@@ -1,0 +1,26 @@
+mejorar la herencia de metodos static!!!!: reducir codigo generado
+
+arrays checkcast
+"length" field for any class
+forName without string
+string constructors from native class 
+local variables name conflicts, ex: var, in, function, etc..
+share empty clinits
+
+configurar serializadores custom en llamadas a servicios: por ejemplo identificar el main class relacionado.
+
+
+
+		//		AsyncServiceExecutor<PersonService> asyncServiceExecutor= serviceFactory.createAsyncService(PersonService.class);
+		//		asyncServiceExecutor.executeAsync(asyncServiceExecutor.getService().getPersons(), new AsyncCallback<List<Person>>()
+		//		{
+		//			public void onError()
+		//			{
+		//			}
+		//
+		//			public void onSuccess(List<Person> result)
+		//			{
+		//				System.out.println(result);
+		//			}
+		//		});
+

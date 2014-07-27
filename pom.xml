@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.dragome</groupId>
+  <artifactId>dragome-sdk</artifactId>
+  <packaging>pom</packaging>
+  <version>0.95-beta1</version>
+  <name>Dragome SDK</name>
+
+  <modules>
+    <module>dragome-js-commons</module>
+    <module>dragome-js-jre</module>
+    <module>dragome-bytecode-js-compiler</module>
+    <module>dragome-core</module>
+    <module>dragome-form-bindings</module>
+    <module>dragome-callback-evictor</module>
+    <module>dragome-method-logger</module>
+  </modules>
+
+  <build>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-bytecode-js-compiler</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-js-commons</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-js-jre</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-callback-evictor</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-form-bindings</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-core</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-method-logger</artifactId>
+      <version>0.95-beta1</version>
+    </dependency>
+  </dependencies>
+</project>

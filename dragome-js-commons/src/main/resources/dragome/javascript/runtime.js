@@ -1,0 +1,454 @@
+dragomeJs = {};
+
+function _isNull(aObject)
+{
+	if (typeof aObject == 'boolean')
+		return aObject == false;
+	else if (typeof aObject == 'number')
+		return aObject == 0;
+	else
+		return aObject == null;
+}
+
+function addSignatureTo(aClass, aMethodSignature, aGenericSignature)
+{
+	if (!aClass.$$$$signatures)
+		aClass.$$$$signatures = [];
+
+	aClass.$$$$signatures[aMethodSignature] = aGenericSignature;
+}
+
+java_lang_null = function()
+{
+};
+
+var now = (function()
+{
+	var performance = window.performance || {};
+
+	performance.now = (function()
+	{
+		return performance.now || performance.webkitNow || performance.msNow || performance.oNow || performance.mozNow || function()
+		{
+			return new Date().getTime();
+		};
+	})();
+
+	return performance.now();
+});
+
+if (typeof String.prototype.startsWith != 'function')
+{
+	String.prototype.startsWith = function(str)
+	{
+		return this.slice(0, str.length) == str;
+	};
+}
+
+if (typeof String.prototype.endsWith != 'function')
+{
+	String.prototype.endsWith = function(str)
+	{
+		return this.slice(-str.length) == str;
+	};
+}
+
+dragomeJs.createException = function(className, message, original)
+{
+	if (dragomeJs.signalState == 1)
+		throw "Recursive exception creation";
+
+	dragomeJs.signalState = 1;
+
+	var stack;
+
+	try
+	{
+		undefined.b = 1;
+	} catch (e)
+	{
+		stack = e.stack;
+		stack = stack.replace("TypeError: Cannot set property 'b' of undefined", message);
+	}
+
+	var exception;
+	try
+	{
+		var clazz = java_lang_Class.$forName___java_lang_String$java_lang_Class(className);
+		exception = eval("new clazz.$$$nativeClass");
+		exception.$$init____java_lang_String$void(message);
+		exception.original = original;
+		exception.stack = stack;
+	} catch (e)
+	{
+		throw "Could not create exception for " + message;
+	} finally
+	{
+		dragomeJs.signalState = 0;
+	}
+	return exception;
+}
+
+/**
+ * Returns the specified exception. According VM Spec's athrow instruction, if
+ * objectref is null, a NullPointerException is returned instead of objectref.
+ */
+dragomeJs.nullSaveException = function(objectref)
+{
+	if (objectref instanceof Error && getQuerystring("debug") == "true")
+		objectref = dragomeJs.createException("java.lang.NullPointerException", objectref.message, objectref);
+	else if (objectref == null)
+		objectref = dragomeJs.createException("java.lang.NullPointerException", null);
+
+	if (!objectref.message)
+		objectref.message = objectref.$$$message;
+
+	return objectref;
+}
+
+dragomeJs.handleNewLine = function(s)
+{
+	if (navigator.appVersion.indexOf("MSIE") != -1)
+	{
+		return s.replace(/\n/g, "\n\r");
+	}
+	return s;
+}
+
+dragomeJs.console_element = null;
+
+dragomeJs.console_init = function()
+{
+	var id = "java.lang.System.out";
+	var consoleContainer = document.getElementById(id);
+	// if (consoleContainer == null)
+	// {
+	// consoleContainer = document.createElement("div");
+	// document.body.appendChild(consoleContainer);
+	// }
+
+	if (consoleContainer != null)
+	{
+		dragomeJs.console_element = document.createElement("pre");
+		consoleContainer.appendChild(dragomeJs.console_element);
+	}
+}
+
+dragomeJs.console_write = function(message)
+{
+	message = String(message);
+	if (message != null)
+	{
+		// TODO: On what browsers do we have to issue a carriage return?
+		message = dragomeJs.handleNewLine(message);
+	} else
+	{
+		message = "null";
+	}
+	try
+	{
+		if (dragomeJs.console_element == null)
+		{
+			dragomeJs.console_init();
+		}
+
+		if (dragomeJs.console_element != null)
+			dragomeJs.console_element.appendChild(document.createTextNode(message));
+		else if (console != null)
+			console.log(message);
+		
+	} catch (e)
+	{
+		alert("Could not print string:\n\t" + message + "\nfor reason:\n\t" + dragomeJs.inspect(e));
+	}
+}
+
+dragomeJs.console_clear = function()
+{
+	if (dragomeJs.console_element != null)
+	{
+		var newElement = document.createElement("pre");
+		consoleContainer.replaceChild(newElement, dragomeJs.console_element);
+		dragomeJs.console_element = newElement;
+	}
+}
+
+dragomeJs.println = function(message)
+{
+	dragomeJs.print(message + "\n");
+}
+
+dragomeJs.print = function(message)
+{
+	if (typeof (window) == "undefined")
+		console.info(message);
+	else
+		dragomeJs.console_write(message);
+
+	var elem = document.getElementById('java.lang.System.out');
+	if (elem)
+		elem.scrollTop = elem.scrollHeight;
+}
+
+dragomeJs.isInstanceof = function(obj, type)
+{
+	if (obj == undefined)
+		return false;
+
+	if ((typeof obj == "string" || obj instanceof String) && type == java_lang_String)
+		return true;
+
+	var clazz = !obj.$$type ? obj.constructor : obj;
+
+	if (clazz == type)
+		return true;
+
+	if (type.$$type == "Interface")
+	{
+		if (obj.$$type == "Interface")
+		{
+			return checkInterfaceExtendsOther(obj, type);
+		} else
+			return qx.Class.hasInterface(clazz, type);
+	} else
+		return qx.Class.isSubClassOf(clazz, type);
+}
+
+function checkInterfaceExtendsOther(obj, type)
+{
+	var interfacesList = obj.$$extends;
+
+	var result = false;
+
+	if (obj.name == type.name)
+		return true;
+
+	for (i in interfacesList)
+		result |= checkInterfaceExtendsOther(interfacesList[i], type);
+
+	return result;
+}
+
+dragomeJs.cmp = function(value1, value2)
+{
+	if (value1 > value2)
+		return 1;
+	if (value1 < value2)
+		return -1;
+	return 0;
+}
+
+// Truncate a number. Needed for integral types in casting and division.
+dragomeJs.trunc = function(f)
+{
+	if (f < 0)
+		return Math.ceil(f);
+	return Math.floor(f);
+}
+
+/**
+ * Narrows the number n to the specified type. The type must be 0xff (byte) or
+ * 0xffff (short). See 5.1.3 "Narrowing Primitive Conversions" of the Java
+ * Language Specification.
+ */
+dragomeJs.narrow = function(n, bits)
+{
+	n = dragomeJs.trunc(n);
+	n = n & bits;
+	if (n > (bits >>> 1))
+		n -= (bits + 1);
+	return n;
+}
+
+/**
+ * Returns a new multidimensional array of the specified array type [...[T and
+ * the desired dimensions. For example, if there are three dimensions, then the
+ * returned array is new [[[T[dim[0]][dim[1]][dim[2]] If T is the boolean type,
+ * then the elements are initialized to false. Otherwise, if T is not a class,
+ * then the elements are initialize to numeric 0.
+ * 
+ * If index > 0, then the first index dimensions are ignored. For example, index =
+ * 1 returns new [[T[dim[1]][dim[2]] This way, we can employ the method
+ * recursively.
+ */
+dragomeJs.newArray = function(classSignature, dim, index)
+{
+	if (index == null)
+		index = 0;
+	var subSignature = classSignature.substr(index);
+	var dimensionAtIndex = dim[index];
+
+	var array = new Array(dimensionAtIndex);
+	// array.clazz = dragomeJs.forName(subSignature);
+
+	if (subSignature == "Z")
+	{
+		for ( var i = 0; i < dimensionAtIndex; i++)
+		{
+			array[i] = false;
+		}
+	} else if (subSignature.charAt(1) != "[" && subSignature.charAt(1) != "L")
+	{
+		for ( var i = 0; i < dimensionAtIndex; i++)
+		{
+			array[i] = 0;
+		}
+	} else
+	{
+		// Component type is a reference (array or object type).
+		if (index + 1 < dim.length)
+		{
+			for ( var i = 0; i < dimensionAtIndex; i++)
+			{
+				array[i] = dragomeJs.newArray(classSignature, dim, index + 1);
+			}
+		}
+	}
+
+	return array;
+}
+
+/**
+ * Returns a shallow clone of the specified array. This method is used in
+ * java.lang.Object#clone()java.lang.Object
+ */
+dragomeJs.cloneArray = function(other)
+{
+	var dim = other.length;
+	var array = new Array(dim);
+	array.clazz = other.clazz;
+	for ( var i = 0; i < dim; i++)
+	{
+		array[i] = other[i];
+	}
+	return array;
+}
+
+// Returns all attributes of the specified object as a string.
+dragomeJs.inspect = function(object)
+{
+	var s = "Value " + String(object);
+
+	if (object == null || object == undefined)
+		return "null";
+
+	if (typeof (object) == "string")
+		return object;
+
+	var attributes = new Array();
+	for ( var e in object)
+	{
+		attributes[attributes.length] = e;
+	}
+
+	if (attributes.length > 0)
+	{
+		attributes.sort();
+		s += "\n\tAttributes:\n";
+		for ( var e in attributes)
+		{
+			var attribute = attributes[e];
+			var value = "";
+			try
+			{
+				value = object[attribute];
+			} catch (e)
+			{
+				value += "While fetching attribute: " + e.message;
+			}
+			var type = typeof (value);
+			if (type == "function")
+			{
+				s += "\t" + attribute + "[" + type + "]\n";
+			} else
+			{
+				s += "\t" + attribute + "[" + type + "]: " + value + "\n";
+			}
+		}
+	}
+
+	return s;
+}
+
+dragomeJs.unquote = function(s)
+{
+	if (s == null || s.length < 2)
+	{
+		return s;
+	}
+
+	var r = "";
+	for ( var i = 0; i < s.length; i++)
+	{
+		var c = s.charAt(i);
+		if (c == '\\' && i < s.length - 1)
+		{
+			c = s.charAt(++i);
+		}
+		r += c;
+	}
+	return r;
+};
+
+dragomeJs.checkCast = function(obj, className)
+{
+	if (!className.basename || className == java_lang_Object || obj == null)
+		return obj;
+
+	if (typeof obj == "string")
+		if (className == java_lang_CharSequence || className == java_lang_Comparable)
+			return obj;
+	
+	// if (className == java_lang_Boolean && (obj == 1 || obj == 0))
+	// return obj;
+
+	if (className == java_lang_Class && obj.$$type == "Class")
+		return obj;
+
+	if (obj.classname && obj.classname.startsWith("ProxyOf_"))
+		return obj;
+
+	if (!dragomeJs.isInstanceof(obj, className))
+	{
+		var cn = obj.classname;
+		if (typeof obj == "string")
+			cn = "java_lang_String";
+
+		throw dragomeJs.createException("java.lang.RuntimeException", "Cannot cast " + cn + " to " + className.basename);
+	}
+
+	return obj;
+}
+
+function createProxyOf(types, methods, handler1, handler)
+{
+	var membersMap = {};
+	membersMap.$$$handler= handler1;
+
+	var createInvoker = function(method)
+	{
+		return function()
+		{
+			return handler.$invoke___java_lang_Object__java_lang_reflect_Method__java_lang_Object_ARRAYTYPE$java_lang_Object(this, method, arguments);
+		};
+	}
+
+	for ( var i in methods.$$$array)
+	{
+		var methodName = methods.$$$array[i].$$$signature;
+		membersMap[methodName] = createInvoker(methods.$$$array[i]);
+	}
+
+	var nextNumber = objectId({});
+
+	qx.Class.define("ProxyOf_" + nextNumber, {
+		extend : java_lang_Object,
+		implement : types,
+		construct : function()
+		{
+		},
+		members : membersMap
+	});
+
+	return eval("new ProxyOf_" + nextNumber + "()");
+}

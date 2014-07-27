@@ -1,0 +1,3 @@
+Dragome is published under the GNU Public License version 3. 
+The exact terms of this license can be found in the "dragome-LICENSE.txt" file. 
+For all 3rd party libraries facilitated by Dragome their individual licenses apply. These can be found in the "3rdparty-LICENSE" folder.
