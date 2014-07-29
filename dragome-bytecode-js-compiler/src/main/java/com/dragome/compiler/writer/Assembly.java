@@ -243,6 +243,8 @@ public class Assembly
 
 		writer.write("java_lang_Object.prototype.toString= function (){return this.$toString$java_lang_String();};\n"); //TODO mover despues de creacion de Object
 
+		writer.write("Array.prototype.$clone$java_lang_Object= java_lang_Object.prototype.$clone$java_lang_Object;\n"); //TODO mover despues de creacion de Object
+
 		writeAnnotationsInsertion(writer);
 
 		//	writer.write("new " + mainClass + "();\n");

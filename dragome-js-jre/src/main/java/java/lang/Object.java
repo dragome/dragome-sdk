@@ -32,16 +32,10 @@ public class Object
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		String className= (String) ScriptHelper.eval("this.clazz.name", this);
-
-		// Special treatment for arrays, because for those we have no class to
-		// overwrite the clone() method.
-		if (className.startsWith("["))
-		{
+		if (ScriptHelper.evalBoolean("this instanceof Array", this))
 			return ScriptHelper.eval("dragomeJs.cloneArray(this)", this);
-		}
-
-		return null;
+		else
+			return null;
 	}
 
 	public boolean equals(Object obj)
