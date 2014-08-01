@@ -10,6 +10,8 @@
  ******************************************************************************/
 package java.net;
 
+import java.io.InputStream;
+
 /**
  * Class URL represents a Uniform Resource Locator, a pointer to a "resource" on the World Wide Web.
  *
@@ -79,6 +81,16 @@ public class URL
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	public URLConnection openConnection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public InputStream openStream() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

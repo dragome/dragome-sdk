@@ -33,4 +33,5 @@ public interface Map<K, V>
 	}
 
 	Set<Map.Entry<K, V>> entrySet();
+    void putAll(Map<? extends K, ? extends V> m);
 }

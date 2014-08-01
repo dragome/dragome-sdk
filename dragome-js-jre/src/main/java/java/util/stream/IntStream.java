@@ -45,6 +45,9 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Supplier;
 
+import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
+
 /**
  * A sequence of primitive int-valued elements supporting sequential and parallel
  * aggregate operations.  This is the {@code int} primitive specialization of
@@ -698,10 +701,10 @@ public interface IntStream extends BaseStream<Integer, IntStream>
 	 *
 	 * @return an empty sequential stream
 	 */
-//	public static IntStream empty()
-//	{
-//		return StreamSupport.intStream(Spliterators.emptyIntSpliterator(), false);
-//	}
+	public static IntStream empty()
+	{
+		return StreamSupport.intStream(Spliterators.emptyIntSpliterator(), false);
+	}
 //
 //	/**
 //	 * Returns a sequential {@code IntStream} containing a single element.
@@ -793,17 +796,17 @@ public interface IntStream extends BaseStream<Integer, IntStream>
 	 * @return a sequential {@code IntStream} for the range of {@code int}
 	 *         elements
 	 */
-//	public static IntStream range(int startInclusive, int endExclusive)
-//	{
-//		if (startInclusive >= endExclusive)
-//		{
-//			return empty();
-//		}
-//		else
-//		{
-//			return StreamSupport.intStream(new Streams.RangeIntSpliterator(startInclusive, endExclusive, false), false);
-//		}
-//	}
+	public static IntStream range(int startInclusive, int endExclusive)
+	{
+		if (startInclusive >= endExclusive)
+		{
+			return empty();
+		}
+		else
+		{
+			return StreamSupport.intStream(new Streams.RangeIntSpliterator(startInclusive, endExclusive, false), false);
+		}
+	}
 
 	/**
 	 * Returns a sequential ordered {@code IntStream} from {@code startInclusive}

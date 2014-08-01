@@ -10,7 +10,7 @@
  ******************************************************************************/
 package java.io;
 
-public abstract class Writer
+public abstract class Writer implements Appendable, Closeable, Flushable 
 {
 	abstract public void write(String str) throws IOException;
 	abstract public void write(String value, int start, int i) throws IOException;//TODO revisar

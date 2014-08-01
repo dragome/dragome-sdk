@@ -17,6 +17,10 @@ public class FileInputStream extends InputStream
 		// TODO Auto-generated constructor stub
 	}
 
+	public FileInputStream(String string) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int read() throws IOException
 	{
 		return 0;

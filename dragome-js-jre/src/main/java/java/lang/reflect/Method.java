@@ -16,8 +16,11 @@ import java.util.List;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
+import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 import com.dragome.commons.javascript.ScriptHelper;
 
+@DragomeCompilerSettings(CompilerType.Standard)
 public final class Method
 {
 	protected String signature;

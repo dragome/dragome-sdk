@@ -5,6 +5,7 @@ import com.dragome.commons.javascript.ScriptHelper;
 public final class Pattern
 {
 
+	public static final String CASE_INSENSITIVE = null;
 	private String regex;
 
 	/**
@@ -24,6 +25,16 @@ public final class Pattern
 	public Matcher matcher(CharSequence input)
 	{
 		return new Matcher(ScriptHelper.eval("new RegExp(this.$$$regex, 'g')", this), input);
+	}
+
+	public static Pattern compile(String pattern, String caseInsensitive) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static boolean matches(String string, String line) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

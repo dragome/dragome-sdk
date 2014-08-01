@@ -19,4 +19,9 @@ public abstract class InputStream implements Closeable
 	    // TODO Auto-generated method stub
 	    return 0;
     }
+
+	public int read(byte[] chunk) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

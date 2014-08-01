@@ -10,14 +10,13 @@ public class Arrays
 	 * @param a the array by which the list will be backed.
 	 * @return list view of the specified array.
 	 */
-	public static List asList(Object... a)
+    	public static <T> List<T> asList(T... a)     
 	{
-		ArrayList vector= new ArrayList();
-		for (int i= 0; i < a.length; i++)
-		{
-			vector.add(a[i]);
-		}
-		return vector;
+		ArrayList<T> result= new ArrayList<T>();
+		for (T t : a)
+		    result.add(t);
+		
+		return result;
 	}
 
 	/**

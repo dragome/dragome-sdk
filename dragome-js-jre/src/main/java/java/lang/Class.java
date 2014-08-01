@@ -22,9 +22,12 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 import com.dragome.commons.javascript.JSObject;
 import com.dragome.commons.javascript.ScriptHelper;
 
+@DragomeCompilerSettings(CompilerType.Standard)
 public final class Class<T> implements java.io.Serializable, java.lang.reflect.GenericDeclaration, java.lang.reflect.Type, java.lang.reflect.AnnotatedElement
 {
 	public String getSimpleName()
@@ -390,7 +393,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return new Constructor(this, new Class<?>[0], new Class<?>[0], 0);
 	}
 
-	public <T extends Annotation> T getAnnotation(Class<T> annotationType)
+	public <A extends Annotation> A getAnnotation(Class<A> annotationClass) 
 	{
 		return null;
 	}
@@ -525,5 +528,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
     {
 	    // TODO Auto-generated method stub
 	    return null;
+    }
+
+    public static Class<?> forName(String name, boolean initialize, ClassLoader loader) throws ClassNotFoundException
+    {
+    	return forName(name);
     }
 }

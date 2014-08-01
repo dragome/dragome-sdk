@@ -28,4 +28,35 @@ public class StringWriter extends Writer
 	{
 		buffer.append(value, start, i);
 	}
+
+	@Override
+	public Appendable append(CharSequence csq) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Appendable append(CharSequence csq, int start, int end)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Appendable append(char c) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void close() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void flush() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 }
