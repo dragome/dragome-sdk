@@ -30,10 +30,7 @@
 
 package org.xmlvm.proc.out;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -88,7 +85,6 @@ import com.android.dx.cf.iface.FieldList;
 import com.android.dx.cf.iface.Method;
 import com.android.dx.cf.iface.MethodList;
 import com.android.dx.cf.iface.ParseException;
-import com.android.dx.dex.cf.CfTranslator;
 import com.android.dx.dex.code.ArrayData;
 import com.android.dx.dex.code.CatchHandlerList;
 import com.android.dx.dex.code.CatchTable;
@@ -123,6 +119,7 @@ import com.android.dx.rop.code.TranslationAdvice;
 import com.android.dx.rop.cst.Constant;
 import com.android.dx.rop.cst.CstAnnotation;
 import com.android.dx.rop.cst.CstArray;
+import com.android.dx.rop.cst.CstBaseMethodRef;
 import com.android.dx.rop.cst.CstBoolean;
 import com.android.dx.rop.cst.CstMemberRef;
 import com.android.dx.rop.cst.CstMethodRef;
@@ -1785,7 +1782,7 @@ public class DEXmlvmOutputProcess extends XmlvmProcessImpl
 	private Element processInvokeInstruction(CstInsn cstInsn, Map<String, ReferenceKind> referencedTypes)
 	{
 		Element result= new Element(sanitizeInstructionName(cstInsn.getOpcode().getName()), NS_DEX);
-		CstMethodRef methodRef= (CstMethodRef) cstInsn.getConstant();
+		CstBaseMethodRef methodRef= (CstBaseMethodRef) cstInsn.getConstant();
 		String classType= methodRef.getDefiningClass().toHuman();
 		String methodName= methodRef.getNat().getName().toHuman();
 
@@ -1829,7 +1826,7 @@ public class DEXmlvmOutputProcess extends XmlvmProcessImpl
 	 * Processes the signature of the given method reference and returns a
 	 * corresponding element.
 	 */
-	private Element processParameterList(CstMethodRef methodRef, List<RegisterSpec> registers)
+	private Element processParameterList(CstBaseMethodRef methodRef, List<RegisterSpec> registers)
 	{
 		Element result= new Element("parameters", NS_DEX);
 		Prototype prototype= methodRef.getPrototype();

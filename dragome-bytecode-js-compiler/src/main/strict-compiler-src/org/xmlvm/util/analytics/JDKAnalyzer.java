@@ -80,6 +80,7 @@ import com.android.dx.rop.code.DexTranslationAdvice;
 import com.android.dx.rop.code.RopMethod;
 import com.android.dx.rop.code.TranslationAdvice;
 import com.android.dx.rop.cst.Constant;
+import com.android.dx.rop.cst.CstBaseMethodRef;
 import com.android.dx.rop.cst.CstMemberRef;
 import com.android.dx.rop.cst.CstMethodRef;
 import com.android.dx.rop.type.Prototype;
@@ -754,7 +755,7 @@ public class JDKAnalyzer
 			if (isInvokeInstruction(cstInsn))
 			{
 				// Adds the class that a method references
-				CstMethodRef methodRef= (CstMethodRef) cstInsn.getConstant();
+			    	CstBaseMethodRef methodRef= (CstBaseMethodRef) cstInsn.getConstant();
 				methodDeps.addDependency(methodRef.getDefiningClass().toHuman(), methodRef.getNat().getName().toHuman() + ":" + methodRef.getPrototype().toString());
 			}
 			else

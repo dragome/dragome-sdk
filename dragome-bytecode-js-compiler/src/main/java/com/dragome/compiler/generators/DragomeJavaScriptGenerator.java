@@ -258,12 +258,21 @@ public class DragomeJavaScriptGenerator extends Generator
 	//    }
 
 	public void visit(MethodDeclaration method)
-	{
-		String compiler= method.getAnnotationsValues().get(DragomeCompilerSettings.class.getName() + "#" + "value");
+	{ 
+	    	String annotationKey= DragomeCompilerSettings.class.getName() + "#" + "value";
+	    	String compiler= DragomeJsCompiler.compiler.compilerType.name();
+		String methodCompilerType= method.getAnnotationsValues().get(annotationKey);
+		String classCompilerType= typeDecl.getAnnotations().get(annotationKey);
+		
+		if (methodCompilerType != null)
+		    compiler= methodCompilerType;
+		else if (classCompilerType != null)
+		    compiler= classCompilerType;
+	    	
 		//	String className2= method.getMethodBinding().getDeclaringClass().getClassName();
 		// !className2.startsWith("java.lang") && (method.getAnnotationsValues().get("alias") == null || className2.contains("JSONTokener")
 
-		if ("Strict".equals(compiler))
+		if ("Strict".equalsIgnoreCase(compiler))
 		{
 			ClassUnit classUnit= project.getClassUnit(method.getMethodBinding().getDeclaringClass().getClassName());
 			classUnit.addNotReversibleMethod(Pass1.extractMethodNameSignature(method.getMethodBinding()));

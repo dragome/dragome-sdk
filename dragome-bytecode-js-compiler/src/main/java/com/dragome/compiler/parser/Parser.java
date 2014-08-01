@@ -58,6 +58,7 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.io.IOUtils;
 
+import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.annotations.AnnotationReader;
@@ -348,9 +349,8 @@ public class Parser
 
 	public static void main(String[] args) throws Exception
 	{
-
 		String className= args[0];
-		DragomeJsCompiler.compiler= new DragomeJsCompiler();
+		DragomeJsCompiler.compiler= new DragomeJsCompiler(CompilerType.Standard);
 
 		Project.createSingleton(null);
 		ClassUnit classUnit= new ClassUnit(Project.singleton, Project.singleton.getSignature(className));

@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.compiler.generators.AbstractVisitor;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
 import com.dragome.compiler.units.ClassUnit;
@@ -86,6 +87,8 @@ public class DragomeJsCompiler
 
 	public BytecodeTransformer bytecodeTransformer;
 
+	public CompilerType compilerType;
+
 	public static void main(String argv[]) throws Exception
 	{
 		if (argv == null || argv.length != 4)
@@ -107,7 +110,7 @@ public class DragomeJsCompiler
 
 		assembly.setTargetLocation(new File(argv[3]));
 
-		DragomeJsCompiler compiler= new DragomeJsCompiler();
+		DragomeJsCompiler compiler= new DragomeJsCompiler(CompilerType.Standard);
 		compiler.setBasedir(basedir);
 		compiler.addClasspathElements(classpathElements);
 		compiler.addAssembly(assembly);
@@ -116,8 +119,9 @@ public class DragomeJsCompiler
 		compiler.execute();
 	}
 
-	public DragomeJsCompiler()
+	public DragomeJsCompiler(CompilerType compilerType)
 	{
+		this.compilerType= compilerType;
 		setBasedir(new File(System.getProperty("user.dir")));
 		setTargetPlatform("web");
 	}
