@@ -35,7 +35,9 @@ public class DragomeCompilerLauncher
 			assembly.setEntryPointClassName(mainClass.getName());
 			assembly.setTargetLocation(new File(target));
 
-			DragomeJsCompiler compiler= new DragomeJsCompiler();
+			DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
+			
+			DragomeJsCompiler compiler= new DragomeJsCompiler(configurator.getDefaultCompilerType());
 			//	    compiler.setBasedir(basedir);
 			compiler.addClasspathElements(classpathElements);
 			compiler.addClasspathFilter(new FileFilter()
@@ -46,7 +48,6 @@ public class DragomeCompilerLauncher
 				}
 			});
 
-			DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
 			if (configurator != null)
 				compiler.setBytecodeTransformer(configurator.getBytecodeTransformer());
 

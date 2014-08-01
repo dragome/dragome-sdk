@@ -33,14 +33,14 @@ public class EventExecutor implements Runnable
 			ScriptHelper.put("event", event, this);
 			String eventType= (String) ScriptHelper.eval("event.type", this);
 			
-//			boolean isKeyup= eventType.equals("keyup");
-//			if (isKeyup)
-//			{
-//				ScriptHelper.put("eventTarget", EventDispatcherImpl.getEventTarget(event), this);
-//				ScriptHelper.eval("stopEvent(event)", this);
-//				int code= ScriptHelper.evalInt("event.keyCode", this);
-//				arguments= code;
-//			}
+			boolean isKeyEvent= eventType.equals("keyup") || eventType.equals("keydown")|| eventType.equals("keypress");
+			if (isKeyEvent)
+			{
+				ScriptHelper.put("eventTarget", EventDispatcherHelper.getEventTarget(event), this);
+				ScriptHelper.eval("stopEvent(event)", this);
+				int code= ScriptHelper.evalInt("event.keyCode", this);
+				arguments= code;
+			}
 
 			ServiceLocator instance= ServiceLocator.getInstance();
 			EventDispatcher eventDispatcher= instance.getEventDispatcher();

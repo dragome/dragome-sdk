@@ -50,7 +50,7 @@ public class ComponentWithValueAndRendererImpl<T> extends AbstractVisualComponen
 
 	public void setValue(T value, boolean fireEvents)
 	{
-		boolean changed= this.value != null ? !this.value.equals(value) : value == null;
+		boolean changed= this.value != null ? !this.value.equals(value) : value != null;
 		this.value= value;
 		if (fireEvents && changed)
 			fireValueChange(value);
