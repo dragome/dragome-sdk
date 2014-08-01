@@ -1,3 +1,4 @@
+
 dragomeJs = {};
 
 function _isNull(aObject)
@@ -279,6 +280,8 @@ dragomeJs.newArray = function(classSignature, dim, index)
 	var dimensionAtIndex = dim[index];
 
 	var array = new Array(dimensionAtIndex);
+	array.$clone$java_lang_Object= java_lang_Object.prototype.$clone$java_lang_Object;
+	
 	// array.clazz = dragomeJs.forName(subSignature);
 
 	if (subSignature == "Z")
