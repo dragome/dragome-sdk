@@ -16,11 +16,11 @@ import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
 
-public class CompositeIntrumentationDragomeConfigurator extends InstrumentationDragomeConfigurator
+public class ChainedInstrumentationDragomeConfigurator extends InstrumentationDragomeConfigurator
 {
 	protected List<InstrumentationDragomeConfigurator> configurators= new ArrayList<InstrumentationDragomeConfigurator>();
 
-	public CompositeIntrumentationDragomeConfigurator()
+	public ChainedInstrumentationDragomeConfigurator()
 	{
 	}
 

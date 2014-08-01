@@ -13,11 +13,13 @@ package com.dragome.commons;
 import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.annotations.CompilerType;
 
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
 	protected String dragomeVersion="0.95-beta1";
+	private CompilerType defaultCompilerType= CompilerType.Standard;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -70,5 +72,15 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		;
 
 		return include;
+	}
+
+	public CompilerType getDefaultCompilerType()
+	{
+	    return defaultCompilerType;
+	}
+
+	public void setDefaultCompilerType(CompilerType defaultCompilerType)
+	{
+	    this.defaultCompilerType = defaultCompilerType;
 	}
 }

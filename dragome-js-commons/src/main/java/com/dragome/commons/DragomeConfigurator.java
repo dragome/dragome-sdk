@@ -11,6 +11,7 @@
 package com.dragome.commons;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.annotations.CompilerType;
 
 public interface DragomeConfigurator
 {
@@ -18,4 +19,6 @@ public interface DragomeConfigurator
 	public BytecodeTransformer getBytecodeTransformer();
 	public ExecutionHandler getExecutionHandler();
 	public boolean filterClassPath(String classpathEntry);
+	public CompilerType getDefaultCompilerType();
+	void setDefaultCompilerType(CompilerType defaultCompilerType);
 }
