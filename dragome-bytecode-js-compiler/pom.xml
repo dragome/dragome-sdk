@@ -14,7 +14,7 @@
     <repository>
       <id>dragome</id>
       <name>dragome</name>
-      <url>https://raw.github.com/fpetrola/dragome/master/maven/</url>
+      <url>https://raw.github.com/dragome/dragome/master/maven</url>
     </repository>
   </repositories>
 
