@@ -64,6 +64,13 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 ###How is programming web apps with Dragome?
 **pure Java! pure HTML! runs as js inside browser!**
 
+
+
+### See it in action
+[![ScreenShot](crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
+
+
+
 ### Debug your application in Java with your favorite IDE
 [![ScreenShot](crud-debugging-screenshot.jpg)](http://youtu.be/ktlMWKNVhgo)
 
