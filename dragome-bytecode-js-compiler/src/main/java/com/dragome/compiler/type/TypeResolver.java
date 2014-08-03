@@ -84,8 +84,7 @@ public class TypeResolver implements TypeVisitor
 		}
 		catch (Exception e)
 		{
-			System.out.println(e.getMessage());
-			//classUnit.setReversible(false);
+		    Log.getLogger().debug("parse error:" + e.getMessage(), e);
 		}
 
 		{
