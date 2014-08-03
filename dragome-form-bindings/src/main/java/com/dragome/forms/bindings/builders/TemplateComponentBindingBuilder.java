@@ -17,6 +17,7 @@ import com.dragome.forms.bindings.client.form.binding.FormBinder;
 import com.dragome.forms.bindings.client.value.ValueSource;
 import com.dragome.model.VisualButtonImpl;
 import com.dragome.model.VisualCheckboxImpl;
+import com.dragome.model.VisualImageImpl;
 import com.dragome.model.VisualLabelImpl;
 import com.dragome.model.VisualLinkImpl;
 import com.dragome.model.VisualPanelImpl;
@@ -27,6 +28,7 @@ import com.dragome.model.interfaces.HasValue;
 import com.dragome.model.interfaces.VisualButton;
 import com.dragome.model.interfaces.VisualCheckbox;
 import com.dragome.model.interfaces.VisualComponent;
+import com.dragome.model.interfaces.VisualImage;
 import com.dragome.model.interfaces.VisualLabel;
 import com.dragome.model.interfaces.VisualLink;
 import com.dragome.model.interfaces.VisualPanel;
@@ -68,6 +70,8 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	    this.componentType= VisualLinkImpl.class;
 	else if (componentType.equals(VisualLabel.class))
 	    this.componentType= VisualLabelImpl.class;
+	else if (componentType.equals(VisualImage.class))
+	    this.componentType= VisualImageImpl.class;
 
 	component= (C) ServiceLocator.getInstance().getReflectionService().createClassInstance(this.componentType);
 	setupComponent();
