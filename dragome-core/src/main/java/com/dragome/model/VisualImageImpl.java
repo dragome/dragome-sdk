@@ -16,6 +16,10 @@ import com.dragome.model.pectin.ComponentWithValueAndRendererImpl;
 
 public class VisualImageImpl extends ComponentWithValueAndRendererImpl<String> implements VisualImage
 {
+        public VisualImageImpl()
+        {
+        }
+        
 	public VisualImageImpl(String aName)
 	{
 		this(aName, new SimpleRenderer<String>());

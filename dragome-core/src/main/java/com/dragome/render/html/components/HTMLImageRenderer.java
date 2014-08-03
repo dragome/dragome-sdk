@@ -19,27 +19,28 @@ import com.dragome.services.ServiceLocator;
 
 public class HTMLImageRenderer extends AbstractHTMLComponentRenderer<VisualImage>
 {
-	public HTMLImageRenderer()
+    public HTMLImageRenderer()
+    {
+    }
+
+    public Canvas<Element> render(final VisualImage visualImage)
+    {
+	Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+
+	canvas.setContent(new MergeableElement()
 	{
-	}
+	    public void mergeWith(Element element)
+	    {
+		String id= DragomeEntityManager.add(visualImage);
+		if (visualImage.getValue() != null)
+		    element.setAttribute("src", visualImage.getValue());
+		element.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
-	public Canvas<Element> render(final VisualImage visualImage)
-	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		addListeners(visualImage, element);
+	    }
+	});
 
-		canvas.setContent(new MergeableElement()
-		{
-			public void mergeWith(Element element)
-			{
-				String id= DragomeEntityManager.add(visualImage);
-				element.setAttribute("src", visualImage.getValue());
-				element.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-
-				addListeners(visualImage, element);
-			}
-		});
-
-		return canvas;
-	}
+	return canvas;
+    }
 
 }
