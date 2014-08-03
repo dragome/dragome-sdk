@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
  * 
@@ -184,14 +185,25 @@ function getTemplatePart(content, id)
 	return subElement.innerHTML;
 }
 
+function getURL(url)
+{
+    return $.ajax({
+        type: "GET",
+        url: url,
+        cache: false,
+        async: false
+    }).responseText;
+}
+
+
 function refreshPageSetup()
 {
-	lastCompilationTime = parseInt(getFile("compiler-service"));
+	lastCompilationTime = parseInt(getURL("compiler-service"));
 
 	if (getQuerystring("refresh") == "true")
 		setInterval(function()
 		{
-			var compilationTime = parseInt(getFile("compiler-service"));
+			var compilationTime = parseInt(getURL("compiler-service"));
 			if (compilationTime > lastCompilationTime)
 			{
 				lastCompilationTime = compilationTime;
