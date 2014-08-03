@@ -14,73 +14,89 @@ import com.dragome.model.interfaces.VisualBounds;
 
 public class DefaultBounds implements VisualBounds
 {
-	public static final Object ZERO= new DefaultBounds(0, 0, 0, 0);
-	protected int x;
-	protected int y;
-	protected int width;
-	protected int height;
-
-	public DefaultBounds()
+    public static final Object ZERO= new DefaultBounds(0, 0, 0, 0);
+    protected int x;
+    protected int y;
+    protected int width;
+    protected int height;
+    private BoundsChangeListener boundsChangeListener= new BoundsChangeListener()
+    {
+	public void boundsChanged()
 	{
 	}
+    };
 
-	public DefaultBounds(int aX, int aY, int aWidth, int aHeight)
+    public DefaultBounds()
+    {
+    }
+
+    public DefaultBounds(int aX, int aY, int aWidth, int aHeight)
+    {
+	x= aX;
+	y= aY;
+	width= aWidth;
+	height= aHeight;
+    }
+
+    public DefaultBounds(int aX, int aY, int aWidth, int aHeight, BoundsChangeListener boundsChangeListener)
+    {
+	this(aX, aY, aWidth, aHeight);
+	this.boundsChangeListener= boundsChangeListener;
+    }
+
+    public boolean equals(Object obj)
+    {
+	if (obj instanceof VisualBounds)
 	{
-		x= aX;
-		y= aY;
-		width= aWidth;
-		height= aHeight;
+	    VisualBounds otherBounds= (VisualBounds) obj;
+
+	    return getWidth() == otherBounds.getWidth() && getHeight() == otherBounds.getHeight() && getX() == otherBounds.getX() && getY() == otherBounds.getY();
 	}
 
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof VisualBounds)
-		{
-			VisualBounds otherBounds= (VisualBounds) obj;
+	return false;
+    }
 
-			return getWidth() == otherBounds.getWidth() && getHeight() == otherBounds.getHeight() && getX() == otherBounds.getX() && getY() == otherBounds.getY();
-		}
+    public int getHeight()
+    {
+	return height;
+    }
 
-		return false;
-	}
+    public int getWidth()
+    {
+	return width;
+    }
 
-	public int getHeight()
-	{
-		return height;
-	}
+    public int getX()
+    {
+	return x;
+    }
 
-	public int getWidth()
-	{
-		return width;
-	}
+    public int getY()
+    {
+	return y;
+    }
 
-	public int getX()
-	{
-		return x;
-	}
+    public void setHeight(int aHeight)
+    {
+	height= aHeight;
+	boundsChangeListener.boundsChanged();
+    }
 
-	public int getY()
-	{
-		return y;
-	}
+    public void setWidth(int aWidth)
+    {
+	width= aWidth;
+	boundsChangeListener.boundsChanged();
+    }
 
-	public void setHeight(int aHeight)
-	{
-		height= aHeight;
-	}
+    public void setX(int aX)
+    {
+	x= aX;
+	boundsChangeListener.boundsChanged();
+    }
 
-	public void setWidth(int aWidth)
-	{
-		width= aWidth;
-	}
-
-	public void setX(int aX)
-	{
-		x= aX;
-	}
-
-	public void setY(int aY)
-	{
-		y= aY;
-	}
+    public void setY(int aY)
+    {
+	y= aY;
+	boundsChangeListener.boundsChanged();
+    }
 }

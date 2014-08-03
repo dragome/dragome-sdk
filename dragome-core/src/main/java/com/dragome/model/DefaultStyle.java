@@ -29,7 +29,19 @@ public class DefaultStyle implements Style
 	protected VisualBorder border;
 	protected VisualColor backgroundColor= WHITE;
 	protected VisualColor foregroundColor= BLACK;
-	protected VisualBounds bounds= new DefaultBounds(0, 0, 0, 0);
+	protected VisualBounds bounds= new DefaultBounds(0, 0, 0, 0, new BoundsChangeListener()
+	{
+	    public void boundsChanged()
+	    {
+		if (!styleChangedFired)
+		{
+			styleChangedFired= true;
+			if (visualComponent.hasListener(StyleChangedListener.class))
+				visualComponent.getListener(StyleChangedListener.class).boundsChanged(DefaultStyle.this);
+			styleChangedFired= false;
+		}
+	    }
+	});
 	protected boolean inverted;
 	protected boolean visible= true;
 	protected boolean enabled= true;
