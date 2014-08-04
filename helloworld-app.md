@@ -78,9 +78,9 @@ Since HelloWorldPage class has an associated @PageAlias annotation with value "h
 __http://localhost:8080/my-app1/run.html?helloworld__
 
 
-Also if the html filename is the same than associated alias you could execute the application like this:
+Also in case your html file name is the same than the associated alias you could execute the application like this:
 
-__http://localhost:8080/my-app1/helloworld.html
+__http://localhost:8080/my-app1/helloworld.html__
 
 
 
