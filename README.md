@@ -67,12 +67,12 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 
 ### See it in action
-[![ScreenShot](crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
+[![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
 
 
 
 ### Debug your application in Java with your favorite IDE
-[![ScreenShot](crud-debugging-screenshot.jpg)](http://youtu.be/ktlMWKNVhgo)
+[![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/ktlMWKNVhgo)
 
 
 ----------
@@ -134,7 +134,7 @@ public class HelloWorldPage extends DragomeVisualActivity
 
   [1]: http://docs.oracle.com/javase/7/docs/api/java/lang/reflect/Proxy.html
   [2]: http://docs.oracle.com/javase/tutorial/reflect/
-  [3]: callback-evictor.md
-  [4]: two-minutes-tutorial.md#DRAGOME%202'%20TUTORIAL
-  [5]: features.md
-  [6]: helloworld-app.md
+  [3]: doc/callback-evictor.md
+  [4]: doc/two-minutes-tutorial.md#DRAGOME%202'%20TUTORIAL
+  [5]: doc/features.md
+  [6]: doc/helloworld-app.md
