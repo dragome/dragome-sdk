@@ -38,7 +38,7 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 * ... see more at [Features][5]
 
 
-Also see [Dragome Todos](todos.md) for more info about the future
+Also see [Dragome Todos](doc/todos.md) for more info about the future
 
 ----------
 
@@ -57,7 +57,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 ###How to setup
 
-[Setup your application](app-setup.md)
+[Setup your application](doc/app-setup.md)
 
 ----------
 
