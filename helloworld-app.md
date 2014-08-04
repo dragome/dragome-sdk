@@ -78,6 +78,12 @@ Since HelloWorldPage class has an associated @PageAlias annotation with value "h
 __http://localhost:8080/my-app1/run.html?helloworld__
 
 
+Also if the html filename is the same than associated alias you could execute the application like this:
+
+__http://localhost:8080/my-app1/helloworld.html
+
+
+
 This URL will execute the page in production mode (running everything on browser), but if you want debug it in Java you may add a query string "debug=true"
 
 __http://localhost:8080/my-app1/run.html?helloworld&debug=true__
