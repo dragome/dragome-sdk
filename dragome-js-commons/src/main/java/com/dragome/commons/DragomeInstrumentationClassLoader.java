@@ -115,9 +115,6 @@ public final class DragomeInstrumentationClassLoader extends URLClassLoader
 	 *      attempts are delegated. May be <code>null</code>,
 	 *      in which case the {@link ClassLoader#getSystemClassLoader() system classloader}
 	 *      is used as the parent.
-	 * @param transformer
-	 *      This transformer is used to perform the byte-code enhancement.
-	 *      May not be null.
 	 */
 	public DragomeInstrumentationClassLoader(URL[] urls, ClassLoader parent)
 	{

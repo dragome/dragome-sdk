@@ -6,6 +6,32 @@
   <version>0.95-beta1</version>
 
   <packaging>jar</packaging>
+  
+  <description>Dragome SDK module: callback evictor</description>
+  <url>http://www.dragome.com</url>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License, Version 3</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Fernando Petrola</name>
+      <email>fernando.petrola@dragome.com</email>
+      <organization>Dragome</organization>
+      <organizationUrl>http://www.dragome.com</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:dragome/dragome-sdk.git</connection>
+    <developerConnection>scm:git:git@github.com:dragome/dragome-sdk.git</developerConnection>
+    <url>git@github.com:dragome/dragome-sdk.git</url>
+  </scm>  
+  
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,6 +45,17 @@
     </repository>
   </repositories>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+  
   <dependencies>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -74,6 +111,60 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+	<version>2.5</version>
+	<configuration>
+	    <charset>UTF-8</charset>
+	    <docencoding>UTF-8</docencoding>
+	    <docfilessubdirs>true</docfilessubdirs>
+	    <links>
+		<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+	    </links>
+	    <show>protected</show>
+	    <source>1.5</source>
+	    <sourcepath>${basedir}/src/main/java/com/dragome/compiler/annotations</sourcepath>
+	</configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+  
     </plugins>
   </build>
 

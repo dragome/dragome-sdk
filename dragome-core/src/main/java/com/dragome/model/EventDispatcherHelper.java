@@ -46,7 +46,8 @@ public class EventDispatcherHelper
 			List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(PageAlias.class).getEntries();
 			for (AnnotationEntry annotationEntry : annotationEntries)
 			{
-				if (annotationEntry.getAnnotationKey().equals("alias") && requestURL.contains(annotationEntry.getAnnotationValue()))
+				boolean isUnique= annotationEntries.size() == 2 && !"discoverer".equals(annotationEntry.getAnnotationValue());
+				if (isUnique || (annotationEntry.getAnnotationKey().equals("alias") && requestURL.contains(annotationEntry.getAnnotationValue())))
 					className= annotationEntry.getType().getName();
 			}
 		}
