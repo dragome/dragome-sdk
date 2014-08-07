@@ -4,7 +4,7 @@ Based on bytecode to javascript compilation, you can execute applications writte
 You can use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
 
 
-[Learn how to code Dragome apps in 2 minutes][4]
+[Learn how to code Dragome apps in 2 minutes][1]
 
 ----------
 
@@ -27,9 +27,9 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 * 100% transparent development: Java code runs on browser with no special modifications
 * Share code between server and client side
 * Java 8 ready! Build your pages using lambda expressions, default methods, streams
-* You can use [Dynamic Proxies][1] and [Java Reflection API][2]
+* You can use [Dynamic Proxies][2] and [Java Reflection API][3]
 * Compilation based on bytecode: You can make use of all bytecode instrumentation tools features
-* Get rid of callbacks: Make async calls with no callbacks! How? See [Callback Evictor][3] Tool!
+* Get rid of callbacks: Make async calls with no callbacks! How? See [Callback Evictor][4] Tool!
 * Neither browser or IDE plugin, nor configuration or installation required
 * Full Java stack web applications
 * Debug your code in your favorite Java IDE
@@ -48,15 +48,26 @@ Also see [Dragome Todos](doc/todos.md) for more info about the future
 
 
 ###Start working with Dragome right now!
-Maven archetype
+#### Using maven archetype
 ```shell
 mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simple-webapp-archetype -DarchetypeVersion=1.0 -DgroupId={your-package-name} -DartifactId={your-app-name}
 ```
 
-----------
+#### Using maven dependency in your project
+``` xml
+<dependency>
+  <groupId>com.dragome</groupId>
+  <artifactId>dragome-sdk</artifactId>
+  <version>0.95-beta1</version>
+  <type>pom</type>
+</dependency>
+```
 
-###How to setup
+#### Clone and build
+[How to build the SDK][6]
 
+
+#### Setup example application
 [Setup your application](doc/app-setup.md)
 
 ----------
@@ -79,7 +90,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 ###Take a look at the following source code:
 
-For more details see [Hello World Application][6]
+For more details see [Hello World Application][7]
 
 **Service definition**
 ``` Java
@@ -132,9 +143,10 @@ public class HelloWorldPage extends DragomeVisualActivity
 ```
 
 
-  [1]: http://docs.oracle.com/javase/7/docs/api/java/lang/reflect/Proxy.html
-  [2]: http://docs.oracle.com/javase/tutorial/reflect/
-  [3]: doc/callback-evictor.md
-  [4]: doc/two-minutes-tutorial.md#DRAGOME%202'%20TUTORIAL
+  [1]: doc/two-minutes-tutorial.md#DRAGOME%202'%20TUTORIAL
+  [2]: http://docs.oracle.com/javase/7/docs/api/java/lang/reflect/Proxy.html
+  [3]: http://docs.oracle.com/javase/tutorial/reflect/
+  [4]: doc/callback-evictor.md
   [5]: doc/features.md
-  [6]: doc/helloworld-app.md
+  [6]: doc/how-to-build.md
+  [7]: doc/helloworld-app.md
