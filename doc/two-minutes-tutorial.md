@@ -84,6 +84,7 @@ HTML template:
 			<tr>
 				<th>Name</th>
 				<th>Last name</th>
+				<th>Complete name</th>
 				<th>Nickname</th>
 				<th></th>
 			</tr>
