@@ -90,10 +90,11 @@ HTML template:
 		</thead>
 		<tbody>
 			<tr data-template="row">
-				<td><span data-template="givenName">Juan</span></td>
-				<td><span data-template="surname">Perez</span></td>
-				<td><span data-template="nickname">JP</span></td>
-				<td><button data-template="delete-button">delete</button></td>
+				<td><input type="text" data-template="givenName" value="Juan"></input></td>
+				<td><input type="text" data-template="surname" value="Perez"></input></td>
+				<td><span  data-template="complete-name">Juan Perez</span></td>
+				<td><select data-template="nickname">JP</select></td>
+				<td><button type="submit" data-template="delete-button"></button></td>
 			</tr>
 		</tbody>
 	</table>
