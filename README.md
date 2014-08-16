@@ -18,7 +18,7 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 * Use the IDE syntax highlighting, error checking, code completion shortcuts, fix proposals, etc
 * You can create highly responsive web applications with heavy lifting on the client-side and reduced chattiness with the server-side.
 * You will minimize contact with HTML files. Managed by graphics designers not developers, Dragome uses exactly the same files that designers are editing, just plain HTML files.
-* UI Updates can be deployed by non developer roles because code is totally decoupled from HTML files.
+* UI design updates can be deployed by non developer roles because code is totally decoupled from HTML files.
 * Use continuation in your development: you can pause your program and continue it whenever you need.
 * Unit testing integration: you can also run your Junit tests on a browser.
 
