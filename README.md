@@ -90,13 +90,13 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 ### Want to contribute?
 
-Fork the project on Github.
-Create an issue or fix one from the issues list.
-Share your ideas or ask questions on mailing list - don't hesitate to write a reply - that helps us improve javadocs/FAQ.
-If you miss a particular feature - browse or ask on the mailing list - don't hesitate to write a reply, show us a sample code and describe the problem.
-Write a blog post about how you use or extend Dragome.
-Please suggest changes to javadoc/exception messages when you find something unclear.
-If you have problems with documentation, find it non intuitive or hard to follow - let us know about it, we'll try to make it better according to your suggestions. Any constructive critique is greatly appreciated. Don't forget that this is an open source project developed and documented in spare time.
+* Fork the project on Github.
+* Create an issue or fix one from the issues list.
+* Share your ideas or ask questions on mailing list - don't hesitate to write a reply - that helps us improve javadocs/FAQ.
+* If you miss a particular feature - browse or ask on the mailing list - don't hesitate to write a reply, show us a sample code and describe the problem.
+* Write a blog post about how you use or extend Dragome.
+* Please suggest changes to javadoc/exception messages when you find something unclear.
+* If you have problems with documentation, find it non intuitive or hard to follow - let us know about it, we'll try to make it better according to your suggestions. Any constructive critique is greatly appreciated. Don't forget that this is an open source project developed and documented in spare time.
 
 ----------
 
