@@ -1,6 +1,6 @@
 #What is Dragome?
 Dragome is an open source tool for creating web applications in pure Java language.  
-Based on bytecode to javascript compilation, you can execute applications written in Java directly on browsers.  
+Based on bytecode to javascript compilation, you may execute applications written in Java directly on browsers.  
 You can use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
 
 
@@ -18,7 +18,7 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 * Use the IDE syntax highlighting, error checking, code completion shortcuts, fix proposals, etc
 * You can create highly responsive web applications with heavy lifting on the client-side and reduced chattiness with the server-side.
 * You will minimize contact with HTML files. Managed by graphics designers not developers, Dragome uses exactly the same files that designers are editing, just plain HTML files.
-* UI Updates can be deployed by non developer roles because code is totally decoupled from HTML files.
+* UI design updates can be deployed by non developer roles because code is totally decoupled from HTML files.
 * Use continuation in your development: you can pause your program and continue it whenever you need.
 * Unit testing integration: you can also run your Junit tests on a browser.
 
@@ -73,7 +73,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 ----------
 
 ###How is programming web apps with Dragome?
-**pure Java! pure HTML! runs as js inside browser!**
+**pure Java, pure HTML, runs as js inside browser!**
 
 
 
@@ -85,6 +85,18 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 ### Debug your application in Java with your favorite IDE
 [![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/ktlMWKNVhgo)
 
+
+----------
+
+### Want to contribute?
+
+* Fork the project on Github.
+* Create an issue or fix one from the issues list.
+* Share your ideas or ask questions on mailing list - don't hesitate to write a reply - that helps us improve javadocs/FAQ.
+* If you miss a particular feature - browse or ask on the [mailing list](https://groups.google.com/d/forum/dragome) - don't hesitate to write a reply, show us a sample code and describe the problem.
+* Write a blog post about how you use or extend Dragome.
+* Please suggest changes to javadoc/exception messages when you find something unclear.
+* If you have problems with documentation, find it non intuitive or hard to follow - let us know about it, we'll try to make it better according to your suggestions. Any constructive critique is greatly appreciated. Don't forget that this is an open source project developed and documented in spare time.
 
 ----------
 
