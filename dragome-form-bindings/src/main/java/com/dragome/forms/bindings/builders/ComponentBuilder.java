@@ -10,128 +10,97 @@
  ******************************************************************************/
 package com.dragome.forms.bindings.builders;
 
-
-import com.dragome.forms.bindings.client.form.binding.FormBinder;
-import com.dragome.forms.bindings.client.form.metadata.binding.ConditionBinderBuilder;
 import com.dragome.methodlogger.enhancers.MethodInvocationListener;
 import com.dragome.methodlogger.enhancers.MethodInvocationLogger;
+import com.dragome.model.VisualPanelImpl;
 import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 
-public class ComponentBuilder<T>
+public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuilder>
 {
-	private FormBinder binder= new FormBinder();
-	protected ConditionBinderBuilder<?> conditionBinderBuilder;
+    private Template template;
+    private TemplateComponentBindingBuilder<? extends VisualComponent> panelBuilder;
 
-	private Template template;
-	private VisualPanel panel;
-	private T model;
+    private void configureMethodListener()
+    {
+	if (MethodInvocationLogger.getListener() == null)
+	    MethodInvocationLogger.setListener(new MethodInvocationListener()
+	    {
+		private int setters= 0;
 
-	public ComponentBuilder(VisualPanel aPanel, T model)
-	{
-		this(aPanel);
-		this.model= model;
-
-		configureMethodListener();
-	}
-
-	private void configureMethodListener()
-	{
-		if (MethodInvocationLogger.getListener() == null)
-			MethodInvocationLogger.setListener(new MethodInvocationListener()
-			{
-				private int setters= 0;
-
-				public void onMethodEnter(Object instance, String name)
-				{
-					if (isGetter(name))
-					{
-						if (!BindingSync.recordingFor.isEmpty())
-							BindingSync.recordingFor.peek().addMethodVisitedEvent(new MethodVisitedEvent(instance, name));
-					}
-					else if (isSetter(name))
-					{
-						setters++;
-						BindingSync.addEvent(new MethodVisitedEvent(instance, name));
-					}
-				}
-
-				public void onMethodExit(Object instance, String name)
-				{
-					if (isSetter(name))
-					{
-						setters--;
-						if (setters == 0)
-							BindingSync.fireChanges();
-					}
-				}
-
-				private boolean isGetter(String name)
-				{
-					return name.startsWith("get") || name.startsWith("is");
-				}
-
-				private boolean isSetter(String name)
-				{
-					return name.startsWith("set");
-				}
-			});
-	}
-
-	public ComponentBuilder(VisualPanel component)
-	{
-		this.panel= component;
-		if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
+		public void onMethodEnter(Object instance, String name)
 		{
-			TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
-			template= templateLayout.getTemplate();
+		    if (isGetter(name))
+		    {
+			if (!BindingSync.recordingFor.isEmpty())
+			    BindingSync.recordingFor.peek().addMethodVisitedEvent(new MethodVisitedEvent(instance, name));
+		    }
+		    else if (isSetter(name))
+		    {
+			setters++;
+			BindingSync.addEvent(new MethodVisitedEvent(instance, name));
+		    }
 		}
-	}
 
-	public TemplateBindingBuilder<T> bindTemplate(String aChildTemplateName)
+		public void onMethodExit(Object instance, String name)
+		{
+		    if (isSetter(name))
+		    {
+			setters--;
+			if (setters == 0)
+			    BindingSync.fireChanges();
+		    }
+		}
+
+		private boolean isGetter(String name)
+		{
+		    return name.startsWith("get") || name.startsWith("is");
+		}
+
+		private boolean isSetter(String name)
+		{
+		    return name.startsWith("set");
+		}
+	    });
+    }
+
+    public ComponentBuilder(VisualPanel component)
+    {
+	this.component= component;
+	if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
 	{
-		return new TemplateBindingBuilder<T>(panel, template.getChild(aChildTemplateName), model);
+	    TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
+	    template= templateLayout.getTemplate();
 	}
+	configureMethodListener();
+    }
 
-	public DragomeStyleBuilder<T> style(VisualComponent component)
-	{
-		DragomeStyleBuilder<T> builder= new DragomeStyleBuilder<T>(model);
-		builder.style(component);
+    public ComponentBuilder(VisualPanelImpl itemPanel, TemplateComponentBindingBuilder<? extends VisualComponent> templateComponentBindingBuilder)
+    {
+	this(itemPanel);
+	this.panelBuilder= templateComponentBindingBuilder;
+	
+    }
 
-		return builder;
-	}
+    public TemplateComponentBindingBuilder<? extends VisualComponent> parentBuilder()
+    {
+	return panelBuilder;
+    }
 
-	public DragomeStyleBuilder<T> styleWith(String className)
-	{
-		return style(panel).with(className);
-	}
+    public TemplateBindingBuilder bindTemplate(String aChildTemplateName)
+    {
+	return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName));
+    }
 
-	public VisualPanel panel()
-	{
-		return panel;
-	}
+    public VisualPanel panel()
+    {
+	return (VisualPanel) component;
+    }
 
-	public T getModel()
-	{
-		return model;
-	}
-
-	public void showWhen(Supplier<Boolean> supplier)
-	{
-		show(panel).when(supplier);
-	}
-
-	public ComponentBuilder<T> show(VisualComponent visualComponent)
-	{
-		conditionBinderBuilder= binder.show(visualComponent);
-		return this;
-	}
-
-	public void when(Supplier<Boolean> object)
-	{
-		ValueModelDelegator<Object, Boolean> condition= BindingSync.createCondition(object, model);
-		conditionBinderBuilder.when(condition);
-	}
+    public VisualComponent build()
+    {
+	throw new RuntimeException("component is not ready");
+    }
 }

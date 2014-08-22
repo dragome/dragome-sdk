@@ -20,6 +20,11 @@ public class VisualComboBoxImpl<T> extends VisualListBoxImpl<T> implements Visua
 		super();
 	}
 
+	public VisualComboBoxImpl(Iterable<T> acceptableValues)
+	{
+		super("", acceptableValues);
+	}
+
 	public VisualComboBoxImpl(String name, Iterable<T> acceptableValues)
 	{
 		super(name, acceptableValues);

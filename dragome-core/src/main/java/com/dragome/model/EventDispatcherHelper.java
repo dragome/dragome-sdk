@@ -92,8 +92,9 @@ public class EventDispatcherHelper
 	}
 
 	@MethodAlias(alias= "EventDispatcher.onEvent")
-	private static void onEvent(final Object event)
+	private static void onEvent()
 	{
+	    	Object event= ScriptHelper.eval("window.event || arguments.callee.caller.arguments[0]", null);
 		Executor executor= ServiceLocator.getInstance().getConfigurator().getExecutionHandler().getExecutor();
 		executor.execute(new EventExecutor(event));
 	}

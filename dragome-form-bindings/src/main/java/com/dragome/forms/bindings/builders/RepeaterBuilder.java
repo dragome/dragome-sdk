@@ -16,29 +16,30 @@ import java.util.List;
 import com.dragome.model.VisualPanelImpl;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
+import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.templates.SimpleItemProcessor;
 import com.dragome.templates.TemplateRepeater;
 import com.dragome.templates.interfaces.Template;
 
-public class RepeaterBuilder<T, S>
+public class RepeaterBuilder<T>
 {
-	private ValueModelDelegator<S, List<T>> valueModelDelegator;
+	private ValueModelDelegator<List<T>> valueModelDelegator;
 	private Template mainTemplate;
 	private Template template;
-	private Getter<S, Tester<T>> filter;
-	private S model;
+	private Supplier<Tester<T>> filter;
 	private VisualPanel panel;
+	private TemplateComponentBindingBuilder<? extends VisualComponent> templateComponentBindingBuilder;
 
-	public RepeaterBuilder(ValueModelDelegator<S, List<T>> valueModelDelegator, Template template, S model, VisualPanel panel)
+	public RepeaterBuilder(ValueModelDelegator<List<T>> valueModelDelegator, Template template, VisualPanel panel, TemplateComponentBindingBuilder<VisualPanel> templateComponentBindingBuilder)
 	{
 		this.valueModelDelegator= valueModelDelegator;
 		this.template= template;
-		this.model= model;
 		this.panel= panel;
+		this.templateComponentBindingBuilder= templateComponentBindingBuilder;
 	}
 
-	public RepeaterBuilder<T, S> repeat(final ItemRepeater<T> itemRepeater)
+	public RepeaterBuilder<T> repeat(final ItemRepeater<T> itemRepeater)
 	{
 		final List<T> list= new ArrayList<T>(valueModelDelegator.getValue());
 
@@ -48,7 +49,7 @@ public class RepeaterBuilder<T, S>
 			{
 				VisualPanelImpl itemPanel= new VisualPanelImpl(aTemplate);
 				panel.addChild(itemPanel);
-				ComponentBuilder<T> componentBuilder= new ComponentBuilder<T>(itemPanel, item);
+				ComponentBuilder componentBuilder= new ComponentBuilder(itemPanel, templateComponentBindingBuilder);
 				itemRepeater.process(item, componentBuilder);
 			}
 		}, true);
@@ -71,7 +72,7 @@ public class RepeaterBuilder<T, S>
 			{
 				List<T> collectedList= new ArrayList<T>();
 				for (T t : value)
-					if (filter == null || filter.get(model).test(t))
+					if (filter == null || filter.get().test(t))
 						collectedList.add(t);
 
 				// Java 8 Stream Implementation
@@ -83,10 +84,15 @@ public class RepeaterBuilder<T, S>
 		return this;
 	}
 
-	public RepeaterBuilder<T, S> filter(Getter<S, Tester<T>> aFilter)
+	public RepeaterBuilder<T> filter(Supplier<Tester<T>> aFilter)
 	{
 		this.filter= aFilter;
 		return this;
+	}
+	
+	public TemplateComponentBindingBuilder<?> builder()
+	{
+	    return templateComponentBindingBuilder;
 	}
 
 }

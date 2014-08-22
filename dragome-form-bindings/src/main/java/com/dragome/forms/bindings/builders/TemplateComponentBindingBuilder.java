@@ -12,7 +12,6 @@ package com.dragome.forms.bindings.builders;
 
 import java.util.List;
 
-import com.dragome.debugging.execution.DragomeVisualActivity;
 import com.dragome.forms.bindings.client.form.binding.FormBinder;
 import com.dragome.forms.bindings.client.value.ValueSource;
 import com.dragome.model.VisualButtonImpl;
@@ -42,19 +41,16 @@ import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 
-public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
+public class TemplateComponentBindingBuilder<C extends VisualComponent> extends BaseBuilder<C, TemplateComponentBindingBuilder<C>>
 {
-    private C component;
     private Class<? extends VisualComponent> componentType;
-    private T model;
     private VisualPanel panel;
     private FormBinder binder= new FormBinder();
     private Template template;
 
-    public TemplateComponentBindingBuilder(Template template, VisualPanel panel, T model, Class<C> componentType)
+    public TemplateComponentBindingBuilder(Template template, VisualPanel panel, Class<C> componentType)
     {
 	this.panel= panel;
-	this.model= model;
 	this.template= template;
 	if (componentType.equals(VisualPanel.class))
 	    this.componentType= VisualPanelImpl.class;
@@ -84,44 +80,43 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	    ((VisualPanel) component).initLayout(new TemplateLayout(template));
     }
 
-    public TemplateComponentBindingBuilder(Template template, VisualPanel panel, T model, C component)
+    public TemplateComponentBindingBuilder(Template template, VisualPanel panel, C component)
     {
 	this.template= template;
 	this.panel= panel;
-	this.model= model;
 	this.component= component;
 	setupComponent();
     }
 
-    public ComponentBuilder<T> childBuilder()
+    public ComponentBuilder childBuilder()
     {
 	build();
-	return new ComponentBuilder<T>((VisualPanel) component, model);
+	return new ComponentBuilder((VisualPanel) component);
     }
 
-    public <S> RepeaterBuilder<S, T> toListProperty(final Getter<T, List<S>> getter)
+    public <S> RepeaterBuilder<S> toListProperty(final Supplier<List<S>> getter)
     {
-	final ValueModelDelegator<T, List<S>> valueModelDelegator= new ValueModelDelegator<T, List<S>>(model);
+	final ValueModelDelegator<List<S>> valueModelDelegator= new ValueModelDelegator<List<S>>();
 
-	List<S> list= getter.get(model);
-	
+	List<S> list= getter.get();
+
 	addListenerIfObservable(valueModelDelegator, list);
-	
+
 	NullMutableValueModel<List<S>> valueSource= new NullMutableValueModel<List<S>>()
 	{
 	    public List<S> getDelegatedValue()
 	    {
-		return getter.get(model);
+		return getter.get();
 	    }
 	};
-	
-	valueModelDelegator.setValueSource(valueSource);	
-	
+
+	valueModelDelegator.setValueSource(valueSource);
+
 	BindingSync.addCondition(valueModelDelegator);
-	return new RepeaterBuilder<S, T>(valueModelDelegator, template, model, panel);
+	return new RepeaterBuilder<S>(valueModelDelegator, template, panel, (TemplateComponentBindingBuilder<VisualPanel>) this);
     }
 
-    private <S> void addListenerIfObservable(final ValueModelDelegator<T, List<S>> valueModelDelegator, List<S> list)
+    private <S> void addListenerIfObservable(final ValueModelDelegator<List<S>> valueModelDelegator, List<S> list)
     {
 	if (list instanceof ObservableList)
 	{
@@ -136,9 +131,9 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	}
     }
 
-    public <S> RepeaterBuilder<S, T> toList(final List<S> list)
+    public <S> RepeaterBuilder<S> toList(final List<S> list)
     {
-	final ValueModelDelegator<T, List<S>> valueModelDelegator= new ValueModelDelegator<T, List<S>>(model);
+	final ValueModelDelegator<List<S>> valueModelDelegator= new ValueModelDelegator<List<S>>();
 	addListenerIfObservable(valueModelDelegator, list);
 
 	NullMutableValueModel<List<S>> valueSource= new NullMutableValueModel<List<S>>()
@@ -152,22 +147,22 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	valueModelDelegator.setValueSource(valueSource);
 
 	BindingSync.addCondition(valueModelDelegator);
-	return new RepeaterBuilder<S, T>(valueModelDelegator, template, model, panel);
+	return new RepeaterBuilder(valueModelDelegator, template, panel, (TemplateComponentBindingBuilder<VisualPanel>) this);
     }
 
-    public TemplateComponentBindingBuilder<T, C> onDoubleClick(DoubleClickListener doubleClickPerformed)
+    public TemplateComponentBindingBuilder<C> onDoubleClick(DoubleClickListener doubleClickPerformed)
     {
 	component.addDoubleClickListener(doubleClickPerformed);
 	return this;
     }
 
-    public TemplateComponentBindingBuilder<T, C> onClick(ClickListener clickListener)
+    public TemplateComponentBindingBuilder<C> onClick(ClickListener clickListener)
     {
 	component.addClickListener(clickListener);
 	return this;
     }
 
-    public TemplateComponentBindingBuilder<T, C> onClick(final ActionExecutor actionExecutor)
+    public TemplateComponentBindingBuilder<C> onClick(final ActionExecutor actionExecutor)
     {
 	component.addClickListener(new ClickListener()
 	{
@@ -184,7 +179,7 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	return component;
     }
 
-    public TemplateComponentBindingBuilder<T, C> onKeyUp(final KeyUpListener keyUpListener, final int... codes)
+    public TemplateComponentBindingBuilder<C> onKeyUp(final KeyUpListener keyUpListener, final int... codes)
     {
 	component.addKeyListener(new KeyUpListener()
 	{
@@ -203,51 +198,50 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	return this;
     }
 
-    public TemplateComponentBindingBuilder<T, C> onBlur(BlurListener blurListener)
+    public TemplateComponentBindingBuilder<C> onBlur(BlurListener blurListener)
     {
 	component.addListener(BlurListener.class, blurListener);
 	return this;
     }
 
-    public <S> TemplateComponentBindingBuilder<T, C> toProperty(final Getter<T, S> getter, final Setter<T, S> setter)
+    public <S> TemplateComponentBindingBuilder<C> toProperty(final Supplier<S> getter, final Consumer<S> setter)
     {
-	ValueModelDelegator<T, S> valueModelDelegator= new ValueModelDelegator<T, S>(new NullMutableValueModel<S>()
+	ValueModelDelegator<S> valueModelDelegator= new ValueModelDelegator<S>(new NullMutableValueModel<S>()
 	{
 	    public S getDelegatedValue()
 	    {
-		return getter.get(model);
+		if (getter != null)
+		    return getter.get();
+		else
+		    return null;
 	    }
 
 	    public void setValue(S value)
 	    {
-		setter.set(model, value);
+		if (setter != null)
+		    setter.accept(value);
 	    }
-	}, model);
+	});
 
 	return with(valueModelDelegator);
     }
 
-    public <S> TemplateComponentBindingBuilder<T, C> toProperty(String propertyName)
-    {
-	return with(new ValueModelDelegator<T, S>(new NullMutableValueModel<S>(), model));
-    }
-
-    private <S> TemplateComponentBindingBuilder<T, C> with(ValueModelDelegator<T, S> valueModelDelegator)
+    private <S> TemplateComponentBindingBuilder<C> with(ValueModelDelegator<S> valueModelDelegator)
     {
 	binder.bind(valueModelDelegator).to((HasValue<S>) component);
 	BindingSync.addCondition(valueModelDelegator);
 	return this;
     }
 
-    public <S> TemplateComponentBindingBuilder<T, C> to(final ValueSource<S> valueSource)
+    public <S> TemplateComponentBindingBuilder<C> to(final ValueSource<S> valueSource)
     {
-	ValueModelDelegator<T, S> valueModelDelegator= new ValueModelDelegator<T, S>(new NullMutableValueModel<S>()
+	ValueModelDelegator<S> valueModelDelegator= new ValueModelDelegator<S>(new NullMutableValueModel<S>()
 	{
 	    public S getDelegatedValue()
 	    {
 		return valueSource.getValue();
 	    }
-	}, model);
+	});
 
 	return with(valueModelDelegator);
     }
@@ -258,10 +252,43 @@ public class TemplateComponentBindingBuilder<T, C extends VisualComponent>
 	return component;
     }
 
-    public TemplateComponentBindingBuilder<T, C> onInput(InputListener inputListener)
+    public TemplateComponentBindingBuilder<C> onInput(InputListener inputListener)
     {
 	component.addListener(InputListener.class, inputListener);
 	return this;
     }
 
+    public <S> TemplateComponentBindingBuilder<C> switchUsing(ValueSource<S> valueSource)
+    {
+	return null;
+    }
+
+    public <S> TemplateComponentBindingBuilder<C> toProperty(final Object object, final String propertyName)
+    {
+	return toProperty(new Supplier<S>()
+	{
+	    public S get()
+	    {
+		return (S) ServiceLocator.getInstance().getReflectionService().getPropertyValue(object, propertyName);
+	    }
+	}, new Consumer<S>()
+	{
+	    public void accept(S t)
+	    {
+		ServiceLocator.getInstance().getReflectionService().setPropertyValue(object, propertyName, t);
+	    }
+	});
+    }
+
+    public TemplateComponentBindingBuilder<C> switchDefault()
+    {
+	// TODO Auto-generated method stub
+	return this;
+    }
+
+    public <S> TemplateComponentBindingBuilder<C> switchWhen(final Supplier<S> getter)
+    {
+	// TODO Auto-generated method stub
+	return this;
+    }
 }

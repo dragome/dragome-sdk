@@ -14,27 +14,25 @@ import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.templates.interfaces.Template;
 
-public class TemplateBindingBuilder<T>
+public class TemplateBindingBuilder
 {
-	private Template template;
-	private VisualPanel panel;
-	private T model;
+    private Template template;
+    private VisualPanel panel;
 
-	public TemplateBindingBuilder(VisualPanel panel, Template child, T model)
-	{
-		this.panel= panel;
-		this.template= child;
-		this.model= model;
-	}
+    public TemplateBindingBuilder(VisualPanel panel, Template child)
+    {
+	this.panel= panel;
+	this.template= child;
+    }
 
-	public <C extends VisualComponent> TemplateComponentBindingBuilder<T, C> as(Class<C> componentType)
-	{
-		return new TemplateComponentBindingBuilder<T, C>(template, panel, model, componentType);
-	}
-	
-	public <C extends VisualComponent> TemplateComponentBindingBuilder<T, C> to(C component)
-	{
-		return new TemplateComponentBindingBuilder<T, C>(template, panel, model, component);
-	}
+    public <C extends VisualComponent> TemplateComponentBindingBuilder<C> as(Class<C> componentType)
+    {
+	return new TemplateComponentBindingBuilder<C>(template, panel, componentType);
+    }
+
+    public <C extends VisualComponent> TemplateComponentBindingBuilder<C> to(C component)
+    {
+	return new TemplateComponentBindingBuilder<C>(template, panel, component);
+    }
 
 }

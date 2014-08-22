@@ -50,6 +50,6 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName)
 	{
 		if (visualComponent.hasListener(listenerType))
-			element.setAttribute(jsAttributeName, "_ed.onEvent(event)");
+			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
 }

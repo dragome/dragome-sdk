@@ -89,7 +89,16 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				else
 				{
 					String value= (String) ScriptHelper.eval("e.node.options[e.node.selectedIndex].value", this);
-					visualList.setValue(value);
+					
+					Renderer<Object> renderer= visualList.getRenderer();
+
+					Collection<Object> acceptableValues= visualList.getAcceptableValues();
+					for (Object object : acceptableValues)
+					{
+					    String render= renderer.render(object);
+					    if (render.equals(value))
+						visualList.setValue(object);
+					}
 				}
 			}
 		});

@@ -12,5 +12,5 @@ package com.dragome.forms.bindings.builders;
 
 public interface ItemRepeater<T>
 {
-	public void process(T item, ComponentBuilder<T> componentBuilder);
+	public void process(T item, ComponentBuilder componentBuilder);
 }

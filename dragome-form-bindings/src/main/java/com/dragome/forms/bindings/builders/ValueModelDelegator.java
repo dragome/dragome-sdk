@@ -12,20 +12,17 @@ package com.dragome.forms.bindings.builders;
 
 import com.dragome.forms.bindings.client.value.MutableValueModel;
 
-public class ValueModelDelegator<M, V> extends CustomValueModel<V>
+public class ValueModelDelegator<V> extends CustomValueModel<V>
 {
 	private MutableValueModel<V> valueSource;
-	private M model;
 
-	public ValueModelDelegator(MutableValueModel<V> valueSource, M model)
+	public ValueModelDelegator()
+	{
+	}
+	
+	public ValueModelDelegator(MutableValueModel<V> valueSource)
 	{
 		this.valueSource= valueSource;
-		this.model= model;
-	}
-
-	public ValueModelDelegator(M model)
-	{
-		this.model= model;
 	}
 
 	public void fireValueChangeEvent(V newValue)
@@ -48,15 +45,6 @@ public class ValueModelDelegator<M, V> extends CustomValueModel<V>
 		valueSource.setValue(value);
 	}
 
-	public M getModel()
-	{
-		return model;
-	}
-
-	public void setModel(M model)
-	{
-		this.model= model;
-	}
 
 	public MutableValueModel<V> getValueSource()
 	{

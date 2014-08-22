@@ -66,8 +66,8 @@ public class ContinuationMethodAnalyzer extends MethodNode implements Opcodes
 				{
 					return Class.forName(t.getDescriptor().replace('/', '.'), true, Thread.currentThread().getContextClassLoader());
 				}
-				//return Class.forName(t.getClassName(), true, Thread.currentThread().getContextClassLoader());
-				return Class.forName(t.getClassName()); //for now try this. It has to use the current classloader
+				return Class.forName(t.getClassName(), true, Thread.currentThread().getContextClassLoader());
+				//return Class.forName(t.getClassName()); //for now try this. It has to use the current classloader
 			}
 			catch (ClassNotFoundException e)
 			{

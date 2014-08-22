@@ -14,13 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.dragome.commons.compiler.annotations.CompilerType;
-import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
-
 public class BindingSync
 {
 	static List<MethodVisitedEvent> events= new ArrayList<MethodVisitedEvent>();
-	private static List<ValueModelDelegator<?, ?>> conditions= new ArrayList<ValueModelDelegator<?, ?>>();
+	private static List<ValueModelDelegator<?>> conditions= new ArrayList<ValueModelDelegator<?>>();
 	static boolean firing;
 	public static Stack<NullMutableValueModel<?>> recordingFor= new Stack<NullMutableValueModel<?>>();
 
@@ -36,8 +33,8 @@ public class BindingSync
 				MethodVisitedEvent event= events.isEmpty() ? null : events.get(events.size() - 1);
 				while (event != null)
 				{
-					List<ValueModelDelegator<?, ?>> conditions2= new ArrayList<ValueModelDelegator<?, ?>>(conditions);
-					for (ValueModelDelegator<?, ?> valueModelDelegator : conditions2)
+					List<ValueModelDelegator<?>> conditions2= new ArrayList<ValueModelDelegator<?>>(conditions);
+					for (ValueModelDelegator<?> valueModelDelegator : conditions2)
 					{
 						if (valueModelDelegator.getValueSource() instanceof NullMutableValueModel)
 						{
@@ -60,21 +57,21 @@ public class BindingSync
 		}
 	}
 
-	public static <T, V, M> ValueModelDelegator<T, V> createCondition(final Supplier<V> object, M model)
+	public static <V> ValueModelDelegator<V> createCondition(final Supplier<V> object)
 	{
-		ValueModelDelegator<M, V> condition= new ValueModelDelegator<M, V>(new NullMutableValueModel<V>()
+		ValueModelDelegator<V> condition= new ValueModelDelegator<V>(new NullMutableValueModel<V>()
 		{
 			public V getDelegatedValue()
 			{
 				return object.get();
 			}
-		}, model);
+		});
 
 		addCondition(condition);
-		return (ValueModelDelegator<T, V>) condition;
+		return (ValueModelDelegator<V>) condition;
 	}
 
-	public static void addCondition(ValueModelDelegator<?, ?> condition)
+	public static void addCondition(ValueModelDelegator<?> condition)
 	{
 		conditions.add(condition);
 	}
