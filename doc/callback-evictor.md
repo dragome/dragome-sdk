@@ -101,7 +101,7 @@ catch(Throwable caught)
 ----------
 ###How can I use it?
 
-First of all you need to configure a yout environment to add Callback Evictor plugin.
+First of all you need to configure your environment to add Callback Evictor plugin.
 
 
 ``` Java
