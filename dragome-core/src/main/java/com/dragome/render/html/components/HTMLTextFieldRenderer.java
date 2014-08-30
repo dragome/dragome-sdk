@@ -46,7 +46,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
 					{
-						String value= (String) event.getValue();
+						String value= visualTextField.getRenderer().render(event.getValue());
 						textFieldElement.setAttribute("value", value);
 						ScriptHelper.put("textFieldElement", textFieldElement, this);
 						ScriptHelper.put("value", value, this);
