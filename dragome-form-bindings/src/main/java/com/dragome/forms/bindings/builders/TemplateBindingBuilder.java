@@ -18,21 +18,23 @@ public class TemplateBindingBuilder
 {
     private Template template;
     private VisualPanel panel;
+    private BaseBuilder<? extends VisualComponent, ?> parentBuilder;
 
-    public TemplateBindingBuilder(VisualPanel panel, Template child)
+    public TemplateBindingBuilder(VisualPanel panel, Template child, BaseBuilder<? extends VisualComponent, ?> parentBuilder)
     {
 	this.panel= panel;
 	this.template= child;
+	this.parentBuilder= parentBuilder;
     }
 
     public <C extends VisualComponent> TemplateComponentBindingBuilder<C> as(Class<C> componentType)
     {
-	return new TemplateComponentBindingBuilder<C>(template, panel, componentType);
+	return new TemplateComponentBindingBuilder<C>(template, panel, componentType, parentBuilder);
     }
 
     public <C extends VisualComponent> TemplateComponentBindingBuilder<C> to(C component)
     {
-	return new TemplateComponentBindingBuilder<C>(template, panel, component);
+	return new TemplateComponentBindingBuilder<C>(template, panel, component, parentBuilder);
     }
 
 }

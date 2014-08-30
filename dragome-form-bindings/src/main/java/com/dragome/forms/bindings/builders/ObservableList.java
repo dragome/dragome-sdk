@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.dragome.forms.bindings.builders;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,12 @@ import java.util.ListIterator;
 public class ObservableList<T> implements List<T>
 {
 	protected List<T> list;
+
+	public void fireChangeEvent()
+	{
+		listChangeListener.listChanged();
+	}
+
 	protected ListChangedListener listChangeListener= new ListChangedListener()
 	{
 		public void listChanged()
@@ -27,12 +34,12 @@ public class ObservableList<T> implements List<T>
 
 	public ObservableList(List<T> list)
 	{
-		this.list= list;
+		this.list= new ArrayList<T>(list);
 	}
 
 	public static <S> List<S> makeObservable(List<S> list)
 	{
-		return new ObservableList<S>(list);
+		return new ObservableList<S>(new ArrayList<S>(list));
 	}
 
 	public int size()

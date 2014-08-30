@@ -12,7 +12,6 @@ package com.dragome.forms.bindings.builders;
 
 import com.dragome.methodlogger.enhancers.MethodInvocationListener;
 import com.dragome.methodlogger.enhancers.MethodInvocationLogger;
-import com.dragome.model.VisualPanelImpl;
 import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.templates.TemplateLayout;
@@ -21,7 +20,6 @@ import com.dragome.templates.interfaces.Template;
 public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuilder>
 {
     private Template template;
-    private TemplateComponentBindingBuilder<? extends VisualComponent> panelBuilder;
 
     private void configureMethodListener()
     {
@@ -77,21 +75,16 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 	configureMethodListener();
     }
 
-    public ComponentBuilder(VisualPanelImpl itemPanel, TemplateComponentBindingBuilder<? extends VisualComponent> templateComponentBindingBuilder)
+    public ComponentBuilder(VisualPanel itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
     {
 	this(itemPanel);
-	this.panelBuilder= templateComponentBindingBuilder;
+	this.parentBuilder= (BaseBuilder<? extends VisualComponent, ComponentBuilder>) templateComponentBindingBuilder;
 	
-    }
-
-    public TemplateComponentBindingBuilder<? extends VisualComponent> parentBuilder()
-    {
-	return panelBuilder;
     }
 
     public TemplateBindingBuilder bindTemplate(String aChildTemplateName)
     {
-	return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName));
+	return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName), parentBuilder);
     }
 
     public VisualPanel panel()
@@ -101,6 +94,6 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 
     public VisualComponent build()
     {
-	throw new RuntimeException("component is not ready");
+	return component; //throw new RuntimeException("component is not ready");
     }
 }
