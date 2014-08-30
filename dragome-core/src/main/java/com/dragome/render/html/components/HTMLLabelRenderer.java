@@ -68,7 +68,7 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 					String replaceAll= originalAttribute.replaceAll("\\$\\{template:[^\\}]+}", aText);
 					label1.setAttribute(attribute, replaceAll);
 				}
-				else
+				else if (aText != null && !aText.trim().isEmpty())
 					label1.setAttribute(HTMLTemplateRenderer.INNER_HTML, aText == null ? "null" : aText);
 			}
 		});
