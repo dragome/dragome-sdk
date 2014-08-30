@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.dragome.model.interfaces.EventProducer;
 import com.dragome.model.interfaces.ListenerMultiplexer;
+import com.dragome.model.listeners.ListenerChanged;
 
 public class DefaultEventProducer implements EventProducer
 {
@@ -37,6 +38,10 @@ public class DefaultEventProducer implements EventProducer
 		}
 		ListenerMultiplexer<T> listenerMultiplexer= (ListenerMultiplexer<T>) listener;
 		listenerMultiplexer.add(aListener); //TODO compilador
+
+		if (!aType.equals(ListenerChanged.class))
+			if (hasListener(ListenerChanged.class))
+				getListener(ListenerChanged.class).listenerAdded(aType, aListener);
 	}
 
 	public <T extends EventListener> void removeListener(Class<T> aType, T aListener)
@@ -51,6 +56,10 @@ public class DefaultEventProducer implements EventProducer
 		{
 			listeners.remove(aType);
 		}
+
+		if (!aType.equals(ListenerChanged.class))
+			if (hasListener(ListenerChanged.class))
+				getListener(ListenerChanged.class).listenerRemoved(aType, aListener);
 	}
 
 	public <T extends EventListener> boolean hasListener(Class<T> aType)
