@@ -11,6 +11,8 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.dragome.model.VisualPanelImpl;
@@ -30,6 +32,8 @@ public class RepeaterBuilder<T>
 	private Supplier<Tester<T>> filter;
 	private VisualPanel panel;
 	private TemplateComponentBindingBuilder<? extends VisualComponent> templateComponentBindingBuilder;
+	private Getter<T, Comparable<?>> orderByGetter;
+	private Supplier<Order> order;
 
 	public RepeaterBuilder(ValueModelDelegator<List<T>> valueModelDelegator, Template template, VisualPanel panel, TemplateComponentBindingBuilder<VisualPanel> templateComponentBindingBuilder)
 	{
@@ -51,6 +55,7 @@ public class RepeaterBuilder<T>
 				panel.addChild(itemPanel);
 				ComponentBuilder componentBuilder= new ComponentBuilder(itemPanel, templateComponentBindingBuilder);
 				itemRepeater.process(item, componentBuilder);
+				componentBuilder.build();
 			}
 		}, true);
 		templateRepeater.repeatItems();
@@ -64,6 +69,26 @@ public class RepeaterBuilder<T>
 
 				list.clear();
 				list.addAll(collectedList);
+
+				if (orderByGetter != null)
+					Collections.sort(list, new Comparator<T>()
+					{
+						public int compare(T o1, T o2)
+						{
+							if (o1 != null && o2 != null)
+							{
+								Comparable comparable= (Comparable) orderByGetter.get(o1);
+								Comparable<?> another= orderByGetter.get(o2);
+								if (comparable != null && another != null)
+								{
+									int compareTo= comparable.compareTo(another);
+									return compareTo * (order.get() == Order.DESC ? -1 : 1);
+								}
+							}
+
+							return 0;
+						}
+					});
 
 				templateRepeater.clearAndRepeatItems();
 			}
@@ -89,10 +114,17 @@ public class RepeaterBuilder<T>
 		this.filter= aFilter;
 		return this;
 	}
-	
+
+	public RepeaterBuilder<T> orderBy(Getter<T, Comparable<?>> getter, Supplier<Order> order)
+	{
+		this.orderByGetter= getter;
+		this.order= order;
+		return this;
+	}
+
 	public TemplateComponentBindingBuilder<?> builder()
 	{
-	    return templateComponentBindingBuilder;
+		return templateComponentBindingBuilder;
 	}
 
 }
