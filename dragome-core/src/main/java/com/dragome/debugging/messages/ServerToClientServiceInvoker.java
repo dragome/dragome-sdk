@@ -33,7 +33,7 @@ public class ServerToClientServiceInvoker
 		ServiceInvocation serviceInvocation= new ServiceInvocation(type, method, args != null ? Arrays.asList(args) : new ArrayList<Object>());
 		invocations.add(serviceInvocation);
 
-		//	if (!ServiceLocator.getInstance().isMethodVoid(method))
+		if (!ServiceLocator.getInstance().isMethodVoid(method))
 		{
 			returnValue= serviceInvocation;
 			performInvocations();
