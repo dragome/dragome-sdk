@@ -31,6 +31,7 @@
   </scm>  
 
   <properties>
+    <skip.gpg>true</skip.gpg>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -154,6 +155,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <version>1.5</version>
+        <configuration>
+          <skip>${skip.gpg}</skip>
+        </configuration>
         <executions>
           <execution>
             <id>sign-artifacts</id>
