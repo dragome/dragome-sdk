@@ -1,3 +1,5 @@
+# ![TodoMVC](logo.png)
+
 # TodoMVC Dragome implementation
 
 Dragome TodoMVC implementation is a new framework choice contribution for [TodoMVC project] (http://todomvc.com/).
