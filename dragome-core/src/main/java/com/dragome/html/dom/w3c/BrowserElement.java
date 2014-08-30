@@ -147,7 +147,7 @@ public class BrowserElement extends AbstractElement
 		init();
 
 		BrowserElement parentElement= null;
-		if (ScriptHelper.evalBoolean("this.node.parentNode != null", this))
+		//	if (ScriptHelper.evalBoolean("this.node.parentNode != null", this))
 		{
 			parentElement= new BrowserElement();
 			ScriptHelper.put("parentElement", parentElement, this);
@@ -213,17 +213,20 @@ public class BrowserElement extends AbstractElement
 		lazyAttribute.setValue(aValue);
 	}
 
-	public boolean setId(String id)
+	public void setId(String id)
 	{
 		this.id= id;
 		ScriptHelper.put("elementId", id, this);
 		ScriptHelper.evalNoResult("this.node= getElementByDebugId(elementId) || document.getElementById(elementId)", this);
+		initialized= true;
+	}
+
+	public boolean setIdCheckExistence(String id)
+	{
+		setId(id);
 		boolean exists= ScriptHelper.evalBoolean("this.node != undefined && this.node != null", this);
 		//	if (exists)
 		//	    ScriptHelper.evalNoResult("this.node.id= elementId;", this);
-
-		initialized= true;
-
 		return exists;
 	}
 

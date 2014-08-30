@@ -70,13 +70,13 @@ public class RequestExecutorImpl implements RequestExecutor
 		ScriptHelper.put("crossDomain", isCrossDomain, null);
 
 		ScriptHelper.put("parameters2", new Object(), null);
-		ScriptHelper.eval("parameters2={}", null);
+		ScriptHelper.evalNoResult("parameters2={}", null);
 		if (parameters != null)
 			for (Entry<String, String> entry : parameters.entrySet())
 			{
 				ScriptHelper.put("key", entry.getKey(), null);
 				ScriptHelper.put("value", entry.getValue(), null);
-				ScriptHelper.eval("parameters2[key]=value", null);
+				ScriptHelper.evalNoResult("parameters2[key]=value", null);
 			}
 
 		Object eval= ScriptHelper.eval("jQueryHttpRequest(asyncCall, url,parameters2,asyncCallback, crossDomain)", null);

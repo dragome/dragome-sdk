@@ -41,7 +41,10 @@ public class BrowserHtmlDocument extends AbstractHtmlDocument implements HTMLDoc
 	public Element getElementById(String anId)
 	{
 		BrowserElement lazyElement= new BrowserElement();
-		boolean exists= lazyElement.setId(anId);
+		boolean exists= true;
+//		exists= lazyElement.setIdCheckExistence(anId);
+		lazyElement.setId(anId);
+		
 		return exists ? lazyElement : null;
 	}
 
