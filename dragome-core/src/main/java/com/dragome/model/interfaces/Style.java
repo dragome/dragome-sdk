@@ -34,4 +34,7 @@ public interface Style
 	public abstract VisualComponent getVisualComponent();
 	public void addClass(String name);
 	public void removeClass(String styleName);
+	boolean isSynchronized();
+	void setSynchronized(boolean styleSynchronized);
+	void fireStyleChanged();
 }
