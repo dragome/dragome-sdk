@@ -19,6 +19,7 @@ public interface TemplateHandlingStrategy
 	void setupContainer();
 	void showContainer();
 	Template loadTemplate(String templateName, String aContainerId);
+	Template loadTemplate(String templateName);
 	Template getMainTemplate();
 	Template loadTemplateCloned(String templateName, String aContainerId);
 }

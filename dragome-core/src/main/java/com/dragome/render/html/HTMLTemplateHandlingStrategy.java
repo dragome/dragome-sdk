@@ -88,4 +88,9 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 		getContainerElement().setAttribute("id", "body");
 		return ServiceLocator.getInstance().getTemplateManager().createTemplate("body");
 	}
+
+	public Template loadTemplate(String templateName)
+	{
+	    return loadTemplate(templateName, "");
+	}
 }
