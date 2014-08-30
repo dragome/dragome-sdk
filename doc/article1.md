@@ -41,7 +41,7 @@ For example Entry Point code will be used as client side code and its location w
 
 
 ``` Java
-	CrudGrid crudGrid= new CrudGrid(entityType);
+    CrudGrid crudGrid= new CrudGrid(entityType);
 	ComponentBuilder componentBuilder= new ComponentBuilder(this);
 
 	componentBuilder.bindTemplate("loading").as(VisualLabel.class).showWhen(crudGrid::isLoading).build();
@@ -100,3 +100,70 @@ For example Entry Point code will be used as client side code and its location w
 	    });
 	});
 ```
+
+
+``` html
+<body>
+<div data-template="loading">Loading...</div>
+<div class="input-group col-md-5 row filter">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+    <input type="text" class="form-control" data-template="filter">
+    <span class="input-group-addon btn btn-default" data-template="remove-filter"><i class="glyphicon glyphicon-remove"></i></span>
+</div>
+
+<table class="crud-grid table table-striped table-bordered table-condensed table-hover">
+    <tr>
+        <th class="col-md-1">
+            <div class="btn-toolbar"><i class="btn btn-default glyphicon" data-template="add-mode-toggler"></i></div>
+        </th>
+
+        <th data-template="table-header">
+            <div>
+                <span data-template="column-name"></span>
+                <i class="glyphicon" data-template="order-icon"></i>
+            </div>
+        </th>
+    </tr>
+    <tr data-template="add-section">
+        <td>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <i class="btn btn-default glyphicon glyphicon-save" data-template="save-button"></i>
+                    <i class="btn btn-default glyphicon glyphicon-remove" data-template="remove-button"></i>
+                </div>
+            </div>
+        </td>
+        <td data-template="columns">
+            <input class="form-control" data-template="input"/>
+            <select data-template="select" class="form-control"></select>
+        </td>
+    </tr>
+    <tr data-template="objects">
+        <td>
+            <div class="btn-toolbar" data-template="toolbar">
+                <div class="btn-group" data-template="view-mode">
+                    <i class="btn btn-default glyphicon glyphicon-edit" data-template="edit"></i>
+                    <i class="btn btn-default glyphicon glyphicon-trash" data-template="trash"></i>
+                </div>
+                <div class="btn-group" data-template="edit-mode">
+                    <i class="btn btn-default glyphicon glyphicon-save" data-template="save"></i>
+                    <i class="btn btn-default glyphicon glyphicon-remove" data-template="remove"></i>
+                </div>
+            </div>
+        </td>
+        <td data-template="columns">
+            <div data-template="view-mode">
+                <span data-template="not-lookup"></span>
+                <span data-template="lookup"></span>
+            </div>
+
+            <div data-template="edit-mode">
+                <input class="form-control" data-template="input"/>
+                <select data-template="select" class="form-control"></select>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+```
+
