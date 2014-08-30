@@ -41,7 +41,7 @@ For example Entry Point code will be used as client side code and its location w
 
 
 ``` Java
-        CrudGrid crudGrid= new CrudGrid(entityType);
+	CrudGrid crudGrid= new CrudGrid(entityType);
 	ComponentBuilder componentBuilder= new ComponentBuilder(this);
 
 	componentBuilder.bindTemplate("loading").as(VisualLabel.class).showWhen(crudGrid::isLoading).build();
