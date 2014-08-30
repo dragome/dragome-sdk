@@ -135,10 +135,10 @@ public class ServiceLocator
 	{
 		if (templateManager == null)
 		{
-			if (isClientSide())
+//			if (isClientSide())
 				templateManager= new HTMLTemplateManager();
-			else
-				templateManager= getServerSideServiceFactory().createSyncService(TemplateManager.class);
+//			else
+//				templateManager= getServerSideServiceFactory().createSyncService(TemplateManager.class);
 		}
 
 		return templateManager;
