@@ -31,22 +31,33 @@ public class DefaultStyle implements Style
 	protected VisualColor foregroundColor= BLACK;
 	protected VisualBounds bounds= new DefaultBounds(0, 0, 0, 0, new BoundsChangeListener()
 	{
-	    public void boundsChanged()
-	    {
-		if (!styleChangedFired)
+		public void boundsChanged()
 		{
-			styleChangedFired= true;
-			if (visualComponent.hasListener(StyleChangedListener.class))
-				visualComponent.getListener(StyleChangedListener.class).boundsChanged(DefaultStyle.this);
-			styleChangedFired= false;
+			if (!styleChangedFired)
+			{
+				styleChangedFired= true;
+				if (visualComponent.hasListener(StyleChangedListener.class))
+					visualComponent.getListener(StyleChangedListener.class).boundsChanged(DefaultStyle.this);
+				styleChangedFired= false;
+			}
 		}
-	    }
 	});
 	protected boolean inverted;
 	protected boolean visible= true;
 	protected boolean enabled= true;
 	protected String name;
 	protected boolean styleChangedFired= false;
+	protected boolean styleSynchronized= false;
+
+	public boolean isSynchronized()
+	{
+		return styleSynchronized;
+	}
+
+	public void setSynchronized(boolean styleSynchronized)
+	{
+		this.styleSynchronized= styleSynchronized;
+	}
 
 	public DefaultStyle()
 	{
@@ -156,18 +167,18 @@ public class DefaultStyle implements Style
 	public void setVisible(boolean isVisible)
 	{
 		this.visible= isVisible;
-		String show= "dragome-show";
+		//String show= "dragome-show";
 		String hide= "dragome-hide";
 
 		if (isVisible)
 		{
-			addClass(show);
+			//			addClass(show);
 			removeClass(hide);
 		}
 		else
 		{
 			addClass(hide);
-			removeClass(show);
+			//			removeClass(show);
 		}
 	}
 
@@ -225,7 +236,7 @@ public class DefaultStyle implements Style
 
 	private boolean isClassPresent(String name, String componentStyleName)
 	{
-		return componentStyleName.equals(name.trim()) || componentStyleName.indexOf(name + " ") == 0 || componentStyleName.indexOf(" " + name) == componentStyleName.length() - name.length() - 1 || componentStyleName.indexOf(" " + name + " ") > -1;
+		return componentStyleName.equals(name.trim()) || componentStyleName.indexOf(name + " ") == 0 || (componentStyleName.indexOf(" " + name) != -1 && (componentStyleName.indexOf(" " + name) == componentStyleName.length() - name.length() - 1)) || componentStyleName.indexOf(" " + name + " ") > -1;
 	}
 
 	public void removeClass(String styleName)
