@@ -16,7 +16,7 @@ public abstract class CustomValueModel<T> extends AbstractMutableValueModel<T>
 {
 	public void fireValueChangeEvent(T newValue)
 	{
-		super.fireValueChangeEvent(null, newValue);
+		super.fireValueChangeEvent((T) new Object(), newValue);
 	}
 
 	public void fireValueChangeEvent()
