@@ -18,7 +18,7 @@ import com.dragome.commons.compiler.annotations.CompilerType;
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
-	protected String dragomeVersion="0.95-beta1";
+	protected String dragomeVersion="0.95.1-beta1";
 	private CompilerType defaultCompilerType= CompilerType.Standard;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
