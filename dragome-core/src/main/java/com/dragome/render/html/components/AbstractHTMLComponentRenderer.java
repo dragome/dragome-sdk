@@ -22,6 +22,7 @@ import com.dragome.model.listeners.InputListener;
 import com.dragome.model.listeners.KeyDownListener;
 import com.dragome.model.listeners.KeyPressListener;
 import com.dragome.model.listeners.KeyUpListener;
+import com.dragome.model.listeners.ListenerChanged;
 import com.dragome.model.listeners.MouseOutListener;
 import com.dragome.model.listeners.MouseOverListener;
 import com.dragome.render.interfaces.ComponentRenderer;
@@ -36,20 +37,39 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 
 	public void addListeners(final VisualComponent visualComponent, final Element element)
 	{
-		addListener(visualComponent, element, ClickListener.class, "onclick");
-		addListener(visualComponent, element, DoubleClickListener.class, "ondblclick");
-		addListener(visualComponent, element, KeyUpListener.class, "onkeyup");
-		addListener(visualComponent, element, KeyDownListener.class, "onkeydown");
-		addListener(visualComponent, element, KeyPressListener.class, "onkeypress");
-		addListener(visualComponent, element, InputListener.class, "oninput");
-		addListener(visualComponent, element, MouseOverListener.class, "onmouseover");
-		addListener(visualComponent, element, MouseOutListener.class, "onmouseout");
-		addListener(visualComponent, element, BlurListener.class, "onblur");
+		visualComponent.addListener(ListenerChanged.class, new ListenerChanged()
+		{
+			public <T extends EventListener> void listenerAdded(Class<? extends T> type, T listener)
+			{
+				addListeners(visualComponent, element, type);
+			}
+
+			public <T extends EventListener> void listenerRemoved(Class<? extends T> type, T listener)
+			{
+			}
+		});
+
+		addListeners(visualComponent, element, null);
+
+		visualComponent.getStyle().fireStyleChanged();
 	}
 
-	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName)
+	private void addListeners(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> expectedType)
 	{
-		if (visualComponent.hasListener(listenerType))
+		addListener(visualComponent, element, ClickListener.class, "onclick", expectedType);
+		addListener(visualComponent, element, DoubleClickListener.class, "ondblclick", expectedType);
+		addListener(visualComponent, element, KeyUpListener.class, "onkeyup", expectedType);
+		addListener(visualComponent, element, KeyDownListener.class, "onkeydown", expectedType);
+		addListener(visualComponent, element, KeyPressListener.class, "onkeypress", expectedType);
+		addListener(visualComponent, element, InputListener.class, "oninput", expectedType);
+		addListener(visualComponent, element, MouseOverListener.class, "onmouseover", expectedType);
+		addListener(visualComponent, element, MouseOutListener.class, "onmouseout", expectedType);
+		addListener(visualComponent, element, BlurListener.class, "onblur", expectedType);
+	}
+
+	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName, Class<? extends EventListener> expectedType)
+	{
+		if (visualComponent.hasListener(listenerType) && (expectedType == null || expectedType.equals(listenerType)))
 			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
 }
