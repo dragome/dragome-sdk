@@ -6,7 +6,7 @@
   <version>0.95.1-beta1</version>
 
   <packaging>jar</packaging>
-  
+
   <description>Dragome SDK module: callback evictor</description>
   <url>http://www.dragome.com</url>
 
@@ -30,8 +30,8 @@
     <connection>scm:git:git@github.com:dragome/dragome-sdk.git</connection>
     <developerConnection>scm:git:git@github.com:dragome/dragome-sdk.git</developerConnection>
     <url>git@github.com:dragome/dragome-sdk.git</url>
-  </scm>  
-  
+  </scm>
+
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,7 +55,7 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-  
+
   <dependencies>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -111,7 +111,7 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -126,7 +126,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -139,22 +139,20 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-	<version>2.5</version>
-	<configuration>
-	    <charset>UTF-8</charset>
-	    <docencoding>UTF-8</docencoding>
-	    <docfilessubdirs>true</docfilessubdirs>
-	    <links>
-		<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-	    </links>
-	    <show>protected</show>
-	    <source>1.5</source>
-	    <sourcepath>${basedir}/src/main/java/com/dragome/compiler/annotations</sourcepath>
-	</configuration>
+        <version>2.5</version>
+        <configuration>
+          <charset>UTF-8</charset>
+          <docencoding>UTF-8</docencoding>
+          <docfilessubdirs>false</docfilessubdirs>
+          <failOnError>false</failOnError>
+          <show>protected</show>
+          <source>1.5</source>
+          <sourcepath>${basedir}/src/main/java/com/dragome/callbackevictor/serverside/stores</sourcepath>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -164,7 +162,7 @@
           </execution>
         </executions>
       </plugin>
-  
+
     </plugins>
   </build>
 

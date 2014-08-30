@@ -127,7 +127,7 @@
 	    </links>
 	    <show>protected</show>
 	    <source>1.5</source>
-	    <sourcepath>${basedir}/src/main/java/com/dragome/compiler/annotations</sourcepath>
+	    <sourcepath>${basedir}/src/main/java/com/dragome/forms/bindings/builders</sourcepath>
 	</configuration>
         <executions>
           <execution>
