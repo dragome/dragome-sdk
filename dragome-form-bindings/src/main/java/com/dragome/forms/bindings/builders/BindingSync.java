@@ -11,17 +11,22 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
+
+import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 
 public class BindingSync
 {
-	static List<MethodVisitedEvent> events= new ArrayList<MethodVisitedEvent>();
+	static Queue<MethodVisitedEvent> events= new LinkedList<MethodVisitedEvent>();
 	private static List<ValueModelDelegator<?>> conditions= new ArrayList<ValueModelDelegator<?>>();
 	static boolean firing;
 	public static Stack<NullMutableValueModel<?>> recordingFor= new Stack<NullMutableValueModel<?>>();
 
-	//	@DragomeCompilerSettings(CompilerType.Strict)
+	@DragomeCompilerSettings(CompilerType.Strict)
 	public static void fireChanges()
 	{
 		if (!firing)
@@ -30,7 +35,7 @@ public class BindingSync
 			{
 				firing= true;
 
-				MethodVisitedEvent event= events.isEmpty() ? null : events.get(events.size() - 1);
+				MethodVisitedEvent event= events.peek();
 				while (event != null)
 				{
 					List<ValueModelDelegator<?>> conditions2= new ArrayList<ValueModelDelegator<?>>(conditions);
@@ -46,8 +51,8 @@ public class BindingSync
 						}
 					}
 
-					events.remove(events.size() - 1);
-					event= events.isEmpty() ? null : events.get(events.size() - 1);
+					events.poll();
+					event= events.peek();
 				}
 			}
 			finally
