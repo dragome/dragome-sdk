@@ -372,4 +372,16 @@ public class LinkedList<E> extends ArrayList<E> implements List<E>, Queue<E>, Se
 			throw new NoSuchElementException();
 		}
 	}
+
+	public boolean contains(Object value)
+	{
+		for (Iterator<?> iterator= listIterator(0); iterator.hasNext();)
+		{
+			Object e= (Object) iterator.next();
+
+			if (e == value || (e != null && e.equals(value)))
+				return true;
+		}
+		return false;
+	}
 }
