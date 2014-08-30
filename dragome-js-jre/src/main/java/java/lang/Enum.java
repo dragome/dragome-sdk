@@ -1,5 +1,7 @@
 package java.lang;
 
+import com.dragome.commons.javascript.ScriptHelper;
+
 /**
  * This is the common base class of all Java language enumeration types.
  */
@@ -25,7 +27,9 @@ public abstract class Enum<E>
 	 */
 	public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name)
 	{
-		throw new UnsupportedOperationException();
+		ScriptHelper.put("enumType", enumType, null);
+		ScriptHelper.put("name", name, null);
+		return (T) ScriptHelper.eval("enumType.$$$nativeClass[\"$$$\"+name]", null);
 	}
 
 	/**
