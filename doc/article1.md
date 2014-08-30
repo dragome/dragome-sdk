@@ -35,9 +35,6 @@ Dragome provides two execution modes, production mode for executing everything i
 * __Important note about debugging__: it is not required the use of any plugin for your IDE or for your browser (any modern Chrome version by now, and any version of Firefox soon, Safari and IE in future versions)
 
 ## Client-side code
-This is the actual Java code written implementing the business logic of the application and that the GWT compiler translates into JavaScript, which will eventually run inside the browser. The location of these resources can be configured using <source path="path" /> element in module configuration file.
-
-For example Entry Point code will be used as client side code and its location will be specified using <source path="path" />. A module entry-point is any class that is assignable to EntryPoint and that can be constructed without parameters. When a module is loaded, every entry point class is instantiated and its EntryPoint.onModuleLoad() method gets called. A sample HelloWorld Entry Point class will be as follows:
 
 
 ``` Java
