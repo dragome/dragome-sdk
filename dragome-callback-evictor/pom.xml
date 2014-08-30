@@ -3,7 +3,7 @@
   <groupId>com.dragome</groupId>
   <artifactId>dragome-callback-evictor</artifactId>
   <name>dragome-callback-evictor</name>
-  <version>0.95-beta1</version>
+  <version>0.95.1-beta1</version>
 
   <packaging>jar</packaging>
   
@@ -97,7 +97,7 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95-beta1</version>
+      <version>0.95.1-beta1</version>
     </dependency>
   </dependencies>
 

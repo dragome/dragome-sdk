@@ -3,7 +3,7 @@
   <groupId>com.dragome</groupId>
   <artifactId>dragome-method-logger</artifactId>
   <name>dragome-method-logger</name>
-  <version>0.95-beta1</version>
+  <version>0.95.1-beta1</version>
   <packaging>jar</packaging>
 
   <description>Dragome SDK module: method logger</description>
@@ -106,7 +106,7 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95-beta1</version>
+      <version>0.95.1-beta1</version>
     </dependency>
   </dependencies>
 

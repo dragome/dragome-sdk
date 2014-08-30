@@ -1,11 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
+<properties>
+   <global.version>0.95-beta1</global.version>
+</properties>  
 
   <groupId>com.dragome</groupId>
   <artifactId>dragome-sdk</artifactId>
   <packaging>pom</packaging>
-  <version>0.95-beta1</version>
+  <version>${global.version}</version>
   <name>Dragome SDK</name>
   <description>Dragome SDK is a tool for creating dynamic web application in pure Java</description>
   <url>http://www.dragome.com</url>

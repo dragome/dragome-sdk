@@ -6,7 +6,7 @@
   <artifactId>dragome-js-commons</artifactId>
   <name>dragome-js-commons</name>
   <packaging>jar</packaging>
-  <version>0.95-beta1</version>
+  <version>0.95.1-beta1</version>
 
   <description>Dragome SDK module: commons</description>
   <url>http://www.dragome.com</url>
