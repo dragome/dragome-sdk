@@ -111,7 +111,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				selectElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 				selectElement.setAttribute("size", getSelectElementSize() + "");
-				selectElement.setAttribute("style", "min-width:300px;");
+//				selectElement.setAttribute("style", "min-width:300px;");
 
 				if (visualList.isMultipleItems())
 					selectElement.setAttribute("multiple", "multiple");
