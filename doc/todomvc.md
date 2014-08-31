@@ -101,7 +101,7 @@ Html template is just the same template provided by TodoMVC with some "data-temp
 				<input id="toggle-all" type="checkbox" data-template="toggle-all">
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
-					<li class="to-be-removed" data-template="completed-todo">
+					<li class="dragome-hide" data-template="completed-todo">
 						<div class="view">
 							<input  data-template="completed" class="toggle" type="checkbox" checked>
 							<label data-template="title">Create a TodoMVC template</label>
