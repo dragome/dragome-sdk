@@ -18,7 +18,9 @@ public class DomHelper
 	public static void removeClassName(Element element, String className)
 	{
 		String classes= element.getAttribute("class");
-		classes= classes.replace(className, "");
+		if (classes == null)
+			classes= "";
+		classes= classes.replace(className, "").trim();
 		element.setAttribute("class", classes);
 	}
 
@@ -28,7 +30,7 @@ public class DomHelper
 		if (!classes.contains(className))
 		{
 			classes+= " " + className;
-			element.setAttribute("class", classes);
+			element.setAttribute("class", classes.trim());
 		}
 	}
 
