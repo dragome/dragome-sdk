@@ -42,6 +42,12 @@
     <module>dragome-method-logger</module>
   </modules>
 
+  <properties>
+    <skip.gpg>true</skip.gpg>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  
   <repositories>
     <repository>
       <id>dragome</id>
@@ -68,7 +74,7 @@
         <artifactId>maven-gpg-plugin</artifactId>
         <version>1.5</version>
         <configuration>
-          <skip>true</skip>
+          <skip>${skip.gpg}</skip>
         </configuration>
         <executions>
           <execution>
