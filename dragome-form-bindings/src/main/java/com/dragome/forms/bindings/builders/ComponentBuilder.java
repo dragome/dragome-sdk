@@ -19,81 +19,81 @@ import com.dragome.templates.interfaces.Template;
 
 public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuilder>
 {
-    private Template template;
+	private Template template;
 
-    private void configureMethodListener()
-    {
-	if (MethodInvocationLogger.getListener() == null)
-	    MethodInvocationLogger.setListener(new MethodInvocationListener()
-	    {
-		private int setters= 0;
-
-		public void onMethodEnter(Object instance, String name)
-		{
-		    if (isGetter(name))
-		    {
-			if (!BindingSync.recordingFor.isEmpty())
-			    BindingSync.recordingFor.peek().addMethodVisitedEvent(new MethodVisitedEvent(instance, name));
-		    }
-		    else if (isSetter(name))
-		    {
-			setters++;
-			BindingSync.addEvent(new MethodVisitedEvent(instance, name));
-		    }
-		}
-
-		public void onMethodExit(Object instance, String name)
-		{
-		    if (isSetter(name))
-		    {
-			setters--;
-			if (setters == 0)
-			    BindingSync.fireChanges();
-		    }
-		}
-
-		private boolean isGetter(String name)
-		{
-		    return name.startsWith("get") || name.startsWith("is");
-		}
-
-		private boolean isSetter(String name)
-		{
-		    return name.startsWith("set");
-		}
-	    });
-    }
-
-    public ComponentBuilder(VisualPanel component)
-    {
-	this.component= component;
-	if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
+	private void configureMethodListener()
 	{
-	    TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
-	    template= templateLayout.getTemplate();
+		if (MethodInvocationLogger.getListener() == null)
+			MethodInvocationLogger.setListener(new MethodInvocationListener()
+			{
+				private int setters= 0;
+
+				public void onMethodEnter(Object instance, String name)
+				{
+					if (isGetter(name))
+					{
+						if (!BindingSync.recordingFor.isEmpty())
+							BindingSync.recordingFor.peek().addMethodVisitedEvent(new MethodVisitedEvent(instance, name));
+					}
+					else if (isSetter(name))
+					{
+						setters++;
+						BindingSync.addEvent(new MethodVisitedEvent(instance, name));
+					}
+				}
+
+				public void onMethodExit(Object instance, String name)
+				{
+					if (isSetter(name))
+					{
+						setters--;
+						if (setters == 0)
+							BindingSync.fireChanges();
+					}
+				}
+
+				private boolean isGetter(String name)
+				{
+					return name.startsWith("get") || name.startsWith("is");
+				}
+
+				private boolean isSetter(String name)
+				{
+					return name.startsWith("set");
+				}
+			});
 	}
-	configureMethodListener();
-    }
 
-    public ComponentBuilder(VisualPanel itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
-    {
-	this(itemPanel);
-	this.parentBuilder= (BaseBuilder<? extends VisualComponent, ComponentBuilder>) templateComponentBindingBuilder;
-	
-    }
+	public ComponentBuilder(VisualPanel component)
+	{
+		this.component= component;
+		if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
+		{
+			TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
+			template= templateLayout.getTemplate();
+		}
+		configureMethodListener();
+	}
 
-    public TemplateBindingBuilder bindTemplate(String aChildTemplateName)
-    {
-	return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName), parentBuilder);
-    }
+	public ComponentBuilder(VisualPanel itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
+	{
+		this(itemPanel);
+		this.parentBuilder= (BaseBuilder<? extends VisualComponent, ComponentBuilder>) templateComponentBindingBuilder;
 
-    public VisualPanel panel()
-    {
-	return (VisualPanel) component;
-    }
+	}
 
-    public VisualComponent build()
-    {
-	return component; //throw new RuntimeException("component is not ready");
-    }
+	public TemplateBindingBuilder bindTemplate(String aChildTemplateName)
+	{
+		return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName), parentBuilder);
+	}
+
+	public VisualPanel panel()
+	{
+		return (VisualPanel) component;
+	}
+
+	public VisualComponent build()
+	{
+		return component; //throw new RuntimeException("component is not ready");
+	}
 }
