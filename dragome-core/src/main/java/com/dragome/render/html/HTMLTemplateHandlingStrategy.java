@@ -50,7 +50,7 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 	public Template createTemplateFromHtml(String templateContent)
     {
 	    Element element= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("div");
-		element.setAttribute("class", "to-be-removed");
+		element.setAttribute("class", "dragome-hide");
 
 		Element childElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("div");
 		element.appendChild(childElement);

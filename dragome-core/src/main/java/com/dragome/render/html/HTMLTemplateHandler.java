@@ -27,7 +27,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 	public void makeVisible(Template clonedChild)
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
-		DomHelper.removeClassName(element, "to-be-removed");
+		DomHelper.removeClassName(element, "dragome-hide");
 		//		element.removeAttribute("style");
 	}
 
@@ -35,7 +35,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
 		//		element.setAttribute("style", "display:none;");
-		DomHelper.addClassName(element, "to-be-removed");
+		DomHelper.addClassName(element, "dragome-hide");
 	}
 
 	public Template clone(Template mainPanel)
