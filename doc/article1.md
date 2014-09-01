@@ -84,7 +84,7 @@ In this section we will introduce a new tool for selecting templates using some 
 ``` Java
 	private void buildAddSection()
 	{
-		    componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
+        componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
 
 			childrenBuilder.bindTemplate("save-button").as(VisualButton.class).onClick(() -> crudGrid.addObject()).build();
 			childrenBuilder.bindTemplate("remove-button").as(VisualButton.class).onClick(() -> crudGrid.toggleAddMode()).build();
@@ -107,7 +107,7 @@ And for filter purposes we specify only a tester supplier to test each item whet
 ``` Java
 	private void buildObjects()
 	{
-		    componentBuilder.bindTemplate("objects").as(VisualPanel.class).toListProperty(crudGrid::getItems).orderBy(crudGrid.getColumnValueGetter(), () -> crudGrid.getOrderColumn().getOrder()).filter(crudGrid::getFilterTester).repeat((item, itemBuilder) -> {
+        componentBuilder.bindTemplate("objects").as(VisualPanel.class).toListProperty(crudGrid::getItems).orderBy(crudGrid.getColumnValueGetter(), () -> crudGrid.getOrderColumn().getOrder()).filter(crudGrid::getFilterTester).repeat((item, itemBuilder) -> {
 			buildToolbar(item, itemBuilder);
 			buildColumns(item, itemBuilder);
 		});
@@ -120,7 +120,7 @@ In this section we can see how complex components can be selected for switch cas
 ``` Java
 	private void buildToolbar(Item item, ComponentBuilder itemBuilder)
 	{
-	    	itemBuilder.bindTemplate("toolbar").as(VisualPanel.class).switchWith(() -> !item.isEditMode()).buildChildren(toolbarChildrenBuilder -> {
+        itemBuilder.bindTemplate("toolbar").as(VisualPanel.class).switchWith(() -> !item.isEditMode()).buildChildren(toolbarChildrenBuilder -> {
 			toolbarChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
 				return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
 					childrenBuilder.bindTemplate("edit").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
