@@ -49,16 +49,16 @@ Our first setup is about creating a **CrudGrid** instance, that's the main model
 To see how to use templates take a look at [Template Engine][3].
 
 ``` Java
-		CrudGrid crudGrid= new CrudGrid(entityType);
-		ComponentBuilder componentBuilder= new ComponentBuilder(this);
+CrudGrid crudGrid= new CrudGrid(entityType);
+ComponentBuilder componentBuilder= new ComponentBuilder(this);
 ```
 
 ###Building filter section
 First section we are constructing is filter panel. Textfield is binded to "**filter**" property of **crudGrid** instance using **toProperty** method, we've previously chosen **VisualTextField** component to represent this value in view.
 In "**remove-filter**" case we also add a condition to make it disable when desired expression is satisfied. For cleaning purposes we attached a click listener to set filter string to empty value.
 ``` Java
-		componentBuilder.bindTemplate("filter").as(VisualTextField.class).toProperty(crudGrid::getFilter, crudGrid::setFilter).build();
-		componentBuilder.bindTemplate("remove-filter").as(VisualLabel.class).disableWhen(() -> crudGrid.getFilter().length() == 0).onClick(v -> crudGrid.setFilter("")).build();
+componentBuilder.bindTemplate("filter").as(VisualTextField.class).toProperty(crudGrid::getFilter, crudGrid::setFilter).build();
+componentBuilder.bindTemplate("remove-filter").as(VisualLabel.class).disableWhen(() -> crudGrid.getFilter().length() == 0).onClick(v -> crudGrid.setFilter("")).build();
 ```
 
 ###Building header
