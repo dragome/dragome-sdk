@@ -1,4 +1,4 @@
-# Creating a single entity CRUD grid with Dragome SDK
+# Creating entity CRUD grid with Dragome SDK
 
 ##What is Dragome?
 
