@@ -1,3 +1,5 @@
+# Creating a single entity CRUD grid with Dragome SDK
+
 ##What is Dragome?
 
 [Dragome][1] is a software development kit (SDK) for creating RICH Internet Application(RIA). It provides developers a mechanism to write client side application in Java. 
@@ -6,7 +8,7 @@ Javascript code is generated directly from bytecode which gives a lot of advanta
 
 Dragome is open source, completely free, and it is licensed under the GPL v3.0.
 
-## Why to use Dragome?
+## Why use the Dragome SDK?
 * Code everything in Java (server side and client side), it will be transformed to javascript automatically.
 * Higher level of abstraction for GUI development using components.
 * High performance for generated client side code.
@@ -18,7 +20,7 @@ Dragome is open source, completely free, and it is licensed under the GPL v3.0.
 * Use continuation in your development: you can pause your program and continue it whenever you need.
 * Unit testing integration: you can also run your Junit tests on a browser.
 
-## The Dragome modules
+## Dragome SDK modules
 Dragome SDK can be divided into following five major parts:
 
 * Dragome Bytecode to JavaScript compiler : This is the most important part of Dragome which makes it a powerful tool for building RIAs. Dragome compiler is used to translate all the application code written in Java into JavaScript.
@@ -36,17 +38,20 @@ Dragome provides two execution modes, production mode for executing everything i
 * Operating System no minimum requirement.
 * __Important note about debugging__: it is not required the use of any plugin for your IDE or for your browser (any modern Chrome version by now, and any version of Firefox soon, Safari and IE in future versions)
 
+# Crud Grid example
+This example is based on [AngularJS CRUD Grid with WebApi, EF, Bootstrap, Font Awesome & Toastr][2]. See original demo [here][3].
+
 ## Server-side code
 There is only one class in server side, this is the implementation of our service that provides instances of required entities as well as metadata for UI creation.
 It handles interactions to ORM by EntityManager, such as finding, removing, saving and updating entities.
-Also it provides metadata for both related entities Place and People.
-See how to use [services][2].
+Also it provides metadata for both entities Place and People.
+See how to use services [here][4].
 
 ## Client-side code
 All the remaining code is going to be executed at client side, this java code will be transformed to javascript and will be loaded by the browser in order to: create UI, manipulate entities instances, serialize/deserialize data structures, establish communication to server, etc.
 
 Our first setup is about creating a **CrudGrid** instance, that's the main model we are going to use, passing it which entity we want it to show. Then for start building all components we will use a **ComponentBuilder** constructed with current **VisualPanel**, where all components and subcomponents will be hanging on.
-To see how to use templates take a look at [Template Engine][3].
+To see how to use templates take a look at [Template Engine][5].
 
 ``` Java
 CrudGrid crudGrid= new CrudGrid(entityType);
@@ -63,18 +68,18 @@ componentBuilder.bindTemplate("remove-filter").as(VisualLabel.class).disableWhen
 
 ###Building header
 For "**add-mode-toggler**" we also add a condition but in this case for styling purposes, each style provided will be applied whenever "**accordingTo**" boolean expression takes true or false value.
-At this point we need to create each column header giving each one sorting behavior, configured style, and a name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. Repeat method will execute the passing block for each column, providing it with column instance and a inner builder.
+At this point we need to create each column header giving each one: sorting behavior, configured style, and a name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. Repeat method will execute the passing block for each column, providing it with column instance and a inner builder.
 ``` Java
-	private void buildHeader()
-	{
-		    componentBuilder.bindTemplate("add-mode-toggler").as(VisualLabel.class).onClick(v -> crudGrid.toggleAddMode()).styleWith("glyphicon-minus", "glyphicon-plus").accordingTo(() -> crudGrid.isAddMode()).build();
-		    componentBuilder.bindTemplate("table-header").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
-			builder.onClick(() -> crudGrid.setOrderColumn(column)).build();
-			builder.styleWith(column.getStyleName()).when(() -> true);
-			builder.bindTemplate("column-name").as(VisualLabel.class).to(() -> column.getName()).build();
-			builder.bindTemplate("order-icon").as(VisualLabel.class).styleWith("glyphicon-sort-by-alphabet", "glyphicon-sort-by-alphabet-alt").accordingTo(() -> crudGrid.getOrderColumn().getOrder().equals(Order.ASC)).showWhen(() -> crudGrid.getOrderColumn() == column).build();
-		});
-	}
+private void buildHeader()
+{
+    componentBuilder.bindTemplate("add-mode-toggler").as(VisualLabel.class).onClick(v -> crudGrid.toggleAddMode()).styleWith("glyphicon-minus", "glyphicon-plus").accordingTo(() -> crudGrid.isAddMode()).build();
+    componentBuilder.bindTemplate("table-header").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
+	builder.onClick(() -> crudGrid.setOrderColumn(column)).build();
+	builder.styleWith(column.getStyleName()).when(() -> true);
+	builder.bindTemplate("column-name").as(VisualLabel.class).to(() -> column.getName()).build();
+	builder.bindTemplate("order-icon").as(VisualLabel.class).styleWith("glyphicon-sort-by-alphabet", "glyphicon-sort-by-alphabet-alt").accordingTo(() -> crudGrid.getOrderColumn().getOrder().equals(Order.ASC)).showWhen(() -> crudGrid.getOrderColumn() == column).build();
+	});
+}
 ```
 
 ###Building add section
@@ -82,26 +87,25 @@ At this point we need to create each column header giving each one sorting behav
 In this section we will introduce a new tool for selecting templates using some expression. We are also repeating each column but inside columns template we want to show a combobox or textfield depending on if it is a lookup value or not. **switchWith** method will collect the corresponding switch expression, inside **buildChildren** builder we may express default case using **switchDefaultCase**, or **switchCase** for specific value to be considered.
 
 ``` Java
-	private void buildAddSection()
-	{
-        componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
+private void buildAddSection()
+{
+    componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
+	childrenBuilder.bindTemplate("save-button").as(VisualButton.class).onClick(() -> crudGrid.addObject()).build();
+	childrenBuilder.bindTemplate("remove-button").as(VisualButton.class).onClick(() -> crudGrid.toggleAddMode()).build();
 
-			childrenBuilder.bindTemplate("save-button").as(VisualButton.class).onClick(() -> crudGrid.addObject()).build();
-			childrenBuilder.bindTemplate("remove-button").as(VisualButton.class).onClick(() -> crudGrid.toggleAddMode()).build();
-
-			childrenBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
-				builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
-					columnBuilder.bindTemplate("input").switchDefaultCase((caseBuilder) -> caseBuilder.as(VisualTextField.class).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-					columnBuilder.bindTemplate("select").switchCase(() -> false, (caseBuilder) -> caseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).showWhen(() -> column.isLookup()).build());
-				});
+	childrenBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
+		builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
+			columnBuilder.bindTemplate("input").switchDefaultCase((caseBuilder) -> caseBuilder.as(VisualTextField.class).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
+			columnBuilder.bindTemplate("select").switchCase(() -> false, (caseBuilder) -> caseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).showWhen(() -> column.isLookup()).build());
 			});
 		});
-	}
+	});
+}
 ```
 
-###Building instances
+###Building objects
 
-Using the same mechanism form above to repeat columns we are repeating each item, which contains a reference to an entity inside. In this particular case we want repeat them in a particular order and filtering by a provided expression.
+Using the same mechanism from above to repeat columns we are repeating each item, which contains a reference to an entity inside. In this case we want repeat them in a particular order and filtering by a provided expression.
 For **orderBy** method we specify a getter that allows repeater mechanism to obtain the value to compare to, and we also specify the ascending or descending order we want to use.
 And for filter purposes we specify only a tester supplier to test each item whether it has to be shown or not.
 ``` Java
@@ -226,6 +230,8 @@ public class CrudGrid
 
 ### Complete UI source code
 
+This is all the code we need to create the UI, the remaining classes are about models, metadata, and services. 
+
 ``` Java
 public class CrudGridComponent extends VisualPanelImpl
 {
@@ -341,6 +347,11 @@ public class CrudGridComponent extends VisualPanelImpl
 ```
 
 ### Complete template for CrudGridComponent
+UI code is generally related to a HTML template containing nested elements with data-template attribute with the same name of bindTemplate usages. 
+So you can see there is no coupling between templates and java code, except for those data-template attribute that mark where is each template and subtemplate.
+There is no logic inside templates, they are pure HTML with no special tags and standard attribute usage. It make them interchangeable with other templates with the same specification (same nested data-templates in elements).
+Graphic designers may work decoupled from developers in all development phases, UI design updates can be performed by any role cause there is no intervention from developers perspective required.
+
 ``` html
 <body>
 <div data-template="loading">Loading...</div>
@@ -408,5 +419,7 @@ public class CrudGridComponent extends VisualPanelImpl
 
 
   [1]: http://www.dragome.com/
-  [2]: http://dragome.sourceforge.net/services.html
-  [3]: http://dragome.sourceforge.net/template-engine.html
+  [2]: https://github.com/jonbgallant/AngularJS-WebApi-EF
+  [3]: http://angularjs-webapi-crud-grid.azurewebsites.net/
+  [4]: http://dragome.sourceforge.net/services.html
+  [5]: http://dragome.sourceforge.net/template-engine.html
