@@ -148,53 +148,41 @@ Associated HTML fragment
 
 ![Add section](crud-grid2.png)
 
-In this section we will introduce a new tool for selecting templates using some expression. We are also repeating each column but inside columns template we want to show a combobox or textfield depending on if it is a lookup value or not. **switchWith** method will collect the corresponding switch expression, inside **buildChildren** builder we may express default case using **switchDefaultCase**, or **switchCase** for specific value to be considered.
+In this section we need to make use of a tool for selecting templates using a expression. We also need to repeat each column but inside each template we want to show a combobox or textfield depending on if it is a lookup value or not. For doing that we use **switchWith** command to configure the desire switch expression, then inside children creation we may express default case using **switchDefaultCase** , and **switchCase** for specific case value to be constructed. Both methods receive a code block that is in charge of building the entire case component/s.
 
 Source code
 ``` Java
 private void buildAddSection()
 {
-    componentBuilder.bindTemplate("add-section")
-        .as(VisualPanel.class)
-        .showWhen(crudGrid::isAddMode)
-        .buildChildren(childrenBuilder -> {
 
-            childrenBuilder.bindTemplate("save-button")
-                .as(VisualButton.class)
-                .onClick(() -> crudGrid.addObject())
-                .build();
-    
-            childrenBuilder.bindTemplate("remove-button")
-                .as(VisualButton.class)
-                .onClick(() -> crudGrid.toggleAddMode())
-                .build();
+...
 
-            childrenBuilder.bindTemplate("columns")
-                .as(VisualPanel.class)
-                .toList(crudGrid.getColumns())
-                .repeat((column, builder) -> {
+childrenBuilder.bindTemplate("columns")
+    .as(VisualPanel.class)
+    .toList(crudGrid.getColumns())
+    .repeat((column, builder) -> {
 
-                    builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
+        builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
 
-                        columnBuilder.bindTemplate("input")
-                            .switchDefaultCase((caseBuilder) -> 
-                                caseBuilder
-                                .as(VisualTextField.class)
-                                .toProperty(() -> crudGrid.getItem().getObject(), column.getName())
-                                .disableWhen(() -> column.isAutoincrement())
-                                .build());
+            columnBuilder.bindTemplate("input")
+                .switchDefaultCase((caseBuilder) -> 
+                    caseBuilder
+                    .as(VisualTextField.class)
+                    .toProperty(() -> crudGrid.getItem().getObject(), column.getName())
+                    .disableWhen(() -> column.isAutoincrement())
+                    .build());
 
-                        columnBuilder.bindTemplate("select")
-                        .switchCase(() -> false, (caseBuilder) -> 
-                            caseBuilder
-                            .to(new VisualComboBoxImpl(crudGrid.getLookupData(column.getLookupEntityType())))
-                            .toProperty(() -> crudGrid.getItem().getObject(), column.getName())
-                            .showWhen(() -> column.isLookup())
-                            .build());
-                    });
-            });
+            columnBuilder.bindTemplate("select")
+            .switchCase(() -> false, (caseBuilder) -> 
+                caseBuilder
+                .to(new VisualComboBoxImpl(crudGrid.getLookupData(column.getLookupEntityType())))
+                .toProperty(() -> crudGrid.getItem().getObject(), column.getName())
+                .showWhen(() -> column.isLookup())
+                .build());
+        });
     });
-}
+    
+....
 ```
 
 Associated HTML fragment
@@ -266,37 +254,6 @@ Associated HTML fragment
     </tr>
 ```
 
-###Building toolbar
-In this section we can see how complex components can be selected for switch cases, both cases return VisualPanels composed by VisualLabels inside.
-
-Source code
-``` Java
-private void buildToolbar(Item item, ComponentBuilder itemBuilder)
-{
-    itemBuilder.bindTemplate("toolbar")
-        .as(VisualPanel.class)
-        .switchWith(() -> !item.isEditMode())
-        .buildChildren(toolbarChildrenBuilder -> {
-            
-            toolbarChildrenBuilder.bindTemplate("view-mode")
-                .switchDefaultCase((caseBuilder) -> {
-                    return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
-                        childrenBuilder.bindTemplate("edit").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
-                        childrenBuilder.bindTemplate("trash").as(VisualLabel.class).onClick(() -> crudGrid.deleteObject(item)).build();
-                    }).build();
-                });
-
-            toolbarChildrenBuilder.bindTemplate("edit-mode")
-                .switchCase(() -> false, (caseBuilder) -> {
-                    return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
-                        childrenBuilder.bindTemplate("save").as(VisualLabel.class).onClick(() -> crudGrid.updateObject(item).toggleEditMode(item)).build();
-                        childrenBuilder.bindTemplate("remove").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
-                    }).build();
-                });
-        });
-}
-```
-
 ###Showing values
 
 In order to show all column values we need to repeat each one to access the particular value and decide how to show it. In this last part we can see the usage of nested switch/cases commands, at top level we use a switch for selecting editMode cases for inline editing the instance. The second switch is inside edit-mode case, we need to choose whether to show a textfield or combobox depending on lookup property of current column.
@@ -348,35 +305,6 @@ private void buildEditMode(Item item, Column column, ComponentBuilder columnChil
                     }).build();
             });
 }
-```
-
-buildViewMode source code
-``` Java
-private void buildViewMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
-{
-    columnChildrenBuilder.bindTemplate("view-mode")
-        .switchDefaultCase((caseBuilder) -> {
-            return caseBuilder
-                .as(VisualPanel.class)
-                .onClick(() -> crudGrid.toggleEditMode(item))
-                .switchWith(() -> column.isLookup())
-                .buildChildren(editModePanelBuilder -> {
-                    editModePanelBuilder.bindTemplate("not-lookup")
-                    .switchDefaultCase((lookupCaseBuilder) -> 
-                        lookupCaseBuilder
-                            .as(VisualLabel.class)
-                            .toProperty(item.getObject(), column.getName())
-                            .build());
-
-                    editModePanelBuilder.bindTemplate("lookup")
-                        .switchCase(() -> false, (lookupCaseBuilder) -> 
-                            lookupCaseBuilder
-                                .as(VisualLabel.class)
-                                .toProperty(item.getObject(), column.getName())
-                                .build());
-                }).build();
-        });
-} 
 ```
 
 ###Main model  
