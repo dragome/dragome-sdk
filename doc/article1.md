@@ -87,7 +87,7 @@ private void buildFilter()
 </div>
 ```
 
-###Header
+### Header
 For "**add-mode-toggler**" we also add a condition but in this case for styling purposes, each style provided will be applied whenever "**accordingTo**" boolean expression takes true or false value.
 At this point we need to create each column header giving each one: sorting behavior, configured style, and a name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. Repeat method will execute the passing block for each column, providing it with column instance and a inner builder.
 ``` Java
@@ -135,20 +135,6 @@ private void buildHeader()
                 <i class="glyphicon" data-template="order-icon"></i>
             </div>
         </th>
-    </tr>
-    <tr data-template="add-section">
-        <td>
-            <div class="btn-toolbar">
-                <div class="btn-group">
-                    <i class="btn btn-default glyphicon glyphicon-save" data-template="save-button"></i>
-                    <i class="btn btn-default glyphicon glyphicon-remove" data-template="remove-button"></i>
-                </div>
-            </div>
-        </td>
-        <td data-template="columns">
-            <input class="form-control" data-template="input"/>
-            <select data-template="select" class="form-control"></select>
-        </td>
     </tr>
 ```
 
@@ -204,6 +190,23 @@ private void buildAddSection()
 }
 ```
 
+``` html
+    <tr data-template="add-section">
+        <td>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <i class="btn btn-default glyphicon glyphicon-save" data-template="save-button"></i>
+                    <i class="btn btn-default glyphicon glyphicon-remove" data-template="remove-button"></i>
+                </div>
+            </div>
+        </td>
+        <td data-template="columns">
+            <input class="form-control" data-template="input"/>
+            <select data-template="select" class="form-control"></select>
+        </td>
+    </tr>
+```
+
 ###Objects section
 
 Using the same mechanism from above to repeat columns we are repeating each item, which contains a reference to an entity inside. In this case we want repeat them in a particular order and filtering by a provided expression.
@@ -222,6 +225,34 @@ private void buildObjects()
             buildColumns(item, itemBuilder);
         });
 }
+```
+
+``` html
+    <tr data-template="objects">
+        <td>
+            <div class="btn-toolbar" data-template="toolbar">
+                <div class="btn-group" data-template="view-mode">
+                    <i class="btn btn-default glyphicon glyphicon-edit" data-template="edit"></i>
+                    <i class="btn btn-default glyphicon glyphicon-trash" data-template="trash"></i>
+                </div>
+                <div class="btn-group" data-template="edit-mode">
+                    <i class="btn btn-default glyphicon glyphicon-save" data-template="save"></i>
+                    <i class="btn btn-default glyphicon glyphicon-remove" data-template="remove"></i>
+                </div>
+            </div>
+        </td>
+        <td data-template="columns">
+            <div data-template="view-mode">
+                <span data-template="not-lookup"></span>
+                <span data-template="lookup"></span>
+            </div>
+
+            <div data-template="edit-mode">
+                <input class="form-control" data-template="input"/>
+                <select data-template="select" class="form-control"></select>
+            </div>
+        </td>
+    </tr>
 ```
 
 ###Building toolbar
