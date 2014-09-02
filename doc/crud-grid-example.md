@@ -43,6 +43,12 @@ This example is based on [AngularJS CRUD Grid with WebApi, EF, Bootstrap, Font A
 
 ![Crud grid example](crud-grid1.png)
 
+This tutorial is about Dragome version of the same crud grid application. We are using a Java server side service for interacting to a embedded database, through Hibernate for ORM mapping. 
+For UI construction we are using Component Builders mechanism provided by Dragome, which handles several similar concepts to AngularJS framework: two-way data binding, switch/case template approach, show or style components using expressions, automatic detection of model changes, event handling, template repeaters with filtering and ordering capabilities, etc.
+Component Builders mechanism is just a layer above Dragome UI components and Form Bindings module, that make components construction a lot easier. 
+The same application could be achieved using components directly but is would be more verbose and more difficult to implement in order to get same data binding advantages.
+Also it could be implemented by DOM manipulations and direct event handling, just as Dragome components do it internally, but again it could be a lot more verbose, and since there would be almost any abstraction layer in this usage, it could be a very difficult task to accomplish.
+
 ## Server-side code
 There is only one class in server side, this is the implementation of our service that provides instances of required entities as well as metadata for UI creation.
 It handles interactions to ORM by EntityManager, such as finding, removing, saving and updating entities.
@@ -61,8 +67,10 @@ ComponentBuilder componentBuilder= new ComponentBuilder(this);
 ```
 
 ###Filter section
-First section we are constructing is filter panel. Textfield is binded to "**filter**" property of **crudGrid** instance using **toProperty** method, we've previously chosen **VisualTextField** component to represent this value in view.
-In "**remove-filter**" case we also add a condition to make it disable when desired expression is satisfied. For cleaning purposes we attached a click listener to set filter string to empty value.
+First section we are constructing is filter panel. 
+A Textfield is binded to *filter* property of *crudGrid* instance using **toProperty** method, we've previously chosen *VisualTextField* component to represent this value in view.
+In "**remove-filter**" case we also add a condition to make it disable when a expression is satisfied. 
+For cleaning purposes we attached a click listener to set filter string to empty value, so due two-way data binding filter will be cleaned by clicking this button and automatically *filter* component (the textfield) will be refreshed with this new value.
 
 Source code
 ``` Java
@@ -92,7 +100,8 @@ Associated HTML fragment
 
 ### Header
 For "**add-mode-toggler**" we also add a condition but in this case for styling purposes, each style provided will be applied whenever "**accordingTo**" boolean expression takes true or false value.
-At this point we need to create each column header giving each one: sorting behavior, configured style, and a name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. Repeat method will execute the passing block for each column, providing it with column instance and a inner builder.
+At this point we need to create each column header with: sorting behavior, configured style, and showing its name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. 
+Repeat method will execute the passing block for each column, this block will receive a column instance and a builder for continuing parent construction and also building new inner components.
 
 Source code
 ``` Java
@@ -148,7 +157,9 @@ Associated HTML fragment
 
 ![Add section](crud-grid2.png)
 
-In this section we need to make use of a tool for selecting templates using a expression. We also need to repeat each column but inside each template we want to show a combobox or textfield depending on if it is a lookup value or not. For doing that we use **switchWith** command to configure the desire switch expression, then inside children creation we may express default case using **switchDefaultCase** , and **switchCase** for specific case value to be constructed. Both methods receive a code block that is in charge of building the entire case component/s.
+In this section we need to show different components depending on *lookup* property of the column. To do that we make use of a tool for selecting templates using a expression. We repeat each column as previous section but inside each template we want to show a combobox or textfield depending on if it is a lookup value or not. 
+Using **switchWith** command we configure the desire switch expression, then inside children creation we may express default case using **switchDefaultCase** , and **switchCase** for specific case value. Both methods receive a code block that is in charge of building the entire case component/s. 
+Only components that belong to current case will be constructed and shown.
 
 Source code
 ``` Java
@@ -195,9 +206,9 @@ Associated HTML fragment
 
 ###Objects section
 
-Using the same mechanism from above to repeat columns we are repeating each item, which contains a reference to an entity inside. In this case we want repeat them in a particular order and filtering by a provided expression.
+Using the same mechanism from above to repeat columns we are repeating each item, item class contains a reference to the entity itself. In this case we want repeat them in a particular order and filtering each one by a specific expression.
 For **orderBy** method we specify a getter that allows repeater mechanism to obtain the value to compare to, and we also specify the ascending or descending order we want to use.
-And for filter purposes we specify only a tester supplier to test each item whether it has to be shown or not.
+For filter purposes we use **filter** method, specifying a tester supplier to test each item whether it has to be shown or not.
 
 Source code
 ``` Java
@@ -246,7 +257,7 @@ Associated HTML fragment
 
 ###Showing values
 
-In order to show all column values we need to repeat each one to access the particular value and decide how to show it. In this last part we can see the usage of nested switch/cases commands, at top level we use a switch for selecting editMode cases for inline editing the instance. The second switch is inside edit-mode case, we need to choose whether to show a textfield or combobox depending on lookup property of current column.
+In order to show all column values we need to repeat each one, access the particular value and decide how to show it. In this last section we can see the usage of nested switch/cases commands, at top level code we use a switch for selecting **editMode** case (inline editing). The second switch is inside edit-mode case, there we need to choose whether to show a textfield or combobox depending on lookup property of current column.
 
 buildColumns source code
 ``` Java
@@ -298,8 +309,9 @@ private void buildEditMode(Item item, Column column, ComponentBuilder columnChil
 ```
 
 ###Main model  
-The whole UI is interacting with a model called CrudGrid, this in charge of storing the information, performing actions over model, communicating to server service, and providing some tools to help builders to create the UI.
-This class is totally decouple from Dragome UI creation, builders, methodlogger plugin or any specific mechanism. The only point of coupling is about using ObservableList instances for detecting list changes automatically, but it could be considered framework agnostic because it only interacts with a listener inside.
+The whole UI is interacting with a model called CrudGrid, that is in charge of storing the information, performing actions over model, communicating to server service, and providing some tools to help builders to create the UI.
+This class is totally decouple from Dragome UI creation, builders, methodlogger or any framework specific mechanism. 
+The only coupling point is using ObservableList instances for detecting list changes automatically, but it could be considered framework agnostic because it only interacts with a listener inside.
 
 
 ``` Java
