@@ -79,6 +79,14 @@ private void buildFilter()
 }
 ```
 
+``` html
+<div class="input-group col-md-5 row filter">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+    <input type="text" class="form-control" data-template="filter">
+    <span class="input-group-addon btn btn-default" data-template="remove-filter"><i class="glyphicon glyphicon-remove"></i></span>
+</div>
+```
+
 ###Header
 For "**add-mode-toggler**" we also add a condition but in this case for styling purposes, each style provided will be applied whenever "**accordingTo**" boolean expression takes true or false value.
 At this point we need to create each column header giving each one: sorting behavior, configured style, and a name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. Repeat method will execute the passing block for each column, providing it with column instance and a inner builder.
