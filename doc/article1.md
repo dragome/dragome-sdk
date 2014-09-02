@@ -374,7 +374,7 @@ private void buildViewMode(Item item, Column column, ComponentBuilder columnChil
 ```
 
 ###Main model 
-The whole UI is interacting with a model called CrudGrid, this in charge of storing the information, perform actions over model, communication to server service, and provide some tools to help builders to create the UI.
+The whole UI is interacting with a model called CrudGrid, this in charge of storing the information, performing actions over model, communicating to server service, and providing some tools to help builders to create the UI.
 This class is totally decouple from Dragome UI creation, builders, methodlogger plugin or any specific mechanism. The only point of coupling is about using ObservableList instances for detecting list changes automatically, but it could be considered framework agnostic because it only interacts with a listener inside.
 
 
