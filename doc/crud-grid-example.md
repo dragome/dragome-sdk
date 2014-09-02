@@ -284,28 +284,28 @@ buildEditMode source code
 private void buildEditMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
 {
     columnChildrenBuilder.bindTemplate("edit-mode")
-            .switchCase(() -> true, (caseBuilder) -> {
-                return caseBuilder
-                    .as(VisualPanel.class)
-                    .switchWith(() -> !column.isLookup())
-                    .buildChildren(viewModePanelBuilder -> {
-                        viewModePanelBuilder.bindTemplate("input")
-                            .switchDefaultCase((lookupCaseBuilder) -> 
-                                lookupCaseBuilder
-                                    .as(VisualTextField.class)
-                                    .toProperty(item.getObject(), column.getName())
-                                    .disableWhen(() -> column.isAutoincrement())
-                                    .build());
-
-                        viewModePanelBuilder.bindTemplate("select")
-                            .switchCase(() -> false, (lookupCaseBuilder) -> 
-                                lookupCaseBuilder
-                                .to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType())))
+        .switchCase(() -> true, (caseBuilder) -> {
+            return caseBuilder
+                .as(VisualPanel.class)
+                .switchWith(() -> !column.isLookup())
+                .buildChildren(viewModePanelBuilder -> {
+                    viewModePanelBuilder.bindTemplate("input")
+                        .switchDefaultCase((lookupCaseBuilder) -> 
+                            lookupCaseBuilder
+                                .as(VisualTextField.class)
                                 .toProperty(item.getObject(), column.getName())
                                 .disableWhen(() -> column.isAutoincrement())
                                 .build());
-                    }).build();
-            });
+
+                    viewModePanelBuilder.bindTemplate("select")
+                        .switchCase(() -> false, (lookupCaseBuilder) -> 
+                            lookupCaseBuilder
+                            .to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType())))
+                            .toProperty(item.getObject(), column.getName())
+                            .disableWhen(() -> column.isAutoincrement())
+                            .build());
+                }).build();
+        });
 }
 ```
 
