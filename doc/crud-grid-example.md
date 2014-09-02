@@ -187,20 +187,10 @@ childrenBuilder.bindTemplate("columns")
 
 Associated HTML fragment
 ``` html
-    <tr data-template="add-section">
-        <td>
-            <div class="btn-toolbar">
-                <div class="btn-group">
-                    <i class="btn btn-default glyphicon glyphicon-save" data-template="save-button"></i>
-                    <i class="btn btn-default glyphicon glyphicon-remove" data-template="remove-button"></i>
-                </div>
-            </div>
-        </td>
         <td data-template="columns">
             <input class="form-control" data-template="input"/>
             <select data-template="select" class="form-control"></select>
         </td>
-    </tr>
 ```
 
 ###Objects section
