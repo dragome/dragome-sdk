@@ -41,7 +41,7 @@ Dragome provides two execution modes, production mode for executing everything i
 # Crud Grid example
 This example is based on [AngularJS CRUD Grid with WebApi, EF, Bootstrap, Font Awesome & Toastr][2]. See original demo [here][3].
 
-![enter image description here](crud-grid1.png)
+![Crud grid example](crud-grid1.png)
 
 ## Server-side code
 There is only one class in server side, this is the implementation of our service that provides instances of required entities as well as metadata for UI creation.
@@ -116,6 +116,8 @@ private void buildHeader()
 ```
 
 ###Add section
+
+![Add section](crud-grid2.png)
 
 In this section we will introduce a new tool for selecting templates using some expression. We are also repeating each column but inside columns template we want to show a combobox or textfield depending on if it is a lookup value or not. **switchWith** method will collect the corresponding switch expression, inside **buildChildren** builder we may express default case using **switchDefaultCase**, or **switchCase** for specific value to be considered.
 
