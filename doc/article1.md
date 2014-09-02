@@ -389,7 +389,7 @@ public class CrudGrid
     private List<Column> columns;
     private Tester<Item> filterTester= updateFilterTester();
     private Column orderColumn;
-    private EntitiesProviderService entitiesProviderService= ServiceLocator.getInstance().getServiceFactory().createSyncService(EntitiesProviderService.class);
+    private EntitiesProviderService entitiesProviderService;
     private Class<?> entityType;
 
     public CrudGrid(Class<?> entityType)
