@@ -62,8 +62,19 @@ ComponentBuilder componentBuilder= new ComponentBuilder(this);
 First section we are constructing is filter panel. Textfield is binded to "**filter**" property of **crudGrid** instance using **toProperty** method, we've previously chosen **VisualTextField** component to represent this value in view.
 In "**remove-filter**" case we also add a condition to make it disable when desired expression is satisfied. For cleaning purposes we attached a click listener to set filter string to empty value.
 ``` Java
-componentBuilder.bindTemplate("filter").as(VisualTextField.class).toProperty(crudGrid::getFilter, crudGrid::setFilter).build();
-componentBuilder.bindTemplate("remove-filter").as(VisualLabel.class).disableWhen(() -> crudGrid.getFilter().length() == 0).onClick(v -> crudGrid.setFilter("")).build();
+private void buildFilter()
+{
+    componentBuilder.bindTemplate("filter")
+        .as(VisualTextField.class)
+        .toProperty(crudGrid::getFilter, crudGrid::setFilter)
+        .build();
+
+    componentBuilder.bindTemplate("remove-filter")
+        .as(VisualLabel.class)
+        .disableWhen(() -> crudGrid.getFilter().length() == 0)
+        .onClick(v -> crudGrid.setFilter(""))
+        .build();
+}
 ```
 
 ###Building header
@@ -72,13 +83,33 @@ At this point we need to create each column header giving each one: sorting beha
 ``` Java
 private void buildHeader()
 {
-    componentBuilder.bindTemplate("add-mode-toggler").as(VisualLabel.class).onClick(v -> crudGrid.toggleAddMode()).styleWith("glyphicon-minus", "glyphicon-plus").accordingTo(() -> crudGrid.isAddMode()).build();
-    componentBuilder.bindTemplate("table-header").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
-	builder.onClick(() -> crudGrid.setOrderColumn(column)).build();
-	builder.styleWith(column.getStyleName()).when(() -> true);
-	builder.bindTemplate("column-name").as(VisualLabel.class).to(() -> column.getName()).build();
-	builder.bindTemplate("order-icon").as(VisualLabel.class).styleWith("glyphicon-sort-by-alphabet", "glyphicon-sort-by-alphabet-alt").accordingTo(() -> crudGrid.getOrderColumn().getOrder().equals(Order.ASC)).showWhen(() -> crudGrid.getOrderColumn() == column).build();
-	});
+    componentBuilder.bindTemplate("add-mode-toggler")
+        .as(VisualLabel.class)
+        .onClick(v -> crudGrid.toggleAddMode())
+        .styleWith("glyphicon-minus", "glyphicon-plus")
+        .accordingTo(() -> crudGrid.isAddMode())
+        .build();
+
+
+    componentBuilder.bindTemplate("table-header")
+        .as(VisualPanel.class)
+        .toList(crudGrid.getColumns())
+        .repeat((column, builder) -> {
+            builder.onClick(() -> crudGrid.setOrderColumn(column)).build();
+            builder.styleWith(column.getStyleName()).when(() -> true);
+        
+            builder.bindTemplate("column-name")
+                .as(VisualLabel.class)
+                .to(() -> column.getName())
+                .build();
+        
+            builder.bindTemplate("order-icon")
+                .as(VisualLabel.class)
+                .styleWith("glyphicon-sort-by-alphabet", "glyphicon-sort-by-alphabet-alt")
+                .accordingTo(() -> crudGrid.getOrderColumn().getOrder().equals(Order.ASC))
+                .showWhen(() -> crudGrid.getOrderColumn() == column)
+                .build();
+        });
 }
 ```
 
@@ -89,17 +120,46 @@ In this section we will introduce a new tool for selecting templates using some 
 ``` Java
 private void buildAddSection()
 {
-    componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
-	childrenBuilder.bindTemplate("save-button").as(VisualButton.class).onClick(() -> crudGrid.addObject()).build();
-	childrenBuilder.bindTemplate("remove-button").as(VisualButton.class).onClick(() -> crudGrid.toggleAddMode()).build();
+    componentBuilder.bindTemplate("add-section")
+        .as(VisualPanel.class)
+        .showWhen(crudGrid::isAddMode)
+        .buildChildren(childrenBuilder -> {
 
-	childrenBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
-		builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
-			columnBuilder.bindTemplate("input").switchDefaultCase((caseBuilder) -> caseBuilder.as(VisualTextField.class).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-			columnBuilder.bindTemplate("select").switchCase(() -> false, (caseBuilder) -> caseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).showWhen(() -> column.isLookup()).build());
-			});
-		});
-	});
+            childrenBuilder.bindTemplate("save-button")
+                .as(VisualButton.class)
+                .onClick(() -> crudGrid.addObject())
+                .build();
+    
+            childrenBuilder.bindTemplate("remove-button")
+                .as(VisualButton.class)
+                .onClick(() -> crudGrid.toggleAddMode())
+                .build();
+
+            childrenBuilder.bindTemplate("columns")
+                .as(VisualPanel.class)
+                .toList(crudGrid.getColumns())
+                .repeat((column, builder) -> {
+
+                    builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
+
+                        columnBuilder.bindTemplate("input")
+                            .switchDefaultCase((caseBuilder) -> 
+                                caseBuilder
+                                .as(VisualTextField.class)
+                                .toProperty(() -> crudGrid.getItem().getObject(), column.getName())
+                                .disableWhen(() -> column.isAutoincrement())
+                                .build());
+
+                        columnBuilder.bindTemplate("select")
+                        .switchCase(() -> false, (caseBuilder) -> 
+                            caseBuilder
+                            .to(new VisualComboBoxImpl(crudGrid.getLookupData(column.getLookupEntityType())))
+                            .toProperty(() -> crudGrid.getItem().getObject(), column.getName())
+                            .showWhen(() -> column.isLookup())
+                            .build());
+                    });
+            });
+    });
 }
 ```
 
@@ -109,37 +169,48 @@ Using the same mechanism from above to repeat columns we are repeating each item
 For **orderBy** method we specify a getter that allows repeater mechanism to obtain the value to compare to, and we also specify the ascending or descending order we want to use.
 And for filter purposes we specify only a tester supplier to test each item whether it has to be shown or not.
 ``` Java
-	private void buildObjects()
-	{
-        componentBuilder.bindTemplate("objects").as(VisualPanel.class).toListProperty(crudGrid::getItems).orderBy(crudGrid.getColumnValueGetter(), () -> crudGrid.getOrderColumn().getOrder()).filter(crudGrid::getFilterTester).repeat((item, itemBuilder) -> {
-			buildToolbar(item, itemBuilder);
-			buildColumns(item, itemBuilder);
-		});
-	}
+private void buildObjects()
+{
+    componentBuilder.bindTemplate("objects")
+        .as(VisualPanel.class)
+        .toListProperty(crudGrid::getItems)
+        .orderBy(crudGrid.getColumnValueGetter(), () -> crudGrid.getOrderColumn().getOrder())
+        .filter(crudGrid::getFilterTester)
+        .repeat((item, itemBuilder) -> {
+            buildToolbar(item, itemBuilder);
+            buildColumns(item, itemBuilder);
+        });
+}
 ```
 
 ###Building toolbar
 In this section we can see how complex components can be selected for switch cases, both cases return VisualPanels composed by VisualLabels inside.
 
 ``` Java
-	private void buildToolbar(Item item, ComponentBuilder itemBuilder)
-	{
-        itemBuilder.bindTemplate("toolbar").as(VisualPanel.class).switchWith(() -> !item.isEditMode()).buildChildren(toolbarChildrenBuilder -> {
-			toolbarChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
-				return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
-					childrenBuilder.bindTemplate("edit").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
-					childrenBuilder.bindTemplate("trash").as(VisualLabel.class).onClick(() -> crudGrid.deleteObject(item)).build();
-				}).build();
-			});
+private void buildToolbar(Item item, ComponentBuilder itemBuilder)
+{
+    itemBuilder.bindTemplate("toolbar")
+        .as(VisualPanel.class)
+        .switchWith(() -> !item.isEditMode())
+        .buildChildren(toolbarChildrenBuilder -> {
+            
+            toolbarChildrenBuilder.bindTemplate("view-mode")
+                .switchDefaultCase((caseBuilder) -> {
+                    return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
+                        childrenBuilder.bindTemplate("edit").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
+                        childrenBuilder.bindTemplate("trash").as(VisualLabel.class).onClick(() -> crudGrid.deleteObject(item)).build();
+                    }).build();
+                });
 
-			toolbarChildrenBuilder.bindTemplate("edit-mode").switchCase(() -> false, (caseBuilder) -> {
-				return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
-					childrenBuilder.bindTemplate("save").as(VisualLabel.class).onClick(() -> crudGrid.updateObject(item).toggleEditMode(item)).build();
-					childrenBuilder.bindTemplate("remove").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
-				}).build();
-			});
-		});
-	}
+            toolbarChildrenBuilder.bindTemplate("edit-mode")
+                .switchCase(() -> false, (caseBuilder) -> {
+                    return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
+                        childrenBuilder.bindTemplate("save").as(VisualLabel.class).onClick(() -> crudGrid.updateObject(item).toggleEditMode(item)).build();
+                        childrenBuilder.bindTemplate("remove").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
+                    }).build();
+                });
+        });
+}
 ```
 
 ###Showing values
@@ -147,28 +218,74 @@ In this section we can see how complex components can be selected for switch cas
 For showing all column values we need to repeat each one to access the particular value and decide how to show it. In this last part we can see the usage of nested switch/cases commands, at top level we use a switch for selecting editMode cases for inline editing the instance. The second switch is inside edit-mode case, we need to choose whether to show a textfield or combobox depending on lookup property of current column.
 
 ``` Java
-	private void buildColumns(Item item, ComponentBuilder itemBuilder)
-	{
-    	itemBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, columnBuilder) -> {
+private void buildColumns(Item item, ComponentBuilder itemBuilder)
+{
+    itemBuilder.bindTemplate("columns")
+        .as(VisualPanel.class)
+        .toList(crudGrid.getColumns())
+        .repeat((column, columnBuilder) -> {
 
-			columnBuilder.switchWith(() -> item.isEditMode()).buildChildren(columnChildrenBuilder -> {
+            columnBuilder
+                .switchWith(() -> item.isEditMode())
+                .buildChildren(columnChildrenBuilder -> {
+                    buildViewMode(item, column, columnChildrenBuilder);
+                    buildEditMode(item, column, columnChildrenBuilder);
+                });
+        });
+}
 
-				columnChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
-					return caseBuilder.as(VisualPanel.class).onClick(() -> crudGrid.toggleEditMode(item)).switchWith(() -> column.isLookup()).buildChildren(editModePanelBuilder -> {
-						editModePanelBuilder.bindTemplate("not-lookup").switchDefaultCase((lookupCaseBuilder) -> lookupCaseBuilder.as(VisualLabel.class).toProperty(item.getObject(), column.getName()).build());
-						editModePanelBuilder.bindTemplate("lookup").switchCase(() -> false, (lookupCaseBuilder) -> lookupCaseBuilder.as(VisualLabel.class).toProperty(item.getObject(), column.getName()).build());
-					}).build();
-				});
+private void buildEditMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
+{
+    columnChildrenBuilder.bindTemplate("edit-mode")
+            .switchCase(() -> true, (caseBuilder) -> {
+                return caseBuilder
+                    .as(VisualPanel.class)
+                    .switchWith(() -> !column.isLookup())
+                    .buildChildren(viewModePanelBuilder -> {
+                        viewModePanelBuilder.bindTemplate("input")
+                            .switchDefaultCase((lookupCaseBuilder) -> 
+                                lookupCaseBuilder
+                                    .as(VisualTextField.class)
+                                    .toProperty(item.getObject(), column.getName())
+                                    .disableWhen(() -> column.isAutoincrement())
+                                    .build());
 
-				columnChildrenBuilder.bindTemplate("edit-mode").switchCase(() -> true, (caseBuilder) -> {
-					return caseBuilder.as(VisualPanel.class).switchWith(() -> !column.isLookup()).buildChildren(viewModePanelBuilder -> {
-						viewModePanelBuilder.bindTemplate("input").switchDefaultCase((lookupCaseBuilder) -> lookupCaseBuilder.as(VisualTextField.class).toProperty(item.getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-						viewModePanelBuilder.bindTemplate("select").switchCase(() -> false, (lookupCaseBuilder) -> lookupCaseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(item.getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-					}).build();
-				});
-			});
-		});
-	}
+                        viewModePanelBuilder.bindTemplate("select")
+                            .switchCase(() -> false, (lookupCaseBuilder) -> 
+                                lookupCaseBuilder
+                                .to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType())))
+                                .toProperty(item.getObject(), column.getName())
+                                .disableWhen(() -> column.isAutoincrement())
+                                .build());
+                    }).build();
+            });
+}
+
+private void buildViewMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
+{
+    columnChildrenBuilder.bindTemplate("view-mode")
+        .switchDefaultCase((caseBuilder) -> {
+            return caseBuilder
+                .as(VisualPanel.class)
+                .onClick(() -> crudGrid.toggleEditMode(item))
+                .switchWith(() -> column.isLookup())
+                .buildChildren(editModePanelBuilder -> {
+                    editModePanelBuilder.bindTemplate("not-lookup")
+                    .switchDefaultCase((lookupCaseBuilder) -> 
+                        lookupCaseBuilder
+                            .as(VisualLabel.class)
+                            .toProperty(item.getObject(), column.getName())
+                            .build());
+
+                    editModePanelBuilder.bindTemplate("lookup")
+                        .switchCase(() -> false, (lookupCaseBuilder) -> 
+                            lookupCaseBuilder
+                                .as(VisualLabel.class)
+                                .toProperty(item.getObject(), column.getName())
+                                .build());
+                }).build();
+        });
+}
 ```
 
 ###Main model 
@@ -179,53 +296,48 @@ This class is totally decouple from Dragome UI creation, builders, methodlogger 
 ``` Java
 public class CrudGrid
 {
-	private boolean loading= true;
-	private String filter= "";
-	private boolean addMode;
-	private List<Item> objects;
-	private Item item;
-	private List<Column> columns;
-	private Tester<Item> filterTester= updateFilterTester();
-	private Column orderColumn;
-	private EntitiesProviderService entitiesProviderService= ServiceLocator.getInstance().getServiceFactory().createSyncService(EntitiesProviderService.class);
-	private Class<?> entityType;
+    private boolean loading= true;
+    private String filter= "";
+    private boolean addMode;
+    private List<Item> objects;
+    private Item item;
+    private List<Column> columns;
+    private Tester<Item> filterTester= updateFilterTester();
+    private Column orderColumn;
+    private EntitiesProviderService entitiesProviderService= ServiceLocator.getInstance().getServiceFactory().createSyncService(EntitiesProviderService.class);
+    private Class<?> entityType;
 
-	public CrudGrid(Class<?> entityType)
-	{
-		this.entityType= entityType;
-		List<Identifiable> all= entitiesProviderService.getAll((Class) entityType);
-		List<Item> result= new ArrayList<Item>();
-		for (Identifiable object : all)
-			result.add(new ItemImpl(object));
+    public CrudGrid(Class<?> entityType)
+    {
+        this.entityType= entityType;
+        List<Identifiable> all= entitiesProviderService.getAll((Class) entityType);
+        List<Item> result= new ArrayList<Item>();
+        for (Identifiable object : all)
+            result.add(new ItemImpl(object));
 
-		objects= new ObservableList<Item>(result);
-		columns= new ObservableList<Column>(entitiesProviderService.getColumnsFor(entityType));
+        objects= new ObservableList<Item>(result);
+        columns= new ObservableList<Column>(entitiesProviderService.getColumnsFor(entityType));
 
-		item= initItem();
-		orderColumn= columns.get(0);
+        item= initItem();
+        orderColumn= columns.get(0);
 
-		setLoading(false);
-	}
+        setLoading(false);
+    }
 
-	public void addObject()
-	{
-		getItems().add(item);
-		Identifiable added= entitiesProviderService.add(item.getObject());
-		item.getObject().setId(added.getId());
-		toggleAddMode();
-	}
+    public void addObject()
+    {
+        getItems().add(item);
+        Identifiable added= entitiesProviderService.add(item.getObject());
+        item.getObject().setId(added.getId());
+        toggleAddMode();
+    }
 
-	public void deleteObject(Item item)
-	{
-		objects.remove(item);
-		entitiesProviderService.delete(item.getObject());
-	}
-	
-   ....
-```
-
-``` Java
-
+    public void deleteObject(Item item)
+    {
+        objects.remove(item);
+        entitiesProviderService.delete(item.getObject());
+    }
+...
 ```
 
 ### Complete UI source code
@@ -235,114 +347,123 @@ This is all the code we need to create the UI, the remaining classes are about m
 ``` Java
 public class CrudGridComponent extends VisualPanelImpl
 {
-	private Class<?> entityType;
-	private CrudGrid crudGrid;
-	private ComponentBuilder componentBuilder;
+ private Class<?> entityType;
+ private CrudGrid crudGrid;
+ private ComponentBuilder componentBuilder;
 
-	public CrudGridComponent(Template template, Class<?> entityType)
-	{
-		this.entityType= entityType;
-		Template clonedTemplate= ServiceLocator.getInstance().getTemplateHandler().clone(template);
-		initLayout(new TemplateLayout(clonedTemplate));
-	}
+ public CrudGridComponent(Template template, Class<?> entityType)
+ {
+  this.entityType= entityType;
+  Template clonedTemplate= ServiceLocator.getInstance().getTemplateHandler().clone(template);
+  initLayout(new TemplateLayout(clonedTemplate));
+ }
 
-	public void setParent(VisualPanel parent)
-	{
-		super.setParent(parent);
+ public void setParent(VisualPanel parent)
+ {
+  super.setParent(parent);
 
-		crudGrid= new CrudGrid(entityType);
-		componentBuilder= new ComponentBuilder(this);
+  crudGrid= new CrudGrid(entityType);
+  componentBuilder= new ComponentBuilder(this);
 
-		componentBuilder.bindTemplate("loading").as(VisualLabel.class).showWhen(crudGrid::isLoading).build();
+  componentBuilder.bindTemplate("loading").as(VisualLabel.class).showWhen(crudGrid::isLoading).build();
 
-		buildFilter();
-		buildHeader();
-		buildAddSection();
-		buildObjects();
-	}
+  buildFilter();
+  buildHeader();
+  buildAddSection();
+  buildObjects();
+ }
 
-	private void buildFilter()
-	{
-		componentBuilder.bindTemplate("filter").as(VisualTextField.class).toProperty(crudGrid::getFilter, crudGrid::setFilter).build();
-		componentBuilder.bindTemplate("remove-filter").as(VisualLabel.class).disableWhen(() -> crudGrid.getFilter().length() == 0).onClick(v -> crudGrid.setFilter("")).build();
-	}
+ private void buildFilter()
+ {
+  componentBuilder.bindTemplate("filter").as(VisualTextField.class).toProperty(crudGrid::getFilter, crudGrid::setFilter).build();
+  componentBuilder.bindTemplate("remove-filter").as(VisualLabel.class).disableWhen(() -> crudGrid.getFilter().length() == 0).onClick(v -> crudGrid.setFilter("")).build();
+ }
 
-	private void buildHeader()
-	{
-		componentBuilder.bindTemplate("add-mode-toggler").as(VisualLabel.class).onClick(v -> crudGrid.toggleAddMode()).styleWith("glyphicon-minus", "glyphicon-plus").accordingTo(() -> crudGrid.isAddMode()).build();
-		componentBuilder.bindTemplate("table-header").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
-			builder.onClick(() -> crudGrid.setOrderColumn(column)).build();
-			builder.styleWith(column.getStyleName()).when(() -> true);
-			builder.bindTemplate("column-name").as(VisualLabel.class).to(() -> column.getName()).build();
-			builder.bindTemplate("order-icon").as(VisualLabel.class).styleWith("glyphicon-sort-by-alphabet", "glyphicon-sort-by-alphabet-alt").accordingTo(() -> crudGrid.getOrderColumn().getOrder().equals(Order.ASC)).showWhen(() -> crudGrid.getOrderColumn() == column).build();
-		});
-	}
+ private void buildHeader()
+ {
+  componentBuilder.bindTemplate("add-mode-toggler").as(VisualLabel.class).onClick(v -> crudGrid.toggleAddMode()).styleWith("glyphicon-minus", "glyphicon-plus").accordingTo(() -> crudGrid.isAddMode()).build();
+  componentBuilder.bindTemplate("table-header").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
+   builder.onClick(() -> crudGrid.setOrderColumn(column)).build();
+   builder.styleWith(column.getStyleName()).when(() -> true);
+   builder.bindTemplate("column-name").as(VisualLabel.class).to(() -> column.getName()).build();
+   builder.bindTemplate("order-icon").as(VisualLabel.class).styleWith("glyphicon-sort-by-alphabet", "glyphicon-sort-by-alphabet-alt").accordingTo(() -> crudGrid.getOrderColumn().getOrder().equals(Order.ASC)).showWhen(() -> crudGrid.getOrderColumn() == column).build();
+  });
+ }
 
-	private void buildAddSection()
-	{
-		componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
+ private void buildAddSection()
+ {
+  componentBuilder.bindTemplate("add-section").as(VisualPanel.class).showWhen(crudGrid::isAddMode).buildChildren(childrenBuilder -> {
 
-			childrenBuilder.bindTemplate("save-button").as(VisualButton.class).onClick(() -> crudGrid.addObject()).build();
-			childrenBuilder.bindTemplate("remove-button").as(VisualButton.class).onClick(() -> crudGrid.toggleAddMode()).build();
+   childrenBuilder.bindTemplate("save-button").as(VisualButton.class).onClick(() -> crudGrid.addObject()).build();
+   childrenBuilder.bindTemplate("remove-button").as(VisualButton.class).onClick(() -> crudGrid.toggleAddMode()).build();
 
-			childrenBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
-				builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
-					columnBuilder.bindTemplate("input").switchDefaultCase((caseBuilder) -> caseBuilder.as(VisualTextField.class).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-					columnBuilder.bindTemplate("select").switchCase(() -> false, (caseBuilder) -> caseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).showWhen(() -> column.isLookup()).build());
-				});
-			});
-		});
-	}
+   childrenBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, builder) -> {
+    builder.switchWith(() -> !column.isLookup()).buildChildren(columnBuilder -> {
+     columnBuilder.bindTemplate("input").switchDefaultCase((caseBuilder) -> caseBuilder.as(VisualTextField.class).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
+     columnBuilder.bindTemplate("select").switchCase(() -> false, (caseBuilder) -> caseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(() -> crudGrid.getItem().getObject(), column.getName()).showWhen(() -> column.isLookup()).build());
+    });
+   });
+  });
+ }
 
-	private void buildObjects()
-	{
-		componentBuilder.bindTemplate("objects").as(VisualPanel.class).toListProperty(crudGrid::getItems).orderBy(crudGrid.getColumnValueGetter(), () -> crudGrid.getOrderColumn().getOrder()).filter(crudGrid::getFilterTester).repeat((item, itemBuilder) -> {
-			buildToolbar(item, itemBuilder);
-			buildColumns(item, itemBuilder);
-		});
-	}
+ private void buildObjects()
+ {
+  componentBuilder.bindTemplate("objects").as(VisualPanel.class).toListProperty(crudGrid::getItems).orderBy(crudGrid.getColumnValueGetter(), () -> crudGrid.getOrderColumn().getOrder()).filter(crudGrid::getFilterTester).repeat((item, itemBuilder) -> {
+   buildToolbar(item, itemBuilder);
+   buildColumns(item, itemBuilder);
+  });
+ }
 
-	private void buildToolbar(Item item, ComponentBuilder itemBuilder)
-	{
-		itemBuilder.bindTemplate("toolbar").as(VisualPanel.class).switchWith(() -> !item.isEditMode()).buildChildren(toolbarChildrenBuilder -> {
-			toolbarChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
-				return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
-					childrenBuilder.bindTemplate("edit").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
-					childrenBuilder.bindTemplate("trash").as(VisualLabel.class).onClick(() -> crudGrid.deleteObject(item)).build();
-				}).build();
-			});
+ private void buildToolbar(Item item, ComponentBuilder itemBuilder)
+ {
+  itemBuilder.bindTemplate("toolbar").as(VisualPanel.class).switchWith(() -> !item.isEditMode()).buildChildren(toolbarChildrenBuilder -> {
+   toolbarChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
+    return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
+     childrenBuilder.bindTemplate("edit").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
+     childrenBuilder.bindTemplate("trash").as(VisualLabel.class).onClick(() -> crudGrid.deleteObject(item)).build();
+    }).build();
+   });
 
-			toolbarChildrenBuilder.bindTemplate("edit-mode").switchCase(() -> false, (caseBuilder) -> {
-				return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
-					childrenBuilder.bindTemplate("save").as(VisualLabel.class).onClick(() -> crudGrid.updateObject(item).toggleEditMode(item)).build();
-					childrenBuilder.bindTemplate("remove").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
-				}).build();
-			});
-		});
-	}
+   toolbarChildrenBuilder.bindTemplate("edit-mode").switchCase(() -> false, (caseBuilder) -> {
+    return caseBuilder.as(VisualPanel.class).buildChildren(childrenBuilder -> {
+     childrenBuilder.bindTemplate("save").as(VisualLabel.class).onClick(() -> crudGrid.updateObject(item).toggleEditMode(item)).build();
+     childrenBuilder.bindTemplate("remove").as(VisualLabel.class).onClick(() -> crudGrid.toggleEditMode(item)).build();
+    }).build();
+   });
+  });
+ }
 
-	private void buildColumns(Item item, ComponentBuilder itemBuilder)
-	{
-		itemBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, columnBuilder) -> {
+ private void buildColumns(Item item, ComponentBuilder itemBuilder)
+ {
+  itemBuilder.bindTemplate("columns").as(VisualPanel.class).toList(crudGrid.getColumns()).repeat((column, columnBuilder) -> {
 
-			columnBuilder.switchWith(() -> item.isEditMode()).buildChildren(columnChildrenBuilder -> {
+   columnBuilder.switchWith(() -> item.isEditMode()).buildChildren(columnChildrenBuilder -> {
 
-				columnChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
-					return caseBuilder.as(VisualPanel.class).onClick(() -> crudGrid.toggleEditMode(item)).switchWith(() -> column.isLookup()).buildChildren(editModePanelBuilder -> {
-						editModePanelBuilder.bindTemplate("not-lookup").switchDefaultCase((lookupCaseBuilder) -> lookupCaseBuilder.as(VisualLabel.class).toProperty(item.getObject(), column.getName()).build());
-						editModePanelBuilder.bindTemplate("lookup").switchCase(() -> false, (lookupCaseBuilder) -> lookupCaseBuilder.as(VisualLabel.class).toProperty(item.getObject(), column.getName()).build());
-					}).build();
-				});
+    buildViewMode(item, column, columnChildrenBuilder);
+    buildEditMode(item, column, columnChildrenBuilder);
+   });
+  });
+ }
 
-				columnChildrenBuilder.bindTemplate("edit-mode").switchCase(() -> true, (caseBuilder) -> {
-					return caseBuilder.as(VisualPanel.class).switchWith(() -> !column.isLookup()).buildChildren(viewModePanelBuilder -> {
-						viewModePanelBuilder.bindTemplate("input").switchDefaultCase((lookupCaseBuilder) -> lookupCaseBuilder.as(VisualTextField.class).toProperty(item.getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-						viewModePanelBuilder.bindTemplate("select").switchCase(() -> false, (lookupCaseBuilder) -> lookupCaseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(item.getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
-					}).build();
-				});
-			});
-		});
-	}
+ private void buildEditMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
+ {
+  columnChildrenBuilder.bindTemplate("edit-mode").switchCase(() -> true, (caseBuilder) -> {
+   return caseBuilder.as(VisualPanel.class).switchWith(() -> !column.isLookup()).buildChildren(viewModePanelBuilder -> {
+    viewModePanelBuilder.bindTemplate("input").switchDefaultCase((lookupCaseBuilder) -> lookupCaseBuilder.as(VisualTextField.class).toProperty(item.getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
+    viewModePanelBuilder.bindTemplate("select").switchCase(() -> false, (lookupCaseBuilder) -> lookupCaseBuilder.to(new VisualComboBoxImpl<>(crudGrid.getLookupData(column.getLookupEntityType()))).toProperty(item.getObject(), column.getName()).disableWhen(() -> column.isAutoincrement()).build());
+   }).build();
+  });
+ }
+
+ private void buildViewMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
+ {
+  columnChildrenBuilder.bindTemplate("view-mode").switchDefaultCase((caseBuilder) -> {
+   return caseBuilder.as(VisualPanel.class).onClick(() -> crudGrid.toggleEditMode(item)).switchWith(() -> column.isLookup()).buildChildren(editModePanelBuilder -> {
+    editModePanelBuilder.bindTemplate("not-lookup").switchDefaultCase((lookupCaseBuilder) -> lookupCaseBuilder.as(VisualLabel.class).toProperty(item.getObject(), column.getName()).build());
+    editModePanelBuilder.bindTemplate("lookup").switchCase(() -> false, (lookupCaseBuilder) -> lookupCaseBuilder.as(VisualLabel.class).toProperty(item.getObject(), column.getName()).build());
+   }).build();
+  });
+ }
 }
 ```
 
