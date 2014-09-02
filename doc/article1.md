@@ -348,6 +348,7 @@ private void buildEditMode(Item item, Column column, ComponentBuilder columnChil
             });
 }
 ```
+
 ``` Java
 private void buildViewMode(Item item, Column column, ComponentBuilder columnChildrenBuilder)
 {
