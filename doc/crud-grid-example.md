@@ -82,6 +82,8 @@ In "**remove-filter**" case we also add a condition to make it disable when a ex
 
 For cleaning purposes we attached a click listener to set filter string to empty value, so due two-way data binding filter will be cleaned by clicking this button and automatically *filter* component (the textfield) will be refreshed with this new value.
 
+![Filter section](filter-section.png)
+
 Source code
 ``` Java
 private void buildFilter()
@@ -114,6 +116,8 @@ For "**add-mode-toggler**" we also add a condition but in this case for styling 
 At this point we need to create each column header with: sorting behavior, configured style, and showing its name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. 
 
 Repeat method will execute the passing block for each column, this block will receive a column instance and a builder for continuing parent construction and also building new inner components.
+
+![Header section](header-section.png)
 
 Source code
 ``` Java
@@ -167,13 +171,13 @@ Associated HTML fragment
 
 ###Add section
 
-![Add section](crud-grid2.png)
-
 In this section we need to show different components depending on *lookup* property of the column. To do that we make use of a tool for selecting templates using a expression. We repeat each column as previous section but inside each template we want to show a combobox or textfield depending on if it is a lookup value or not. 
 
 Using **switchWith** command we configure the desire switch expression, then inside children creation we may express default case using **switchDefaultCase** , and **switchCase** for specific case value. Both methods receive a code block that is in charge of building the entire case component/s. 
 
 Only components that belong to current case will be constructed and shown.
+
+![Add section](add-section.png)
 
 Source code
 ``` Java
@@ -225,6 +229,9 @@ Using the same mechanism from above to repeat columns we are repeating each item
 For **orderBy** method we specify a getter that allows repeater mechanism to obtain the value to compare to, and we also specify the ascending or descending order we want to use.
 
 For filter purposes we use **filter** method, specifying a tester supplier to test each item whether it has to be shown or not.
+
+![Objects section](objects-section.png)
+
 
 Source code
 ``` Java
@@ -390,6 +397,8 @@ You can see there is no coupling between templates and java code, except for tho
 There is no logic inside templates, they are pure HTML with no special tags and standard attribute usage. It make them interchangeable with other templates with the same specification (same nested data-templates in elements).
 
 Graphic designers may work decoupled from developers in all development phases, UI design updates can be performed by any role cause there is no intervention from developers perspective required.
+
+![Template](template.png)
 
 ``` html
 <body>
