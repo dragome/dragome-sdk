@@ -63,6 +63,8 @@ ComponentBuilder componentBuilder= new ComponentBuilder(this);
 ###Filter section
 First section we are constructing is filter panel. Textfield is binded to "**filter**" property of **crudGrid** instance using **toProperty** method, we've previously chosen **VisualTextField** component to represent this value in view.
 In "**remove-filter**" case we also add a condition to make it disable when desired expression is satisfied. For cleaning purposes we attached a click listener to set filter string to empty value.
+
+Source code
 ``` Java
 private void buildFilter()
 {
@@ -79,6 +81,7 @@ private void buildFilter()
 }
 ```
 
+Associated HTML fragment
 ``` html
 <div class="input-group col-md-5 row filter">
     <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
@@ -90,6 +93,8 @@ private void buildFilter()
 ### Header
 For "**add-mode-toggler**" we also add a condition but in this case for styling purposes, each style provided will be applied whenever "**accordingTo**" boolean expression takes true or false value.
 At this point we need to create each column header giving each one: sorting behavior, configured style, and a name. For repeating "**table-header**" template for each column in **crudGrid.getColumns()** we use "**repeat**" method. Repeat method will execute the passing block for each column, providing it with column instance and a inner builder.
+
+Source code
 ``` Java
 private void buildHeader()
 {
@@ -123,6 +128,7 @@ private void buildHeader()
 }
 ```
 
+Associated HTML fragment
 ``` html
 	 <tr>
         <th class="col-md-1">
@@ -144,6 +150,7 @@ private void buildHeader()
 
 In this section we will introduce a new tool for selecting templates using some expression. We are also repeating each column but inside columns template we want to show a combobox or textfield depending on if it is a lookup value or not. **switchWith** method will collect the corresponding switch expression, inside **buildChildren** builder we may express default case using **switchDefaultCase**, or **switchCase** for specific value to be considered.
 
+Source code
 ``` Java
 private void buildAddSection()
 {
@@ -190,6 +197,7 @@ private void buildAddSection()
 }
 ```
 
+Associated HTML fragment
 ``` html
     <tr data-template="add-section">
         <td>
@@ -212,6 +220,8 @@ private void buildAddSection()
 Using the same mechanism from above to repeat columns we are repeating each item, which contains a reference to an entity inside. In this case we want repeat them in a particular order and filtering by a provided expression.
 For **orderBy** method we specify a getter that allows repeater mechanism to obtain the value to compare to, and we also specify the ascending or descending order we want to use.
 And for filter purposes we specify only a tester supplier to test each item whether it has to be shown or not.
+
+Source code
 ``` Java
 private void buildObjects()
 {
@@ -227,6 +237,7 @@ private void buildObjects()
 }
 ```
 
+Associated HTML fragment
 ``` html
     <tr data-template="objects">
         <td>
@@ -258,6 +269,7 @@ private void buildObjects()
 ###Building toolbar
 In this section we can see how complex components can be selected for switch cases, both cases return VisualPanels composed by VisualLabels inside.
 
+Source code
 ``` Java
 private void buildToolbar(Item item, ComponentBuilder itemBuilder)
 {
@@ -289,6 +301,7 @@ private void buildToolbar(Item item, ComponentBuilder itemBuilder)
 
 For showing all column values we need to repeat each one to access the particular value and decide how to show it. In this last part we can see the usage of nested switch/cases commands, at top level we use a switch for selecting editMode cases for inline editing the instance. The second switch is inside edit-mode case, we need to choose whether to show a textfield or combobox depending on lookup property of current column.
 
+Source code
 ``` Java
 private void buildColumns(Item item, ComponentBuilder itemBuilder)
 {
