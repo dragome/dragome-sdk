@@ -299,7 +299,7 @@ private void buildToolbar(Item item, ComponentBuilder itemBuilder)
 
 ###Showing values
 
-For showing all column values we need to repeat each one to access the particular value and decide how to show it. In this last part we can see the usage of nested switch/cases commands, at top level we use a switch for selecting editMode cases for inline editing the instance. The second switch is inside edit-mode case, we need to choose whether to show a textfield or combobox depending on lookup property of current column.
+In order to show all column values we need to repeat each one to access the particular value and decide how to show it. In this last part we can see the usage of nested switch/cases commands, at top level we use a switch for selecting editMode cases for inline editing the instance. The second switch is inside edit-mode case, we need to choose whether to show a textfield or combobox depending on lookup property of current column.
 
 Source code
 ``` Java
