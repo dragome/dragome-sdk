@@ -426,8 +426,8 @@ public class CrudGrid
 ```
 
 ### Complete template for CrudGridComponent
-UI code is generally related to a HTML template containing nested elements with data-template attribute with the same name of bindTemplate usages. 
-So you can see there is no coupling between templates and java code, except for those data-template attribute that mark where is each template and subtemplate.
+Generally, UI code is related to a HTML template that contains nested elements with data-template attributes, matching the same name of bindTemplate usages. 
+You can see there is no coupling between templates and java code, except for those data-template attribute that mark where is each template and subtemplate.
 There is no logic inside templates, they are pure HTML with no special tags and standard attribute usage. It make them interchangeable with other templates with the same specification (same nested data-templates in elements).
 Graphic designers may work decoupled from developers in all development phases, UI design updates can be performed by any role cause there is no intervention from developers perspective required.
 
