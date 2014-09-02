@@ -19,6 +19,7 @@ Dragome is open source, completely free, and it is licensed under the GPL v3.0.
 * UI design updates can be deployed by non developer roles because code is totally decoupled from HTML files.
 * Use continuation in your development: you can pause your program and continue it whenever you need.
 * Unit testing integration: you can also run your Junit tests on a browser.
+* Java 8 enabled.
 
 ## Dragome SDK modules
 Dragome SDK can be divided into following five major parts:
