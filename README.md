@@ -10,32 +10,22 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 
 ##Why Dragome
 * Full Java stack web applications, code everything in Java (server side and client side). It will be transformed to javascript automatically.
-* Fast GUI development using components, builders and two-way databinding.
-* Make use of excellent debugging support offered by the mature Java IDEs.
-* Minimize contact with HTML files, managed by graphics designers not developers, Dragome uses exactly the same files that designers are editing, just plain HTML files.
-* Use continuation in your development: you can pause your program and continue it whenever you need.
-* Unit testing integration: you can also run your Junit tests on a browser.
+* Fast GUI development using components, builders and two-way databinding, using similar AngularJs concepts.
+* Debug mode for debugging in your favorite Java IDE.
 * No IDE plugins or browser plugins required.
-
-
-###Top features
-* Share code between server and client side
 * Java 8 ready! Build your pages using lambda expressions, default methods, streams
 * You can use [Dynamic Proxies][2] and [Java Reflection API][3]
-* Compilation based on bytecode: You can make use of all bytecode instrumentation tools features
-* Get rid of callbacks: Make async calls with no callbacks! How? See [Callback Evictor][4] Tool!
-* Javascript native interface
-* Very powerful template engine
-* ... see more at [Features][5]
+* Get rid of callbacks hell: Make async calls with no callbacks! How? See [Callback Evictor][4] Tool!
+* Use continuation in your development: you can pause your resulting js program and continue it whenever you need.
+* Unit testing integration: you can also run your Junit tests on a browser.
+* Javascript native interface for low level component construction.
+* Very powerful template engine. No logic in HTML files, only ids for locating templates placeholders.
+* ... more at [Features][5]
 
 
 Also see [Dragome Todos](doc/todos.md) for more info about the future
 
 ----------
-
-
-
-
 
 
 ###Start working with Dragome right now!
