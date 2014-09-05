@@ -10,7 +10,7 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 * Fast GUI development using components, builders and two-way databinding, using similar AngularJs concepts.
 * Debug mode for debugging in your favorite Java IDE.
 * No IDE plugins or browser plugins required.
-* Java 8 ready! Build your pages using lambda expressions, default methods, streams
+* Java 8 ready. Build your pages using lambda expressions, default methods, streams
 * You can use [Dynamic Proxies][2] and [Java Reflection API][3]
 * Get rid of callbacks hell: Make async calls with no callbacks! How? See [Callback Evictor][4] Tool!
 * Use continuation in your development: you can pause your resulting js program and continue it whenever you need.
@@ -26,12 +26,14 @@ Also see [Dragome Todos](doc/todos.md) for more info about the future
 
 [Learn how to code Dragome apps in 2 minutes][1]
 
+----------
 
-###Start working with Dragome right now!
+###Start working with Dragome
 #### Using maven archetype
 ```shell
 mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simple-webapp-archetype -DarchetypeVersion=1.0 -DgroupId={your-package-name} -DartifactId={your-app-name}
 ```
+----------
 
 #### Using maven dependency in your project
 ``` xml
@@ -42,10 +44,12 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
   <type>pom</type>
 </dependency>
 ```
+----------
 
 #### Clone and build
 [How to build the SDK][6]
 
+----------
 
 #### Setup example application
 [Setup your application](doc/app-setup.md)
