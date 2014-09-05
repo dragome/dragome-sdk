@@ -39,7 +39,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 <dependency>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-sdk</artifactId>
-  <version>0.95-beta1</version>
+  <version>0.95.1-beta1</version>
   <type>pom</type>
 </dependency>
 ```
