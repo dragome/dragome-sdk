@@ -8,6 +8,8 @@ Javascript code is generated directly from bytecode which gives a lot of advanta
 
 Dragome is open source, completely free, and it is licensed under the GPL v3.0.
 
+----------
+
 ## Why use the Dragome SDK?
 * Code everything in Java (server side and client side), it will be transformed to javascript automatically.
 * Higher level of abstraction for GUI development using components.
@@ -21,6 +23,8 @@ Dragome is open source, completely free, and it is licensed under the GPL v3.0.
 * Unit testing integration: you can also run your Junit tests on a browser.
 * Java 8 enabled.
 
+----------
+
 ## Dragome SDK modules
 Dragome SDK can be divided into following five major parts:
 
@@ -32,12 +36,16 @@ Dragome SDK can be divided into following five major parts:
 
 Dragome provides two execution modes, production mode for executing everything in client side, and debug mode that executes all in Java Virtual Machine without compiling to javascript and make remotes updates to browser DOM. 
 
+----------
+
 ## System Requirements
 * JDK	1.7 or above.
 * Memory no minimum requirement.
 * Disk space no minimum requirement.
 * Operating System no minimum requirement.
 * __Important note about debugging__: it is not required the use of any plugin for your IDE or for your browser (any modern Chrome version by now, and any version of Firefox soon, Safari and IE in future versions)
+
+----------
 
 # Crud Grid example
 This example is based on [AngularJS CRUD Grid with WebApi, EF, Bootstrap, Font Awesome & Toastr][2]. See original demo [here][3].
@@ -54,6 +62,7 @@ difficult to implement in order to get same data binding advantages.
 
 Also it could be implemented by DOM manipulations and direct event handling, just as Dragome components do it internally, but again it could be a lot more verbose, and since there would be almost any abstraction layer in this usage, it could be a very difficult task to accomplish.
 
+----------
 
 ## Server-side code
 There is only one class in server side, this is the implementation of our service that provides instances of required entities as well as metadata for UI creation.
@@ -61,6 +70,8 @@ There is only one class in server side, this is the implementation of our servic
 It handles interactions to ORM by EntityManager, such as finding, removing, saving and updating entities.
 Also it provides metadata for both entities Place and People.
 See how to use services [here][4].
+
+----------
 
 ## Client-side code
 All the remaining code is going to be executed at client side, this java code will be transformed to javascript and will be loaded by the browser in order to: create UI, manipulate entities instances, serialize/deserialize data structures, establish communication to server, etc.
@@ -72,6 +83,8 @@ To see how to use templates take a look at [Template Engine][5].
 CrudGrid crudGrid= new CrudGrid(entityType);
 ComponentBuilder componentBuilder= new ComponentBuilder(this);
 ```
+
+----------
 
 ###Filter section
 First section we are constructing is filter panel. 
@@ -109,6 +122,8 @@ Associated HTML fragment
     <span class="input-group-addon btn btn-default" data-template="remove-filter"><i class="glyphicon glyphicon-remove"></i></span>
 </div>
 ```
+
+----------
 
 ### Header
 For "**add-mode-toggler**" we also add a condition but in this case for styling purposes, each style provided will be applied whenever "**accordingTo**" boolean expression takes true or false value.
@@ -169,6 +184,8 @@ Associated HTML fragment
     </tr>
 ```
 
+----------
+
 ###Add section
 
 In this section we need to show different components depending on *lookup* property of the column. To do that we make use of a tool for selecting templates using a expression. We repeat each column as previous section but inside each template we want to show a combobox or textfield depending on if it is a lookup value or not. 
@@ -221,6 +238,8 @@ Associated HTML fragment
             <select data-template="select" class="form-control"></select>
         </td>
 ```
+
+----------
 
 ###Objects section
 
@@ -277,6 +296,8 @@ Associated HTML fragment
         </td>
     </tr>
 ```
+
+----------
 
 ###Showing values
 
@@ -335,6 +356,8 @@ private void buildEditMode(Item item, Column column, ComponentBuilder columnChil
 }
 ```
 
+----------
+
 ###Main model  
 The whole UI is interacting with a model called CrudGrid, that is in charge of storing the information, performing actions over model, communicating to server service, and providing some tools to help builders to create the UI.
 This class is totally decouple from Dragome UI creation, builders, methodlogger or any framework specific mechanism. 
@@ -388,6 +411,7 @@ public class CrudGrid
     }
 ...
 ```
+----------
 
 ### Complete template for CrudGridComponent
 Generally, UI code is related to a HTML template that contains nested elements with data-template attributes, matching the same name of bindTemplate usages. 
