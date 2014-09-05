@@ -9,30 +9,21 @@ You can use your favorite IDE, your favorite Java frameworks and tools because D
 ----------
 
 ##Why Dragome
-* Code everything in Java (server side and client side), it will be transformed to javascript automatically.
-* Higher level of abstraction for GUI development using components.
-* High performance for generated client side code.
-* Java based development process and code reuse.
-* Use the excellent debugging support offered by the mature Java IDEs.
-* Make use of built-in IDE support to refactor Java code, improve your agile development.
-* Use the IDE syntax highlighting, error checking, code completion shortcuts, fix proposals, etc
-* You can create highly responsive web applications with heavy lifting on the client-side and reduced chattiness with the server-side.
-* You will minimize contact with HTML files. Managed by graphics designers not developers, Dragome uses exactly the same files that designers are editing, just plain HTML files.
-* UI design updates can be deployed by non developer roles because code is totally decoupled from HTML files.
+* Full Java stack web applications, code everything in Java (server side and client side). It will be transformed to javascript automatically.
+* Fast GUI development using components, builders and two-way databinding.
+* Make use of excellent debugging support offered by the mature Java IDEs.
+* Minimize contact with HTML files, managed by graphics designers not developers, Dragome uses exactly the same files that designers are editing, just plain HTML files.
 * Use continuation in your development: you can pause your program and continue it whenever you need.
 * Unit testing integration: you can also run your Junit tests on a browser.
+* No IDE plugins or browser plugins required.
 
 
 ###Top features
-* 100% transparent development: Java code runs on browser with no special modifications
 * Share code between server and client side
 * Java 8 ready! Build your pages using lambda expressions, default methods, streams
 * You can use [Dynamic Proxies][2] and [Java Reflection API][3]
 * Compilation based on bytecode: You can make use of all bytecode instrumentation tools features
 * Get rid of callbacks: Make async calls with no callbacks! How? See [Callback Evictor][4] Tool!
-* Neither browser or IDE plugin, nor configuration or installation required
-* Full Java stack web applications
-* Debug your code in your favorite Java IDE
 * Javascript native interface
 * Very powerful template engine
 * ... see more at [Features][5]
