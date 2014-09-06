@@ -56,7 +56,7 @@ You can add bytecode instrumentation configurators using init method. This confi
 
 ## For IDEs and Browsers
 
-Debug capabilities are working only in Chrome browser at current version. Other browsers will be supported in near future.
+Debug capabilities are working on: Chrome, Firefox and Opera browsers. Other browsers will be supported in near future.
 
 
 There is no installation required, neither browser or IDE plugin required.
