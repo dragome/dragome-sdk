@@ -43,7 +43,7 @@ Dragome provides two execution modes, production mode for executing everything i
 * Memory no minimum requirement.
 * Disk space no minimum requirement.
 * Operating System no minimum requirement.
-* __Important note about debugging__: it is not required the use of any plugin for your IDE or for your browser (any modern Chrome version by now, and any version of Firefox soon, Safari and IE in future versions)
+* __Important note about debugging__: it is not required the use of any plugin for your IDE or for your browser. Applications can be debugged on modern versions of Chrome, Firefox or Opera. Safari and IE will be available in future versions.
 
 ----------
 
