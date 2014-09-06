@@ -50,6 +50,9 @@ public class TodosPage extends DragomeVisualActivity
 }
 ```
 
+# ![TodoMVC Example](http://todomvc.com/site-assets/screenshot.png)
+
+
 ## Configuration
 
 There some expressions like the following, where component style is depending on the value of editedTodo that is a member of todoManager.
