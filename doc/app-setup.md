@@ -56,7 +56,7 @@ You can add bytecode instrumentation configurators using init method. This confi
 
 ## For IDEs and Browsers
 
-Debug capabilities are working on: Chrome, Firefox, Opera, and IE 11. Safari will be supported in near future.
+Debug capabilities are available using: Chrome, Firefox, Opera, and IE 11. Safari will be supported in near future.
 
 
 There is no installation required, neither browser or IDE plugin required.
