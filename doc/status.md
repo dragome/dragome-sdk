@@ -1,4 +1,4 @@
-# Dragome status: current version 0.95-beta1
+# Dragome status: current version 0.95.1-beta1
 
  1. JRE js implementation is supporting the entire framework features but it's not 100% implemented yet. For example running JRuby, Jython or Scala applications is not allowed yet but it could be achieved in a near future.
  2. Reflection API can be used for method invocations, constructing instances, calling dynamic Proxies, but also needs to be improved by js JRE implementation. There are several features that cannot be executed in js by now, for example: field access, introspection, serialization, complex annotations handling, non default constructors invocations..
