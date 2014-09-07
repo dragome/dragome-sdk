@@ -20,7 +20,7 @@
   - Convert .NET Common Intermediate Language to bytecode to be able to use Dragome with .NET?
   - Multiple threads emulator
       - crear threadpool
-      - round robin para threads
+      - round robin for threads
       - use continuations for pausing
   - Allow the use continuations in any application
   - Add target language such as: PHP, Asm.js, .NET msi
