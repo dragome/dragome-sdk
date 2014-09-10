@@ -57,9 +57,11 @@ public class TodosPage extends DragomeVisualActivity
 ``` Java
 public class TodosPage extends DragomeVisualActivity
 {
+	private TodoManager todoManager;
+
 	public void build()
 	{
-		TodoManager todoManager= new TodoManager(ServiceLocator.getInstance().getParametersHandler().getFragment(), new LocalStorage());
+		todoManager= new TodoManager(ServiceLocator.getInstance().getParametersHandler().getFragment(), new LocalStorage());
 		ComponentBuilder componentBuilder= new ComponentBuilder(mainPanel);
 
 		componentBuilder.bindTemplate("new-todo")
@@ -68,31 +70,29 @@ public class TodosPage extends DragomeVisualActivity
 			.onKeyUp((v, c) -> todoManager.addTodo(), KEY_ENTER)
 			.build();
 
-		componentBuilder.bindTemplate("main-section").as(VisualPanel.class).buildChildren(mainSectionBuilder -> {
-			VisualCheckbox allChecked= mainSectionBuilder.bindTemplate("toggle-all")
-					.as(VisualCheckbox.class)
-					.toProperty(todoManager::isAllChecked, todoManager::setAllChecked)
-					.onClick(v -> todoManager.markAll(!todoManager.isAllChecked()))
-					.build();
-			
-			mainSectionBuilder.show(allChecked).when(() -> !todoManager.getTodos().isEmpty());
-			mainSectionBuilder.showWhen(() -> !todoManager.getTodos().isEmpty());
-
-			mainSectionBuilder.bindTemplate("completed-todo")
-				.as(VisualPanel.class)
-				.toListProperty(todoManager::getTodos)
-				.filter(todoManager::getStatusFilter)
-				.repeat((todo, builder) -> {
-					buildItems(todoManager, todo, builder);
-			});
-		});
-
-		componentBuilder.bindTemplate("footer-section").as(VisualPanel.class).buildChildren(footerBuilder -> {
-			buildFooter(todoManager, footerBuilder);
-		});
+		componentBuilder.bindTemplate("main-section").as(VisualPanel.class).buildChildren(this::buildMainSection);
+		componentBuilder.bindTemplate("footer-section").as(VisualPanel.class).buildChildren(this::buildFooter);
 	}
 
-	private void buildFooter(TodoManager todoManager, ComponentBuilder footerBuilder)
+	private void buildMainSection(ComponentBuilder mainSectionBuilder)
+	{
+		VisualCheckbox allChecked= mainSectionBuilder.bindTemplate("toggle-all")
+				.as(VisualCheckbox.class)
+				.toProperty(todoManager::isAllChecked, todoManager::setAllChecked)
+				.onClick(v -> todoManager.markAll(!todoManager.isAllChecked()))
+				.build();
+		
+		mainSectionBuilder.show(allChecked).when(() -> !todoManager.getTodos().isEmpty());
+		mainSectionBuilder.showWhen(() -> !todoManager.getTodos().isEmpty());
+
+		mainSectionBuilder.bindTemplate("completed-todo")
+			.as(VisualPanel.class)
+			.toListProperty(todoManager::getTodos)
+			.filter(todoManager::getStatusFilter)
+			.repeat(this::buildTodo);
+	}
+
+	private void buildFooter(ComponentBuilder footerBuilder)
 	{
 		footerBuilder.showWhen(() -> !todoManager.getTodos().isEmpty());
 		
@@ -129,7 +129,7 @@ public class TodosPage extends DragomeVisualActivity
 		});
 	}
 
-	private void buildItems(TodoManager todoManager, Todo todo, ComponentBuilder builder)
+	private void buildTodo(Todo todo, ComponentBuilder builder)
 	{
 		builder.bindTemplate("todo-input")
     		.as(VisualTextField.class)
@@ -162,6 +162,7 @@ public class TodosPage extends DragomeVisualActivity
 			.when(() -> todo == todoManager.getEditedTodo());
 	}
 }
+
 ```
 
 # ![TodoMVC Example](http://todomvc.com/site-assets/screenshot.png)
