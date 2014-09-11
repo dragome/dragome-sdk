@@ -5,8 +5,6 @@ You may use your favorite IDE, your favorite Java frameworks and tools because D
 
 ----------
 
-{{ toc max-depth="2" }}
-
 
 ##Why Dragome
 * Full Java stack web applications, code everything in Java (server side and client side). It will be transformed to javascript automatically.
