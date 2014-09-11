@@ -56,6 +56,28 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 ----------
 
+
+| Features  |Dragome|GWT|
+|:---------|:-----------------------|:----|
+| Generates js from | bytecode | java source code
+| Requirements for debug | Any modern browser, no plugin required for IDE or browser | IDE plugin and Browser plugin, not available for all browsers
+| JDK changes impact | Almost no impact because bytecode rarely changes | Big impact in every new JDK version because java syntax changes frequently
+| Incremental compiler | yes | -
+| Java 8 | Lambda expressions, Stream API, default methods, and static interface methods available | not supported
+| Continuation | yes (through javaflow) | -
+| Reflection | yes | -
+| Dynamic Proxies | yes | -
+| Bytecode instrumentation | yes | -
+| DOM level debug | yes | -
+| Code permutations | - | yes
+| Split compiling | - | yes
+| Template Engine | yes | - 
+| Two-way databinding for UI | yes | -
+| Make async calls with no callbacks | yes | -
+
+
+----------
+
 ###How is programming web apps with Dragome?
 **pure Java, pure HTML, runs as js inside browser!**
 
