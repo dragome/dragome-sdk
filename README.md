@@ -28,7 +28,7 @@ SDKs comparison
 
 | Features  |Dragome|GWT|
 |:---------|:-----------------------|:----|
-| Generates js from | bytecode | java source code
+| Generates js from | bytecode (produced by several JVM languages) | java source code
 | Requirements for debug | Any modern browser, no plugin required for IDE or browser | IDE plugin and Browser plugin, not available for all browsers
 | JDK changes impact | Almost no impact because bytecode rarely changes | Big impact in every new JDK version because java syntax changes frequently
 | Incremental compiler | yes | -
