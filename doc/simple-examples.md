@@ -2,6 +2,8 @@
 
 ### Textfield to label binding
 
+![Simple binding](simple-binding.gif)
+
 First of all we create a ComponentBuilder using "mainPanel" component provided by DragomeVisualActivity. 
 This panel is already configured with html body content, inside it we can find two placeholders with names "textfield" and "label". Both elements will be used to place our components that will be binding the same value.
 
