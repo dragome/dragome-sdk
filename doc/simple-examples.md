@@ -51,6 +51,9 @@ public class SimpleBinding extends DragomeVisualActivity
 }
 ```
 
+------
+
+
 ### Combobox to label binding
 
 Following the same concepts from above we create a combobox to label binding. 
