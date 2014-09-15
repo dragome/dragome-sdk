@@ -56,6 +56,9 @@ public class SimpleBinding extends DragomeVisualActivity
 
 ### Combobox to label binding
 
+![Simple binding](combo-label-binding.gif)
+
+
 Following the same concepts from above we create a combobox to label binding. 
 HTML changes only in combobox element representation using a SELECT element.
 
@@ -103,8 +106,13 @@ public class ComboLabelBinding extends DragomeVisualActivity
 }
 ```
 
+------
+
 
 ### Using repeaters
+
+![Simple binding](simple-repeater.gif)
+
 
 We have a list of names and we want to show them in a table, each one in a new row.
 For doing this we use the following template with nested placeholders, "row" placeholder will be repeated for each item, and its content will be filled with corresponding item name.
@@ -147,7 +155,12 @@ public class SimpleRepeater extends DragomeVisualActivity
 }
 ```
 
+------
+
 ### Filtering items
+
+![Simple binding](repeat-with-filter.gif)
+
 
 Now we want to show only the items that match the desire criteria.
 For that we use a mix of previous components definitions, a VisualTextField for input filter criteria and a repeater for showing filtered items.
@@ -214,7 +227,12 @@ public class RepeatWithFilter extends DragomeVisualActivity
 }
 ```
 
+------
+
 ### Sorting items
+
+![Simple binding](repeat-with-order-by.gif)
+
 
 For sorting items in a repeater we add a button that will swap the current order between ASC and DESC.
 
