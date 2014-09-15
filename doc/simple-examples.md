@@ -115,7 +115,7 @@ For doing this we use the following template with nested placeholders, "row" pla
 ```
 
 We start binding "row" placeholder to a VisualPanel component. One instance of VisualComponent will be created for each item we provide in "names" list. 
-Using "repeat" method we indicate we want to visit each item in provided list to build a panel for each one. This lambda expression receives the corresponding item and a builder that will help us to create the panel sub components. Inside it we create a label binded directly to the item.
+Using "repeat" method we indicate we want to visit each item in provided list to build a panel for each one. This lambda expression receives the corresponding item and a builder that will help us to create the panel sub components. Inside it we create a label bound directly to the item.
  
 ``` Java 
 @PageAlias(alias= "simple-repeater")
