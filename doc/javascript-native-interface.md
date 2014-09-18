@@ -4,7 +4,7 @@ JSNI is the mechanism used by Dragome to execute javascript code from Java (byte
 DOM manipulations and several JS-JRE classes make intensive use of this feature. For instance, reflection API, dynamic proxies, and essential classes such as Class and Method have a lot of interactions with javascript using JSNI.
 When you run the application in debug mode ("debug=true" at querystring), you can execute each single JSNI call, for example to take a look at DOM changes step by step. Take a look at: 
 
-[![ScreenShot](crud-debugging-screenshot.jpg)](http://youtu.be/ktlMWKNVhgo)
+[![ScreenShot](crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
 
 To accomplish these interactions JSNI provides a set of methods located at com.dragome.commons.javascript.ScriptHelper class, these are:
  1. put 
