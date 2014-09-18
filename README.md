@@ -110,7 +110,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 ###Take a look at the following source code:
 
-This is the complete source code for a simple hellow wolrd application using a service. 
+This is the complete source code for a simple hello world application using a service. 
 
 For more details see [Hello World Application][7]
 
