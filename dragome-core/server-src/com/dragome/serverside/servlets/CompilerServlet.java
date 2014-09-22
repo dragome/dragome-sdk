@@ -10,14 +10,15 @@
  ******************************************************************************/
 package com.dragome.serverside.servlets;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,10 +37,17 @@ public class CompilerServlet extends GetPostServlet
 
 	public void init() throws ServletException
 	{
-		compile();
+		try
+		{
+			compile();
+		}
+		catch (URISyntaxException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	private void compile()
+	private void compile() throws URISyntaxException
 	{
 		final StringBuilder classPath= new StringBuilder();
 
@@ -49,22 +57,24 @@ public class CompilerServlet extends GetPostServlet
 		String classesFolder= "";
 		for (URL i : urls)
 		{
-			String string= i.toString();
-			boolean isClassesFolder= string.endsWith("/classes/") || string.endsWith("/classes");
-			boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(string);
+			String classPathEntry= new File(i.toURI()).toString();
+			boolean isClassesFolder= i.toString().endsWith("/classes/") || i.toString().endsWith("/classes");
+			boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(classPathEntry);
 
 			if (isClassesFolder || addToClasspath)
-				classPath.append(i.getPath() + ";");
+				classPath.append(classPathEntry + ";");
 
 			if (isClassesFolder)
-				classesFolder= string;
+				classesFolder= classPathEntry;
 
-			LOGGER.log(Level.INFO, "url: " + i);
+			LOGGER.log(Level.INFO, "classpath entry: " + classPathEntry);
 		}
 
-		final String path= new java.io.File(classesFolder).getParentFile().getParentFile().getPath().replace("file:", "") + "/compiled-js";
+		final String path= new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString() + File.separator + "compiled-js";
 
-		final String classesFolder2= classesFolder.replace("file:", "");
+		LOGGER.log(Level.INFO, "classes: " + path);
+
+		final String classesFolder2= classesFolder;
 
 		new Thread()
 		{

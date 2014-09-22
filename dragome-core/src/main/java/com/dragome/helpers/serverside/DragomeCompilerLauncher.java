@@ -36,7 +36,7 @@ public class DragomeCompilerLauncher
 			assembly.setTargetLocation(new File(target));
 
 			DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
-			
+
 			DragomeJsCompiler compiler= new DragomeJsCompiler(configurator.getDefaultCompilerType());
 			//	    compiler.setBasedir(basedir);
 			compiler.addClasspathElements(classpathElements);
@@ -44,7 +44,7 @@ public class DragomeCompilerLauncher
 			{
 				public boolean accept(File pathname)
 				{
-					return !pathname.toString().contains("/serverside");
+					return !pathname.toString().contains(File.separator + "serverside");
 				}
 			});
 
