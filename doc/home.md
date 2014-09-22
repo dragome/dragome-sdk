@@ -4,7 +4,7 @@ Based on bytecode to javascript compilation, you can execute applications writte
 You can use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
 
 
-[Learn how to code Dragome apps in 2 minutes][4]
+[Learn how to code Dragome apps in 5 minutes][4]
 
 ----------
 
@@ -124,7 +124,7 @@ public class HelloWorldPage extends DragomeVisualActivity
   [1]: http://docs.oracle.com/javase/7/docs/api/java/lang/reflect/Proxy.html
   [2]: http://docs.oracle.com/javase/tutorial/reflect/
   [3]: callback-evictor.md
-  [4]: two-minutes-tutorial.md#DRAGOME%202'%20TUTORIAL
+  [4]: simple-examples.md#DRAGOME%205'%20TUTORIAL
   [5]: features.md
   [6]: helloworld-app.md
 
