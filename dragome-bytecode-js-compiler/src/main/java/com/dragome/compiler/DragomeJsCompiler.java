@@ -216,7 +216,7 @@ public class DragomeJsCompiler
 		Collection<String> allFilesInClasspath= fileManager.getAllFilesInClasspath();
 		for (String file : allFilesInClasspath)
 		{
-			assembly.resolveNoTainting(file.replace("/", "."));
+			assembly.resolveNoTainting(file.replace(File.separator, "."));
 		}
 
 		assembly.addEntryPoint(assembly.getEntryPointClassName() + "#onCreate()void");
