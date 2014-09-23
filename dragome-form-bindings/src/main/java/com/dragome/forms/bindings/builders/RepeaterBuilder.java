@@ -34,6 +34,8 @@ public class RepeaterBuilder<T>
 	private TemplateComponentBindingBuilder<? extends VisualComponent> templateComponentBindingBuilder;
 	private Getter<T, Comparable<?>> orderByGetter;
 	private Supplier<Order> order;
+	private ValueModelDelegator<Boolean> valueModelDelegatorForFilter;
+	private ValueModelDelegator<?> valueModelDelegatorForOrder;
 
 	public RepeaterBuilder(ValueModelDelegator<List<T>> valueModelDelegator, Template template, VisualPanel panel, TemplateComponentBindingBuilder<VisualPanel> templateComponentBindingBuilder)
 	{
@@ -45,7 +47,8 @@ public class RepeaterBuilder<T>
 
 	public RepeaterBuilder<T> repeat(final ItemRepeater<T> itemRepeater)
 	{
-		final List<T> list= new ArrayList<T>(valueModelDelegator.getValue());
+		final List<T> list= new ArrayList<T>(collectItems(valueModelDelegator.getValue()));
+		sortList(list);
 
 		final TemplateRepeater<T> templateRepeater= new TemplateRepeater<T>(list, template.getParent(), template.getName(), new SimpleItemProcessor<T>()
 		{
@@ -70,43 +73,96 @@ public class RepeaterBuilder<T>
 				list.clear();
 				list.addAll(collectedList);
 
-				if (orderByGetter != null)
-					Collections.sort(list, new Comparator<T>()
-					{
-						public int compare(T o1, T o2)
-						{
-							if (o1 != null && o2 != null)
-							{
-								Comparable comparable= (Comparable) orderByGetter.get(o1);
-								Comparable<?> another= orderByGetter.get(o2);
-								if (comparable != null && another != null)
-								{
-									int compareTo= comparable.compareTo(another);
-									return compareTo * (order.get() == Order.DESC ? -1 : 1);
-								}
-							}
-
-							return 0;
-						}
-					});
+				sortList(list);
 
 				templateRepeater.clearAndRepeatItems();
-			}
-
-			private List<T> collectItems(List<T> value)
-			{
-				List<T> collectedList= new ArrayList<T>();
-				for (T t : value)
-					if (filter == null || filter.get().test(t))
-						collectedList.add(t);
-
-				// Java 8 Stream Implementation
-				// List<T> collectedList= valueModelDelegator.getValue().stream().filter(filter.get(model)).collect(Collectors.toList());
-				return collectedList;
 			}
 		});
 
 		return this;
+	}
+	
+	private void sortList(final List<T> list)
+	{
+		if (orderByGetter != null)
+			Collections.sort(list, new Comparator<T>()
+			{
+				public int compare(final T o1, T o2)
+				{
+					if (o1 != null && o2 != null)
+					{
+						if (valueModelDelegatorForOrder == null)
+							valueModelDelegatorForOrder= createWatcher(new Runnable()
+							{
+								public void run()
+								{
+									order.get();
+									orderByGetter.get(o1);
+								}
+							});
+
+						Comparable<Object> comparable= (Comparable) orderByGetter.get(o1);
+						Comparable<?> another= orderByGetter.get(o2);
+						if (comparable != null && another != null)
+						{
+							int compareTo= comparable.compareTo(another);
+							return compareTo * (order.get() == Order.DESC ? -1 : 1);
+						}
+					}
+
+					return 0;
+				}
+			});
+	}
+	
+
+	private List<T> collectItems(List<T> value)
+	{
+		List<T> collectedList= new ArrayList<T>();
+		for (final T t : value)
+		{
+			if (filter == null || filter.get().test(t))
+			{
+				if (valueModelDelegatorForFilter == null && filter != null)
+					valueModelDelegatorForFilter= createWatcher(new Runnable()
+					{
+						public void run()
+						{
+							filter.get().test(t);
+						}
+					});
+
+				collectedList.add(t);
+			}
+		}
+
+		// Java 8 Stream Implementation
+		// List<T> collectedList= valueModelDelegator.getValue().stream().filter(filter.get(model)).collect(Collectors.toList());
+		return collectedList;
+	}
+
+	private <S> ValueModelDelegator<S> createWatcher(final Runnable supplier)
+	{
+		ValueModelDelegator<S> delegator;
+		delegator= BindingSync.createCondition(new Supplier<S>()
+		{
+			public S get()
+			{
+				supplier.run();
+				return null;
+			}
+		});
+
+		delegator.addValueChangeHandler(new ValueChangeHandler<S>()
+		{
+			public void onValueChange(ValueChangeEvent<S> event)
+			{
+				valueModelDelegator.fireValueChangeEvent();
+			}
+		});
+
+		delegator.getValue();
+		return delegator;
 	}
 
 	public RepeaterBuilder<T> filter(Supplier<Tester<T>> aFilter)
