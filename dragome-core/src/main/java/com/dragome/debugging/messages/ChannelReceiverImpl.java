@@ -26,8 +26,8 @@ public final class ChannelReceiverImpl implements Receiver
 	public void messageReceived(String aMessage)
 	{
 		//		System.out.println("received:" + message);
-		String[] split= aMessage.split("\\|");
-		queue.addMessage(Integer.parseInt(split[1]), aMessage);
+		int separatorIndex= aMessage.lastIndexOf("|");
+		queue.addMessage(Integer.parseInt(aMessage.substring(separatorIndex+1)), aMessage);
 	}
 	public void reset()
 	{
