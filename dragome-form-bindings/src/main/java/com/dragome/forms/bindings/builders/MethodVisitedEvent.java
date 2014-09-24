@@ -44,12 +44,12 @@ public class MethodVisitedEvent
 
 	private static String getPropertyName(String methodName)
 	{
-		if (methodName.startsWith("get") || methodName.startsWith("set"))
+		if (methodName.length() > 3 &&(methodName.startsWith("get") || methodName.startsWith("set")))
 			return methodName.toLowerCase().charAt(3) + methodName.substring(4);
-		else if (methodName.startsWith("is"))
+		else if (methodName.length() > 2 && methodName.startsWith("is"))
 			return methodName.toLowerCase().charAt(2) + methodName.substring(3);
 
-		return null;
+		return "";
 	}
 
 	public boolean isSameProperty(MethodVisitedEvent event)
