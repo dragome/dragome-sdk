@@ -110,10 +110,15 @@ public class EvictorConfigurator extends CallbackEvictorConfigurator implements 
 {
 	public ExamplesApplicationConfigurator()
 	{
+		getIncludedPaths().add(HelloWorldPage.class.getPackage().getName());
 		setEnabled(true);
 	}
 }
 ```
+
+First line in constructor is adding the classes that are going to be instrumented by callbackevictor for continuations. Javaflow is the underlying mechanism used to perform continuations, it requires that every single class present in the stacktrace when you pause the application has to be instrumented.
+More info at: [Javaflow][1] 
+
 
 After you've configured Callback Evictor plugin you will be able to make synchronous invocations, and all of them will be converted to asynchronous ones in background. 
 
@@ -126,5 +131,5 @@ After you've configured Callback Evictor plugin you will be able to make synchro
 
 Activating callback evictor, this code will produce an asynchronous call to travel service, disposing its execution thread giving control to the browser and taking the control again when resulting Departure value is available.
 
-
+[1]: http://commons.apache.org/sandbox/commons-javaflow/tutorial.html
 
