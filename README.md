@@ -99,7 +99,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 ### Want to contribute?
 
 * Fork the project on Github.
-* Create an issue or fix one from the issues list [issue tracker](https://java.net/jira/browse/DRAGOME)
+* Create an issue or fix one from the [issues list](https://java.net/jira/browse/DRAGOME/?selectedTab=com.atlassian.jira.jira-projects-plugin:issues-panel).
 * Share your ideas or ask questions on mailing list - don't hesitate to write a reply - that helps us improve javadocs/FAQ.
 * If you miss a particular feature - browse or ask on the [mailing list](https://groups.google.com/d/forum/dragome) - don't hesitate to write a reply, show us a sample code and describe the problem.
 * Write a blog post about how you use or extend Dragome.
