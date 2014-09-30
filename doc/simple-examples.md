@@ -28,11 +28,13 @@ public class SimpleBinding extends DragomeVisualActivity
 	{
 		ComponentBuilder componentBuilder= new ComponentBuilder(mainPanel);
 
+		// We bind the input text
 		componentBuilder.bindTemplate("textfield")
 			.as(VisualTextField.class)
 			.toProperty(this::getText, this::setText)
 			.build();
 
+		// Binding the span element
 		componentBuilder.bindTemplate("label")
     		.as(VisualLabel.class)
     		.toProperty(this::getText)
