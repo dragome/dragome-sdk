@@ -64,7 +64,7 @@ SDKs comparison
 
 ----------
 
-[Learn how to bind components in Dragome in 5 minutes][1]
+[Learn how to bind components in Dragome in 5'][1]
 
 ----------
 
