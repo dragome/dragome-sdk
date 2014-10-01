@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.dragome.model;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.events.EventListener;
+
 import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.listeners.BlurListener;
 import com.dragome.model.listeners.ClickListener;
@@ -48,18 +51,21 @@ public class EventDispatcherImpl implements EventDispatcher
 		}
 	}
 
-	public static VisualComponent getComponentById(String id)
-	{
-		return ((VisualComponent) DragomeEntityManager.get(id));
-	}
-
 	public void eventPerformedById(final String eventType, final String id, final Object arguments)
 	{
 		runOnlySynchronized(new Runnable()
 		{
 			public void run()
 			{
-				VisualComponent visualComponent= getComponentById(id);
+				Object object= DragomeEntityManager.get(id);
+				if (object instanceof EventListener)
+					processElementEvent(eventType, arguments, (EventListener) object, id);
+				else
+					processComponentEvent(eventType, arguments, (VisualComponent) object);
+			}
+
+			private void processComponentEvent(final String eventType, final Object arguments, VisualComponent visualComponent)
+			{
 				if (visualComponent != null)
 				{
 					if (eventType.equals("click"))
@@ -82,6 +88,20 @@ public class EventDispatcherImpl implements EventDispatcher
 						visualComponent.getListener(InputListener.class).inputPerformed(visualComponent);
 				}
 			}
+
+			private void processElementEvent(final String eventType, final Object arguments, EventListener browserEventListener, String id)
+			{
+				//				final Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[data-component-id = \""+id+"\"]");
+				browserEventListener.handleEvent(eventType.startsWith("key") ? new KeyboardEventImpl(eventType, (int)arguments) : new EventImpl(eventType));
+			}
 		});
+	}
+
+	public static void setEventListener(Element element, EventListener eventListener, String... eventTypes)
+	{
+		for (String eventType : eventTypes)
+			element.setAttribute("on" + eventType, "_ed.onEvent()");
+
+		element.setAttribute("data-component-id", DragomeEntityManager.add(eventListener));
 	}
 }
