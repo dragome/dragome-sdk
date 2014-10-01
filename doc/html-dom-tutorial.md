@@ -17,36 +17,36 @@ These are the ones you can find located in w3c.dom package, ex: *org.w3c.dom.Doc
 To obtain a reference to current HTML document you may use:
 
 ``` Java
-		Document document= ServiceLocator.getInstance().getDomHandler().getDocument();
+Document document= ServiceLocator.getInstance().getDomHandler().getDocument();
 ```
 
 ##Finding an element
 Document can be inspected as you already do in js, to find an element by id:
 
 ``` Java
-		Element div1= document.getElementById("div1");
+Element div1= document.getElementById("div1");
 ```
 
 ##Reading/Writing an attribute
 The same with elements and their attributes:
 
 ``` Java
-		String className= div1.getAttribute("class");
-		div1.setAttribute("style", "position: relative;");
+String className= div1.getAttribute("class");
+div1.setAttribute("style", "position: relative;");
 ```
 
 ##Listening an event
 You can add an event handler to any element using the following helper passing W3C standard classes:
 
 ``` Java
-		EventDispatcherImpl.setEventListener(div1, new EventListener()
-		{
-			public void handleEvent(Event event)
-			{
-				if (event.getType().equals("click"))
-					//do something
-			}
-		}, "click");
+EventDispatcherImpl.setEventListener(div1, new EventListener()
+{
+	public void handleEvent(Event event)
+	{
+		if (event.getType().equals("click"))
+			//do something
+	}
+}, "click");
 ```
 
 
