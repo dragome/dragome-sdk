@@ -1,4 +1,4 @@
-#Gui Toolkit
+#Gui Toolkit Tutorial
 
 ##Components
 
