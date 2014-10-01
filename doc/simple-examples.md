@@ -1,4 +1,4 @@
-#Component building examples
+#Binding tutorial
 
 ### Textfield to label binding
 
