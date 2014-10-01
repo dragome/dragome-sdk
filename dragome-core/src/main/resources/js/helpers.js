@@ -132,7 +132,8 @@ function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain)
 		{
 			ajaxParameters.success = function(data)
 			{
-				asyncCallback.$onSuccess___java_lang_Object$void(data);
+				if (data != "null")
+					asyncCallback.$onSuccess___java_lang_Object$void(data);
 			};
 
 			ajaxParameters.error = function()
