@@ -24,29 +24,22 @@
  */
 package java.util.stream;
 
-import java.util.Arrays;
 import java.util.IntSummaryStatistics;
-import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
-import java.util.function.IntSupplier;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Supplier;
-
-import com.dragome.commons.compiler.annotations.CompilerType;
-import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 
 /**
  * A sequence of primitive int-valued elements supporting sequential and parallel
