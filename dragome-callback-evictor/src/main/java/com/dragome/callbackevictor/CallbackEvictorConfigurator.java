@@ -35,34 +35,37 @@ public class CallbackEvictorConfigurator extends InstrumentationDragomeConfigura
 
 	public ExecutionHandler getExecutionHandler()
 	{
-		return new ExecutionHandler()
-		{
-			public void suspendExecution()
+		if (!enabled)
+			return super.getExecutionHandler();
+		else
+			return new ExecutionHandler()
 			{
-				Continuation.suspend();
-			}
-
-			public void continueExecution()
-			{
-				Continuation.continueWith(Continuation.current);
-			}
-
-			public Executor getExecutor()
-			{
-				return new Executor()
+				public void suspendExecution()
 				{
-					public void execute(Runnable command)
-					{
-						Continuation.startWith(command);
-					}
-				};
-			}
+					Continuation.suspend();
+				}
 
-			public boolean canSuspend()
-			{
-				return enabled;
-			}
-		};
+				public void continueExecution()
+				{
+					Continuation.continueWith(Continuation.current);
+				}
+
+				public Executor getExecutor()
+				{
+					return new Executor()
+					{
+						public void execute(Runnable command)
+						{
+							Continuation.startWith(command);
+						}
+					};
+				}
+
+				public boolean canSuspend()
+				{
+					return enabled;
+				}
+			};
 	}
 
 	public boolean filterClassPath(String classpathEntry)
