@@ -24,6 +24,21 @@ You may use your favorite IDE, your favorite Java frameworks and tools because D
 Also see [Dragome Todos](doc/todos.md) for more info about the future
 
 ----------
+
+## Dragome SDK modules
+Dragome SDK can be divided into following five major parts:
+
+* **Bytecode to JavaScript compiler** : Dragome compiler is used to translate all the application code written in Java into JavaScript. Within compilation process there is a bytecode instrumentation chain that could be configured to add your custom manipulations. Examples of this configuration are CallbackEvictor and MethodLogger plugins, which add javaflow enhancer and custom ASM enhancer to achieve each functionality.
+* **JRE Emulation library** : Dragome includes a library that emulates a subset of the Java runtime library. Including metaprogramming tools such as reflection and dynamic proxies.
+* **GUI Toolkit**: The toolkit contains a set of visual basic components such as: Button, Label, Checkbox, Radiobutton, List, Combo, Panel, etc. These components works together with a template engine capable of locating them into HTML logicless templates. Components and template engine are totally decoupled from HTML and css, allowing the addition of other UI targets such as Android, IOS, wxWidgets, etc in a near future.
+* **Form Bindings**: Based on gwt-pectin project this module provides easy data bindings capabilities. It uses a declarative style API (guice style) for defining the models, commands and forms as well as binding them to components. In addition to gwt-pectin classes there is a small layer named "component builder" that helps to create components and binding with less effort.
+* **Callback evictor**: In charge of getting rid of callback hell, it uses bytecode instrumentation and dynamic proxies to do it.
+* **Method logger**: Simple method interceptor for automatic model changes detection, it also make use of bytecode instrumentations. It's commonly used by component builder layer to detects model changes in two-ways databinding.
+
+### Execution modes
+Dragome provides two execution modes, production mode for executing everything in client side, and debug mode that executes all in Java Virtual Machine without compiling to javascript and make remotes updates to browser DOM. 
+
+----------
 SDKs comparison
 
 
@@ -44,11 +59,12 @@ SDKs comparison
 | Template Engine | yes | - 
 | Two-way databinding for UI | yes | -
 | Make async calls with no callbacks | yes | -
+| Decouple from HTML/CSS using abstractions | yes | -
 
 
 ----------
 
-[Learn how to code Dragome apps in 2 minutes][1]
+[Learn how to bind components in Dragome in 5'][1]
 
 ----------
 
@@ -99,7 +115,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 ### Want to contribute?
 
 * Fork the project on Github.
-* Create an issue or fix one from the issues list.
+* Create an issue or fix one from the [issues list](https://java.net/jira/browse/DRAGOME-2?jql=project%20%3D%20DRAGOME).
 * Share your ideas or ask questions on mailing list - don't hesitate to write a reply - that helps us improve javadocs/FAQ.
 * If you miss a particular feature - browse or ask on the [mailing list](https://groups.google.com/d/forum/dragome) - don't hesitate to write a reply, show us a sample code and describe the problem.
 * Write a blog post about how you use or extend Dragome.
@@ -165,7 +181,7 @@ public class HelloWorldPage extends DragomeVisualActivity
 ```
 
 
-  [1]: doc/two-minutes-tutorial.md#DRAGOME%202'%20TUTORIAL
+  [1]: doc/simple-examples.md#DRAGOME%205'%20TUTORIAL
   [2]: http://docs.oracle.com/javase/7/docs/api/java/lang/reflect/Proxy.html
   [3]: http://docs.oracle.com/javase/tutorial/reflect/
   [4]: doc/callback-evictor.md
