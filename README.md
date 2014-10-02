@@ -26,7 +26,7 @@ Also see [Dragome Todos](doc/todos.md) for more info about the future
 ----------
 
 ## Dragome SDK modules
-Dragome SDK can be divided into following five major parts:
+Dragome SDK can be divided into following six major parts:
 
 * **Bytecode to JavaScript compiler** : Dragome compiler is used to translate all the application code written in Java into JavaScript. Within compilation process there is a bytecode instrumentation chain that could be configured to add your custom manipulations. Examples of this configuration are CallbackEvictor and MethodLogger plugins, which add javaflow enhancer and custom ASM enhancer to achieve each functionality.
 * **JRE Emulation library** : Dragome includes a library that emulates a subset of the Java runtime library. Including metaprogramming tools such as reflection and dynamic proxies.
