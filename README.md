@@ -5,6 +5,11 @@ You may use your favorite IDE, your favorite Java frameworks and tools because D
 
 ----------
 
+### See it in action: how Eclipse and Chrome interact on both modes.
+[![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
+
+----------
+
 
 ##Why Dragome
 * Full Java stack web applications, code everything in Java (server side and client side). It will be transformed to javascript automatically.
@@ -98,12 +103,6 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 
 ###How is programming web apps with Dragome?
 **pure Java, pure HTML, runs as js inside browser!**
-
-
-
-### See it in action
-[![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
-
 
 
 ### Debug your application in Java with your favorite IDE
