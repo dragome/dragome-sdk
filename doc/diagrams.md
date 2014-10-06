@@ -7,4 +7,4 @@
 
 # Service execution sequence diagram
 
-![Service execution](compilation-process.png)
+![Service execution](service-execution-sequence.png)
