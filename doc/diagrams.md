@@ -1,10 +1,12 @@
+#Dragome Architecture Diagrams
 
-# Compilation process diagram
+
+## Compilation process diagram
 
 ![Compilation process](compilation-process.png)
 
 ------
 
-# Service execution sequence diagram
+## Service execution sequence diagram
 
 ![Service execution](service-execution-sequence.png)
