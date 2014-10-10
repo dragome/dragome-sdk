@@ -258,17 +258,17 @@ public class DragomeJavaScriptGenerator extends Generator
 	//    }
 
 	public void visit(MethodDeclaration method)
-	{ 
-	    	String annotationKey= DragomeCompilerSettings.class.getName() + "#" + "value";
-	    	String compiler= DragomeJsCompiler.compiler.compilerType.name();
+	{
+		String annotationKey= DragomeCompilerSettings.class.getName() + "#" + "value";
+		String compiler= DragomeJsCompiler.compiler.compilerType.name();
 		String methodCompilerType= method.getAnnotationsValues().get(annotationKey);
 		String classCompilerType= typeDecl.getAnnotations().get(annotationKey);
-		
+
 		if (methodCompilerType != null)
-		    compiler= methodCompilerType;
+			compiler= methodCompilerType;
 		else if (classCompilerType != null)
-		    compiler= classCompilerType;
-	    	
+			compiler= classCompilerType;
+
 		//	String className2= method.getMethodBinding().getDeclaringClass().getClassName();
 		// !className2.startsWith("java.lang") && (method.getAnnotationsValues().get("alias") == null || className2.contains("JSONTokener")
 
@@ -346,7 +346,8 @@ public class DragomeJavaScriptGenerator extends Generator
 		while (iterator.hasNext())
 		{
 			VariableDeclaration decl= iterator.next();
-			if ("function".equals(decl.getName()))
+			
+			if (hasToEscapeVariable(decl.getName()))
 				print("_");
 			decl.visit(this);
 			print(iterator.hasNext() ? ", " : "");
@@ -937,13 +938,13 @@ public class DragomeJavaScriptGenerator extends Generator
 			//	    print(prefix);
 			//	    print(INVOKESUPER);
 			//	    print("(");
-			
+
 			String string= "arguments.callee.self.superclass.prototype.{methodName}.call(this";
 
 			if (methodBinding.getDeclaringClass().referencesInterface())
 			{
 				String invokeClassName= normalizeExpression(methodBinding.getDeclaringClass());
-				string= invokeClassName+ ".$$members.{methodName}.call(this"; 
+				string= invokeClassName + ".$$members.{methodName}.call(this";
 			}
 
 			if (Modifier.isStatic(invocation.methodDecl.getAccess()))
@@ -1016,16 +1017,16 @@ public class DragomeJavaScriptGenerator extends Generator
 			boolean isStatic= true;//Modifier.isStatic(invocation.methodDecl.getAccess());
 
 			Signature signature= Project.getSingleton().getSignature(methodBinding.getDeclaringClass().getClassName());
-//			if (isStatic)
-//				print("_getClassForStatic(");
+			//			if (isStatic)
+			//				print("_getClassForStatic(");
 			print(normalizeExpression(signature));
-//			if (isStatic)
-//			{
-//				print(", \"");
-//				Signature signature2= getSignatureOfInvocation(invocation);
-//				print(normalizeExpression(signature2));
-//				print("\")");
-//			}
+			//			if (isStatic)
+			//			{
+			//				print(", \"");
+			//				Signature signature2= getSignatureOfInvocation(invocation);
+			//				print(normalizeExpression(signature2));
+			//				print("\")");
+			//			}
 			print(".");
 			generateArguments(invocation);
 		}
@@ -1206,15 +1207,25 @@ public class DragomeJavaScriptGenerator extends Generator
 		// print("l");
 		// }
 		if (reference.getVariableDeclaration().getLocation() == VariableDeclaration.LOCAL_PARAMETER)
-			if ("function".equals(reference.getName()))
+			if (hasToEscapeVariable(reference.getName()))
 				print("_");
+		
 		print(escapeVariable(reference.getName()));
+	}
+
+	private boolean hasToEscapeVariable(String name)
+	{
+		return "function".equals(name) || "default".equals(name);
 	}
 
 	private String escapeVariable(String name)
 	{
 		if ("var".equals(name))
 			return "_var";
+		else if ("enum".equals(name))
+			return "_enum";
+		else if ("this".equals(name))
+			return "_this";
 		else
 			return name;
 	}
@@ -1277,8 +1288,8 @@ public class DragomeJavaScriptGenerator extends Generator
 	{
 		if (cast.getTypeBinding() != Type.VOID)
 		{ // &&
-			// dragomeJsCompiler.compiler.isCheckCast())
-			// {
+		  // dragomeJsCompiler.compiler.isCheckCast())
+		  // {
 			print("dragomeJs.checkCast(");
 			cast.getExpression().visit(this);
 			String string= cast.getTypeBinding().toString();

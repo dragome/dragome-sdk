@@ -23,7 +23,7 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
-		Reflections reflections= new Reflections("");
+		Reflections reflections= new Reflections("^");
 		Set<Class<? extends T>> implementations= reflections.getSubTypesOf(type);
 		return implementations;
 	}

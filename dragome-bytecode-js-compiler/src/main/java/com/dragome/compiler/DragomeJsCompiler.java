@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
+import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.compiler.generators.AbstractVisitor;
@@ -45,7 +47,7 @@ import com.dragome.compiler.utils.Log;
 import com.dragome.compiler.utils.Utils;
 import com.dragome.compiler.writer.Assembly;
 
-public class DragomeJsCompiler
+public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 {
 	public static DragomeJsCompiler compiler;
 
@@ -89,6 +91,10 @@ public class DragomeJsCompiler
 
 	public CompilerType compilerType;
 
+	private BytecodeToJavascriptCompilerConfiguration compilerConfiguration;
+
+	private boolean initialized= false;
+
 	public static void main(String argv[]) throws Exception
 	{
 		if (argv == null || argv.length != 4)
@@ -116,26 +122,77 @@ public class DragomeJsCompiler
 		compiler.addAssembly(assembly);
 		compiler.setGenerateLineNumbers(false);
 		compiler.setCompression(false);
-		compiler.execute();
+		compiler.compile();
+	}
+
+	public DragomeJsCompiler(BytecodeToJavascriptCompilerConfiguration compilerConfiguration)
+	{
+		configure(compilerConfiguration);
+	}
+
+	public void configure(BytecodeToJavascriptCompilerConfiguration compilerConfiguration)
+	{
+		if (!initialized)
+		{
+			compiler= this;
+			this.compilerConfiguration= compilerConfiguration;
+
+			initFromCompilerType(compilerConfiguration.getCompilerType());
+
+			Project.singleton= null;
+			//	    compiler.setBasedir(basedir);
+			String classpathElements= compilerConfiguration.classPath;
+			compiler.addClasspathElements(classpathElements);
+			compiler.addClasspathFilter(compilerConfiguration.classpathFilter);
+
+			if (compilerConfiguration.bytecodeTransformer != null)
+				compiler.setBytecodeTransformer(compilerConfiguration.bytecodeTransformer);
+
+			Assembly assembly= new Assembly();
+			assembly.setEntryPointClassName(compilerConfiguration.mainClassName);
+			assembly.setTargetLocation(new File(compilerConfiguration.targetDir));
+			compiler.addAssembly(assembly);
+			compiler.setGenerateLineNumbers(false);
+			compiler.setCompression(false);
+			initialized= true;
+		}
 	}
 
 	public DragomeJsCompiler(CompilerType compilerType)
+	{
+		initFromCompilerType(compilerType);
+	}
+
+	private void initFromCompilerType(CompilerType compilerType)
 	{
 		this.compilerType= compilerType;
 		setBasedir(new File(System.getProperty("user.dir")));
 		setTargetPlatform("web");
 	}
 
-	public void execute() throws Exception
+	public DragomeJsCompiler()
 	{
-		if (logger == null)
-		{
-			setLogger(new Log());
-		}
+	}
 
-		for (Assembly assembly : assemblies)
+	public void compile()
+	{
+		configure(compilerConfiguration);
+
+		try
 		{
-			execute(assembly);
+			if (logger == null)
+			{
+				setLogger(new Log());
+			}
+
+			for (Assembly assembly : assemblies)
+			{
+				execute(assembly);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -452,4 +509,8 @@ public class DragomeJsCompiler
 		this.bytecodeTransformer= bytecodeTransformer;
 	}
 
+	public void setCompilerConfiguration(BytecodeToJavascriptCompilerConfiguration compilerConfiguration)
+	{
+		this.compilerConfiguration= compilerConfiguration;
+	}
 }

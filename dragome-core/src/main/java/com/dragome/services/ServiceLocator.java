@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.dragome.commons.DragomeConfigurator;
+import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.debugging.messages.ClientToServerMessageChannel;
 import com.dragome.debugging.messages.MessageChannel;
@@ -67,7 +68,7 @@ public class ServiceLocator
 		return clientSideEnabled;
 	}
 
-	@MethodAlias(alias= "_ed.setClientSideEnabled")
+	@MethodAlias(alias= "this.setClientSideEnabled")
 	public void setClientSideEnabled(boolean clientSideEnabled)
 	{
 		this.clientSideEnabled= clientSideEnabled;
@@ -239,5 +240,12 @@ public class ServiceLocator
 	public RequestExecutor getRequestExecutor()
 	{
 		return new RequestExecutorImpl();
+	}
+
+	public BytecodeToJavascriptCompiler getBytecodeToJavascriptCompiler()
+	{
+		ReflectionService reflectionService= getReflectionService();
+		Class<BytecodeToJavascriptCompiler> clazz= (Class<BytecodeToJavascriptCompiler>) reflectionService.getSubTypesOf(BytecodeToJavascriptCompiler.class).iterator().next();
+		return reflectionService.createClassInstance(clazz);
 	}
 }

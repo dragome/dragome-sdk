@@ -14,51 +14,33 @@ import java.io.File;
 import java.io.FileFilter;
 
 import com.dragome.commons.DragomeConfigurator;
-import com.dragome.compiler.DragomeJsCompiler;
-import com.dragome.compiler.Project;
-import com.dragome.compiler.writer.Assembly;
+import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
+import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
+import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.debugging.execution.DragomeVisualActivity;
 import com.dragome.services.ServiceLocator;
 
 public class DragomeCompilerLauncher
 {
-	static Class<DragomeVisualActivity> mainClass= DragomeVisualActivity.class;
-
 	public static void compileWithMainClass(String classPath, String target)
 	{
-		try
+		DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
+		String mainClassName= DragomeVisualActivity.class.getName();
+		CompilerType defaultCompilerType= configurator.getDefaultCompilerType();
+		BytecodeTransformer bytecodeTransformer= configurator.getBytecodeTransformer();
+		FileFilter classpathFilter= new FileFilter()
 		{
-			Project.singleton= null;
-
-			String classpathElements= classPath;
-			Assembly assembly= new Assembly();
-			assembly.setEntryPointClassName(mainClass.getName());
-			assembly.setTargetLocation(new File(target));
-
-			DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
-
-			DragomeJsCompiler compiler= new DragomeJsCompiler(configurator.getDefaultCompilerType());
-			//	    compiler.setBasedir(basedir);
-			compiler.addClasspathElements(classpathElements);
-			compiler.addClasspathFilter(new FileFilter()
+			public boolean accept(File pathname)
 			{
-				public boolean accept(File pathname)
-				{
-					return !pathname.toString().contains(File.separator + "serverside");
-				}
-			});
-
-			if (configurator != null)
-				compiler.setBytecodeTransformer(configurator.getBytecodeTransformer());
-
-			compiler.addAssembly(assembly);
-			compiler.setGenerateLineNumbers(false);
-			compiler.setCompression(false);
-			compiler.execute();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+				return !pathname.toString().contains(File.separator + "serverside");
+			}
+		};
+		
+		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= ServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
+		
+		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter);
+		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
+		bytecodeToJavascriptCompiler.compile();
 	}
 }

@@ -103,11 +103,6 @@
 
     <dependency>
       <groupId>com.dragome</groupId>
-      <artifactId>dragome-bytecode-js-compiler</artifactId>
-      <version>0.95.1-beta1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
       <version>0.95.1-beta1</version>
     </dependency>

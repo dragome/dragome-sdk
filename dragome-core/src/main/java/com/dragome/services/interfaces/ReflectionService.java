@@ -27,6 +27,6 @@ public interface ReflectionService
 	public Set<Class<?>> getAllInterfaces(Class<?> clazz);
 	public Object createClassInstance(String className);
 	public Class<?> forName(String className);
-	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type);
+	public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type);
 	public DragomeConfigurator getConfigurator();
 }
