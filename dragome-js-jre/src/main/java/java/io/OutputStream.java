@@ -27,9 +27,15 @@ public abstract class OutputStream
 	{
 	}
 
-	public abstract void write(int b) throws IOException;
+	public void write(int b) throws IOException
+	{
+		
+	}
 
-	public abstract void write(String s) throws IOException;
+	public void write(String s) throws IOException
+	{
+		
+	}
 
 	public void write(byte[] b) throws IOException
 	{
@@ -49,7 +55,7 @@ public abstract class OutputStream
 		ensureOpen();
 	}
 
-	public void close()
+	public void close() throws IOException
 	{
 		isClosed= true;
 	}

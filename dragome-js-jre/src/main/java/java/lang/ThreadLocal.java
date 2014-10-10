@@ -41,4 +41,12 @@ public class ThreadLocal<T>
 	{
 		this.value= value;
 	}
+
+	static class ThreadLocalMap
+	{
+		public <S> ThreadLocalMap(InheritableThreadLocal<S> inheritableThreadLocal, S firstValue)
+		{
+		}
+
+	}
 }

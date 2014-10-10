@@ -14,14 +14,38 @@ public abstract class InputStream implements Closeable
 {
 	public abstract int read() throws IOException;
 
-	public int read(byte[] buffer, int i, int bufferSize)
-    {
-	    // TODO Auto-generated method stub
-	    return 0;
-    }
-
-	public int read(byte[] chunk) {
+	public int read(byte[] buffer, int i, int bufferSize) throws IOException
+	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public int read(byte[] chunk) throws IOException
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public long skip(long n) throws IOException
+	{
+		return 0;
+	}
+
+	public int available() throws IOException
+	{
+		return 0;
+	}
+
+	public synchronized void mark(int readlimit)
+	{
+	}
+
+	public synchronized void reset() throws IOException
+	{
+	}
+
+	public boolean markSupported()
+	{
+		return false;
 	}
 }

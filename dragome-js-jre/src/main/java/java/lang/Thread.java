@@ -18,6 +18,21 @@ package java.lang;
  */
 public class Thread implements Runnable
 {
+	ThreadLocal.ThreadLocalMap inheritableThreadLocals= null;
+
+	public interface UncaughtExceptionHandler
+	{
+		/**
+		 * Method invoked when the given thread terminates due to the
+		 * given uncaught exception.
+		 * <p>Any exception thrown by this method will be ignored by the
+		 * Java Virtual Machine.
+		 * @param t the thread
+		 * @param e the exception
+		 */
+		void uncaughtException(Thread t, Throwable e);
+	}
+
 	/**
 	 * The minimum priority that a thread can have.
 	 */
@@ -426,14 +441,14 @@ public class Thread implements Runnable
 
 	}
 	public ClassLoader getContextClassLoader()
-    {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public void setContextClassLoader(ClassLoader last)
-    {
-	    // TODO Auto-generated method stub
-	    
-    }
+	{
+		// TODO Auto-generated method stub
+
+	}
 
 }

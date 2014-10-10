@@ -90,4 +90,19 @@ public abstract class AbstractCollection<T> implements Collection<T>, Iterable<T
 	{
 		throw new RuntimeException("not implemented");
 	}
+	
+	public boolean remove(Object elem)
+	{
+		return false;
+	}
+	
+	public boolean isEmpty()
+	{
+		return true;
+	}
+	
+	public boolean contains(Object value)
+	{
+		return false;
+	}
 }

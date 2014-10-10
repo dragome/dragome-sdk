@@ -41,7 +41,7 @@ public class PrintStream extends OutputStream
 		}
 	}
 
-	public void close()
+	public void close() throws IOException
 	{
 		out.close();
 	}
