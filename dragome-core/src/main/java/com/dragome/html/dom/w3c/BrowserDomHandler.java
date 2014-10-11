@@ -48,4 +48,9 @@ public class BrowserDomHandler implements DomHandler
 
 		return exists ? foundElement : null;
 	}
+
+	public void initDocument()
+	{
+		document= new BrowserHtmlDocument();
+	}
 }

@@ -13,7 +13,6 @@ package com.dragome.serverside.servlets;
 import java.util.concurrent.Executor;
 
 import com.dragome.debugging.messages.ServerToClientServiceInvoker;
-import com.dragome.html.dom.w3c.BrowserHtmlDocument;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.interfaces.SerializationService;
@@ -34,7 +33,7 @@ public class ServiceInvoker
 		{
 			public void run()
 			{
-				ServiceLocator.getInstance().getDomHandler().setDocument(new BrowserHtmlDocument()); //TODO revisar!!
+				ServiceLocator.getInstance().getDomHandler().initDocument(); //TODO revisar!!
 
 				SerializationService serializationService= ServiceLocator.getInstance().getSerializationService();
 
