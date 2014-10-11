@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.dragome.templates.interfaces;
 
-import org.w3c.dom.Element;
-
 import com.dragome.debugging.execution.TemplateHandlingStrategy;
 import com.dragome.render.canvas.interfaces.CanvasFactory;
 import com.dragome.render.interfaces.ComponentRenderer;
@@ -24,6 +22,5 @@ public interface TemplateManager
 	public TemplateHandlingStrategy getTemplateHandlingStrategy();
 	public CanvasFactory getCanvasFactory();
 	public Template createTemplate(String aTemplateName);
-	public Template createTemplateFromElement(Element containerElement, String aName);
 	public ComponentRenderer getComponentRenderer();
 }
