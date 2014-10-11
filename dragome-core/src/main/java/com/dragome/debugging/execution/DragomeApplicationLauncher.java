@@ -18,7 +18,6 @@ import com.dragome.debugging.messages.Receiver;
 import com.dragome.debugging.temp.TempHelper;
 import com.dragome.html.dom.w3c.BrowserDomHandler;
 import com.dragome.model.EventDispatcherHelper;
-import com.dragome.model.EventDispatcherImpl;
 import com.dragome.remote.ApplicationExecutor;
 import com.dragome.services.RequestExecutorImpl;
 import com.dragome.services.ServiceInvocation;

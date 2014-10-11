@@ -17,6 +17,7 @@ import com.dragome.render.html.HTMLTemplateHandlingStrategy;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.interfaces.ParametersHandler;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.templates.interfaces.TemplateHandlingStrategy;
 
 public abstract class DragomeVisualActivity implements VisualActivity
 {
