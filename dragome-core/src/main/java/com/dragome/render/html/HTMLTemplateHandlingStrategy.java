@@ -12,9 +12,10 @@ package com.dragome.render.html;
 
 import org.w3c.dom.Element;
 
-import com.dragome.debugging.execution.TemplateHandlingStrategy;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.templates.interfaces.TemplateHandlingStrategy;
 
 public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 {
@@ -38,7 +39,7 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 	public Template loadTemplateCloned(String templateName, String aContainerId)
 	{
 		Template template= loadTemplate(templateName, aContainerId);
-		return ServiceLocator.getInstance().getTemplateHandler().clone(template);
+		return GuiaServiceLocator.getInstance().getTemplateHandler().clone(template);
 	}
 	
 	public Template loadTemplate(String templateName, String aContainerId)
@@ -62,7 +63,7 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 		childElement.setAttribute("data-template", aTemplateName);
 		childElement.setAttribute("id", aTemplateName);
 
-		Template createTemplate= ServiceLocator.getInstance().getTemplateManager().createTemplate(aTemplateName);
+		Template createTemplate= GuiaServiceLocator.getInstance().getTemplateManager().createTemplate(aTemplateName);
 		//	Template createTemplate= new HTMLTemplateFactory().createTemplate(element, aTemplateName);
 		return createTemplate;
     }
@@ -86,7 +87,7 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 	{
 		getContainerElement().setAttribute("data-template", "body");
 		getContainerElement().setAttribute("id", "body");
-		return ServiceLocator.getInstance().getTemplateManager().createTemplate("body");
+		return GuiaServiceLocator.getInstance().getTemplateManager().createTemplate("body");
 	}
 
 	public Template loadTemplate(String templateName)

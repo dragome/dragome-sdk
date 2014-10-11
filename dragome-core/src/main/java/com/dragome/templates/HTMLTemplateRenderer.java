@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.canvas.interfaces.CanvasHelper;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 
@@ -51,14 +51,14 @@ public class HTMLTemplateRenderer
 		Element templateContent= ((Content<Element>) template.getContent()).getValue();
 		Element content= (Element) templateContent;
 
-		CanvasHelper canvasHelper= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().getCanvasHelper();
+		CanvasHelper canvasHelper= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().getCanvasHelper();
 		//	canvasHelper.hideTemplateIds(template);
 
 		Element cloneElement= (Element) content.cloneNode(true);
 
 		//	canvasHelper.restoreTemplateIds(template);
 
-		canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		//	if (template.isInner())
 		//	    canvas.setContent(cloneElement.getAttribute(INNER_HTML));

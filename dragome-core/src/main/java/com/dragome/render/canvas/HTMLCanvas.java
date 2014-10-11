@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.canvas.interfaces.ConcatCanvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateFactory;
 
 public class HTMLCanvas implements Canvas<Element>
@@ -96,7 +96,7 @@ public class HTMLCanvas implements Canvas<Element>
 		}
 
 		if (removeReplacements)
-			ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().getCanvasHelper().removeReplacedElements(parentNode);
+			GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().getCanvasHelper().removeReplacedElements(parentNode);
 
 		if (grandParentNode != null)
 			grandParentNode.replaceChild(parentNode, cloneNode);

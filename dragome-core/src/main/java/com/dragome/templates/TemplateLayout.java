@@ -17,14 +17,14 @@ import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.model.listeners.PanelListener;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.interfaces.Template;
 
 public class TemplateLayout implements Layout
 {
 	public static class PanelListenerImpl implements PanelListener
 	{
-		protected ComponentRenderer<Object, VisualComponent> renderer= ServiceLocator.getInstance().getTemplateManager().getComponentRenderer();
+		protected ComponentRenderer<Object, VisualComponent> renderer= GuiaServiceLocator.getInstance().getTemplateManager().getComponentRenderer();
 		protected VisualPanel visualPanel;
 
 		private PanelListenerImpl(VisualPanel visualPanel)

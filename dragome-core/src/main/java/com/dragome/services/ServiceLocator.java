@@ -24,19 +24,16 @@ import com.dragome.helpers.BrowserResultSetProcessorExecutor;
 import com.dragome.helpers.NullResultSetProcessorExecutor;
 import com.dragome.helpers.ResultSetProcessorExecutor;
 import com.dragome.html.dom.DomHandler;
+import com.dragome.html.dom.EventDispatcher;
 import com.dragome.html.dom.w3c.BrowserDomHandler;
 import com.dragome.model.EventDispatcherImpl;
-import com.dragome.model.listeners.EventDispatcher;
 import com.dragome.remote.ServiceFactory;
 import com.dragome.remote.TimeCollector;
-import com.dragome.render.html.HTMLTemplateHandler;
-import com.dragome.render.interfaces.TemplateHandler;
 import com.dragome.services.interfaces.ParametersHandler;
 import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.services.interfaces.SerializationService;
 import com.dragome.services.serialization.FlexJsonSerializationService;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
-import com.dragome.templates.HTMLTemplateManager;
 import com.dragome.templates.interfaces.TemplateManager;
 
 public class ServiceLocator
@@ -132,19 +129,6 @@ public class ServiceLocator
 		return new ServerSideServiceFactory();
 	}
 
-	public TemplateManager getTemplateManager()
-	{
-		if (templateManager == null)
-		{
-//			if (isClientSide())
-				templateManager= new HTMLTemplateManager();
-//			else
-//				templateManager= getServerSideServiceFactory().createSyncService(TemplateManager.class);
-		}
-
-		return templateManager;
-	}
-
 	public TimeCollector getTimeCollector()
 	{
 		if (timeCollector == null)
@@ -210,11 +194,6 @@ public class ServiceLocator
 		if (fixedThreadPool == null)
 			fixedThreadPool= Executors.newCachedThreadPool();
 		return fixedThreadPool;
-	}
-
-	public TemplateHandler getTemplateHandler()
-	{
-		return new HTMLTemplateHandler();
 	}
 
 	public void setConfigurator(DragomeConfigurator configurator)

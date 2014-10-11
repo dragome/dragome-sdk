@@ -10,19 +10,17 @@
  ******************************************************************************/
 package com.dragome.templates;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.dragome.render.ItemProcessorImpl;
 import com.dragome.render.interfaces.ItemProcessor;
 import com.dragome.render.interfaces.TemplateHandler;
 import com.dragome.render.interfaces.View;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.interfaces.Template;
 
 public class TemplateRepeater<T>
@@ -85,7 +83,7 @@ public class TemplateRepeater<T>
 	public void repeatItems(Iterable<T> items, ItemProcessor<T> itemProcessor)
 	{
 		Map<T, List<Template>> templatesByItemReplacement= new LinkedHashMap<T, List<Template>>();
-		TemplateHandler templateHandler= ServiceLocator.getInstance().getTemplateHandler();
+		TemplateHandler templateHandler= GuiaServiceLocator.getInstance().getTemplateHandler();
 
 		Entry<T, List<Template>> entry= null;
 		Iterator<Entry<T, List<Template>>> entriesIterator= shownTemplates.entrySet().iterator();
@@ -190,7 +188,7 @@ public class TemplateRepeater<T>
 
 	public Template getUpdatedTemplateFor(T item)
 	{
-		TemplateHandler templateHandler= ServiceLocator.getInstance().getTemplateHandler();
+		TemplateHandler templateHandler= GuiaServiceLocator.getInstance().getTemplateHandler();
 		Template updatedTemplate= itemProcessor.getRepeatTemplates(item).get(0);
 		Template clone= templateHandler.clone(updatedTemplate);
 		templateHandler.makeVisible(clone);

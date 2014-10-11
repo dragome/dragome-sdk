@@ -10,16 +10,15 @@
  ******************************************************************************/
 package com.dragome.templates.interfaces;
 
-import com.dragome.render.canvas.interfaces.CanvasFactory;
-import com.dragome.render.interfaces.ComponentRenderer;
-import com.dragome.render.interfaces.TemplateHandler;
 
-public interface TemplateManager
+public interface TemplateHandlingStrategy
 {
-//	public Template getTemplate(String anAlias);
-	public TemplateHandler getTemplateHandler();
-	public TemplateHandlingStrategy getTemplateHandlingStrategy();
-	public CanvasFactory getCanvasFactory();
-	public Template createTemplate(String aTemplateName);
-	public ComponentRenderer getComponentRenderer();
+	void loadMainTemplate(String templateName);
+	void hideContainer();
+	void setupContainer();
+	void showContainer();
+	Template loadTemplate(String templateName, String aContainerId);
+	Template loadTemplate(String templateName);
+	Template getMainTemplate();
+	Template loadTemplateCloned(String templateName, String aContainerId);
 }
