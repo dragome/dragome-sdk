@@ -11,7 +11,7 @@
 package com.dragome.model;
 
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.model.listeners.EventDispatcher;
+import com.dragome.html.dom.EventDispatcher;
 import com.dragome.services.ServiceLocator;
 
 public class EventExecutor implements Runnable

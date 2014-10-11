@@ -18,6 +18,7 @@ import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.model.interfaces.VisualProgressBar;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.services.ServiceLocator;
 
 public class HTMLProgressBarRenderer implements ComponentRenderer<Element, VisualProgressBar>
@@ -46,7 +47,7 @@ public class HTMLProgressBarRenderer implements ComponentRenderer<Element, Visua
 			}
 		});
 
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 		canvas.setContent(mainDiv);
 
 		return canvas;

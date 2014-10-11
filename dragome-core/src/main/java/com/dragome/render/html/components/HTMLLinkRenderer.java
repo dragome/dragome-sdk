@@ -16,7 +16,7 @@ import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.VisualLink;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
@@ -27,7 +27,7 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 
 	public Canvas<Element> render(final VisualLink visualLink)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
 		{
@@ -37,7 +37,6 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 				if (visualLink.getUrl() != null)
 					linkElement.setAttribute("href", visualLink.getUrl());
 
-				linkElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 				setInnerText(visualLink, linkElement);
 
 				addListeners(visualLink, linkElement);

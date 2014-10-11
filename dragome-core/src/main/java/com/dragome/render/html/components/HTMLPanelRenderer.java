@@ -42,7 +42,6 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 //			}
 			
 			final String id= DragomeEntityManager.add(visualPanel);
-			element.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 			
 			return new HTMLCanvas(element);
 		}

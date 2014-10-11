@@ -17,7 +17,7 @@ import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.model.interfaces.VisualTextArea;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLTextAreaRenderer extends AbstractHTMLComponentRenderer<VisualTextArea<Object>>
 {
@@ -27,7 +27,7 @@ public class HTMLTextAreaRenderer extends AbstractHTMLComponentRenderer<VisualTe
 
 	public Canvas<Element> render(final VisualTextArea<Object> visualTextArea)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 		canvas.setContent(new MergeableElement()
 		{
 			public void mergeWith(final Element textAreaElement)
@@ -43,7 +43,6 @@ public class HTMLTextAreaRenderer extends AbstractHTMLComponentRenderer<VisualTe
 				});
 
 				String value= visualTextArea.getRenderer().render(visualTextArea.getValue());
-				textAreaElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 				textAreaElement.setAttribute("onchange", "EventDispatcher.setText(this.id, this.value);stopEvent(event);");
 
 				textAreaElement.setAttribute("innerHTML", value);

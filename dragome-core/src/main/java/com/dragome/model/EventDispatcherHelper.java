@@ -87,7 +87,7 @@ public class EventDispatcherHelper
 	private static void getComponentById(Object event)
 	{
 		ScriptHelper.eval("stopEvent(event)", null);
-		String id2= (String) ScriptHelper.eval("event.currentTarget.getAttribute('data-component-id')", null);
+		String id2= (String) ScriptHelper.eval("event.currentTarget.getAttribute('data-element-id')", null);
 		EventDispatcherHelper.getComponentById(id2); //TODO revisar el static
 	}
 
@@ -103,7 +103,7 @@ public class EventDispatcherHelper
 		//	ScriptHelper.eval("stopEvent(event)", null);
 		Object eventTarget= getEventTarget(event);
 		ScriptHelper.put("eventTarget", eventTarget, null);
-		String id= (String) ScriptHelper.eval("eventTarget.getAttribute('data-component-id')", null);
+		String id= (String) ScriptHelper.eval("eventTarget.getAttribute('data-element-id')", null);
 		return id;
 	}
 

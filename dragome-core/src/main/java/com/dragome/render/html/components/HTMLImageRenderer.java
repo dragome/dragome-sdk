@@ -13,34 +13,31 @@ package com.dragome.render.html.components;
 import org.w3c.dom.Element;
 
 import com.dragome.model.interfaces.VisualImage;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLImageRenderer extends AbstractHTMLComponentRenderer<VisualImage>
 {
-    public HTMLImageRenderer()
-    {
-    }
-
-    public Canvas<Element> render(final VisualImage visualImage)
-    {
-	Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
-
-	canvas.setContent(new MergeableElement()
+	public HTMLImageRenderer()
 	{
-	    public void mergeWith(Element element)
-	    {
-		String id= DragomeEntityManager.add(visualImage);
-		if (visualImage.getValue() != null)
-		    element.setAttribute("src", visualImage.getValue());
-		element.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+	}
 
-		addListeners(visualImage, element);
-	    }
-	});
+	public Canvas<Element> render(final VisualImage visualImage)
+	{
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-	return canvas;
-    }
+		canvas.setContent(new MergeableElement()
+		{
+			public void mergeWith(Element element)
+			{
+				if (visualImage.getValue() != null)
+					element.setAttribute("src", visualImage.getValue());
+
+				addListeners(visualImage, element);
+			}
+		});
+
+		return canvas;
+	}
 
 }

@@ -25,7 +25,7 @@ import com.dragome.model.interfaces.VisualListBox;
 import com.dragome.model.listeners.ClickListener;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBox<Object>>
@@ -36,7 +36,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 	public Canvas<Element> render(final VisualListBox<Object> visualList)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
 		{
@@ -109,7 +109,6 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					}
 				});
 
-				selectElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 				selectElement.setAttribute("size", getSelectElementSize() + "");
 //				selectElement.setAttribute("style", "min-width:300px;");
 

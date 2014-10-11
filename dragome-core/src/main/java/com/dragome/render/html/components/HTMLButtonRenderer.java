@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import com.dragome.model.interfaces.VisualButton;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButton>
 {
@@ -25,7 +25,7 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 
 	public Canvas<Element> render(final VisualButton visualButton)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
 		{
@@ -36,7 +36,6 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 				//		Element button1= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("input");
 				element.setAttribute("type", "button");
 				element.setAttribute("value", visualButton.getCaption());
-				element.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
 				addListeners(visualButton, element);
 			}

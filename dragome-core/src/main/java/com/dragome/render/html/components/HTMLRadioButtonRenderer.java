@@ -19,6 +19,7 @@ import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.listeners.ClickListener;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.services.ServiceLocator;
 
 public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<VisualRadioButton>
@@ -45,11 +46,10 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 		radioButtonElement.setAttribute("name", radioButton.getButtonGroup());
 		if (radioButton.getValue())
 			radioButtonElement.setAttribute("checked", "checked");
-		radioButtonElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
 		addListeners(radioButton, radioButtonElement);
 
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 		canvas.setContent(radioButtonElement);
 
 		return canvas;

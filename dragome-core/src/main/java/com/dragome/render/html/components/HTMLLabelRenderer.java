@@ -18,7 +18,7 @@ import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.model.interfaces.VisualLabel;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel<Object>>
@@ -29,7 +29,7 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 
 	public Canvas<Element> render(final VisualLabel<Object> visualLabel)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
 		{
@@ -38,7 +38,6 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 			public void mergeWith(final Element labelElement)
 			{
 				String id= DragomeEntityManager.add(visualLabel);
-				labelElement.setAttribute(AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE, id);
 				//final Element labelElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("span");
 				setInnerText(visualLabel, labelElement);
 

@@ -13,22 +13,13 @@ package com.dragome.model;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.listeners.BlurListener;
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.model.listeners.DoubleClickListener;
-import com.dragome.model.listeners.EventDispatcher;
-import com.dragome.model.listeners.InputListener;
-import com.dragome.model.listeners.KeyDownListener;
-import com.dragome.model.listeners.KeyPressListener;
-import com.dragome.model.listeners.KeyUpListener;
-import com.dragome.model.listeners.MouseOutListener;
-import com.dragome.model.listeners.MouseOverListener;
+import com.dragome.html.dom.EventDispatcher;
 import com.dragome.remote.entities.DragomeEntityManager;
 
 public class EventDispatcherImpl implements EventDispatcher
 {
 	private static boolean processingEvent= false;
+	public static final String ELEMENT_ID_ATTRIBUTE= "data-element-id";
 
 	public EventDispatcherImpl()
 	{
@@ -60,38 +51,11 @@ public class EventDispatcherImpl implements EventDispatcher
 				Object object= DragomeEntityManager.get(id);
 				if (object instanceof EventListener)
 					processElementEvent(eventType, arguments, (EventListener) object, id);
-				else
-					processComponentEvent(eventType, arguments, (VisualComponent) object);
-			}
-
-			private void processComponentEvent(final String eventType, final Object arguments, VisualComponent visualComponent)
-			{
-				if (visualComponent != null)
-				{
-					if (eventType.equals("click"))
-						visualComponent.getListener(ClickListener.class).clickPerformed(visualComponent);
-					else if (eventType.equals("dblclick"))
-						visualComponent.getListener(DoubleClickListener.class).doubleClickPerformed(visualComponent);
-					else if (eventType.equals("mouseover"))
-						visualComponent.getListener(MouseOverListener.class).mouseOverPerformed(visualComponent);
-					else if (eventType.equals("mouseout"))
-						visualComponent.getListener(MouseOutListener.class).mouseOutPerformed(visualComponent);
-					else if (eventType.equals("keyup"))
-						visualComponent.getListener(KeyUpListener.class).keyupPerformed(visualComponent, (int) arguments);
-					else if (eventType.equals("keydown"))
-						visualComponent.getListener(KeyDownListener.class).keydownPerformed(visualComponent, (int) arguments);
-					else if (eventType.equals("keypress"))
-						visualComponent.getListener(KeyPressListener.class).keypressPerformed(visualComponent, (int) arguments);
-					else if (eventType.equals("blur"))
-						visualComponent.getListener(BlurListener.class).blurPerformed(visualComponent);
-					else if (eventType.equals("input"))
-						visualComponent.getListener(InputListener.class).inputPerformed(visualComponent);
-				}
 			}
 
 			private void processElementEvent(final String eventType, final Object arguments, EventListener browserEventListener, String id)
 			{
-				//				final Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[data-component-id = \""+id+"\"]");
+				//				final Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[data-element-id = \""+id+"\"]");
 				browserEventListener.handleEvent(eventType.startsWith("key") ? new KeyboardEventImpl(eventType, (int)arguments) : new EventImpl(eventType));
 			}
 		});
@@ -102,6 +66,6 @@ public class EventDispatcherImpl implements EventDispatcher
 		for (String eventType : eventTypes)
 			element.setAttribute("on" + eventType, "_ed.onEvent()");
 
-		element.setAttribute("data-component-id", DragomeEntityManager.add(eventListener));
+		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
 	}
 }

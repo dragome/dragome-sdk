@@ -21,7 +21,7 @@ import com.dragome.model.listeners.FocusListener;
 import com.dragome.model.listeners.InputListener;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualTextField<Object>>
 {
@@ -31,7 +31,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 	public Canvas<Element> render(final VisualTextField<Object> visualTextField)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
 		{
@@ -80,7 +80,6 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				String value= visualTextField.getRenderer().render(visualTextField.getValue());
 				textFieldElement.setAttribute("type", "text");
 				textFieldElement.setAttribute("value", value);
-				textFieldElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
 				ScriptHelper.put("value", value == null ? "" : value, this);
 				ScriptHelper.put("textFieldElement", textFieldElement, this);

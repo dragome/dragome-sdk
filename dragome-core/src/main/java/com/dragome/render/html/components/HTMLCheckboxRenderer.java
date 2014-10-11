@@ -18,13 +18,13 @@ import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.model.interfaces.VisualCheckbox;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.ServiceLocator;
+import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCheckbox>
 {
 	public Canvas<Element> render(final VisualCheckbox checkbox)
 	{
-		Canvas<Element> canvas= ServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
 		{
@@ -35,7 +35,6 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 				button1.setAttribute("type", "checkbox");
 				button1.setAttribute("value", checkbox.getCaption());
 				updateChecked(checkbox, button1);
-				button1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
 				checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
 				{
