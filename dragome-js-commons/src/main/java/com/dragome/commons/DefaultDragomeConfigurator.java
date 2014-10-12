@@ -67,6 +67,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		        classpathEntry.contains("dragome-js-jre-"+dragomeVersion+".jar") || //
 		        classpathEntry.contains("dragome-js-commons-"+dragomeVersion+".jar") || //
 		        classpathEntry.contains("dragome-core-"+dragomeVersion+".jar") || //
+		        classpathEntry.contains("dragome-guia-"+dragomeVersion+".jar") || //
 		        classpathEntry.contains("dragome-form-bindings-"+dragomeVersion+".jar") || //
 		        classpathEntry.contains("dragome-method-logger-"+dragomeVersion+".jar") //
 		;
