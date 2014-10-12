@@ -21,6 +21,7 @@ import com.dragome.render.interfaces.ItemProcessor;
 import com.dragome.render.interfaces.TemplateHandler;
 import com.dragome.render.interfaces.View;
 import com.dragome.services.GuiaServiceLocator;
+import com.dragome.templates.interfaces.SimpleItemProcessor;
 import com.dragome.templates.interfaces.Template;
 
 public class TemplateRepeater<T>

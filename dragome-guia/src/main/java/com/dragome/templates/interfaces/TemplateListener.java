@@ -8,14 +8,13 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.templates;
+package com.dragome.templates.interfaces;
 
 import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
-import com.dragome.templates.interfaces.Content;
-import com.dragome.templates.interfaces.Template;
+import com.dragome.templates.TemplateImpl;
 
 public interface TemplateListener extends EventListener
 {

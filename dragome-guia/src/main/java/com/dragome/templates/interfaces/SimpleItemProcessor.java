@@ -8,9 +8,8 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.templates;
+package com.dragome.templates.interfaces;
 
-import com.dragome.templates.interfaces.Template;
 
 public interface SimpleItemProcessor<T>
 {

@@ -20,6 +20,7 @@ import com.dragome.model.DefaultEventProducer;
 import com.dragome.render.html.HTMLTemplateChangedListener;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.templates.interfaces.TemplateListener;
 import com.dragome.templates.interfaces.TemplateVisitor;
 
 public class TemplateImpl extends DefaultEventProducer implements Template
