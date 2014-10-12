@@ -12,7 +12,7 @@ package com.dragome.render.interfaces;
 
 import java.util.List;
 
-import com.dragome.templates.SimpleItemProcessor;
+import com.dragome.templates.interfaces.SimpleItemProcessor;
 import com.dragome.templates.interfaces.Template;
 
 public interface ItemProcessor<T> extends SimpleItemProcessor<T>

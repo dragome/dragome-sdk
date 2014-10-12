@@ -18,9 +18,9 @@ import org.w3c.dom.Node;
 
 import com.dragome.render.html.components.Mergeable;
 import com.dragome.templates.TemplateImpl;
-import com.dragome.templates.TemplateListener;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.templates.interfaces.TemplateListener;
 
 public final class HTMLTemplateChangedListener implements TemplateListener
 {
