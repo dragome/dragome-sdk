@@ -20,8 +20,8 @@ import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.templates.SimpleItemProcessor;
 import com.dragome.templates.TemplateRepeater;
+import com.dragome.templates.interfaces.SimpleItemProcessor;
 import com.dragome.templates.interfaces.Template;
 
 public class RepeaterBuilder<T>

@@ -24,7 +24,7 @@ import com.dragome.forms.bindings.client.format.Format;
 import com.dragome.forms.bindings.client.format.FormatException;
 import com.dragome.model.interfaces.IndexedValidationResultCollector;
 import com.dragome.model.interfaces.Message;
-import com.dragome.services.interfaces.ValidationResultCollector;
+import com.dragome.model.pectin.ValidationResultCollector;
 
 /**
  * Created by IntelliJ IDEA.

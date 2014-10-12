@@ -25,7 +25,7 @@ import com.dragome.model.interfaces.HandlerRegistration;
 import com.dragome.model.interfaces.Severity;
 import com.dragome.model.interfaces.ValidationMessage;
 import com.dragome.model.interfaces.ValidationResult;
-import com.dragome.services.interfaces.ValidationResultCollector;
+import com.dragome.model.pectin.ValidationResultCollector;
 
 /**
  * Created by IntelliJ IDEA.

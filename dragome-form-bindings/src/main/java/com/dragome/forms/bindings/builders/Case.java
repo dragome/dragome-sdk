@@ -1,8 +1,7 @@
 package com.dragome.forms.bindings.builders;
 
 import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.services.ServiceLocator;
-import com.dragome.templates.interfaces.Template;
+import com.dragome.services.GuiaServiceLocator;
 
 public class Case
 {
@@ -90,11 +89,11 @@ public class Case
 
 	public void hide()
 	{
-		ServiceLocator.getInstance().getTemplateHandler().makeInvisible(templateBindingBuilder.getTemplate());
+		GuiaServiceLocator.getInstance().getTemplateHandler().makeInvisible(templateBindingBuilder.getTemplate());
 	}
 
 	public void show()
 	{
-		ServiceLocator.getInstance().getTemplateHandler().makeVisible(templateBindingBuilder.getTemplate());
+		GuiaServiceLocator.getInstance().getTemplateHandler().makeVisible(templateBindingBuilder.getTemplate());
 	}
 }

@@ -16,7 +16,7 @@
 
 package com.dragome.forms.bindings.client.form.validation;
 
-import com.dragome.services.interfaces.ValidationResultCollector;
+import com.dragome.model.pectin.ValidationResultCollector;
 
 /**
  * Created by IntelliJ IDEA.

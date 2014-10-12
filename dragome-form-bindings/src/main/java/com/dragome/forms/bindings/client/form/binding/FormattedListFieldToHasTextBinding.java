@@ -23,10 +23,10 @@ import com.dragome.forms.bindings.client.format.CollectionToStringFormat;
 import com.dragome.forms.bindings.client.format.DisplayFormat;
 import com.dragome.forms.bindings.client.format.Format;
 import com.dragome.forms.bindings.client.format.ListDisplayFormat;
-import com.dragome.model.interfaces.list.ListModel;
 import com.dragome.forms.bindings.extra.user.client.ui.HasText;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
+import com.dragome.model.interfaces.list.ListModel;
 
 /**
  *

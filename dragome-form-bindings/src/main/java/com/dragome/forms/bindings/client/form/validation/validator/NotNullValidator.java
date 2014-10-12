@@ -18,7 +18,7 @@ package com.dragome.forms.bindings.client.form.validation.validator;
 
 import com.dragome.forms.bindings.client.form.validation.Validator;
 import com.dragome.forms.bindings.client.form.validation.message.ErrorMessage;
-import com.dragome.services.interfaces.ValidationResultCollector;
+import com.dragome.model.pectin.ValidationResultCollector;
 
 /**
  * 
