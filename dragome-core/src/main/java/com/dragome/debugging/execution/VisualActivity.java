@@ -19,4 +19,6 @@ public interface VisualActivity
 	public void onPause();
 	public void onStop();
 	public void onDestroy();
+	public void openActivity(VisualActivity activity);
+	public void build();
 }

@@ -53,7 +53,7 @@ public class DragomeApplicationLauncher
 
 			public void execute(Class<?> type)
 			{
-				DragomeVisualActivity visualActivity= (DragomeVisualActivity) ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
+				VisualActivity visualActivity= (VisualActivity) ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
 				visualActivity.onCreate();
 			}
 

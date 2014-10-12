@@ -43,7 +43,7 @@ public class ApplicationExecutorImpl implements ApplicationExecutor
 				{
 					public void run()
 					{
-						DragomeVisualActivity application= (DragomeVisualActivity) ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
+						VisualActivity application= (VisualActivity) ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
 						application.onCreate();
 					}
 				});

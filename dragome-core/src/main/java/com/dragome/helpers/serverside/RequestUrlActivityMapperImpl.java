@@ -17,7 +17,6 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import com.dragome.annotations.PageAlias;
-import com.dragome.debugging.execution.DragomeVisualActivity;
 import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.model.RequestUrlActivityMapper;
 
@@ -45,14 +44,14 @@ public class RequestUrlActivityMapperImpl implements RequestUrlActivityMapper
 		return null;
 	}
 
-	public List<Class<? extends DragomeVisualActivity>> getExistingVisualActivities()
+	public List<Class<? extends VisualActivity>> getExistingVisualActivities()
 	{
 		Reflections reflections= new Reflections("");
-		Set<Class<? extends DragomeVisualActivity>> classes= reflections.getSubTypesOf(DragomeVisualActivity.class);
-		return new ArrayList<Class<? extends DragomeVisualActivity>>(classes);
+		Set<Class<? extends VisualActivity>> classes= reflections.getSubTypesOf(VisualActivity.class);
+		return new ArrayList<Class<? extends VisualActivity>>(classes);
 	}
 
-	public String getActivityAlias(Class<? extends DragomeVisualActivity> visualActivity)
+	public String getActivityAlias(Class<? extends VisualActivity> visualActivity)
 	{
 		PageAlias pageAlias= visualActivity.getAnnotation(PageAlias.class);
 		return pageAlias != null ? pageAlias.alias() : "";

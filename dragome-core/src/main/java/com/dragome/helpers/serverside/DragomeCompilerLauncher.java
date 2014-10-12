@@ -18,7 +18,7 @@ import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
-import com.dragome.debugging.execution.DragomeVisualActivity;
+import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.services.ServiceLocator;
 
 public class DragomeCompilerLauncher
@@ -26,7 +26,7 @@ public class DragomeCompilerLauncher
 	public static void compileWithMainClass(String classPath, String target)
 	{
 		DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
-		String mainClassName= DragomeVisualActivity.class.getName();
+		String mainClassName= VisualActivity.class.getName();
 		CompilerType defaultCompilerType= configurator.getDefaultCompilerType();
 		BytecodeTransformer bytecodeTransformer= configurator.getBytecodeTransformer();
 		FileFilter classpathFilter= new FileFilter()
