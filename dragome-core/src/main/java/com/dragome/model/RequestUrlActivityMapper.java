@@ -13,13 +13,13 @@ package com.dragome.model;
 import java.util.List;
 
 import com.dragome.annotations.ServiceImplementation;
-import com.dragome.debugging.execution.DragomeVisualActivity;
+import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.helpers.serverside.RequestUrlActivityMapperImpl;
 
 @ServiceImplementation(RequestUrlActivityMapperImpl.class)
 public interface RequestUrlActivityMapper
 {
 	String getActivityClassNameFromUrl(String uri);
-	List<Class<? extends DragomeVisualActivity>> getExistingVisualActivities();
-	String getActivityAlias(Class<? extends DragomeVisualActivity> visualActivity);
+	List<Class<? extends VisualActivity>> getExistingVisualActivities();
+	String getActivityAlias(Class<? extends VisualActivity> visualActivity);
 }
