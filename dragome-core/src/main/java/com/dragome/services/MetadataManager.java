@@ -24,11 +24,7 @@ import com.dragome.html.dom.EventDispatcher;
 import com.dragome.html.dom.w3c.BrowserDomHandler;
 import com.dragome.model.EventDispatcherImpl;
 import com.dragome.remote.ApplicationExecutor;
-import com.dragome.render.html.HtmlTemplateStorageImpl;
-import com.dragome.render.interfaces.HtmlTemplateStorage;
 import com.dragome.services.interfaces.AsyncResponseHandler;
-import com.dragome.templates.HTMLTemplateManager;
-import com.dragome.templates.interfaces.TemplateManager;
 
 public class MetadataManager
 {
@@ -74,10 +70,10 @@ public class MetadataManager
 			{
 				return CrossExecutionCommandProcessorImpl.class;
 			}
-			else if (TemplateManager.class.isAssignableFrom(type))
-			{
-				return HTMLTemplateManager.class;
-			}
+//			else if (TemplateManager.class.isAssignableFrom(type))
+//			{
+//				return HTMLTemplateManager.class;
+//			}
 			else if (DomHandler.class.isAssignableFrom(type))
 			{
 				return BrowserDomHandler.class;
@@ -86,10 +82,10 @@ public class MetadataManager
 			{
 				return EventDispatcherImpl.class;
 			}
-			else if (HtmlTemplateStorage.class.isAssignableFrom(type))
-			{
-				return HtmlTemplateStorageImpl.class;
-			}
+//			else if (HtmlTemplateStorage.class.isAssignableFrom(type))
+//			{
+//				return HtmlTemplateStorageImpl.class;
+//			}
 			else if (AsyncResponseHandler.class.isAssignableFrom(type))
 			{
 				return AsyncResponseHandlerImpl.class;

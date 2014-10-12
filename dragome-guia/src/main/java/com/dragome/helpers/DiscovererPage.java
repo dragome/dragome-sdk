@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.dragome.annotations.PageAlias;
 import com.dragome.debugging.execution.DragomeVisualActivity;
+import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.model.RequestUrlActivityMapper;
 import com.dragome.model.VisualLabelImpl;
 import com.dragome.model.VisualLinkImpl;
@@ -40,18 +41,18 @@ public class DiscovererPage extends DragomeVisualActivity
 
 		final RequestUrlActivityMapper requestUrlActivityMapper= serviceFactory.createSyncService(RequestUrlActivityMapper.class);
 
-		List<Class<? extends DragomeVisualActivity>> visualActivities= requestUrlActivityMapper.getExistingVisualActivities();
+		List<Class<? extends VisualActivity>> visualActivities= requestUrlActivityMapper.getExistingVisualActivities();
 
-		new TemplateRepeater<Class<? extends DragomeVisualActivity>>().repeatItems(visualActivities, new ItemProcessorImpl<Class<? extends DragomeVisualActivity>>(template, "row")
+		new TemplateRepeater<Class<? extends VisualActivity>>().repeatItems(visualActivities, new ItemProcessorImpl<Class<? extends VisualActivity>>(template, "row")
 		{
-			public void fillTemplates(final Class<? extends DragomeVisualActivity> visualActivity, List<Template> aRowTemplate)
+			public void fillTemplates(final Class<? extends VisualActivity> visualActivity, List<Template> aRowTemplate)
 			{
 				VisualLink link= new VisualLinkImpl("view", visualActivity.getSimpleName());
 				link.addClickListener(new ClickListener()
 				{
 					public void clickPerformed(VisualComponent aVisualComponent)
 					{
-						openPage(ServiceLocator.getInstance().getReflectionService().createClassInstance(visualActivity));
+						openActivity(ServiceLocator.getInstance().getReflectionService().createClassInstance(visualActivity));
 					}
 				});
 

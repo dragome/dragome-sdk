@@ -34,7 +34,6 @@ import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.services.interfaces.SerializationService;
 import com.dragome.services.serialization.FlexJsonSerializationService;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
-import com.dragome.templates.interfaces.TemplateManager;
 
 public class ServiceLocator
 {
@@ -51,7 +50,6 @@ public class ServiceLocator
 	protected boolean clientSideEnabled= false;
 
 	protected DomHandler domHandler;
-	protected TemplateManager templateManager;
 	protected TimeCollector timeCollector;
 	protected MessageChannel serverToClientMessageChannel;
 	protected MessageChannel clientToServerMessageChannel;
