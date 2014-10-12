@@ -85,6 +85,7 @@ public class AnnotationsHelper
 	{
 		try
 		{
+			ServiceLocator.getInstance().setClientSideEnabled(true);
 			Class<?> type= ServiceLocator.getInstance().getReflectionService().forName(className);
 			Class<? extends Annotation> annotationClass= (Class<? extends Annotation>) ServiceLocator.getInstance().getReflectionService().forName(annotationClassName);
 
