@@ -114,7 +114,7 @@ mvn archetype:generate -DarchetypeGroupId=com.dragome -DarchetypeArtifactId=simp
 ### Want to contribute?
 
 * Fork the project on Github.
-* Create an issue or fix one from the [issues list](https://java.net/jira/browse/DRAGOME-2?jql=project%20%3D%20DRAGOME).
+* Create an issue or fix one from the [issues list](https://github.com/dragome/dragome-sdk/issues).
 * Share your ideas or ask questions on mailing list - don't hesitate to write a reply - that helps us improve javadocs/FAQ.
 * If you miss a particular feature - browse or ask on the [mailing list](https://groups.google.com/d/forum/dragome) - don't hesitate to write a reply, show us a sample code and describe the problem.
 * Write a blog post about how you use or extend Dragome.
