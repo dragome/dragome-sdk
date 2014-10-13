@@ -3,7 +3,7 @@
   <name>dragome-js-jre</name>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-js-jre</artifactId>
-  <version>0.95.1-beta1</version>
+  <version>0.95.2-beta1</version>
 
   <description>Dragome SDK module: js-jre</description>
   <url>http://www.dragome.com</url>
@@ -120,7 +120,7 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95.1-beta1</version>
+      <version>0.95.2-beta1</version>
     </dependency>
   </dependencies>
 </project>

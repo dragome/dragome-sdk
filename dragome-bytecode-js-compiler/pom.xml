@@ -3,7 +3,7 @@
   <name>dragome-bytecode-js-compiler</name>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-bytecode-js-compiler</artifactId>
-  <version>0.95.1-beta1</version>
+  <version>0.95.2-beta1</version>
   
   <description>Dragome SDK module: bytecode to javascript compiler</description>
   <url>http://www.dragome.com</url>
@@ -94,7 +94,7 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95.1-beta1</version>
+      <version>0.95.2-beta1</version>
     </dependency>
   </dependencies>
   <build>

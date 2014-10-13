@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-form-bindings</artifactId>
-  <version>0.95.1-beta1</version>
+  <version>0.95.2-beta1</version>
   <name>dragome-form-bindings</name>
 
   <description>Dragome SDK module: form bindings</description>
@@ -40,17 +40,17 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-core</artifactId>
-      <version>0.95.1-beta1</version>
+      <version>0.95.2-beta1</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-method-logger</artifactId>
-      <version>0.95.1-beta1</version>
+      <version>0.95.2-beta1</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-guia</artifactId>
-      <version>0.95.1-beta1</version>
+      <version>0.95.2-beta1</version>
     </dependency>
   </dependencies>
   
