@@ -6,3 +6,8 @@
 ------
 
 ![Service execution](service-execution-sequence.png)
+
+------
+
+![Service execution](dragome-modules.gif)
+
