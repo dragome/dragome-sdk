@@ -11,3 +11,8 @@
 
 ![Service execution](dragome-modules.gif)
 
+------
+
+![dragome dependencies](dragome-dependencies.png)
+
+
