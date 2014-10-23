@@ -24,11 +24,15 @@ public abstract class DragomeVisualActivity extends DefaultVisualActivity implem
 	protected TemplateHandlingStrategy templateHandlingStrategy= new HTMLTemplateHandlingStrategy();
 	protected VisualPanel mainPanel;
 	protected Template mainTemplate;
-
-	public void onCreate()
+	
+	public DragomeVisualActivity()
 	{
 		initialize();
 		updateMainPanel();
+	}
+
+	public void onCreate()
+	{
 		build();
 		showTemplate();
 	}
