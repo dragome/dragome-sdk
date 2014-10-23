@@ -81,13 +81,13 @@ public class EventDispatcherHelper
 		return configurator;
 	}
 
-//	@MethodAlias(alias= "EventDispatcher.getComponentById")
-//	private static void getComponentById(Object event)
-//	{
-//		ScriptHelper.eval("stopEvent(event)", null);
-//		String id2= (String) ScriptHelper.eval("event.currentTarget.getAttribute('data-element-id')", null);
-//		EventDispatcherHelper.getComponentById(id2); //TODO revisar el static
-//	}
+	//	@MethodAlias(alias= "EventDispatcher.getComponentById")
+	//	private static void getComponentById(Object event)
+	//	{
+	//		ScriptHelper.eval("stopEvent(event)", null);
+	//		String id2= (String) ScriptHelper.eval("event.currentTarget.getAttribute('data-element-id')", null);
+	//		EventDispatcherHelper.getComponentById(id2); //TODO revisar el static
+	//	}
 
 	@MethodAlias(alias= "EventDispatcher.onEvent")
 	private static void onEvent()
@@ -134,17 +134,20 @@ public class EventDispatcherHelper
 		}
 	}
 
-//	public static VisualComponent getComponentById(String id)
-//	{
-//		return ((VisualComponent) DragomeEntityManager.get(id));
-//	}
+	//	public static VisualComponent getComponentById(String id)
+	//	{
+	//		return ((VisualComponent) DragomeEntityManager.get(id));
+	//	}
 
 	public static Runnable applicationRunner;
 
 	@MethodAlias(alias= "EventDispatcher.runApplication")
 	public static void runApplication()
 	{
-		applicationRunner.run();
+		if (applicationRunner != null)
+			applicationRunner.run();
+		else
+			ScriptHelper.eval("alert('Cannot find any activity to execute, please add annotation @PageAlias(alias= \"page-name\") to your activity class.')", null);
 	}
 
 	public static void runApplication(Runnable runnable)
