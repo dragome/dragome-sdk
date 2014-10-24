@@ -25,6 +25,23 @@ import com.dragome.templates.interfaces.TemplateVisitor;
 
 public class TemplateImpl extends DefaultEventProducer implements Template
 {
+	
+	public static Template findTemplate(Template templateElement, final String name)
+	{
+		final Template[] foundTemplate= new Template[1];
+		
+		templateElement.accept(new TemplateVisitor()
+		{
+			public void visitTemplate(Template aTemplate)
+			{
+				if (aTemplate.getName().equals(name))
+					foundTemplate[0]= aTemplate;
+			}
+		});
+
+		return foundTemplate[0];
+	}
+	
 	public static Template getTemplateElementInDepth(Template templateElement, String aDeepAlias)
 	{
 		String[] aliases= aDeepAlias.split("\\.");
