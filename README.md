@@ -49,7 +49,7 @@ Dragome provides two execution modes, production mode for executing everything i
 Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
 Take a look at its dependencies:
 
-![dragome dependencies](docs/dragome-dependencies.png)
+![dragome dependencies](doc/dragome-dependencies.png)
 
 ----------
 SDKs comparison
