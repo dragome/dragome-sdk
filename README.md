@@ -44,6 +44,14 @@ Dragome SDK can be divided into following six major parts:
 Dragome provides two execution modes, production mode for executing everything in client side, and debug mode that executes all in Java Virtual Machine without compiling to javascript and make remotes updates to browser DOM. 
 
 ----------
+##Dragome Concept
+
+Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
+Take a look at its dependencies:
+
+![dragome dependencies](docs/dragome-dependencies.png)
+
+----------
 SDKs comparison
 
 
