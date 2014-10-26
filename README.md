@@ -7,7 +7,8 @@ You may use your favorite IDE, your favorite Java frameworks and tools because D
 ##Concept
 
 Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
-Take a look at its dependencies:
+This diagram shows the hidden complexity behind the simple concepts exposed by the SDK. 
+You can see which part was implemented from scratch, which one was used as base project, and also which are the required tools it depends on.
 
 ![dragome dependencies](doc/dragome-dependencies.png)
 
