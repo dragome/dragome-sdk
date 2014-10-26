@@ -15,7 +15,7 @@ You can see which part was implemented from scratch, which one was used as base 
 
 ----------
 
-### See it in action: how Eclipse and Chrome interact on both modes.
+### See it in action: how Eclipse and Chrome interact on debug mode and production mode.
 [![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
 
 ----------
