@@ -4,6 +4,14 @@ Based on bytecode to javascript compilation, you can execute applications writte
 You may use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
 
 ----------
+##Dragome Concept
+
+Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
+Take a look at its dependencies:
+
+![dragome dependencies](doc/dragome-dependencies.png)
+
+----------
 
 ### See it in action: how Eclipse and Chrome interact on both modes.
 [![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
@@ -42,14 +50,6 @@ Dragome SDK can be divided into following six major parts:
 
 ### Execution modes
 Dragome provides two execution modes, production mode for executing everything in client side, and debug mode that executes all in Java Virtual Machine without compiling to javascript and make remotes updates to browser DOM. 
-
-----------
-##Dragome Concept
-
-Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
-Take a look at its dependencies:
-
-![dragome dependencies](doc/dragome-dependencies.png)
 
 ----------
 SDKs comparison
