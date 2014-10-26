@@ -4,7 +4,7 @@ Based on bytecode to javascript compilation, you can execute applications writte
 You may use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
 
 ----------
-##Dragome Concept
+##Concept
 
 Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
 Take a look at its dependencies:
