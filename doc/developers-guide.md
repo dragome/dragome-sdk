@@ -1,6 +1,6 @@
 
 
-#Developers Guide
+#Developer's Guide
 
 ## Tutorials
 * [HTML DOM Handling Tutorial](html-dom-tutorial.md)
