@@ -3,11 +3,9 @@
 #Developers Guide
 
 ## Tutorials
-  [HTML DOM Handling Tutorial](html-dom-tutorial.md)
-  
-  [Gui Toolkit Tutorial](gui-toolkit.md)
-  
-  [Binding tutorial](simple-examples.md)
+*[HTML DOM Handling Tutorial](html-dom-tutorial.md)
+*[Gui Toolkit Tutorial](gui-toolkit.md)
+*[Binding tutorial](simple-examples.md)
   
   [Template Engine](template-engine.md)
   
