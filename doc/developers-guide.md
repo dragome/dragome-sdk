@@ -15,6 +15,8 @@
   
   [JSNI](javascript-native-interface.md)
   
+  [Callback Evictor](callback-evictor.md)
+  
   
 ## Simple examples
   [Hello World App](helloworld-app.md)
