@@ -31,7 +31,7 @@ For each element containing data-template attribute, template engine creates an 
 ```
 With this HTML, Template Engine will create a Template instance with name "parent", containing two children that are also instances of Template called "first-child" and "second-child":
 ``` Java
-Template parent= getTemplate("parent");
+Template parent= mainTemplate.getChild("parent");
 Template firstChild= parent.getChild("first-child");
 Template secondChild= parent.getChild("second-child");
 ```
