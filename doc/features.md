@@ -14,7 +14,7 @@
 
 ---------
 
-##Very fast web development
+##Fast web development
 * Pure java on server and client side
 * Debug your code in your favorite Java IDE
 * Javascript native interface
