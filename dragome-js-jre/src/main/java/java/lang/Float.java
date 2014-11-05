@@ -63,6 +63,10 @@ public final class Float extends Number
 		return new Float(f);
 	}
 
+    public static Float valueOf(String aFloat) {
+        return new Float(parseFloat(aFloat));
+    }
+
 	static public boolean isNaN(float v)
 	{
 		return (v != v);

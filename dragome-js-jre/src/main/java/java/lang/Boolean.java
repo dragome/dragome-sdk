@@ -48,6 +48,10 @@ public final class Boolean
 		return FALSE;
 	}
 
+    public static Boolean valueOf(String aBoolean) {
+        return "true".equalsIgnoreCase(aBoolean);
+    }
+
 	/**
 	 * Allocates a Boolean object representing the value argument.
 	 */
