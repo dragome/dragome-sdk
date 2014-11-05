@@ -52,6 +52,10 @@ public class Arrays
 		ScriptHelper.eval("array.sort()", null);
 	}
 
+    public static void sort(java.lang.Object[] array, int fromindex, int toindex) {
+        sort(array);
+    }
+
 	/**
 	 * Sorts the specified array of objects according to the order induced by the specified comparator.
 	 */
