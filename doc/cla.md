@@ -10,6 +10,7 @@ When you’re ready to contribute to Dragome, we have two forms: one for individ
 Please complete the appropriate form.
 
  [Dragome Individual Contributor License Agreement] (Dragome-Individual.pdf)
+ 
  [Dragome Entity Contributor License Agreement] (Dragome-Entity.pdf)
 
 We use the Harmony CLA to protect your rights regarding any contribution you make to our open source projects. 
