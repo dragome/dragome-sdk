@@ -9,9 +9,9 @@ In effect, you’re giving us a licence, but you still own the copyright — so 
 When you’re ready to contribute to Dragome, we have two forms: one for individual contributors and one for companies and other organisations. 
 Please complete the appropriate form.
 
- [Dragome Individual Contributor License Agreement] (https://github.com/dragome/dragome-sdk/blob/master/doc/Dragome-Individual.pdf?raw=true)
+ [Dragome Individual Contributor License Agreement] (Dragome-Individual.pdf)
  
- [Dragome Entity Contributor License Agreement] (https://github.com/dragome/dragome-sdk/blob/master/doc/Dragome-Entity.pdf?raw=true)
+ [Dragome Entity Contributor License Agreement] (Dragome-Entity.pdf)
 
 We use the Harmony CLA to protect your rights regarding any contribution you make to our open source projects. 
 Learn more about how it works and what it means for you.
