@@ -1,7 +1,7 @@
 # Dragome contributor licence agreement
 At Dragome, we are required to have agreements with everyone who takes part. 
 It's the easiest way for you to give us permission to use your contributions. 
-In effect, you are giving us a licence, but you still own the copyright — so you retain the right to modify your code and use it in other projects.
+In effect, you are giving us a licence, but you still own the copyright - so you retain the right to modify your code and use it in other projects.
 
 
 # Sign the contributor agreement
