@@ -41,6 +41,7 @@
     <module>dragome-callback-evictor</module>
     <module>dragome-method-logger</module>
     <module>dragome-guia</module>
+    <module>dragome-maven-plugins</module>
   </modules>
 
   <properties>
