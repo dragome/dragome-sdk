@@ -1,5 +1,7 @@
-#License
+# Contributors
+If you are a developer and want to contribute to Dragome please read: [Contributor License Agreement](cla.md)
 
+#License
 
 Terms of Service
 
