@@ -72,6 +72,11 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 			TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
 			template= templateLayout.getTemplate();
 		}
+		
+		if (template == null)
+			throw new RuntimeException("VisualPanel has not template associated");
+		
+		
 		configureMethodListener();
 	}
 
