@@ -175,6 +175,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 		if (otherClass == null)
 			throw new NullPointerException();
+		
+		if (otherClass.isInterface() && Object.class.equals(this))
+			return true;
+		
 		ScriptHelper.put("otherClass", otherClass, this);
 		return ScriptHelper.evalBoolean("dragomeJs.isInstanceof(otherClass.$$$nativeClass, this.$$$nativeClass)", this);
 	}
@@ -357,7 +361,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 			for (Method method : declaredMethods)
 			{
-				if (method.getName().equals(name))
+				if (method.getName().equals(name) && //
+						(foundMethod == null || foundMethod.getReturnType().isAssignableFrom(method.getReturnType())))
 					foundMethods.put(name, foundMethod= method);
 			}
 		}
@@ -393,7 +398,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return new Constructor(this, new Class<?>[0], new Class<?>[0], 0);
 	}
 
-	public <A extends Annotation> A getAnnotation(Class<A> annotationClass) 
+	public <A extends Annotation> A getAnnotation(Class<A> annotationClass)
 	{
 		return null;
 	}
@@ -512,26 +517,26 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return getMethod(name, parameterTypes);
 	}
 
-	public static <T> java.lang.Class<T> getType(java.lang.String typeName) 
+	public static <T> java.lang.Class<T> getType(java.lang.String typeName)
 	{
-	    try
-	    {
-	        return (java.lang.Class<T>) Class.forName(typeName);
-	    }
-	    catch (Exception e)
-	    {
-	    	throw new RuntimeException(e);
-	    }
+		try
+		{
+			return (java.lang.Class<T>) Class.forName(typeName);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public ProtectionDomain getProtectionDomain()
-    {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public static Class<?> forName(String name, boolean initialize, ClassLoader loader) throws ClassNotFoundException
-    {
-    	return forName(name);
-    }
+	public static Class<?> forName(String name, boolean initialize, ClassLoader loader) throws ClassNotFoundException
+	{
+		return forName(name);
+	}
 }
