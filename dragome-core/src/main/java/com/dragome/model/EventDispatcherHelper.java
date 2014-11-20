@@ -30,27 +30,35 @@ public class EventDispatcherHelper
 	@MethodAlias(alias= "EventDispatcher.executeMainClass")
 	public static void executeMainClass() throws Exception
 	{
-		ServiceLocator.getInstance().setClientSideEnabled(true);
-
-		ServiceLocator.getInstance().setConfigurator(getConfigurator());
-
-		ParametersHandler parametersHandler= ServiceLocator.getInstance().getParametersHandler();
-
-		String className= parametersHandler.getParameter("class");
-		if (className == null || className.trim().length() == 0)
+		try
 		{
-			String requestURL= parametersHandler.getRequestURL();
+			ServiceLocator.getInstance().setClientSideEnabled(true);
 
-			List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(PageAlias.class).getEntries();
-			for (AnnotationEntry annotationEntry : annotationEntries)
+			ServiceLocator.getInstance().setConfigurator(getConfigurator());
+
+			ParametersHandler parametersHandler= ServiceLocator.getInstance().getParametersHandler();
+
+			String className= parametersHandler.getParameter("class");
+			if (className == null || className.trim().length() == 0)
 			{
-				boolean isUnique= annotationEntries.size() == 2 && !"discoverer".equals(annotationEntry.getAnnotationValue());
-				if (isUnique || (annotationEntry.getAnnotationKey().equals("alias") && requestURL.contains(annotationEntry.getAnnotationValue())))
-					className= annotationEntry.getType().getName();
-			}
-		}
+				String requestURL= parametersHandler.getRequestURL();
 
-		launch(className);
+				List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(PageAlias.class).getEntries();
+				for (AnnotationEntry annotationEntry : annotationEntries)
+				{
+					boolean isUnique= annotationEntries.size() == 2 && !"discoverer".equals(annotationEntry.getAnnotationValue());
+					if (isUnique || (annotationEntry.getAnnotationKey().equals("alias") && requestURL.contains(annotationEntry.getAnnotationValue())))
+						className= annotationEntry.getType().getName();
+				}
+			}
+
+			launch(className);
+		}
+		catch (Exception e)
+		{
+			alert("ERROR (more info on browser console):" + e.getMessage());
+			throw e;
+		}
 	}
 
 	private static void launch(String className) throws Exception
@@ -147,7 +155,13 @@ public class EventDispatcherHelper
 		if (applicationRunner != null)
 			applicationRunner.run();
 		else
-			ScriptHelper.eval("alert('Cannot find any activity to execute, please add annotation @PageAlias(alias= \"page-name\") to your activity class.')", null);
+			alert("Cannot find any activity to execute, please add annotation @PageAlias(alias= \"page-name\") to your activity class.");
+	}
+
+	public static void alert(String message)
+	{
+		ScriptHelper.put("message", message, null);
+		ScriptHelper.eval("alert(message)", null);
 	}
 
 	public static void runApplication(Runnable runnable)
