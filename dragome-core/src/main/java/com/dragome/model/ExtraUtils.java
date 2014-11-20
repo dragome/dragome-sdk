@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.dragome.model;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,9 +73,22 @@ public class ExtraUtils
 	private static ServiceInvocation nsi(String type, String methodName, String id, List<Object> args) throws NoSuchMethodException
 	{
 		Class<?> forName= ServiceLocator.getInstance().getReflectionService().forName(type);
-		ServiceInvocation serviceInvocation= new ServiceInvocation(forName, forName.getMethod(methodName, null), args, id);
+
+		ServiceInvocation serviceInvocation= new ServiceInvocation(forName, findMethod(methodName, forName), args, id);
 		ScriptHelper.put("serviceInvocation", serviceInvocation, null);
 		return serviceInvocation;
+	}
+
+	private static Method findMethod(String methodName, Class<?> aClass)
+	{
+		Method foundMethod= null;
+
+		Method[] methods= aClass.getMethods();
+		for (Method method : methods)
+			if (method.getName().equals(methodName))
+				foundMethod= method;
+		
+		return foundMethod;
 	}
 
 	@MethodAlias(alias= "EventDispatcher.nl")
