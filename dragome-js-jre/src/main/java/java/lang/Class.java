@@ -175,10 +175,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 		if (otherClass == null)
 			throw new NullPointerException();
-		
+
 		if (otherClass.isInterface() && Object.class.equals(this))
 			return true;
-		
+
 		ScriptHelper.put("otherClass", otherClass, this);
 		return ScriptHelper.evalBoolean("dragomeJs.isInstanceof(otherClass.$$$nativeClass, this.$$$nativeClass)", this);
 	}
@@ -352,9 +352,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return false;
 	}
 
-	public Method getMethod(String name, Class... parameterTypes) throws NoSuchMethodException, SecurityException
+	public Method getMethod(String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException
 	{
-		Method foundMethod= foundMethods.get(name);
+		String argumentTypesToString= argumentTypesToString(parameterTypes);
+		String key= name + argumentTypesToString;
+
+		Method foundMethod= foundMethods.get(key);
 		if (foundMethod == null)
 		{
 			Method[] declaredMethods= getMethods();
@@ -362,13 +365,14 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			for (Method method : declaredMethods)
 			{
 				if (method.getName().equals(name) && //
+						arrayContentsEq(parameterTypes, method.getParameterTypes()) && // 
 						(foundMethod == null || foundMethod.getReturnType().isAssignableFrom(method.getReturnType())))
-					foundMethods.put(name, foundMethod= method);
+					foundMethods.put(key, foundMethod= method);
 			}
 		}
 
 		if (foundMethod == null)
-			throw new NoSuchMethodException(getName() + "." + name + argumentTypesToString(parameterTypes));
+			throw new NoSuchMethodException(getName() + "." + key);
 
 		return foundMethod;
 	}
@@ -470,21 +474,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	@Override
 	public boolean equals(java.lang.Object obj)
 	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Class other= (Class) obj;
-		if (getName() == null)
-		{
-			if (other.getName() != null)
-				return false;
-		}
-		else if (!getName().equals(other.getName()))
-			return false;
-		return true;
+		ScriptHelper.put("obj", obj, this);
+		boolean result= ScriptHelper.evalBoolean("obj.$$$nativeClass == this.$$$nativeClass", this);
+		return result;
 	}
 
 	public Package getPackage()
@@ -538,5 +530,33 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	public static Class<?> forName(String name, boolean initialize, ClassLoader loader) throws ClassNotFoundException
 	{
 		return forName(name);
+	}
+
+	private static boolean arrayContentsEq(Object[] a1, Object[] a2)
+	{
+		if (a1 == null)
+		{
+			return a2 == null || a2.length == 0;
+		}
+
+		if (a2 == null)
+		{
+			return a1.length == 0;
+		}
+
+		if (a1.length != a2.length)
+		{
+			return false;
+		}
+
+		for (int i= 0; i < a1.length; i++)
+		{
+			if (!a1[i].equals(a2[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
