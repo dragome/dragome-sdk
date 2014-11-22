@@ -42,7 +42,13 @@ public class BrowserElement extends AbstractElement
 		ScriptHelper.evalNoResult("this.node= document.createElement(tagName);", this);
 	}
 
-	public Node appendChild(Node newChild) throws DOMException
+    @Override
+    public void setTextContent(String textContent) throws DOMException {
+        ScriptHelper.put("text", textContent, this);
+        ScriptHelper.evalNoResult("this.node.textContent=text;", this);
+    }
+
+    public Node appendChild(Node newChild) throws DOMException
 	{
 		init();
 
