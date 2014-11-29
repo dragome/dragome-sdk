@@ -10,17 +10,18 @@ import org.apache.bcel.generic.Type;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.AbstractVisitor;
 import com.dragome.compiler.parser.LineNumberCursor;
+import com.dragome.compiler.parser.Parser;
 
 public class MethodDeclaration extends ASTNode
 {
 
-	private String tempPrefix= "_";
+	private String tempPrefix = "_";
 
 	private Block block;
 
-	private Map<String, VariableDeclaration> parameters= new LinkedHashMap<String, VariableDeclaration>();
+	private Map<String, VariableDeclaration> parameters = new LinkedHashMap<String, VariableDeclaration>();
 
-	private Map<String, VariableDeclaration> localVariables= new LinkedHashMap<String, VariableDeclaration>();
+	private Map<String, VariableDeclaration> localVariables = new LinkedHashMap<String, VariableDeclaration>();
 
 	private int accessFlags;
 
@@ -39,16 +40,16 @@ public class MethodDeclaration extends ASTNode
 
 	public void setAnnotationsValues(Map<String, String> annotationsValues)
 	{
-		this.annotationsValues= annotationsValues;
+		this.annotationsValues = annotationsValues;
 	}
 
 	public MethodDeclaration(MethodBinding theMethodBinding, int theAccessFlags, Code theCode, Map<String, String> annotationsValues)
 	{
-		methodBinding= theMethodBinding;
-		accessFlags= theAccessFlags;
-		code= theCode;
-		this.annotationsValues= annotationsValues;
-		lineNumberCursor= new LineNumberCursor(code);
+		methodBinding = theMethodBinding;
+		accessFlags = theAccessFlags;
+		code = theCode;
+		this.annotationsValues = annotationsValues;
+		lineNumberCursor = new LineNumberCursor(code);
 		Project.getSingleton().getOrCreateProcedureUnit(methodBinding);
 	}
 
@@ -59,7 +60,8 @@ public class MethodDeclaration extends ASTNode
 
 	public void visit(AbstractVisitor visitor)
 	{
-		visitor.visit(this);
+		if (isAllowedToCompile())
+			visitor.visit(this);
 	}
 
 	public boolean isInstanceConstructor()
@@ -74,7 +76,7 @@ public class MethodDeclaration extends ASTNode
 
 	public void setBody(Block theBlock)
 	{
-		block= theBlock;
+		block = theBlock;
 		theBlock.setParentNode(this);
 	}
 
@@ -83,30 +85,30 @@ public class MethodDeclaration extends ASTNode
 		if (type == null)
 			throw new NullPointerException();
 
-		VariableDeclaration decl= getParameter(name);
+		VariableDeclaration decl = getParameter(name);
 		if (decl == null)
 		{
-			decl= getLocalVariable(name);
+			decl = getLocalVariable(name);
 		}
 		if (decl == null)
 		{
-			decl= new VariableDeclaration(!isWrite);
+			decl = new VariableDeclaration(!isWrite);
 			decl.setName(name);
 			decl.setType(type);
 			addLocalVariable(decl);
 		}
 
-		VariableBinding binding= new VariableBinding(decl);
+		VariableBinding binding = new VariableBinding(decl);
 
 		return binding;
 	}
 
-	private int vbCount= 0;
+	private int vbCount = 0;
 
 	public VariableBinding createAnonymousVariableBinding(Type type, boolean isWrite)
 	{
-		String name= tempPrefix + (vbCount++);
-		VariableBinding vb= createVariableBinding(name, type, isWrite);
+		String name = tempPrefix + (vbCount++);
+		VariableBinding vb = createVariableBinding(name, type, isWrite);
 		vb.setTemporary(true);
 		return vb;
 	}
@@ -159,6 +161,10 @@ public class MethodDeclaration extends ASTNode
 	public Code getCode()
 	{
 		return code;
+	}
+
+	public boolean isAllowedToCompile() {
+		return !annotationsValues.containsKey(Parser.DISALLOW);
 	}
 
 	public LineNumberCursor getLineNumberCursor()

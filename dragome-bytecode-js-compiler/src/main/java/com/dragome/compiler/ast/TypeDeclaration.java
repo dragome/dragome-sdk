@@ -8,6 +8,7 @@ import org.apache.bcel.generic.ObjectType;
 
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.AbstractVisitor;
+import com.dragome.compiler.parser.Parser;
 
 public class TypeDeclaration extends ASTNode
 {
@@ -16,9 +17,9 @@ public class TypeDeclaration extends ASTNode
 
 	private ObjectType superType;
 
-	private ArrayList<MethodDeclaration> methods= new ArrayList<MethodDeclaration>();
+	private ArrayList<MethodDeclaration> methods = new ArrayList<MethodDeclaration>();
 
-	private List<VariableDeclaration> fields= new ArrayList<VariableDeclaration>();
+	private List<VariableDeclaration> fields = new ArrayList<VariableDeclaration>();
 
 	private int accessFlags;
 
@@ -31,24 +32,25 @@ public class TypeDeclaration extends ASTNode
 
 	public void setAnnotations(Map<String, String> annotations)
 	{
-		this.annotations= annotations;
+		this.annotations = annotations;
 	}
 
 	public TypeDeclaration(ObjectType theType, int theAccessFlags, Map<String, String> annotations)
 	{
-		type= theType;
-		accessFlags= theAccessFlags;
-		this.annotations= annotations;
+		type = theType;
+		accessFlags = theAccessFlags;
+		this.annotations = annotations;
 	}
 
 	public void visit(AbstractVisitor visitor)
 	{
-		visitor.visit(this);
+		if (isAllowedToCompile())
+			visitor.visit(this);
 	}
 
 	public MethodDeclaration[] getMethods()
 	{
-		MethodDeclaration[] a= new MethodDeclaration[methods.size()];
+		MethodDeclaration[] a = new MethodDeclaration[methods.size()];
 		return methods.toArray(a);
 	}
 
@@ -70,8 +72,8 @@ public class TypeDeclaration extends ASTNode
 
 	public String getPackageName()
 	{
-		String name= type.getClassName();
-		int index= name.lastIndexOf('.');
+		String name = type.getClassName();
+		int index = name.lastIndexOf('.');
 		if (index != -1)
 			return name.substring(0, index);
 		else
@@ -85,8 +87,8 @@ public class TypeDeclaration extends ASTNode
 
 	public String getUnQualifiedName()
 	{
-		String name= type.getClassName();
-		int index= name.lastIndexOf('.');
+		String name = type.getClassName();
+		int index = name.lastIndexOf('.');
 		if (index != -1)
 			return name.substring(index + 1);
 		else
@@ -111,12 +113,16 @@ public class TypeDeclaration extends ASTNode
 
 	public void setSuperType(ObjectType newSuperType)
 	{
-		superType= newSuperType;
+		superType = newSuperType;
 	}
 
 	public String toString()
 	{
 		return type.getClassName();
+	}
+
+	public boolean isAllowedToCompile() {
+		return !annotations.containsKey(Parser.DISALLOW);
 	}
 
 }
