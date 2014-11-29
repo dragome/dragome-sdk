@@ -159,7 +159,7 @@ public class Parser
 
 		if (annotationsValues.containsKey(DONTPARSE))
 			return typeDecl;
-		
+
 		fileUnit.isInterface = Modifier.isInterface(typeDecl.getAccess());
 		fileUnit.isAbstract = Modifier.isAbstract(typeDecl.getAccess());
 
@@ -250,8 +250,6 @@ public class Parser
 				List<AnnotationEntry> newEntries = new ArrayList<AnnotationEntry>();
 				for (AnnotationEntry entry : entries)
 				{
-					System.out.println(entry.getAnnotationType());
-
 					if (entry.getElementValuePairs().length == 0)
 						result.put(Type.getType(entry.getAnnotationType()) + "# ", " ");
 
@@ -372,8 +370,8 @@ public class Parser
 	}
 
 	public static final boolean test = true;
-	
-	private final static String testPath= "D:/dragome_workspace/CompilerTest/bin/TestClass.class";
+
+	private final static String testPath = "D:/dragome_workspace/CompilerTest/bin/TestClass.class";
 	private final static String testClassName = "TestClass.class";
 
 	public static void main(String[] args) throws Exception
@@ -382,7 +380,7 @@ public class Parser
 		String[] arguments;
 
 		if (test) {
-			arguments = new String[] { testPath, testClassName };
+			arguments = new String[] { testClassName, testPath };
 
 			Path path = Paths.get("/tmp");
 			Path file = Paths.get("/tmp", "webapp.js");
