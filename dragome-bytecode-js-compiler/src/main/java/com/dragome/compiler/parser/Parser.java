@@ -85,7 +85,7 @@ import com.dragome.compiler.utils.Utils;
 public class Parser
 {
 
-	public static final String DONTPARSE = "com.dragome.commons.compiler.annotations.ServerOnly# ";
+	public static final String DISALLOW = "com.dragome.commons.compiler.annotations.ServerOnly# ";
 
 	public static String getResourcePath(String name)
 	{
@@ -157,7 +157,7 @@ public class Parser
 		TypeDeclaration typeDecl = new TypeDeclaration(type, jc.getAccessFlags(), annotationsValues);
 		Project.singleton.addTypeAnnotations(typeDecl);
 
-		if (annotationsValues.containsKey(DONTPARSE))
+		if (annotationsValues.containsKey(DISALLOW))
 			return typeDecl;
 
 		fileUnit.isInterface = Modifier.isInterface(typeDecl.getAccess());
@@ -202,7 +202,7 @@ public class Parser
 
 			Map<String, String> methodAnnotationsValues = getAnnotationsValues(attributes);
 
-			if (methodAnnotationsValues.containsKey(DONTPARSE))
+			if (methodAnnotationsValues.containsKey(DISALLOW))
 				continue;
 
 			MethodBinding binding = MethodBinding.lookup(jc.getClassName(), method.getName(), method.getSignature());
@@ -399,6 +399,7 @@ public class Parser
 
 		Project.createSingleton(null);
 		ClassUnit classUnit = new ClassUnit(Project.singleton, Project.singleton.getSignature(className));
+		
 		classUnit.setClassFile(new FileObject(new File(arguments[1])));
 		Parser parser = new Parser(classUnit);
 		TypeDeclaration typeDecl = parser.parse();

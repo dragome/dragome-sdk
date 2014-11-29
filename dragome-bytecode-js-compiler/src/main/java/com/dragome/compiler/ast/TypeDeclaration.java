@@ -122,7 +122,7 @@ public class TypeDeclaration extends ASTNode
 	}
 
 	public boolean isAllowedToCompile() {
-		return !annotations.containsKey(Parser.DONTPARSE);
+		return !annotations.containsKey(Parser.DISALLOW);
 	}
 
 }

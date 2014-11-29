@@ -272,6 +272,9 @@ public class DragomeJavaScriptGenerator extends Generator
 		String methodCompilerType = method.getAnnotationsValues().get(annotationKey);
 		String classCompilerType = typeDecl.getAnnotations().get(annotationKey);
 
+		if(!method.isAllowedToCompile())
+			return;
+		
 		if (methodCompilerType != null)
 			compiler = methodCompilerType;
 		else if (classCompilerType != null)

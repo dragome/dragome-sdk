@@ -455,8 +455,7 @@ public class Project implements Serializable
 
 			new FieldUnit(getSignature("length"), clazz);
 
-			TypeDeclaration typeDecl = new TypeDeclaration(new ObjectType(clazz.getName()), 0, new HashMap<String, String>());// revisar
-																																// annotations
+			TypeDeclaration typeDecl = new TypeDeclaration(new ObjectType(clazz.getName()), 0, new HashMap<String, String>());// revisar																									// annotations
 
 			typeDecl.setSuperType(Type.OBJECT);
 			typeDecl.visit(DragomeJsCompiler.compiler.generator);
