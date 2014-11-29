@@ -159,7 +159,7 @@ public class Parser
 
 		if (annotationsValues.containsKey(DONTPARSE))
 			return typeDecl;
-		System.out.println("asdoi");
+		
 		fileUnit.isInterface = Modifier.isInterface(typeDecl.getAccess());
 		fileUnit.isAbstract = Modifier.isAbstract(typeDecl.getAccess());
 
