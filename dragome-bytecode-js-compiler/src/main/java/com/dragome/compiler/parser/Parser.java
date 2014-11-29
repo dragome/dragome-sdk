@@ -36,6 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,10 +85,12 @@ import com.dragome.compiler.utils.Utils;
 public class Parser
 {
 
+	public static final String DONTPARSE = "com.dragome.commons.compiler.annotations.ServerOnly# ";
+
 	public static String getResourcePath(String name)
 	{
-		name= name.replace('.', '/') + ".class";
-		java.net.URL url= Parser.class.getClassLoader().getResource(name);
+		name = name.replace('.', '/') + ".class";
+		java.net.URL url = Parser.class.getClassLoader().getResource(name);
 		if (url == null)
 			throw new RuntimeException("Resource not found: " + name);
 		return url.getPath();
@@ -95,88 +100,93 @@ public class Parser
 
 	private ClassUnit fileUnit;
 
-	InvokeDynamicBackporter lambdaUsageBackporter= new InvokeDynamicBackporter();
+	InvokeDynamicBackporter lambdaUsageBackporter = new InvokeDynamicBackporter();
 
 	public Parser(ClassUnit theFileUnit)
 	{
-		fileUnit= theFileUnit;
-		fileUnit.annotations= null;
+		fileUnit = theFileUnit;
+		fileUnit.annotations = null;
 
-		AttributeReader r= new AnnotationReader(fileUnit);
+		AttributeReader r = new AnnotationReader(fileUnit);
+
 		Attribute.addAttributeReader("RuntimeVisibleAnnotations", r);
 
 		try
 		{
-			InputStream openInputStream= fileUnit.getClassFile().openInputStream();
+			InputStream openInputStream = fileUnit.getClassFile().openInputStream();
 
-			String filename= fileUnit.getName();
-			byte[] originalByteArray= IOUtils.toByteArray(openInputStream);
-			byte[] transformedArray= originalByteArray;
+			String filename = fileUnit.getName();
+			byte[] originalByteArray = IOUtils.toByteArray(openInputStream);
+			byte[] transformedArray = originalByteArray;
 
-			transformedArray= lambdaUsageBackporter.transform(filename, transformedArray);
+			transformedArray = lambdaUsageBackporter.transform(filename, transformedArray);
 
 			if (DragomeJsCompiler.compiler.bytecodeTransformer != null)
 				if (DragomeJsCompiler.compiler.bytecodeTransformer.requiresTransformation(filename))
-					transformedArray= DragomeJsCompiler.compiler.bytecodeTransformer.transform(filename, transformedArray);
+					transformedArray = DragomeJsCompiler.compiler.bytecodeTransformer.transform(filename, transformedArray);
 
 			fileUnit.setBytecodeArrayI(transformedArray);
 
-			ClassParser cp= new ClassParser(new ByteArrayInputStream(transformedArray), filename);
-			jc= cp.parse();
+			ClassParser cp = new ClassParser(new ByteArrayInputStream(transformedArray), filename);
+			jc = cp.parse();
 
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
+
 	public TypeDeclaration parse()
 	{
-		DescendingVisitor classWalker= new DescendingVisitor(jc, new EmptyVisitor()
+		DescendingVisitor classWalker = new DescendingVisitor(jc, new EmptyVisitor()
 		{
 			public void visitConstantClass(ConstantClass obj)
 			{
-				ConstantPool cp= jc.getConstantPool();
-				String bytes= obj.getBytes(cp);
+				ConstantPool cp = jc.getConstantPool();
+				String bytes = obj.getBytes(cp);
 				fileUnit.addDependency(bytes.replace("/", "."));
 			}
 		});
 		classWalker.visit();
 
-		org.apache.bcel.classfile.Method[] bcelMethods= jc.getMethods();
+		org.apache.bcel.classfile.Method[] bcelMethods = jc.getMethods();
 
-		ObjectType type= new ObjectType(jc.getClassName());
-		Map<String, String> annotationsValues= getAnnotationsValues(jc.getAttributes());
-		TypeDeclaration typeDecl= new TypeDeclaration(type, jc.getAccessFlags(), annotationsValues);
+		ObjectType type = new ObjectType(jc.getClassName());
+		Map<String, String> annotationsValues = getAnnotationsValues(jc.getAttributes());
+
+		TypeDeclaration typeDecl = new TypeDeclaration(type, jc.getAccessFlags(), annotationsValues);
 		Project.singleton.addTypeAnnotations(typeDecl);
 
-		fileUnit.isInterface= Modifier.isInterface(typeDecl.getAccess());
-		fileUnit.isAbstract= Modifier.isAbstract(typeDecl.getAccess());
+		if (annotationsValues.containsKey(DONTPARSE))
+			return typeDecl;
+		System.out.println("asdoi");
+		fileUnit.isInterface = Modifier.isInterface(typeDecl.getAccess());
+		fileUnit.isAbstract = Modifier.isAbstract(typeDecl.getAccess());
 
 		fileUnit.setAnnotations(annotationsValues);
 
 		if (!type.getClassName().equals("java.lang.Object"))
 		{
 
-			ObjectType superType= new ObjectType(jc.getSuperclassName());
+			ObjectType superType = new ObjectType(jc.getSuperclassName());
 			typeDecl.setSuperType(superType);
-			ClassUnit superUnit= Project.getSingleton().getOrCreateClassUnit(superType.getClassName());
+			ClassUnit superUnit = Project.getSingleton().getOrCreateClassUnit(superType.getClassName());
 			fileUnit.setSuperUnit(superUnit);
 
-			String[] interfaceNames= jc.getInterfaceNames();
-			for (int i= 0; i < interfaceNames.length; i++)
+			String[] interfaceNames = jc.getInterfaceNames();
+			for (int i = 0; i < interfaceNames.length; i++)
 			{
-				ObjectType interfaceType= new ObjectType(interfaceNames[i]);
-				ClassUnit interfaceUnit= Project.getSingleton().getOrCreateClassUnit(interfaceType.getClassName());
+				ObjectType interfaceType = new ObjectType(interfaceNames[i]);
+				ClassUnit interfaceUnit = Project.getSingleton().getOrCreateClassUnit(interfaceType.getClassName());
 				fileUnit.addInterface(interfaceUnit);
 			}
 		}
 
-		Field[] fields= jc.getFields();
-		for (int i= 0; i < fields.length; i++)
+		Field[] fields = jc.getFields();
+		for (int i = 0; i < fields.length; i++)
 		{
-			Field field= fields[i];
-			VariableDeclaration variableDecl= new VariableDeclaration(VariableDeclaration.NON_LOCAL);
+			Field field = fields[i];
+			VariableDeclaration variableDecl = new VariableDeclaration(VariableDeclaration.NON_LOCAL);
 			variableDecl.setName(field.getName());
 			variableDecl.setModifiers(field.getModifiers());
 			variableDecl.setType(field.getType());
@@ -184,35 +194,41 @@ public class Parser
 			typeDecl.addField(variableDecl);
 		}
 
-		for (int i= 0; i < bcelMethods.length; i++)
+		for (int i = 0; i < bcelMethods.length; i++)
 		{
-			Method method= bcelMethods[i];
+			Method method = bcelMethods[i];
 
-			Attribute[] attributes= method.getAttributes();
+			Attribute[] attributes = method.getAttributes();
 
-			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes);
+			Map<String, String> methodAnnotationsValues = getAnnotationsValues(attributes);
 
-			MethodBinding binding= MethodBinding.lookup(jc.getClassName(), method.getName(), method.getSignature());
+			if (methodAnnotationsValues.containsKey(DONTPARSE))
+				continue;
 
-			String genericSignature= method.getGenericSignature();
+			MethodBinding binding = MethodBinding.lookup(jc.getClassName(), method.getName(), method.getSignature());
+
+			System.out.println(binding.getName());
+
+			String genericSignature = method.getGenericSignature();
 			if (genericSignature != null && !genericSignature.equals(method.getSignature()))
 			{
-				Signature signature= Project.getSingleton().getSignature(binding.toString()).relative();
-				String normalizedSignature= DragomeJavaScriptGenerator.normalizeExpression(signature);
-				String normalizedClassname= DragomeJavaScriptGenerator.normalizeExpression(type.getClassName());
+				Signature signature = Project.getSingleton().getSignature(binding.toString()).relative();
+				String normalizedSignature = DragomeJavaScriptGenerator.normalizeExpression(signature);
+				String normalizedClassname = DragomeJavaScriptGenerator.normalizeExpression(type.getClassName());
 				Project.getSingleton().addGenericSignature(normalizedClassname + "|" + normalizedSignature + "|" + genericSignature);
-				//		System.out.println(genericSignature);
+				// System.out.println(genericSignature);
 			}
 
 			if (DragomeJsCompiler.compiler.getSingleEntryPoint() != null)
 			{
-				Signature signature= Project.getSingleton().getSignature(binding.toString());
-				String singleSignature= DragomeJsCompiler.compiler.getSingleEntryPoint();
+				Signature signature = Project.getSingleton().getSignature(binding.toString());
+				String singleSignature = DragomeJsCompiler.compiler.getSingleEntryPoint();
 				if (!signature.toString().equals(singleSignature))
 					continue;
 			}
 
-			MethodDeclaration methodDecl= new MethodDeclaration(binding, method.getAccessFlags(), method.getCode(), methodAnnotationsValues);
+			MethodDeclaration methodDecl = new MethodDeclaration(binding, method.getAccessFlags(), method.getCode(),
+					methodAnnotationsValues);
 			typeDecl.addMethod(methodDecl);
 
 			parseMethod(typeDecl, methodDecl, method);
@@ -223,23 +239,28 @@ public class Parser
 
 	private Map<String, String> getAnnotationsValues(Attribute[] attributes)
 	{
-		Map<String, String> result= new LinkedHashMap<String, String>();
+		Map<String, String> result = new LinkedHashMap<String, String>();
 		for (Attribute attribute : attributes)
 		{
 			if (attribute instanceof Annotations)
 			{
-				Annotations annotations= (Annotations) attribute;
-				AnnotationEntry[] entries= annotations.getAnnotationEntries();
-				List<AnnotationEntry> newEntries= new ArrayList<AnnotationEntry>();
+				Annotations annotations = (Annotations) attribute;
+
+				AnnotationEntry[] entries = annotations.getAnnotationEntries();
+				List<AnnotationEntry> newEntries = new ArrayList<AnnotationEntry>();
 				for (AnnotationEntry entry : entries)
 				{
+					System.out.println(entry.getAnnotationType());
+
 					if (entry.getElementValuePairs().length == 0)
 						result.put(Type.getType(entry.getAnnotationType()) + "# ", " ");
 
-					for (int i= 0; i < entry.getElementValuePairs().length; i++)
+					for (int i = 0; i < entry.getElementValuePairs().length; i++)
 					{
-						ElementValuePair elementValuePair= entry.getElementValuePairs()[i];
-						result.put(Type.getType(entry.getAnnotationType()) + "#" + elementValuePair.getNameString(), elementValuePair.getValue().toString());
+						ElementValuePair elementValuePair = entry.getElementValuePairs()[i];
+						result.put(Type.getType(entry.getAnnotationType()) + "#" + elementValuePair.getNameString(), elementValuePair
+								.getValue().toString());
+
 					}
 				}
 			}
@@ -249,38 +270,37 @@ public class Parser
 
 	public void parseMethod(TypeDeclaration typeDecl, MethodDeclaration methodDecl, Method method)
 	{
-		Type[] types= method.getArgumentTypes();
+		Type[] types = method.getArgumentTypes();
 
 		int offset;
 		if (Modifier.isStatic(methodDecl.getAccess()))
 		{
-			offset= 0;
+			offset = 0;
 		}
 		else
 		{
 
-			offset= 1;
+			offset = 1;
 		}
-		for (int i= 0; i < types.length; i++)
+		for (int i = 0; i < types.length; i++)
 		{
-			VariableDeclaration variableDecl= new VariableDeclaration(VariableDeclaration.LOCAL_PARAMETER);
+			VariableDeclaration variableDecl = new VariableDeclaration(VariableDeclaration.LOCAL_PARAMETER);
 			variableDecl.setName(VariableDeclaration.getLocalVariableName(method, offset, 0));
 			variableDecl.setType(types[i]);
 			methodDecl.addParameter(variableDecl);
-			offset+= types[i].getSize();
+			offset += types[i].getSize();
 		}
 
 		if (methodDecl.getCode() == null)
 			return;
 
 		Log.getLogger().debug("Parsing " + methodDecl.toString());
-		Pass1 pass1= new Pass1(jc);
+		Pass1 pass1 = new Pass1(jc);
 
 		try
 		{
 			pass1.parse(method, methodDecl);
-		}
-		catch (Throwable ex)
+		} catch (Throwable ex)
 		{
 			if (ex instanceof UnhandledCompilerProblemException)
 			{
@@ -288,14 +308,14 @@ public class Parser
 			}
 			else
 			{
-				ASTNode node= null;
+				ASTNode node = null;
 				if (ex instanceof ParseException)
 				{
-					node= ((ParseException) ex).getAstNode();
+					node = ((ParseException) ex).getAstNode();
 				}
 				else
 				{
-					node= Pass1.getCurrentNode();
+					node = Pass1.getCurrentNode();
 				}
 
 				if (DragomeJsCompiler.compiler.isFailOnError())
@@ -305,34 +325,38 @@ public class Parser
 				else
 				{
 					fileUnit.addNotReversibleMethod(Pass1.extractMethodNameSignature(methodDecl.getMethodBinding()));
-					//String msg= Utils.generateExceptionMessage(methodDecl, node);
-					//DragomeJsCompiler.errorCount++;
-					//		    Log.getLogger().error(msg + "\n" + Utils.stackTraceToString(ex));
+					// String msg= Utils.generateExceptionMessage(methodDecl,
+					// node);
+					// DragomeJsCompiler.errorCount++;
+					// Log.getLogger().error(msg + "\n" +
+					// Utils.stackTraceToString(ex));
 				}
 
 			}
-			Block body= new Block();
-			ThrowStatement throwStmt= new ThrowStatement();
+			Block body = new Block();
+			ThrowStatement throwStmt = new ThrowStatement();
 			/*
-			MethodBinding binding= MethodBinding.lookup("java.lang.RuntimeException", "<init>", "(java/lang/String)V;");
-			ClassInstanceCreation cic= new ClassInstanceCreation(methodDecl, binding);
-			cic.addArgument(new StringLiteral("Unresolved decompilation problem"));
-			throwStmt.setExpression(cic);
-			body.appendChild(throwStmt);*/
+			 * MethodBinding binding=
+			 * MethodBinding.lookup("java.lang.RuntimeException", "<init>",
+			 * "(java/lang/String)V;"); ClassInstanceCreation cic= new
+			 * ClassInstanceCreation(methodDecl, binding); cic.addArgument(new
+			 * StringLiteral("Unresolved decompilation problem"));
+			 * throwStmt.setExpression(cic); body.appendChild(throwStmt);
+			 */
 			methodDecl.setBody(body);
 
 		}
 
 		if (DragomeJsCompiler.compiler.optimize && methodDecl.getBody().getLastChild() instanceof ReturnStatement)
 		{
-			ReturnStatement ret= (ReturnStatement) methodDecl.getBody().getLastChild();
+			ReturnStatement ret = (ReturnStatement) methodDecl.getBody().getLastChild();
 			if (ret.getExpression() == null)
 			{
 				methodDecl.getBody().removeChild(ret);
 			}
 		}
 
-		//		Pass1.dump(methodDecl.getBody(), "Body of " + methodDecl.toString());
+		// Pass1.dump(methodDecl.getBody(), "Body of " + methodDecl.toString());
 
 		return;
 	}
@@ -347,22 +371,42 @@ public class Parser
 		return jc.getClassName();
 	}
 
+	public static final boolean test = true;
+
 	public static void main(String[] args) throws Exception
 	{
-		String className= args[0];
-		DragomeJsCompiler.compiler= new DragomeJsCompiler(CompilerType.Standard);
+
+		String[] arguments;
+
+		if (test) {
+			arguments = new String[] { "TestClass.class", "D:/dragome_workspace/CompilerTest/bin/TestClass.class" };
+
+			Path path = Paths.get("/tmp");
+			Path file = Paths.get("/tmp", "webapp.js");
+
+			if (Files.notExists(path))
+				Files.createDirectories(Paths.get("/tmp"));
+			if (Files.notExists(file))
+				Files.createFile(Paths.get("/tmp", "webapp.js"));
+
+		}
+		else
+			arguments = args;
+
+		String className = arguments[0];
+		DragomeJsCompiler.compiler = new DragomeJsCompiler(CompilerType.Standard);
 
 		Project.createSingleton(null);
-		ClassUnit classUnit= new ClassUnit(Project.singleton, Project.singleton.getSignature(className));
-		classUnit.setClassFile(new FileObject(new File(args[1])));
-		Parser parser= new Parser(classUnit);
-		TypeDeclaration typeDecl= parser.parse();
-		DragomeJavaScriptGenerator dragomeJavaScriptGenerator= new DragomeJavaScriptGenerator(Project.singleton);
+		ClassUnit classUnit = new ClassUnit(Project.singleton, Project.singleton.getSignature(className));
+		classUnit.setClassFile(new FileObject(new File(arguments[1])));
+		Parser parser = new Parser(classUnit);
+		TypeDeclaration typeDecl = parser.parse();
+		DragomeJavaScriptGenerator dragomeJavaScriptGenerator = new DragomeJavaScriptGenerator(Project.singleton);
 		dragomeJavaScriptGenerator.setOutputStream(new PrintStream(new FileOutputStream(new File("/tmp/webapp.js"))));
 		dragomeJavaScriptGenerator.visit(typeDecl);
 
-		FileInputStream fis= new FileInputStream(new File("/tmp/webapp.js"));
-		String md5= org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+		FileInputStream fis = new FileInputStream(new File("/tmp/webapp.js"));
+		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
 		System.out.println(md5);
 	}
 
