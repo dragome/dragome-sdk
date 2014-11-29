@@ -372,6 +372,9 @@ public class Parser
 	}
 
 	public static final boolean test = true;
+	
+	private final static String testPath= "D:/dragome_workspace/CompilerTest/bin/TestClass.class";
+	private final static String testClassName = "TestClass.class";
 
 	public static void main(String[] args) throws Exception
 	{
@@ -379,7 +382,7 @@ public class Parser
 		String[] arguments;
 
 		if (test) {
-			arguments = new String[] { "TestClass.class", "D:/dragome_workspace/CompilerTest/bin/TestClass.class" };
+			arguments = new String[] { testPath, testClassName };
 
 			Path path = Paths.get("/tmp");
 			Path file = Paths.get("/tmp", "webapp.js");
