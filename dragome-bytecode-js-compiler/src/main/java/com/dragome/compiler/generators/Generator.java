@@ -27,11 +27,11 @@ public abstract class Generator extends AbstractVisitor
 	{
 		if (DragomeJsCompiler.compiler.isCompression())
 		{
-			whiteSpace= "";
+			whiteSpace = "";
 		}
 		else
 		{
-			whiteSpace= " ";
+			whiteSpace = " ";
 		}
 	}
 
@@ -48,7 +48,7 @@ public abstract class Generator extends AbstractVisitor
 
 	public void setOutputStream(PrintStream theStream)
 	{
-		stream= theStream;
+		stream = theStream;
 	}
 
 	public void flush()
@@ -61,14 +61,14 @@ public abstract class Generator extends AbstractVisitor
 
 		if (DragomeJsCompiler.compiler.isCompression())
 			return;
-		String INDENT= "\t";
+		String INDENT = "\t";
 		if (indents == null || depth >= indents.length)
 		{
-			indents= new String[2 * depth];
-			indents[0]= "";
-			for (int i= 1; i < indents.length; i++)
+			indents = new String[2 * depth];
+			indents[0] = "";
+			for (int i = 1; i < indents.length; i++)
 			{
-				indents[i]= indents[i - 1] + INDENT;
+				indents[i] = indents[i - 1] + INDENT;
 			}
 		}
 		print(indents[depth]);
@@ -78,7 +78,7 @@ public abstract class Generator extends AbstractVisitor
 	{
 		stream.print(s);
 		if (s.length() > 0)
-			lastChar= s.charAt(s.length() - 1);
+			lastChar = s.charAt(s.length() - 1);
 	}
 
 	void println(String s)

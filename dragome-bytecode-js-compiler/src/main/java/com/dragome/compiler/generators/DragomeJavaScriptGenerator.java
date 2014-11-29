@@ -75,7 +75,6 @@ import com.dragome.compiler.parser.Pass1;
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.units.ClassUnit;
 import com.dragome.compiler.units.FieldUnit;
-import com.dragome.compiler.units.MemberUnit;
 import com.dragome.compiler.units.ProcedureUnit;
 import com.dragome.compiler.utils.Log;
 import com.dragome.compiler.utils.Utils;
@@ -83,11 +82,11 @@ import com.dragome.compiler.utils.Utils;
 public class DragomeJavaScriptGenerator extends Generator
 {
 
-	public static final String DRAGOME_PACKAGE= "dragome";
+	public static final String DRAGOME_PACKAGE = "dragome";
 
 	private static int parametersSignaturesCounter;
 
-	public static Map<String, Integer> parametersSignatures= new LinkedHashMap<String, Integer>();
+	public static Map<String, Integer> parametersSignatures = new LinkedHashMap<String, Integer>();
 
 	private ASTNode currentNode;
 
@@ -95,45 +94,50 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private Project project;
 
-	private ByteArrayOutputStream baStream= new ByteArrayOutputStream();
+	private ByteArrayOutputStream baStream = new ByteArrayOutputStream();
 
-	//    private List<MethodInvocation> superMethods= new ArrayList<MethodInvocation>();
+	// private List<MethodInvocation> superMethods= new
+	// ArrayList<MethodInvocation>();
 
 	public DragomeJavaScriptGenerator(Project theProject)
 	{
 		super();
-		project= theProject;
+		project = theProject;
 		setOutputStream(new PrintStream(baStream));
 	}
 
 	private String reset()
 	{
 		flush();
-		String s= baStream.toString();
+		String s = baStream.toString();
 		baStream.reset();
 		return s;
 	}
 
 	private void consume(Object object)
 	{
-		object= object == null ? object : object;
+		object = object == null ? object : object;
 	}
 
 	public void visit(TypeDeclaration theTypeDecl)
 	{
-		Map<String, String> annotations= theTypeDecl.getAnnotations();
 
-		ClassUnit classUnit= project.getClassUnit(theTypeDecl.getType());
+		if (!theTypeDecl.isAllowedToCompile())
+			return;
 
-		lastChar= '\0';
-		currentNode= null;
-		depth= 0;
+		Map<String, String> annotations = theTypeDecl.getAnnotations();
 
-		typeDecl= theTypeDecl;
+		ClassUnit classUnit = project.getClassUnit(theTypeDecl.getType());
 
-		boolean isInterface= Modifier.isInterface(typeDecl.getAccess());
+		lastChar = '\0';
+		currentNode = null;
+		depth = 0;
 
-		String type= isInterface ? "Interface" : "Class";
+		typeDecl = theTypeDecl;
+
+		boolean isInterface = Modifier.isInterface(typeDecl.getAccess());
+
+		String type = isInterface ? "Interface" : "Class";
 		print("qx." + type + ".define(\"");
 		print(normalizeExpression(theTypeDecl.getClassName()));
 		println("\", ");
@@ -143,7 +147,7 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if (classUnit.getSuperUnit() != null)
 		{
-			String superUnitName= normalizeExpression(classUnit.getSuperUnit().getName());
+			String superUnitName = normalizeExpression(classUnit.getSuperUnit().getName());
 			print("extend: " + superUnitName);
 			println(",");
 		}
@@ -165,50 +169,53 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		classUnit.setData(reset());
 
-		List fields= theTypeDecl.getFields();
-		for (int i= 0; i < fields.size(); i++)
+		List fields = theTypeDecl.getFields();
+		for (int i = 0; i < fields.size(); i++)
 		{
-			VariableDeclaration decl= (VariableDeclaration) fields.get(i);
+			VariableDeclaration decl = (VariableDeclaration) fields.get(i);
 
 			if (decl.getLocation() == VariableDeclaration.NON_LOCAL)
 			{
-				//	    if (Modifier.isStatic(decl.getModifiers()))
-				//		continue;
-				//		indent();
+				// if (Modifier.isStatic(decl.getModifiers()))
+				// continue;
+				// indent();
 				decl.visit(this);
-				//println(",");
+				// println(",");
 			}
 		}
 		depth--;
-		//	String superType= null;
+		// String superType= null;
 		//
-		//	if (theTypeDecl.getSuperType() != null && !Modifier.isInterface(theTypeDecl.getAccess()))
-		//	{
-		//	    superType= Project.getSingleton().getSignature(theTypeDecl.getSuperType().getClassName()).getCommentedId();
-		//	}
+		// if (theTypeDecl.getSuperType() != null &&
+		// !Modifier.isInterface(theTypeDecl.getAccess()))
+		// {
+		// superType=
+		// Project.getSingleton().getSignature(theTypeDecl.getSuperType().getClassName()).getCommentedId();
+		// }
 
-		//	for (int i= 0; i < fields.size(); i++)
-		//	{
-		//	    VariableDeclaration decl= (VariableDeclaration) fields.get(i);
+		// for (int i= 0; i < fields.size(); i++)
+		// {
+		// VariableDeclaration decl= (VariableDeclaration) fields.get(i);
 		//
-		//	    if (!Modifier.isStatic(decl.getModifiers()))
-		//		continue;
-		//	    indent();
-		//	    decl.visit(this);
-		//	    println(";");
-		//	}
+		// if (!Modifier.isStatic(decl.getModifiers()))
+		// continue;
+		// indent();
+		// decl.visit(this);
+		// println(";");
+		// }
 
 		depth++;
-		MethodDeclaration[] methods= theTypeDecl.getMethods();
-		List<String> processedMethods= new ArrayList<String>();
+		MethodDeclaration[] methods = theTypeDecl.getMethods();
+		List<String> processedMethods = new ArrayList<String>();
 
-		for (int i= 0; i < methods.length; i++)
+		for (int i = 0; i < methods.length; i++)
 		{
-			MethodDeclaration method= methods[i];
-			currentMethodDeclaration= method;
+			MethodDeclaration method = methods[i];
+			currentMethodDeclaration = method;
 			try
 			{
-				String normalizeExpression= normalizeExpression(Project.getSingleton().getSignature(method.getMethodBinding().toString()).relative());
+				String normalizeExpression = normalizeExpression(Project.getSingleton().getSignature(method.getMethodBinding().toString())
+						.relative());
 
 				if (!processedMethods.contains(normalizeExpression))
 				{
@@ -217,9 +224,8 @@ public class DragomeJavaScriptGenerator extends Generator
 				}
 				else
 					System.out.println("duplicado!");
-				//		System.out.println("llego!");
-			}
-			catch (RuntimeException ex)
+				// System.out.println("llego!");
+			} catch (RuntimeException ex)
 			{
 				throw Utils.generateException(ex, method, currentNode);
 			}
@@ -230,123 +236,129 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		reset();
 		depth++;
-		//addSuperMethodsDefinition();
+		// addSuperMethodsDefinition();
 		depth--;
 
 		classUnit.setData(classUnit.getData() + reset());
 	}
 
-	//    private void addSuperMethodsDefinition()
-	//    {
-	//	for (MethodInvocation methodInvocation : superMethods)
-	//	{
-	//	    indent();
-	//	    String declaringClass= normalizeExpression(methodInvocation.getMethodBinding().getDeclaringClass().getClassName());
-	//	    String signature= normalizeExpression(getSignatureOfInvocation(methodInvocation));
+	// private void addSuperMethodsDefinition()
+	// {
+	// for (MethodInvocation methodInvocation : superMethods)
+	// {
+	// indent();
+	// String declaringClass=
+	// normalizeExpression(methodInvocation.getMethodBinding().getDeclaringClass().getClassName());
+	// String signature=
+	// normalizeExpression(getSignatureOfInvocation(methodInvocation));
 	//
-	//	    print("this.");
-	//	    print(declaringClass);
-	//	    print("_");
-	//	    print(signature);
-	//	    print("= ");
-	//	    print("this.");
-	//	    print(signature);
-	//	    println(";");
-	//	}
+	// print("this.");
+	// print(declaringClass);
+	// print("_");
+	// print(signature);
+	// print("= ");
+	// print("this.");
+	// print(signature);
+	// println(";");
+	// }
 	//
-	//	superMethods.clear(); 
-	//    }
+	// superMethods.clear();
+	// }
 
 	public void visit(MethodDeclaration method)
 	{
-		String annotationKey= DragomeCompilerSettings.class.getName() + "#" + "value";
-		String compiler= DragomeJsCompiler.compiler.compilerType.name();
-		String methodCompilerType= method.getAnnotationsValues().get(annotationKey);
-		String classCompilerType= typeDecl.getAnnotations().get(annotationKey);
+		String annotationKey = DragomeCompilerSettings.class.getName() + "#" + "value";
+		String compiler = DragomeJsCompiler.compiler.compilerType.name();
+		String methodCompilerType = method.getAnnotationsValues().get(annotationKey);
+		String classCompilerType = typeDecl.getAnnotations().get(annotationKey);
 
 		if (methodCompilerType != null)
-			compiler= methodCompilerType;
+			compiler = methodCompilerType;
 		else if (classCompilerType != null)
-			compiler= classCompilerType;
+			compiler = classCompilerType;
 
-		//	String className2= method.getMethodBinding().getDeclaringClass().getClassName();
-		// !className2.startsWith("java.lang") && (method.getAnnotationsValues().get("alias") == null || className2.contains("JSONTokener")
+		// String className2=
+		// method.getMethodBinding().getDeclaringClass().getClassName();
+		// !className2.startsWith("java.lang") &&
+		// (method.getAnnotationsValues().get("alias") == null ||
+		// className2.contains("JSONTokener")
 
 		if ("Strict".equalsIgnoreCase(compiler))
 		{
-			ClassUnit classUnit= project.getClassUnit(method.getMethodBinding().getDeclaringClass().getClassName());
+			ClassUnit classUnit = project.getClassUnit(method.getMethodBinding().getDeclaringClass().getClassName());
 			classUnit.addNotReversibleMethod(Pass1.extractMethodNameSignature(method.getMethodBinding()));
 		}
 
-		MethodBinding methodBinding= method.getMethodBinding();
-		ProcedureUnit unit= project.getProcedureUnit(methodBinding);
+		MethodBinding methodBinding = method.getMethodBinding();
+		ProcedureUnit unit = project.getProcedureUnit(methodBinding);
 
 		if (method.getBody() == null && Modifier.isNative(method.getAccess()))
 		{
-			if (Modifier.isNative(method.getAccess()) || Modifier.isAbstract(method.getAccess()) || Modifier.isInterface(typeDecl.getAccess()))
+			if (Modifier.isNative(method.getAccess()) || Modifier.isAbstract(method.getAccess())
+					|| Modifier.isInterface(typeDecl.getAccess()))
 			{
 				return;
 			}
 			throw new RuntimeException("Method " + method + " with access " + method.getAccess() + " may not have empty body");
 		}
 
-		//	if (!dragomeJsCompiler.compiler.isCompression())
-		//	{
-		//	    println("/* " + unit.getAbsoluteSignature() + " */");
-		//	}
+		// if (!dragomeJsCompiler.compiler.isCompression())
+		// {
+		// println("/* " + unit.getAbsoluteSignature() + " */");
+		// }
 
 		String closingString;
-		Signature signature= Project.getSingleton().getSignature(methodBinding.toString()).relative();
-		String signatureReplaced= normalizeExpression(signature);
+		Signature signature = Project.getSingleton().getSignature(methodBinding.toString()).relative();
+		String signatureReplaced = normalizeExpression(signature);
 
 		if (typeDecl.getClassName().equals("java.lang.String") && method.isInstanceConstructor())
 		{
 
-			Block body= method.getBody();
+			Block body = method.getBody();
 
 			body.removeChild(body.getFirstChild());
 
-			MethodInvocation consume= (MethodInvocation) body.getLastChild();
+			MethodInvocation consume = (MethodInvocation) body.getLastChild();
 			body.removeChild(consume);
 
-			ReturnStatement r= new ReturnStatement(0, 0);
+			ReturnStatement r = new ReturnStatement(0, 0);
 			r.setExpression((Expression) consume.getArguments().get(0));
 			body.appendChild(r);
 
 			print("_dragomeJs.StringInit" + signatureReplaced + " = function(");
-			closingString= "};\n";
+			closingString = "};\n";
 		}
 		else
 		{
 			if (Modifier.isStatic(method.getAccess()))
 			{
-				String className= normalizeExpression(method.getMethodBinding().getDeclaringClass().getClassName());
+				String className = normalizeExpression(method.getMethodBinding().getDeclaringClass().getClassName());
 				print(ClassUnit.STATIC_MEMBER);
-				//		print(className + ".");
+				// print(className + ".");
 			}
 			else
 			{
-				//		if (typeDecl.getClassName().equals("java.lang.String"))
-				//		    print("String.prototype." + signatureReplaced + "=");
+				// if (typeDecl.getClassName().equals("java.lang.String"))
+				// print("String.prototype." + signatureReplaced + "=");
 
-				//		print("this.");
+				// print("this.");
 			}
 
 			print(signatureReplaced);
 			print(": ");
-			String alias= method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "alias");
+			String alias = method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "alias");
 			if (alias != null)
 				print(alias + "= ");
 
 			print("function (");
-			closingString= "}";
+			closingString = "}";
 		}
 
-		Iterator<VariableDeclaration> iterator= method.getParameters().iterator();
+		Iterator<VariableDeclaration> iterator = method.getParameters().iterator();
 		while (iterator.hasNext())
 		{
-			VariableDeclaration decl= iterator.next();
-			
+			VariableDeclaration decl = iterator.next();
+
 			if (hasToEscapeVariable(decl.getName()))
 				print("_");
 			decl.visit(this);
@@ -356,13 +368,13 @@ public class DragomeJavaScriptGenerator extends Generator
 		println(")");
 		println("{");
 
-		depth= 1;
+		depth = 1;
 
-		Collection<VariableDeclaration> localVariables= method.getLocalVariables();
+		Collection<VariableDeclaration> localVariables = method.getLocalVariables();
 		if (localVariables.size() > 0)
 			print("var ");
 
-		int i= 0;
+		int i = 0;
 		for (VariableDeclaration decl : localVariables)
 		{
 			decl.visit(this);
@@ -374,59 +386,61 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (localVariables.size() > 0)
 			println(";");
 
-		depth= 0;
+		depth = 0;
 
 		if (method.getBody() != null)
 			visit_(method.getBody());
 
-		//	println ("//llamar al servidor");
+		// println ("//llamar al servidor");
 
 		if (method.isInstanceConstructor())
 			print("return this;\n");
 
 		print(closingString);
 
-		String local_alias= method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "local_alias");
+		String local_alias = method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "local_alias");
 		if (local_alias != null)
 		{
 			print(", \n");
 			print(local_alias + ": function() {return this." + signatureReplaced + "(arguments)}");
 		}
 
-		//println(",");
+		// println(",");
 
 		unit.setData(reset());
 		Log.getLogger().debug("Generating JavaScript for " + unit);
 	}
+
 	public static String normalizeExpression(Object object)
 	{
 		if (object instanceof Signature)
 		{
-			Signature signature= (Signature) object;
-			String string= signature.toString();
+			Signature signature = (Signature) object;
+			String string = signature.toString();
 
-			string= string.replaceAll("\\[\\]", "_ARRAYTYPE");
-			String result= string.replaceAll("\\(\\)", "\\$");
-			result= result.replaceAll("\\)", "\\$").replaceAll("\\(", "___").replaceAll("\\.", "_").replaceAll(",", "__").replaceAll("<", "").replaceAll(">", "").replaceAll("\\[", "_").replaceAll("\\]", "_").replaceAll(";", "\\$");
+			string = string.replaceAll("\\[\\]", "_ARRAYTYPE");
+			String result = string.replaceAll("\\(\\)", "\\$");
+			result = result.replaceAll("\\)", "\\$").replaceAll("\\(", "___").replaceAll("\\.", "_").replaceAll(",", "__")
+					.replaceAll("<", "").replaceAll(">", "").replaceAll("\\[", "_").replaceAll("\\]", "_").replaceAll(";", "\\$");
 
 			if (signature.isMethod() || signature.isConstructor())
 			{
-				result= "$" + result;
+				result = "$" + result;
 
 				if (signature.isConstructor())
 				{
-					result= result.replaceAll("___$", "");
-					result= result.replace("$init", "$init_");
+					result = result.replaceAll("___$", "");
+					result = result.replace("$init", "$init_");
 					return "$" + result;
 				}
 				else
 				{
-					result= result.replaceAll("___$", "");
+					result = result.replaceAll("___$", "");
 					if (result.contains("clinit"))
-						result= "$" + result + "_";
+						result = "$" + result + "_";
 
 					if ("$$clinit$void_".equals(result))
-						result= "$$clinit_";
+						result = "$$clinit_";
 
 					return result;
 				}
@@ -436,12 +450,13 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 		else
 		{
-			String string= object.toString();
+			String string = object.toString();
 
-			string= string.replaceAll("\\[\\]", "_ARRAYTYPE");
+			string = string.replaceAll("\\[\\]", "_ARRAYTYPE");
 
-			//string= modifyMethodName(string);
-			return string.replaceAll("\\(", "_").replaceAll("\\)", "_").replaceAll("\\.", "_").replaceAll(",", "__").replaceAll("<", "_").replaceAll(">", "_").replaceAll("\\[", "_").replaceAll("\\]", "_").replaceAll(";", "\\$");
+			// string= modifyMethodName(string);
+			return string.replaceAll("\\(", "_").replaceAll("\\)", "_").replaceAll("\\.", "_").replaceAll(",", "__").replaceAll("<", "_")
+					.replaceAll(">", "_").replaceAll("\\[", "_").replaceAll("\\]", "_").replaceAll(";", "\\$");
 		}
 	}
 
@@ -449,14 +464,14 @@ public class DragomeJavaScriptGenerator extends Generator
 	{
 		if (string.contains("("))
 		{
-			int indexOf= string.indexOf("(");
-			String parametersPart= string.substring(indexOf);
+			int indexOf = string.indexOf("(");
+			String parametersPart = string.substring(indexOf);
 
-			Integer counter= parametersSignatures.get(parametersPart);
+			Integer counter = parametersSignatures.get(parametersPart);
 			if (counter == null)
-				parametersSignatures.put(parametersPart, counter= ++parametersSignaturesCounter);
+				parametersSignatures.put(parametersPart, counter = ++parametersSignaturesCounter);
 
-			string= string.substring(0, indexOf) + "_" + counter;
+			string = string.substring(0, indexOf) + "_" + counter;
 		}
 		return string;
 	}
@@ -499,20 +514,20 @@ public class DragomeJavaScriptGenerator extends Generator
 		println("try {");
 		visit_(tryStmt.getTryBlock());
 		indent("} ");
-		Block clauses= tryStmt.getCatchStatements();
-		CatchClause clause= (CatchClause) clauses.getFirstChild();
+		Block clauses = tryStmt.getCatchStatements();
+		CatchClause clause = (CatchClause) clauses.getFirstChild();
 
-		String ex= null;
+		String ex = null;
 		if (clause != null)
 		{
-			ex= clause.getException().getName();
+			ex = clause.getException().getName();
 		}
 
-		//	if (clauses.getChildCount() == 1)
-		//	{
-		//	    print("catch(" + ex + ") ");
-		//	    clause.visit(this);
-		//	}
+		// if (clauses.getChildCount() == 1)
+		// {
+		// print("catch(" + ex + ") ");
+		// clause.visit(this);
+		// }
 		if (clauses.getChildCount() > 0)
 		{
 			println("catch(" + ex + ") {");
@@ -521,12 +536,13 @@ public class DragomeJavaScriptGenerator extends Generator
 			while (clause != null)
 			{
 				if (clause.getException().getType() != null)
-					print("if (dragomeJs.isInstanceof(" + ex + ", " + normalizeExpression(Utils.getSignature(clause.getException().getType())) + ")) ");
+					print("if (dragomeJs.isInstanceof(" + ex + ", "
+							+ normalizeExpression(Utils.getSignature(clause.getException().getType())) + ")) ");
 				else
 					print("if (true)");
 
 				clause.visit(this);
-				clause= (CatchClause) clause.getNextSibling();
+				clause = (CatchClause) clause.getNextSibling();
 				if (clause == null)
 					break;
 				print(" else ");
@@ -539,7 +555,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			indent("}");
 		}
 
-		Block finallyBlock= tryStmt.getFinallyBlock();
+		Block finallyBlock = tryStmt.getFinallyBlock();
 		if (finallyBlock != null)
 		{
 			println(" finally {");
@@ -556,13 +572,13 @@ public class DragomeJavaScriptGenerator extends Generator
 	public void visit_(Block block)
 	{
 		depth++;
-		ASTNode node= block.getFirstChild();
+		ASTNode node = block.getFirstChild();
 		while (node != null)
 		{
-			currentNode= node;
+			currentNode = node;
 			if (DragomeJsCompiler.compiler.isGenerateLineNumbers())
 			{
-				int lineNumber= currentMethodDeclaration.getLineNumberCursor().getAndMarkLineNumber(node);
+				int lineNumber = currentMethodDeclaration.getLineNumberCursor().getAndMarkLineNumber(node);
 				if (lineNumber != -1)
 				{
 					print("//ln=" + lineNumber + ";\n");
@@ -585,7 +601,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			{
 				println(";");
 			}
-			node= node.getNextSibling();
+			node = node.getNextSibling();
 		}
 		depth--;
 	}
@@ -620,7 +636,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private void bracket(ASTNode node, InfixExpression.Operator op)
 	{
-		if ((node instanceof InfixExpression && ((InfixExpression) node).getOperator() == op) || node instanceof NumberLiteral || node instanceof NullLiteral || node instanceof FieldAccess || node instanceof VariableBinding)
+		if ((node instanceof InfixExpression && ((InfixExpression) node).getOperator() == op) || node instanceof NumberLiteral
+				|| node instanceof NullLiteral || node instanceof FieldAccess || node instanceof VariableBinding)
 		{
 			node.visit(this);
 		}
@@ -634,16 +651,16 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(InfixExpression binOp)
 	{
-		InfixExpression.Operator op= binOp.getOperator();
-		Expression left= binOp.getLeftOperand();
-		Expression right= binOp.getRightOperand();
+		InfixExpression.Operator op = binOp.getOperator();
+		Expression left = binOp.getLeftOperand();
+		Expression right = binOp.getRightOperand();
 
-		boolean isTruncate= false;
-		Type type= binOp.getTypeBinding();
+		boolean isTruncate = false;
+		Type type = binOp.getTypeBinding();
 
 		if (op == InfixExpression.Operator.DIVIDE && (type.equals(Type.LONG) || type.equals(Type.INT)))
 		{
-			isTruncate= true;
+			isTruncate = true;
 			print("dragomeJs.trunc(");
 		}
 
@@ -671,11 +688,11 @@ public class DragomeJavaScriptGenerator extends Generator
 		print("dragomeJs.isInstanceof (");
 		node.getLeftOperand().visit(this);
 		print(", ");
-		Signature signature= Project.getSingleton().getArraySignature(node.getRightOperand());
+		Signature signature = Project.getSingleton().getArraySignature(node.getRightOperand());
 		print(normalizeExpression(signature.toString()));
 		print(")");
 
-		//	print ("true");
+		// print ("true");
 	}
 
 	public void visit(SwitchStatement switchStmt)
@@ -683,24 +700,24 @@ public class DragomeJavaScriptGenerator extends Generator
 		print("switch (");
 		switchStmt.getExpression().visit(this);
 		println(") {");
-		ASTNode node= switchStmt.getFirstChild();
+		ASTNode node = switchStmt.getFirstChild();
 		while (node != null)
 		{
-			SwitchCase sc= (SwitchCase) node;
+			SwitchCase sc = (SwitchCase) node;
 			sc.visit(this);
-			node= node.getNextSibling();
+			node = node.getNextSibling();
 		}
 		indentln("}");
 	}
 
 	public void visit(SwitchCase switchCase)
 	{
-		Iterator<NumberLiteral> iter= switchCase.getExpressions().iterator();
+		Iterator<NumberLiteral> iter = switchCase.getExpressions().iterator();
 		if (iter.hasNext())
 		{
 			while (iter.hasNext())
 			{
-				NumberLiteral expression= iter.next();
+				NumberLiteral expression = iter.next();
 				indent("case ");
 				expression.visit(this);
 				println(":");
@@ -730,11 +747,11 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(Assignment a)
 	{
-		Expression rhs= a.getRightHandSide();
+		Expression rhs = a.getRightHandSide();
 
 		if (rhs instanceof ClassInstanceCreation)
 		{
-			ClassInstanceCreation cic= (ClassInstanceCreation) rhs;
+			ClassInstanceCreation cic = (ClassInstanceCreation) rhs;
 			if (cic.getTypeBinding().toString().equals("java.lang.String"))
 			{
 				return;
@@ -776,8 +793,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(ClassLiteral literal)
 	{
-		MethodBinding binding= MethodBinding.lookup("java.lang.Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;");
-		MethodInvocation mi= new MethodInvocation(currentMethodDeclaration, binding);
+		MethodBinding binding = MethodBinding.lookup("java.lang.Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;");
+		MethodInvocation mi = new MethodInvocation(currentMethodDeclaration, binding);
 		mi.addArgument(new StringLiteral(literal.getSignature().toString()));
 		visit(mi);
 	}
@@ -790,7 +807,7 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private void generateList(List arguments)
 	{
-		for (int i= 0; i < arguments.size(); i++)
+		for (int i = 0; i < arguments.size(); i++)
 		{
 			print(i == 0 ? "" : ", ");
 			((ASTNode) arguments.get(i)).visit(this);
@@ -799,12 +816,12 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private boolean isW3C(MethodInvocation invocation)
 	{
-		MethodBinding methodBinding= invocation.getMethodBinding();
+		MethodBinding methodBinding = invocation.getMethodBinding();
 
-		String name= methodBinding.getName();
-		int argCount= invocation.getArguments().size();
-		boolean isSetter= name.startsWith("set") && argCount == 1;
-		boolean isGetter= name.startsWith("get") && argCount == 0;
+		String name = methodBinding.getName();
+		int argCount = invocation.getArguments().size();
+		boolean isSetter = name.startsWith("set") && argCount == 1;
+		boolean isGetter = name.startsWith("get") && argCount == 0;
 
 		if (!isSetter && !isGetter)
 			return false;
@@ -831,22 +848,22 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private void generateScriptCode(MethodInvocation invocation)
 	{
-		MethodBinding methodBinding= invocation.getMethodBinding();
-		String name= methodBinding.getName();
-		List args= invocation.getArguments();
+		MethodBinding methodBinding = invocation.getMethodBinding();
+		String name = methodBinding.getName();
+		List args = invocation.getArguments();
 		String firstArg;
 		if (!(args.get(0) instanceof StringLiteral))
 		{
 			if (args.get(0) instanceof VariableBinding)
 			{
-				VariableBinding variableBinding= (VariableBinding) args.get(0);
-				firstArg= variableBinding.getName();
+				VariableBinding variableBinding = (VariableBinding) args.get(0);
+				firstArg = variableBinding.getName();
 			}
 			else
 				throw new RuntimeException("First argument to " + methodBinding + " must be a string literal");
 		}
 		else
-			firstArg= ((StringLiteral) args.get(0)).getValue();
+			firstArg = ((StringLiteral) args.get(0)).getValue();
 
 		if (name.equals("put"))
 		{
@@ -867,7 +884,7 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private void generateArguments(MethodInvocation invocation)
 	{
-		Signature signature= getSignatureOfInvocation(invocation);
+		Signature signature = getSignatureOfInvocation(invocation);
 		print(normalizeExpression(signature));
 
 		print("(");
@@ -877,17 +894,17 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private static Signature getSignatureOfInvocation(MethodInvocation invocation)
 	{
-		MethodBinding methodBinding= invocation.getMethodBinding();
-		Signature signature= Project.getSingleton().getSignature(methodBinding.getDeclaringClass().getClassName());
-		signature= Project.getSingleton().getSignature(methodBinding.getRelativeSignature());
+		MethodBinding methodBinding = invocation.getMethodBinding();
+		Signature signature = Project.getSingleton().getSignature(methodBinding.getDeclaringClass().getClassName());
+		signature = Project.getSingleton().getSignature(methodBinding.getRelativeSignature());
 		return signature;
 	}
 
 	public void visit(MethodInvocation invocation)
 	{
-		MethodBinding methodBinding= invocation.getMethodBinding();
-		String name= methodBinding.getName();
-		String className= methodBinding.getDeclaringClass().getClassName();
+		MethodBinding methodBinding = invocation.getMethodBinding();
+		String name = methodBinding.getName();
+		String className = methodBinding.getDeclaringClass().getClassName();
 
 		if (className.equals("com.dragome.commons.javascript.ScriptHelper"))
 		{
@@ -901,7 +918,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			return;
 		}
 
-		ASTNode expression= invocation.getExpression();
+		ASTNode expression = invocation.getExpression();
 
 		// expression.visit(this);
 		// } else {
@@ -923,11 +940,11 @@ public class DragomeJavaScriptGenerator extends Generator
 				assert expression instanceof ClassInstanceCreation;
 			}
 
-			Signature signature= Project.getSingleton().getSignature(methodBinding.toString()).relative();
-			String signatureReplaced= normalizeExpression(signature);
+			Signature signature = Project.getSingleton().getSignature(methodBinding.toString()).relative();
+			String signatureReplaced = normalizeExpression(signature);
 
 			print("dragomeJs.StringInit" + signatureReplaced + "(");
-			//	    print("dragomeJs.StringInit" + signature.getId() + "(");
+			// print("dragomeJs.StringInit" + signature.getId() + "(");
 			generateList(invocation.getArguments());
 			print(")");
 			return;
@@ -935,24 +952,24 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if (invocation.isSuper(typeDecl.getClassName()))
 		{
-			//	    print(prefix);
-			//	    print(INVOKESUPER);
-			//	    print("(");
+			// print(prefix);
+			// print(INVOKESUPER);
+			// print("(");
 
-			String string= "arguments.callee.self.superclass.prototype.{methodName}.call(this";
+			String string = "arguments.callee.self.superclass.prototype.{methodName}.call(this";
 
 			if (methodBinding.getDeclaringClass().referencesInterface())
 			{
-				String invokeClassName= normalizeExpression(methodBinding.getDeclaringClass());
-				string= invokeClassName + ".$$members.{methodName}.call(this";
+				String invokeClassName = normalizeExpression(methodBinding.getDeclaringClass());
+				string = invokeClassName + ".$$members.{methodName}.call(this";
 			}
 
 			if (Modifier.isStatic(invocation.methodDecl.getAccess()))
-				string= "this.superclass.prototype.{methodName}.call(arguments[0]";
+				string = "this.superclass.prototype.{methodName}.call(arguments[0]";
 
-			Signature signature= getSignatureOfInvocation(invocation);
-			String methodName= normalizeExpression(signature);
-			string= string.replace("{methodName}", methodName);
+			Signature signature = getSignatureOfInvocation(invocation);
+			String methodName = normalizeExpression(signature);
+			string = string.replace("{methodName}", methodName);
 
 			if (invocation.getArguments().isEmpty())
 			{
@@ -967,24 +984,25 @@ public class DragomeJavaScriptGenerator extends Generator
 				print(")");
 			}
 
-			//	    print("this.");
-			//	    String declaringClass= normalizeExpression(methodBinding.getDeclaringClass().getClassName());
-			//	    print(declaringClass);
-			//	    print("_");
-			//	    //	    generateArguments(invocation);
-			//	    generateList(invocation.getArguments());
-			//	    print(")");
-			//	    superMethods.add(invocation);
+			// print("this.");
+			// String declaringClass=
+			// normalizeExpression(methodBinding.getDeclaringClass().getClassName());
+			// print(declaringClass);
+			// print("_");
+			// // generateArguments(invocation);
+			// generateList(invocation.getArguments());
+			// print(")");
+			// superMethods.add(invocation);
 
-			//	    if (expression == null)
-			//	    {
-			//		print("null");
-			//	    }
-			//	    else
-			//	    {
-			//		expression.visit(this);
-			//	    }
-			//	    print(", ");
+			// if (expression == null)
+			// {
+			// print("null");
+			// }
+			// else
+			// {
+			// expression.visit(this);
+			// }
+			// print(", ");
 		}
 		else if (invocation.isSpecial)
 		{
@@ -993,10 +1011,10 @@ public class DragomeJavaScriptGenerator extends Generator
 
 			if (methodBinding.isConstructor() && expression instanceof ThisExpression && !"java.lang.String".equals(className))
 			{
-				String normalizeExpression= normalizeExpression(className);
+				String normalizeExpression = normalizeExpression(className);
 				print(normalizeExpression);
 				print(".prototype.");
-				Signature signature= getSignatureOfInvocation(invocation);
+				Signature signature = getSignatureOfInvocation(invocation);
 				print(normalizeExpression(signature));
 				print(".call(this");
 				if (!invocation.getArguments().isEmpty())
@@ -1014,19 +1032,19 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 		else if (expression == null)
 		{
-			boolean isStatic= true;//Modifier.isStatic(invocation.methodDecl.getAccess());
+			boolean isStatic = true;// Modifier.isStatic(invocation.methodDecl.getAccess());
 
-			Signature signature= Project.getSingleton().getSignature(methodBinding.getDeclaringClass().getClassName());
-			//			if (isStatic)
-			//				print("_getClassForStatic(");
+			Signature signature = Project.getSingleton().getSignature(methodBinding.getDeclaringClass().getClassName());
+			// if (isStatic)
+			// print("_getClassForStatic(");
 			print(normalizeExpression(signature));
-			//			if (isStatic)
-			//			{
-			//				print(", \"");
-			//				Signature signature2= getSignatureOfInvocation(invocation);
-			//				print(normalizeExpression(signature2));
-			//				print("\")");
-			//			}
+			// if (isStatic)
+			// {
+			// print(", \"");
+			// Signature signature2= getSignatureOfInvocation(invocation);
+			// print(normalizeExpression(signature2));
+			// print("\")");
+			// }
 			print(".");
 			generateArguments(invocation);
 		}
@@ -1041,13 +1059,14 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(ClassInstanceCreation cic)
 	{
-		//	print(prefix);
-		//	print(NEWINSTANCE);
-		//	print("(");
+		// print(prefix);
+		// print(NEWINSTANCE);
+		// print("(");
 		print("new ");
-		Object className= Project.getSingleton().getSignature(((ObjectType) cic.getTypeBinding()).getClassName());
+		Object className = Project.getSingleton().getSignature(((ObjectType) cic.getTypeBinding()).getClassName());
 		print(normalizeExpression(className));
-		//	print(Project.getSingleton().getSignature(((ObjectType) cic.getTypeBinding()).getClassName()).getCommentedId());
+		// print(Project.getSingleton().getSignature(((ObjectType)
+		// cic.getTypeBinding()).getClassName()).getCommentedId());
 
 		print("(");
 		if (cic.getMethodBinding() != null)
@@ -1063,7 +1082,7 @@ public class DragomeJavaScriptGenerator extends Generator
 	public void visit(ArrayInitializer ai)
 	{
 		print("[");
-		for (int i= 0; i < ai.getExpressions().size(); i++)
+		for (int i = 0; i < ai.getExpressions().size(); i++)
 		{
 			print(i == 0 ? "" : ", ");
 			((ASTNode) ai.getExpressions().get(i)).visit(this);
@@ -1085,10 +1104,10 @@ public class DragomeJavaScriptGenerator extends Generator
 		else
 		{
 			print("dragomeJs.newArray('");
-			Signature signature= Project.getSingleton().getArraySignature(ac.getTypeBinding());
+			Signature signature = Project.getSingleton().getArraySignature(ac.getTypeBinding());
 			print(signature.toString());
 			print("', [");
-			for (int i= 0; i < ac.getDimensions().size(); i++)
+			for (int i = 0; i < ac.getDimensions().size(); i++)
 			{
 				print(i == 0 ? "" : ", ");
 				ac.getDimensions().get(i).visit(this);
@@ -1107,12 +1126,12 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private String normalizeAccess(FieldAccess fr)
 	{
-		String prefix= "$$$";
+		String prefix = "$$$";
 		if (fr.getFirstChild() instanceof FieldRead)
 		{
-			FieldRead fieldRead= (FieldRead) fr.getFirstChild();
-			//	    if (variableBinding.getTypeBinding() instanceof ArrayType)
-			//		prefix="";
+			FieldRead fieldRead = (FieldRead) fr.getFirstChild();
+			// if (variableBinding.getTypeBinding() instanceof ArrayType)
+			// prefix="";
 		}
 
 		if ("length".equals(fr.getName()))
@@ -1120,10 +1139,10 @@ public class DragomeJavaScriptGenerator extends Generator
 			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
 				System.out.println("sdgsdg");
 
-			prefix= "";
+			prefix = "";
 		}
 
-		String name= prefix + fr.getName();
+		String name = prefix + fr.getName();
 		if (!fr.getName().matches("\\w*"))
 		{
 			// Name contains non-word characters, for example generated by
@@ -1135,7 +1154,7 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(VariableDeclaration decl)
 	{
-		String name= escapeVariable(decl.getName());
+		String name = escapeVariable(decl.getName());
 
 		if (decl.getLocation() == VariableDeclaration.LOCAL_PARAMETER)
 		{
@@ -1145,20 +1164,20 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if (decl.getLocation() == VariableDeclaration.NON_LOCAL)
 		{
-			FieldUnit fieldUnit= project.getOrCreateFieldUnit(typeDecl.getType(), name);
+			FieldUnit fieldUnit = project.getOrCreateFieldUnit(typeDecl.getType(), name);
 
 			if (Modifier.isStatic(decl.getModifiers()))
 			{
-				//		print(normalizeExpression(typeDecl.toString()));
+				// print(normalizeExpression(typeDecl.toString()));
 				print(ClassUnit.STATIC_MEMBER);
 			}
 			else
 			{
-				//		print("this");
+				// print("this");
 			}
 
 			print("$$$");
-			//	    print(normalizeAccess(name));
+			// print(normalizeAccess(name));
 			print(name);
 			initializeField(decl, ":");
 			fieldUnit.setData(reset());
@@ -1183,21 +1202,21 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		switch (decl.getType().getType())
 		{
-			case Constants.T_INT:
-			case Constants.T_SHORT:
-			case Constants.T_BYTE:
-			case Constants.T_LONG:
-			case Constants.T_DOUBLE:
-			case Constants.T_FLOAT:
-			case Constants.T_CHAR:
-				print("0");
-				break;
-			case Constants.T_BOOLEAN:
-				print("false");
-				break;
-			default:
-				print("null");
-				break;
+		case Constants.T_INT:
+		case Constants.T_SHORT:
+		case Constants.T_BYTE:
+		case Constants.T_LONG:
+		case Constants.T_DOUBLE:
+		case Constants.T_FLOAT:
+		case Constants.T_CHAR:
+			print("0");
+			break;
+		case Constants.T_BOOLEAN:
+			print("false");
+			break;
+		default:
+			print("null");
+			break;
 		}
 	}
 
@@ -1209,7 +1228,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (reference.getVariableDeclaration().getLocation() == VariableDeclaration.LOCAL_PARAMETER)
 			if (hasToEscapeVariable(reference.getName()))
 				print("_");
-		
+
 		print(escapeVariable(reference.getName()));
 	}
 
@@ -1238,15 +1257,15 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(FieldAccess fr)
 	{
-		ASTNode expression= fr.getExpression();
+		ASTNode expression = fr.getExpression();
 		if (expression == null)
 		{
 			// Static access.
-			String normalizeExpression= normalizeExpression(Project.getSingleton().getSignature(fr.getType().getClassName()));
-			boolean sameType= currentMethodDeclaration.getMethodBinding().getDeclaringClass().equals(fr.getType());
+			String normalizeExpression = normalizeExpression(Project.getSingleton().getSignature(fr.getType().getClassName()));
+			boolean sameType = currentMethodDeclaration.getMethodBinding().getDeclaringClass().equals(fr.getType());
 			if (true || "<clinit>".equals(currentMethodDeclaration.getMethodBinding().getName()) && !sameType)
 			{
-				String clinitExpression= normalizeExpression(new Signature("<clinit>()void", 0));
+				String clinitExpression = normalizeExpression(new Signature("<clinit>()void", 0));
 				print("" + normalizeExpression + "." + clinitExpression + "()");
 			}
 			else
@@ -1258,9 +1277,9 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 		else
 		{
-			//print(prefix + "cn(");
+			// print(prefix + "cn(");
 			expression.visit(this);
-			//print(")");
+			// print(")");
 		}
 
 		print(normalizeAccess(fr));
@@ -1288,14 +1307,14 @@ public class DragomeJavaScriptGenerator extends Generator
 	{
 		if (cast.getTypeBinding() != Type.VOID)
 		{ // &&
-		  // dragomeJsCompiler.compiler.isCheckCast())
-		  // {
+			// dragomeJsCompiler.compiler.isCheckCast())
+			// {
 			print("dragomeJs.checkCast(");
 			cast.getExpression().visit(this);
-			String string= cast.getTypeBinding().toString();
-			String normalizeExpression= normalizeExpression(string);
+			String string = cast.getTypeBinding().toString();
+			String normalizeExpression = normalizeExpression(string);
 			if (string.startsWith("[L"))
-				normalizeExpression= "'" + string + "'";
+				normalizeExpression = "'" + string + "'";
 			print("," + normalizeExpression + ")");
 		}
 		else
@@ -1333,7 +1352,7 @@ public class DragomeJavaScriptGenerator extends Generator
 	public void visit(PrimitiveCast node)
 	{
 		// TODO: Review cast to long.
-		Type type= node.getTypeBinding();
+		Type type = node.getTypeBinding();
 		if (type.equals(Type.LONG))
 		{
 			print("dragomeJs.trunc(");

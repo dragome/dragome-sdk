@@ -76,7 +76,7 @@ import com.dragome.compiler.utils.Utils;
 public class Project implements Serializable
 {
 
-	static final long serialVersionUID= 0;
+	static final long serialVersionUID = 0;
 
 	public static Project singleton;
 
@@ -98,30 +98,31 @@ public class Project implements Serializable
 
 	public transient int currentGeneratedMethods;
 
-	private List<String> clinits= new ArrayList<String>();
+	private List<String> clinits = new ArrayList<String>();
 
-	private List<String> genericSignatures= new ArrayList<String>();
+	private List<String> genericSignatures = new ArrayList<String>();
 
-	transient private int badMethods= 0;
+	transient private int badMethods = 0;
 
-	public List<String> writtenSignatures= new ArrayList<String>();
+	public List<String> writtenSignatures = new ArrayList<String>();
 
-	private Set<String> typeDeclarationsWithAnnotations= new HashSet<String>();
+	private Set<String> typeDeclarationsWithAnnotations = new HashSet<String>();
 
 	public List<String> getWrittenSignatures()
 	{
 		if (writtenSignatures == null)
-			writtenSignatures= new ArrayList<String>();
+			writtenSignatures = new ArrayList<String>();
 
 		return writtenSignatures;
 	}
 
 	public void writeClinits(Writer writer) throws IOException
 	{
-		//	for (String clinit : clinits)
-		//	{
-		//	    writer.write("new " + clinit.substring(0, clinit.indexOf(".")) + "();\n");
-		//	}
+		// for (String clinit : clinits)
+		// {
+		// writer.write("new " + clinit.substring(0, clinit.indexOf(".")) +
+		// "();\n");
+		// }
 		writer.write("new java_lang_String();\n");
 
 		for (String clinit : clinits)
@@ -143,7 +144,7 @@ public class Project implements Serializable
 
 	public void setClinits(List<String> clinits)
 	{
-		this.clinits= clinits;
+		this.clinits = clinits;
 	}
 
 	public static Project getSingleton()
@@ -162,16 +163,16 @@ public class Project implements Serializable
 			try
 			{
 				read(cacheFile);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				Log.getLogger().warn("Could not read cache:\n" + e.getMessage());
 			}
 		}
 
-		if (singleton == null || singleton.compressed != DragomeJsCompiler.compiler.isCompression() || singleton.generateLineNumbers != DragomeJsCompiler.compiler.isGenerateLineNumbers())
+		if (singleton == null || singleton.compressed != DragomeJsCompiler.compiler.isCompression()
+				|| singleton.generateLineNumbers != DragomeJsCompiler.compiler.isGenerateLineNumbers())
 		{
-			singleton= new Project();
+			singleton = new Project();
 			singleton.clear();
 		}
 
@@ -180,34 +181,34 @@ public class Project implements Serializable
 
 	private static void read(File file) throws Exception
 	{
-		FileInputStream fis= new FileInputStream(file);
-		ObjectInputStream ois= new ObjectInputStream(fis);
-		singleton= (Project) ois.readObject();
+		FileInputStream fis = new FileInputStream(file);
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		singleton = (Project) ois.readObject();
 		ois.close();
 	}
 
 	public static void write() throws IOException
 	{
-		File file= DragomeJsCompiler.compiler.getCacheFile();
+		File file = DragomeJsCompiler.compiler.getCacheFile();
 		if (file.exists() && !file.canWrite())
 		{
 			throw new IOException("Cannot write " + file);
 		}
-		FileOutputStream fos= new FileOutputStream(file);
-		ObjectOutputStream oos= new ObjectOutputStream(fos);
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(singleton);
 		oos.close();
 	}
 
 	public Signature getArraySignature(Type type)
 	{
-		String signatureString= type.getSignature();
+		String signatureString = type.getSignature();
 
 		if (!signatureString.startsWith("L") || !signatureString.endsWith(";"))
 		{
 			throw new RuntimeException("Not a class signature: " + signatureString);
 		}
-		signatureString= signatureString.substring(1, signatureString.length() - 1);
+		signatureString = signatureString.substring(1, signatureString.length() - 1);
 		return getSignature(signatureString);
 	}
 
@@ -217,12 +218,12 @@ public class Project implements Serializable
 		{
 
 		}
-		signatureString= signatureString.replaceAll("/", ".");
+		signatureString = signatureString.replaceAll("/", ".");
 
-		Signature signature= signatures.get(signatureString);
+		Signature signature = signatures.get(signatureString);
 		if (signature == null)
 		{
-			signature= new Signature(signatureString, getUniqueId());
+			signature = new Signature(signatureString, getUniqueId());
 			signatures.put(signatureString, signature);
 		}
 
@@ -243,7 +244,7 @@ public class Project implements Serializable
 	{
 		if (ids == null)
 		{
-			ids= new Stack<Integer>();
+			ids = new Stack<Integer>();
 			for (Signature signature : signatures.values())
 			{
 				ids.add(signature.getId());
@@ -253,8 +254,8 @@ public class Project implements Serializable
 
 		while (currentIndex < ids.size() && ids.get(currentIndex) == currentId)
 		{
-			currentId+= 1;
-			currentIndex+= 1;
+			currentId += 1;
+			currentIndex += 1;
 		}
 
 		currentId++;
@@ -263,17 +264,17 @@ public class Project implements Serializable
 
 	private void clear()
 	{
-		classesByName= new LinkedHashMap<String, ClassUnit>();
-		javaLangObject= null;
+		classesByName = new LinkedHashMap<String, ClassUnit>();
+		javaLangObject = null;
 
-		signatures= new LinkedHashMap<String, Signature>();
-		ids= null;
-		currentId= 0;
-		currentIndex= 0;
-		compressed= DragomeJsCompiler.compiler.isCompression();
-		generateLineNumbers= DragomeJsCompiler.compiler.isGenerateLineNumbers();
-		badMethods= 0;
-		writtenSignatures= new ArrayList<String>();
+		signatures = new LinkedHashMap<String, Signature>();
+		ids = null;
+		currentId = 0;
+		currentIndex = 0;
+		compressed = DragomeJsCompiler.compiler.isCompression();
+		generateLineNumbers = DragomeJsCompiler.compiler.isGenerateLineNumbers();
+		badMethods = 0;
+		writtenSignatures = new ArrayList<String>();
 	}
 
 	public void remove(ClassUnit clazz)
@@ -284,7 +285,7 @@ public class Project implements Serializable
 	public void visitSuperTypes(ClassUnit clazz, TypeVisitor visitor)
 	{
 		visitor.visit(clazz);
-		ClassUnit superClass= clazz.getSuperUnit();
+		ClassUnit superClass = clazz.getSuperUnit();
 		if (superClass != null)
 		{
 			visitSuperTypes(superClass, visitor);
@@ -304,7 +305,7 @@ public class Project implements Serializable
 
 	public ClassUnit getClassUnit(String className)
 	{
-		ClassUnit clazz= classesByName.get(className);
+		ClassUnit clazz = classesByName.get(className);
 		if (clazz != null)
 			return clazz;
 
@@ -316,16 +317,16 @@ public class Project implements Serializable
 		String signature;
 		if (type instanceof ArrayType)
 		{
-			ArrayType aType= (ArrayType) type;
-			signature= Utils.getSignature(aType.getBasicType());
-			for (int i= 0; i < aType.getDimensions(); i++)
+			ArrayType aType = (ArrayType) type;
+			signature = Utils.getSignature(aType.getBasicType());
+			for (int i = 0; i < aType.getDimensions(); i++)
 			{
-				signature+= "[]";
+				signature += "[]";
 			}
 		}
 		else
 		{
-			signature= Utils.getSignature(type);
+			signature = Utils.getSignature(type);
 		}
 
 		return getClassUnit(signature);
@@ -333,17 +334,17 @@ public class Project implements Serializable
 
 	public ClassUnit getOrCreateClassUnit(String className)
 	{
-		ClassUnit classUnit= classesByName.get(className);
+		ClassUnit classUnit = classesByName.get(className);
 		if (classUnit != null)
 			return classUnit;
 
-		Signature signature= Project.singleton.getSignature(className);
-		classUnit= new ClassUnit(this, signature);
+		Signature signature = Project.singleton.getSignature(className);
+		classUnit = new ClassUnit(this, signature);
 		classesByName.put(className, classUnit);
 
 		if (className.equals("java.lang.Object"))
 		{
-			javaLangObject= classUnit;
+			javaLangObject = classUnit;
 		}
 
 		return classUnit;
@@ -351,7 +352,7 @@ public class Project implements Serializable
 
 	private MemberUnit getMemberUnitOrNull(String className, Signature signature)
 	{
-		ClassUnit classUnit= getOrCreateClassUnit(className);
+		ClassUnit classUnit = getOrCreateClassUnit(className);
 		if (classUnit == null)
 			return null;
 		return classUnit.getDeclaredMember(signature.toString());
@@ -359,7 +360,7 @@ public class Project implements Serializable
 
 	private MemberUnit getMemberUnit(String className, Signature signature)
 	{
-		MemberUnit unit= getMemberUnitOrNull(className, signature);
+		MemberUnit unit = getMemberUnitOrNull(className, signature);
 		if (unit == null)
 		{
 			throw new RuntimeException("No such unit: " + className + "#" + signature);
@@ -370,36 +371,36 @@ public class Project implements Serializable
 
 	public ProcedureUnit getProcedureUnit(MethodBinding methodBinding)
 	{
-		Signature signature= Project.singleton.getSignature(methodBinding.getRelativeSignature());
-		String className= methodBinding.getDeclaringClass().getClassName();
+		Signature signature = Project.singleton.getSignature(methodBinding.getRelativeSignature());
+		String className = methodBinding.getDeclaringClass().getClassName();
 		return (ProcedureUnit) getMemberUnit(className, signature);
 	}
 
 	public ProcedureUnit getOrCreateProcedureUnit(MethodBinding methodBinding)
 	{
-		Signature signature= Project.singleton.getSignature(methodBinding.getRelativeSignature());
-		String className= methodBinding.getDeclaringClass().getClassName();
+		Signature signature = Project.singleton.getSignature(methodBinding.getRelativeSignature());
+		String className = methodBinding.getDeclaringClass().getClassName();
 		return (ProcedureUnit) getOrCreateMemberUnit(className, signature, Pass1.extractMethodNameSignature(methodBinding));
 	}
 
 	private MemberUnit getOrCreateMemberUnit(String className, Signature signature, String nameAndSignature)
 	{
-		MemberUnit member= getMemberUnitOrNull(className, signature);
+		MemberUnit member = getMemberUnitOrNull(className, signature);
 
 		if (member == null)
 		{
-			ClassUnit clazz= getClassUnit(className);
+			ClassUnit clazz = getClassUnit(className);
 			if (signature.isMethod())
 			{
-				member= new MethodUnit(signature, clazz, nameAndSignature);
+				member = new MethodUnit(signature, clazz, nameAndSignature);
 			}
 			else if (signature.isConstructor())
 			{
-				member= new ConstructorUnit(signature, clazz);
+				member = new ConstructorUnit(signature, clazz);
 			}
 			else
 			{
-				member= new FieldUnit(signature, clazz);
+				member = new FieldUnit(signature, clazz);
 			}
 
 		}
@@ -414,21 +415,21 @@ public class Project implements Serializable
 
 	public void addReference(MethodDeclaration decl, FieldAccess fa)
 	{
-		ProcedureUnit source= getOrCreateProcedureUnit(decl.getMethodBinding());
+		ProcedureUnit source = getOrCreateProcedureUnit(decl.getMethodBinding());
 		source.addTarget(Project.singleton.getSignature(fa));
 	}
 
 	public void addReference(MethodDeclaration decl, MethodInvocation invocation)
 	{
-		ProcedureUnit source= getOrCreateProcedureUnit(decl.getMethodBinding());
+		ProcedureUnit source = getOrCreateProcedureUnit(decl.getMethodBinding());
 		source.addTarget(Project.singleton.getSignature(invocation.getMethodBinding().toString()));
 	}
 
 	public void addReference(MethodDeclaration decl, ArrayCreation ac)
 	{
-		ProcedureUnit source= getOrCreateProcedureUnit(decl.getMethodBinding());
-		Signature signature= Project.getSingleton().getArraySignature(ac.getTypeBinding());
-		for (int i= 0; i < ac.getDimensions().size(); i++)
+		ProcedureUnit source = getOrCreateProcedureUnit(decl.getMethodBinding());
+		Signature signature = Project.getSingleton().getArraySignature(ac.getTypeBinding());
+		for (int i = 0; i < ac.getDimensions().size(); i++)
 		{
 
 			source.addTarget(Project.singleton.getSignature(signature.toString().substring(i) + "#length"));
@@ -454,13 +455,15 @@ public class Project implements Serializable
 
 			new FieldUnit(getSignature("length"), clazz);
 
-			TypeDeclaration typeDecl= new TypeDeclaration(new ObjectType(clazz.getName()), 0, new HashMap<String, String>());//revisar annotations
+			TypeDeclaration typeDecl = new TypeDeclaration(new ObjectType(clazz.getName()), 0, new HashMap<String, String>());// revisar
+																																// annotations
+
 			typeDecl.setSuperType(Type.OBJECT);
 			typeDecl.visit(DragomeJsCompiler.compiler.generator);
 		}
 		else
 		{
-			TypeResolver resolver= new TypeResolver(this, DragomeJsCompiler.compiler.generator);
+			TypeResolver resolver = new TypeResolver(this, DragomeJsCompiler.compiler.generator);
 			visitSuperTypes(clazz, resolver);
 		}
 	}
@@ -471,12 +474,11 @@ public class Project implements Serializable
 		{
 			for (String genericSignature : genericSignatures)
 			{
-				String[] split= genericSignature.split("\\|");
+				String[] split = genericSignature.split("\\|");
 				if (getWrittenSignatures().contains(split[0] + "|" + split[1]))
 					writer.write("addSignatureTo(" + split[0] + ",\"" + split[1] + "\", \"" + split[2] + "\");\n");
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -489,7 +491,7 @@ public class Project implements Serializable
 
 	public int incrementBadMethods(int i)
 	{
-		return badMethods+= i;
+		return badMethods += i;
 	}
 
 	public int getBadMethods()
@@ -499,9 +501,9 @@ public class Project implements Serializable
 
 	public void addTypeAnnotations(TypeDeclaration typeDecl)
 	{
-		for (Iterator<String> iterator= getTypeDeclarationsWithAnnotations().iterator(); iterator.hasNext();)
+		for (Iterator<String> iterator = getTypeDeclarationsWithAnnotations().iterator(); iterator.hasNext();)
 		{
-			String declaredAnnotation= (String) iterator.next();
+			String declaredAnnotation = (String) iterator.next();
 			if (declaredAnnotation.startsWith(typeDecl.getClassName()))
 				iterator.remove();
 		}

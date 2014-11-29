@@ -16,7 +16,7 @@ import com.dragome.compiler.utils.Log;
 
 public abstract class Transformation
 {
-	static Class[] transformations= new Class[] { Switch.class, Try.class, Loop.class, Merge.class };
+	static Class<?>[] transformations = { Switch.class, Try.class, Loop.class, Merge.class };
 
 	public static Transformation select(Graph graph, Node node)
 	{
