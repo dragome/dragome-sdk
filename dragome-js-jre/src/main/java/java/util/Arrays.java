@@ -42,8 +42,7 @@ public class Arrays
 	}
 
     private static class NaturalOrder<T> implements Comparator<T> {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override public int compare(T o1, T o2) {
+        public int compare(T o1, T o2) {
             if (o1 != null) {
                 return ((Comparable)o1).compareTo(o2);
             }
