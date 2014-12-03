@@ -10,6 +10,13 @@ public class Timer
 {
 	public Object setInterval(final Runnable runnable, int milliseconds)
 	{
+		setupTimer(runnable, milliseconds);
+		ScriptHelper.put("milliseconds", milliseconds, this);
+		return ScriptHelper.eval("setInterval('window.wrappedCallback.$onSuccess___java_lang_Object$void(new String())', milliseconds)", this);
+	}
+
+	private void setupTimer(final Runnable runnable, int milliseconds)
+	{
 		AsyncCallback<String> asyncCallback= new AsyncCallback<String>()
 		{
 			public void onSuccess(String result)
@@ -26,8 +33,15 @@ public class Timer
 		ScriptHelper.put("milliseconds", milliseconds, this);
 		ScriptHelper.put("wrappedCallback", wrappedCallback, this);
 		ScriptHelper.eval("window.wrappedCallback=wrappedCallback", this);
-		return ScriptHelper.eval("setInterval('window.wrappedCallback.$onSuccess___java_lang_Object$void(new String())', milliseconds)", this);
 	}
+	
+	public Object setTimeout(final Runnable runnable, int milliseconds)
+	{
+		setupTimer(runnable, milliseconds);
+		ScriptHelper.put("milliseconds", milliseconds, this);
+		return ScriptHelper.eval("setTimeout('window.wrappedCallback.$onSuccess___java_lang_Object$void(new String())', milliseconds)", this);
+	}
+	
 
 	public void clearInterval(Object interval)
 	{
