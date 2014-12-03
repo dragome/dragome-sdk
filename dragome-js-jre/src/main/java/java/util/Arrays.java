@@ -41,6 +41,18 @@ public class Arrays
 		return true;
 	}
 
+    private static class NaturalOrder<T> implements Comparator<T> {
+        public int compare(T o1, T o2) {
+            if (o1 != null) {
+                return ((Comparable)o1).compareTo(o2);
+            }
+            if (o2 != null) {
+                return ((Comparable)o2).compareTo(o1);
+            }
+            return 0;
+        }
+    }
+
 	/**
 	 *  Sorts the specified array of objects into ascending order, according to the natural ordering of its elements.
 	 *  <br/>
@@ -53,25 +65,29 @@ public class Arrays
 	}
 
     public static void sort(java.lang.Object[] array, int fromindex, int toindex) {
-        sort(array);
+        sort(array, fromindex, toindex, new NaturalOrder());
     }
 
-	/**
+    public static <T> void sort(T[] a, int fromIndex, int toIndex, Comparator<? super T> c) {
+        T[] subarray = (T[])new Object[toIndex - fromIndex];
+        for (int i = fromIndex; i < toIndex; ++i) {
+            subarray[i - fromIndex] = a[i];
+        }
+        sort(subarray, c);
+        for (int i = fromIndex; i < toIndex; ++i) {
+            a[i] = subarray[i - fromIndex];
+        }
+    }
+
+    /**
 	 * Sorts the specified array of objects according to the order induced by the specified comparator.
 	 */
 	public static <T> void sort(T[] array, Comparator<? super T> c)
 	{
 		ScriptHelper.put("array", array, null);
-		if (c == null)
-		{
-			c= new Comparator<T>()
-			{
-				public int compare(T o1, T o2)
-				{
-					return ((Comparable<T>) o1).compareTo(o2);
-				}
-			};
-		}
+		if (c == null) {
+            c = new NaturalOrder();
+        }
 		ScriptHelper.put("c", c, null);
 		ScriptHelper.eval("array.sort(function(o1, o2) {return c.$compare___java_lang_Object__java_lang_Object$int(o1, o2)})", null);
 	}
