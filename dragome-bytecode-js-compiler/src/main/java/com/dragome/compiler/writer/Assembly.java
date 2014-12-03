@@ -254,7 +254,7 @@ public class Assembly
 		//	writer.write("new " + mainClass + "();\n");
 		//	writer.write(mainClass + "." + mainMethod + "();\n");
 
-		writer.write("$(function(){_ed.executeMainClass();});");
+		writer.write("$(function(){setupCheckCast(); _ed.executeMainClass();});");
 
 		writer.close();
 
