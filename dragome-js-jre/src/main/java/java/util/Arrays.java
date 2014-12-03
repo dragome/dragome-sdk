@@ -4,18 +4,17 @@ import com.dragome.commons.javascript.ScriptHelper;
 
 public class Arrays
 {
-
 	/**
 	 * Returns a fixed-size list backed by the specified array.
 	 * @param a the array by which the list will be backed.
 	 * @return list view of the specified array.
 	 */
-    	public static <T> List<T> asList(T... a)     
+	public static <T> List<T> asList(T... a)
 	{
 		ArrayList<T> result= new ArrayList<T>();
 		for (T t : a)
-		    result.add(t);
-		
+			result.add(t);
+
 		return result;
 	}
 
@@ -41,17 +40,13 @@ public class Arrays
 		return true;
 	}
 
-    private static class NaturalOrder<T> implements Comparator<T> {
-        public int compare(T o1, T o2) {
-            if (o1 != null) {
-                return ((Comparable)o1).compareTo(o2);
-            }
-            if (o2 != null) {
-                return ((Comparable)o2).compareTo(o1);
-            }
-            return 0;
-        }
-    }
+	private static class NaturalOrder<T extends Comparable<Object>> implements Comparator<T>
+	{
+		public int compare(T o1, T o2)
+		{
+			return o1 != null ? o1.compareTo(o2) : o2 != null ? o2.compareTo(o1) : 0;
+		}
+	}
 
 	/**
 	 *  Sorts the specified array of objects into ascending order, according to the natural ordering of its elements.
@@ -64,55 +59,66 @@ public class Arrays
 		ScriptHelper.eval("array.sort()", null);
 	}
 
-    public static void sort(java.lang.Object[] array, int fromindex, int toindex) {
-        sort(array, fromindex, toindex, new NaturalOrder());
-    }
-
-    public static <T> void sort(T[] a, int fromIndex, int toIndex, Comparator<? super T> c) {
-        T[] subarray = (T[])new Object[toIndex - fromIndex];
-        for (int i = fromIndex; i < toIndex; ++i) {
-            subarray[i - fromIndex] = a[i];
-        }
-        sort(subarray, c);
-        for (int i = fromIndex; i < toIndex; ++i) {
-            a[i] = subarray[i - fromIndex];
-        }
-    }
-
-    /**
-	 * Sorts the specified array of objects according to the order induced by the specified comparator.
-	 */
-	public static <T> void sort(T[] array, Comparator<? super T> c)
+	public static void sort(Object[] array, int fromIndex, int toIndex)
 	{
 		ScriptHelper.put("array", array, null);
-		if (c == null) {
-            c = new NaturalOrder();
-        }
-		ScriptHelper.put("c", c, null);
+		ScriptHelper.put("fromIndex", fromIndex, null);
+		ScriptHelper.put("toIndex", toIndex, null);
+		
+		Object subarray= ScriptHelper.eval("array.slice(fromIndex, toIndex)", null);
+		ScriptHelper.put("subarray", subarray, null);
+		
+		ScriptHelper.eval("subarray.sort()", null);
+		ScriptHelper.eval("for (var i= fromIndex; i < toIndex; ++i)	array[i]= subarray[i - fromIndex]", null);
+	}
+
+	public static <T> void sort(T[] a, int fromIndex, int toIndex, Comparator<? super T> comparator)
+	{
+		T[] subarray= (T[]) new Object[toIndex - fromIndex];
+		
+		for (int i= fromIndex; i < toIndex; ++i)
+			subarray[i - fromIndex]= a[i];
+
+		sort(subarray, comparator);
+		
+		for (int i= fromIndex; i < toIndex; ++i)
+			a[i]= subarray[i - fromIndex];
+	}
+
+	/**
+	 * Sorts the specified array of objects according to the order induced by the specified comparator.
+	 */
+	public static <T> void sort(T[] array, Comparator<? super T> comparator)
+	{
+		ScriptHelper.put("array", array, null);
+		if (comparator == null)
+			comparator= new NaturalOrder();
+		
+		ScriptHelper.put("c", comparator, null);
 		ScriptHelper.eval("array.sort(function(o1, o2) {return c.$compare___java_lang_Object__java_lang_Object$int(o1, o2)})", null);
 	}
 
-	public static int hashCode(Object a[])
+	public static int hashCode(Object array[])
 	{
-		if (a == null)
+		if (array == null)
 			return 0;
 
 		int result= 1;
 
-		for (Object element : a)
+		for (Object element : array)
 			result= 31 * result + (element == null ? 0 : element.hashCode());
 
 		return result;
 	}
 
 	public static void sort(double[] a)
-	{//No implementado
-		throw new NotImplementedMethod("Arrays.sort");
+	{
+		sort(a);
 	}
 
 	public static boolean deepEquals0(Object a, Object b)
-    {
-	    // TODO Auto-generated method stub
-	    return false;
-    }
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
