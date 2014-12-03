@@ -22,11 +22,17 @@ public class Utils
 	 */
 	public static int cmp(double value1, double value2, int gORl)
 	{
-		if (gORl != 0 && (Double.isNaN(value1) || Double.isNaN(value2)))
-			return gORl;
+//		if (gORl != 0 && (Double.isNaN(value1) || Double.isNaN(value2)))
+//			return gORl;
+//		ScriptHelper.put("value1", value1, null);
+//		ScriptHelper.put("value2", value2, null);
+//		return ScriptHelper.evalInt("dragomeJs.cmp(value1, value2)", null);
+
 		ScriptHelper.put("value1", value1, null);
 		ScriptHelper.put("value2", value2, null);
-		return ScriptHelper.evalInt("dragomeJs.cmp(value1, value2)", null);
+		return ScriptHelper.evalInt("value1 == value2 ? 0 : (value1 > value2) ? 1 : -1", null);
+
+				
 	}
 
 }
