@@ -232,11 +232,12 @@ function checkInterfaceExtendsOther(obj, type)
 
 dragomeJs.cmp = function(value1, value2)
 {
-	if (value1 > value2)
+	if (value1 == value2)
+		return 0;
+	else if (value1 > value2)
 		return 1;
-	if (value1 < value2)
+	else 
 		return -1;
-	return 0;
 }
 
 // Truncate a number. Needed for integral types in casting and division.
