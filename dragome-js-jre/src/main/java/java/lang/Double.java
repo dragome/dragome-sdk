@@ -116,18 +116,18 @@ public final class Double extends Number implements Comparable<Double>
 	 */
 	public int compareTo(Double o)
 	{
-		if (!(o instanceof Double))
-			throw new ClassCastException();
-		Double d= (Double) o;
-		if (isNaN() || d.isNaN())
-		{
-			if (isNaN() && d.isNaN())
-				return 0;
-			if (isNaN())
-				return 1;
-			return -1;
-		}
-		return Utils.cmp(value, d.doubleValue(), 0);
+//		if (!(o instanceof Double))
+//			throw new ClassCastException();
+//		Double d= (Double) o;
+//		if (isNaN() || d.isNaN())
+//		{
+//			if (isNaN() && d.isNaN())
+//				return 0;
+//			if (isNaN())
+//				return 1;
+//			return -1;
+//		}
+		return Utils.cmp(value, o.doubleValue(), 0);
 	}
 
 	public double doubleValue()
@@ -178,8 +178,8 @@ public final class Double extends Number implements Comparable<Double>
 		if (s.matches("(\\+|\\-)?NaN"))
 			return NaN;
 
-		if (!s.matches("(\\+|\\-)?\\d+(\\.\\d+)?"))
-			throw new NumberFormatException("Invalid double: " + s);
+//		if (!s.matches("(\\+|\\-)?\\d+(\\.\\d+)?"))
+//			throw new NumberFormatException("Invalid double: " + s);
 
 		ScriptHelper.put("s", s, null);
 		double d= ScriptHelper.evalDouble("parseFloat(s)", null);
