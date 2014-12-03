@@ -74,7 +74,8 @@ public class Object
 
 	public String toString()
 	{
-		return getClass().toString() + "@" + hashCode();
+//		return getClass().toString() + "@" + hashCode();
+		return (String) ScriptHelper.eval("Object.prototype.toString.call(this)", this);
 	}
 
 	public void wait()
