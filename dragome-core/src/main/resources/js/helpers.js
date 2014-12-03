@@ -252,3 +252,10 @@ function checkStyleSheet(url)
 }
 
 checkStyleSheet("dragome/dragome.css");
+
+function setupCheckCast()
+{
+	if (getQuerystring("check-cast-disabled") == "true")
+		dragomeJs.checkCast= function (obj){return obj};
+}
+
