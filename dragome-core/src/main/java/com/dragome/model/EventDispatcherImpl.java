@@ -42,7 +42,7 @@ public class EventDispatcherImpl implements EventDispatcher
 		}
 	}
 
-	public void eventPerformedById(final String eventType, final String id, final Object arguments)
+	public void eventPerformedById(final String eventType, final String id, final Object args)
 	{
 		runOnlySynchronized(new Runnable()
 		{
@@ -50,13 +50,13 @@ public class EventDispatcherImpl implements EventDispatcher
 			{
 				Object object= DragomeEntityManager.get(id);
 				if (object instanceof EventListener)
-					processElementEvent(eventType, arguments, (EventListener) object, id);
+					processElementEvent(eventType, args, (EventListener) object, id);
 			}
 
-			private void processElementEvent(final String eventType, final Object arguments, EventListener browserEventListener, String id)
+			private void processElementEvent(final String eventType, final Object args, EventListener browserEventListener, String id)
 			{
 				//				final Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[data-element-id = \""+id+"\"]");
-				browserEventListener.handleEvent(eventType.startsWith("key") ? new KeyboardEventImpl(eventType, (int)arguments) : new EventImpl(eventType));
+				browserEventListener.handleEvent(eventType.startsWith("key") ? new KeyboardEventImpl(eventType, (int)args) : new EventImpl(eventType));
 			}
 		});
 	}
