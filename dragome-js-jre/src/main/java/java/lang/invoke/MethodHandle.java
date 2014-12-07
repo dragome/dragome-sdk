@@ -30,10 +30,10 @@ public class MethodHandle
 		return this;
 	}
 
-	public Object invokeWithArguments(Object... arguments) throws Throwable
+	public Object invokeWithArguments(Object... args) throws Throwable
 	{
 		ScriptHelper.put("type", lookup.getSpecialCaller(), this);
-		ScriptHelper.put("args", arguments, this);
+		ScriptHelper.put("args", args, this);
 		ScriptHelper.put("proxy", x, this);
 		ScriptHelper.put("method", lookup.getMethod(), this);
 		Object o= ScriptHelper.eval("type.$$$nativeClass.$$members[method.$$$signature].apply(proxy, args)", this);
