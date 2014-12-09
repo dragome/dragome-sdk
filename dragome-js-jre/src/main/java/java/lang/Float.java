@@ -18,6 +18,17 @@ public final class Float extends Number
 {
 	public static final Class<Float> TYPE= Class.getType("float");
 
+    public static final float POSITIVE_INFINITY = 1.0f / 0.0f;
+    public static final float NEGATIVE_INFINITY = -1.0f / 0.0f;
+    public static final float NaN = 0.0f / 0.0f;
+    public static final float MAX_VALUE = 0x1.fffffeP+127f; // 3.4028235e+38f
+    public static final float MIN_NORMAL = 0x1.0p-126f; // 1.17549435E-38f
+    public static final float MIN_VALUE = 0x0.000002P-126f; // 1.4e-45f
+    public static final int MAX_EXPONENT = 127;
+    public static final int MIN_EXPONENT = -126;
+    public static final int SIZE = 32;
+
+
 	private float value;
 
 	/**
