@@ -28,8 +28,10 @@ import com.dragome.model.listeners.KeyDownListener;
 import com.dragome.model.listeners.KeyPressListener;
 import com.dragome.model.listeners.KeyUpListener;
 import com.dragome.model.listeners.ListenerChanged;
+import com.dragome.model.listeners.MouseDownListener;
 import com.dragome.model.listeners.MouseOutListener;
 import com.dragome.model.listeners.MouseOverListener;
+import com.dragome.model.listeners.MouseUpListener;
 import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.interfaces.ComponentRenderer;
 
@@ -42,6 +44,8 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 	private static final String BLUR= "blur";
 	private static final String MOUSEOUT= "mouseout";
 	private static final String MOUSEOVER= "mouseover";
+	private static final String MOUSEDOWN= "mousedown";
+	private static final String MOUSEUP= "mouseup";
 	private static final String DBLCLICK= "dblclick";
 	private static final String CLICK= "click";
 	public static final String COMPONENT_ID_ATTRIBUTE= "data-component-id";
@@ -99,6 +103,10 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 					visualComponent.getListener(MouseOverListener.class).mouseOverPerformed(visualComponent);
 				else if (type.equals(MOUSEOUT))
 					visualComponent.getListener(MouseOutListener.class).mouseOutPerformed(visualComponent);
+				else if (type.equals(MOUSEDOWN))
+					visualComponent.getListener(MouseDownListener.class).mouseDownPerformed(null);
+				else if (type.equals(MOUSEUP))
+					visualComponent.getListener(MouseUpListener.class).mouseUpPerformed(visualComponent);
 				else if (type.equals(BLUR))
 					visualComponent.getListener(BlurListener.class).blurPerformed(visualComponent);
 				else if (type.equals(INPUT))
