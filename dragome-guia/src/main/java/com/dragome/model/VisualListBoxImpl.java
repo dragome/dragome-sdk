@@ -56,6 +56,7 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 
 	public VisualListBoxImpl()
 	{
+		super("", new SimpleRenderer<T>());
 	}
 
 	public VisualListBoxImpl(String name, Renderer<T> renderer, Iterable<T> acceptableValues)

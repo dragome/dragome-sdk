@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import com.dragome.model.interfaces.Renderer;
 
-public final class SimpleRenderer<T> implements Renderer<T>
+public class SimpleRenderer<T> implements Renderer<T>
 {
 	public String render(T object)
 	{
