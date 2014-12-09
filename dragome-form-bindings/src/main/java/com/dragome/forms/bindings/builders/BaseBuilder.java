@@ -1,6 +1,7 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.dragome.forms.bindings.client.form.binding.FormBinder;
@@ -230,6 +231,18 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 		component.addClickListener(new ClickListener()
 		{
 			public void clickPerformed(VisualComponent aVisualComponent)
+			{
+				actionExecutor.execute();
+			}
+		});
+		return (B) this;
+	}
+
+	public B onValueChange(final ActionExecutor actionExecutor)
+	{
+		component.addListener(ValueChangeHandler.class, new ValueChangeHandler()
+		{
+			public void onValueChange(ValueChangeEvent event)
 			{
 				actionExecutor.execute();
 			}
