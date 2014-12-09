@@ -16,7 +16,9 @@ public final class Array
 {
 	public static Object newInstance(Class<?> componentType, int length)
 	{
-		throw new UnsupportedOperationException();
+		ScriptHelper.put("l", length, null);
+		Object eval= ScriptHelper.eval("new Array(l)", null);
+		return eval;
 	}
 
 	public static void set(Object array, int i, Object v)
