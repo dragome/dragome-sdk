@@ -8,7 +8,17 @@ import com.dragome.services.interfaces.AsyncCallback;
 
 public class Timer
 {
-	public Object setInterval(final Runnable runnable, int milliseconds)
+	private Object id;
+
+	public Timer setInterval(final Runnable runnable, int milliseconds)
+	{
+		setupTimer(runnable);
+		ScriptHelper.put("milliseconds", milliseconds, this);
+		id= ScriptHelper.eval("setInterval('window.wrappedCallback.$onSuccess___java_lang_Object$void(new String())', milliseconds)", this);
+		return this;
+	}
+
+	private void setupTimer(final Runnable runnable)
 	{
 		AsyncCallback<String> asyncCallback= new AsyncCallback<String>()
 		{
@@ -23,16 +33,22 @@ public class Timer
 		};
 		AsyncCallback<String> wrappedCallback= RequestExecutorImpl.wrapCallback(Serializable.class, asyncCallback);
 
-		ScriptHelper.put("milliseconds", milliseconds, this);
 		ScriptHelper.put("wrappedCallback", wrappedCallback, this);
 		ScriptHelper.eval("window.wrappedCallback=wrappedCallback", this);
-		return ScriptHelper.eval("setInterval('window.wrappedCallback.$onSuccess___java_lang_Object$void(new String())', milliseconds)", this);
 	}
 
-	public void clearInterval(Object interval)
+	public Timer setTimeout(final Runnable runnable, int milliseconds)
 	{
-		ScriptHelper.put("interval", interval, this);
-		interval= ScriptHelper.eval("clearInterval(interval)", this);
+		setupTimer(runnable);
+		ScriptHelper.put("milliseconds", milliseconds, this);
+		id= ScriptHelper.eval("setTimeout('window.wrappedCallback.$onSuccess___java_lang_Object$void(new String())', milliseconds)", this);
+		return this;
+	}
+
+	public void clearInterval()
+	{
+		ScriptHelper.put("interval", id, this);
+		ScriptHelper.eval("clearInterval(interval)", this);
 	}
 
 }
