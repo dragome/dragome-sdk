@@ -12,5 +12,6 @@ package com.dragome.html.dom;
 
 public interface EventDispatcher
 {
-	public void eventPerformedById(String eventType, String id, Object arguments);
+	public void keyEventPerformedById(String eventName, String id, int code);
+	public void mouseEventPerformedById(String eventName, String id, int clientX, int clientY, boolean shiftKey);
 }

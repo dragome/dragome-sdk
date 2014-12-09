@@ -1,4 +1,4 @@
-package com.dragome.model;
+package com.dragome.html.dom.w3c;
 
 import org.w3c.dom.events.KeyboardEvent;
 import org.w3c.dom.views.AbstractView;

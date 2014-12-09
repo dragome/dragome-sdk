@@ -14,6 +14,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 
 import com.dragome.html.dom.EventDispatcher;
+import com.dragome.html.dom.w3c.KeyboardEventImpl;
+import com.dragome.html.dom.w3c.MouseEventImpl;
 import com.dragome.remote.entities.DragomeEntityManager;
 
 public class EventDispatcherImpl implements EventDispatcher
@@ -42,7 +44,15 @@ public class EventDispatcherImpl implements EventDispatcher
 		}
 	}
 
-	public void eventPerformedById(final String eventType, final String id, final Object arguments)
+	public static void setEventListener(Element element, EventListener eventListener, String... eventTypes)
+	{
+		for (String eventType : eventTypes)
+			element.setAttribute("on" + eventType, "_ed.onEvent()");
+
+		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
+	}
+
+	public void keyEventPerformedById(final String eventName, final String id, final int code)
 	{
 		runOnlySynchronized(new Runnable()
 		{
@@ -50,22 +60,21 @@ public class EventDispatcherImpl implements EventDispatcher
 			{
 				Object object= DragomeEntityManager.get(id);
 				if (object instanceof EventListener)
-					processElementEvent(eventType, arguments, (EventListener) object, id);
-			}
-
-			private void processElementEvent(final String eventType, final Object arguments, EventListener browserEventListener, String id)
-			{
-				//				final Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[data-element-id = \""+id+"\"]");
-				browserEventListener.handleEvent(eventType.startsWith("key") ? new KeyboardEventImpl(eventType, (int)arguments) : new EventImpl(eventType));
+					((EventListener) object).handleEvent(new KeyboardEventImpl(eventName, code));
 			}
 		});
 	}
 
-	public static void setEventListener(Element element, EventListener eventListener, String... eventTypes)
+	public void mouseEventPerformedById(final String eventName, final String id, final int clientX, final int clientY, final boolean shiftKey)
 	{
-		for (String eventType : eventTypes)
-			element.setAttribute("on" + eventType, "_ed.onEvent()");
-
-		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
+		runOnlySynchronized(new Runnable()
+		{
+			public void run()
+			{
+				Object object= DragomeEntityManager.get(id);
+				if (object instanceof EventListener)
+					((EventListener) object).handleEvent(new MouseEventImpl(eventName, clientX, clientY, shiftKey));
+			}
+		});
 	}
 }

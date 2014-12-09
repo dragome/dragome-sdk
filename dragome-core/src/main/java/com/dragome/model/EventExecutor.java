@@ -22,29 +22,37 @@ public class EventExecutor implements Runnable
 	{
 		this.event= event;
 	}
-	
+
 	public void run()
 	{
 		try
 		{
+			ServiceLocator instance= ServiceLocator.getInstance();
+			EventDispatcher eventDispatcher= instance.getEventDispatcher();
+
 			String id= EventDispatcherHelper.getEventTargetId(event);
-			Object arguments= null;
 
 			ScriptHelper.put("event", event, this);
 			String eventType= (String) ScriptHelper.eval("event.type", this);
-			
-			boolean isKeyEvent= eventType.equals("keyup") || eventType.equals("keydown")|| eventType.equals("keypress");
+
+			boolean isKeyEvent= eventType.equals("keyup") || eventType.equals("keydown") || eventType.equals("keypress");
+			ScriptHelper.put("eventTarget", EventDispatcherHelper.getEventTarget(event), this);
 			if (isKeyEvent)
 			{
-				ScriptHelper.put("eventTarget", EventDispatcherHelper.getEventTarget(event), this);
 				ScriptHelper.eval("stopEvent(event)", this);
 				int code= ScriptHelper.evalInt("event.keyCode", this);
-				arguments= code;
+				eventDispatcher.keyEventPerformedById(eventType, id, code);
+			}
+			else
+			{
+				int clientX= ScriptHelper.evalInt("event.layerX", this);
+				int clientY= ScriptHelper.evalInt("event.layerY", this);
+				//				int offsetLeft= ScriptHelper.evalInt("eventTarget.offsetLeft", this);
+				//				int offsetTop= ScriptHelper.evalInt("eventTarget.offsetTop", this);
+				boolean shiftKey= ScriptHelper.evalBoolean("event.shiftKey", this);
+				eventDispatcher.mouseEventPerformedById(eventType, id, clientX, clientY, shiftKey);
 			}
 
-			ServiceLocator instance= ServiceLocator.getInstance();
-			EventDispatcher eventDispatcher= instance.getEventDispatcher();
-			eventDispatcher.eventPerformedById(eventType, id, arguments);
 		}
 		catch (Exception e)
 		{
