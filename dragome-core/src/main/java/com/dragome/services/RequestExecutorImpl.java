@@ -20,9 +20,17 @@ import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.debugging.messages.ClientToServerServiceInvocationHandler;
 import com.dragome.services.interfaces.AsyncCallback;
 import com.dragome.services.interfaces.AsyncResponseHandler;
+import com.dragome.services.interfaces.RequestExecutor;
 
 public class RequestExecutorImpl implements RequestExecutor
 {
+	private boolean useGetMethod;
+
+	public RequestExecutorImpl(boolean useGetMethod)
+	{
+		this.useGetMethod= useGetMethod;
+	}
+
 	public String executeSynchronousRequest(String url, Map<String, String> parameters)
 	{
 		final ExecutionHandler executionHandler= ServiceLocator.getInstance().getConfigurator().getExecutionHandler();
@@ -44,22 +52,22 @@ public class RequestExecutorImpl implements RequestExecutor
 				}
 			};
 			AsyncCallback<String> wrappedCallback= wrapCallback(Serializable.class, asyncCallbackToContinue);
-			executeHttpRequest(true, url, parameters, wrappedCallback, false);
+			executeHttpRequest(true, url, parameters, wrappedCallback, false, useGetMethod);
 
 			executionHandler.suspendExecution();
 			return resultArray[0];
 		}
 		else
-			return executeHttpRequest(false, url, parameters, null, false);
+			return executeHttpRequest(false, url, parameters, null, false, useGetMethod);
 
 	}
 
 	public String executeFixedSynchronousRequest(String url, Map<String, String> parameters)
 	{
-		return executeHttpRequest(false, url, parameters, null, false);
+		return executeHttpRequest(false, url, parameters, null, false, useGetMethod);
 	}
 
-	public static String executeHttpRequest(boolean isAsync, String url, Map<String, String> parameters, AsyncCallback<String> asyncCallback, boolean crossDomain)
+	public static String executeHttpRequest(boolean isAsync, String url, Map<String, String> parameters, AsyncCallback<String> asyncCallback, boolean crossDomain, boolean useGetMethod)
 	{
 		ScriptHelper.put("url", url, null);
 		String isAsyncAsString= isAsync ? "true" : "false";
@@ -68,6 +76,7 @@ public class RequestExecutorImpl implements RequestExecutor
 		ScriptHelper.put("asyncCall", isAsyncAsString, null);
 		ScriptHelper.put("asyncCallback", asyncCallback, null);
 		ScriptHelper.put("crossDomain", isCrossDomain, null);
+		ScriptHelper.put("useGetMethod", useGetMethod, null);
 
 		ScriptHelper.put("parameters2", new Object(), null);
 		ScriptHelper.evalNoResult("parameters2={}", null);
@@ -79,14 +88,14 @@ public class RequestExecutorImpl implements RequestExecutor
 				ScriptHelper.evalNoResult("parameters2[key]=value", null);
 			}
 
-		Object eval= ScriptHelper.eval("jQueryHttpRequest(asyncCall, url,parameters2,asyncCallback, crossDomain)", null);
+		Object eval= ScriptHelper.eval("jQueryHttpRequest(asyncCall, url,parameters2,asyncCallback, crossDomain, useGetMethod)", null);
 		return isAsync ? "" : (String) eval;
 	}
 
 	public String executeAsynchronousRequest(String url, Map<String, String> parameters, AsyncCallback<String> asyncCallback)
 	{
 		AsyncCallback<String> wrappedCallback= wrapCallback(Serializable.class, asyncCallback);
-		return executeHttpRequest(true, url, parameters, wrappedCallback, false);
+		return executeHttpRequest(true, url, parameters, wrappedCallback, false, useGetMethod);
 	}
 
 	public static <T, S> AsyncCallback<S> wrapCallback(final Class<T> type, final AsyncCallback<S> asyncCallback)
@@ -123,7 +132,7 @@ public class RequestExecutorImpl implements RequestExecutor
 	public void executeCrossDomainAsynchronousRequest(String url, Map<String, String> parameters, AsyncCallback<String> asyncCallback)
 	{
 		AsyncCallback<String> wrappedCallback= wrapCallback(Serializable.class, asyncCallback);
-		executeHttpRequest(true, url, parameters, wrappedCallback, true);
+		executeHttpRequest(true, url, parameters, wrappedCallback, true, useGetMethod);
 	}
 
 }
