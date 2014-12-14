@@ -15,13 +15,13 @@
  */
 package com.dragome.model.pectin;
 
+import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.model.interfaces.IndexedValidationDisplay;
 import com.dragome.model.interfaces.IndexedValidationResult;
 import com.dragome.model.interfaces.Severity;
 import com.dragome.model.interfaces.ValidationDisplay;
 import com.dragome.model.interfaces.ValidationMessage;
 import com.dragome.model.interfaces.ValidationResult;
-import com.dragome.model.interfaces.VisualLabel;
 
 public class ValidationDisplayAdapter implements ValidationDisplay, IndexedValidationDisplay
 {

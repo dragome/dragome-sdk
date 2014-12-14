@@ -17,9 +17,9 @@ package com.dragome.templates;
 
 import org.w3c.dom.Element;
 
+import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.canvas.interfaces.CanvasHelper;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 

@@ -15,14 +15,14 @@
  */
 package com.dragome.model.pectin;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.listeners.ClickListener;
 import com.dragome.model.interfaces.ClickEvent;
 import com.dragome.model.interfaces.ClickHandler;
 import com.dragome.model.interfaces.GwtEvent;
 import com.dragome.model.interfaces.HandlerRegistration;
 import com.dragome.model.interfaces.HasClickHandlers;
 import com.dragome.model.interfaces.HasEnabled;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.listeners.ClickListener;
 
 public class HasClickHandlersAdapter implements HasClickHandlers, HasEnabled
 {

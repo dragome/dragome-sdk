@@ -65,6 +65,9 @@ public class CompileClientMojo extends AbstractMojo {
     }
 
     private void compile() throws URISyntaxException, DependencyResolutionRequiredException, MalformedURLException {
+
+    	System.setProperty("dragome-compile-mode", "release");
+
         // Fire the compiler
         final StringBuilder theClassPathForCompiler= new StringBuilder();
 

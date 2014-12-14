@@ -1,12 +1,12 @@
 package com.dragome.forms.bindings.client.binding;
 
 import com.dragome.forms.bindings.client.command.UiCommand;
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.model.interfaces.ClickEvent;
 import com.dragome.model.interfaces.ClickHandler;
 import com.dragome.model.interfaces.HandlerRegistration;
 import com.dragome.model.interfaces.HasClickHandlers;
 import com.dragome.model.interfaces.HasEnabled;
-import com.dragome.model.interfaces.VisualComponent;
 import com.dragome.model.pectin.HasClickHandlersAdapter;
 
 /**

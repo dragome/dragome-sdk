@@ -17,10 +17,10 @@
 package com.dragome.forms.bindings.client.form.validation.binding;
 
 import com.dragome.forms.bindings.client.form.validation.HasIndexedValidationResult;
+import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.model.interfaces.IndexedValidationDisplay;
 import com.dragome.model.interfaces.UIObject;
 import com.dragome.model.interfaces.ValidationStyles;
-import com.dragome.model.interfaces.VisualLabel;
 import com.dragome.model.pectin.ValidationDisplayAdapter;
 
 /**

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.listeners.PanelListener;
 import com.dragome.model.interfaces.Layout;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.listeners.PanelListener;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 

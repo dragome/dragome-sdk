@@ -15,7 +15,7 @@
  */
 package com.dragome.model.interfaces;
 
-import com.dragome.model.SelectionMode;
+import com.dragome.guia.components.SelectionMode;
 
 public interface SelectionModeChooser
 {

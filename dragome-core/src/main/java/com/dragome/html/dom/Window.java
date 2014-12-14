@@ -6,8 +6,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.model.EventDispatcherImpl;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.dispatcher.EventDispatcherImpl;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.RequestExecutorImpl;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.interfaces.AsyncCallback;

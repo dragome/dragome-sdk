@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
+import com.dragome.guia.components.interfaces.VisualTextArea;
 import com.dragome.model.interfaces.Renderer;
-import com.dragome.model.interfaces.VisualTextArea;
 import com.dragome.model.pectin.ComponentWithValueAndRendererImpl;
 
 public class VisualTextAreaImpl<T> extends ComponentWithValueAndRendererImpl<T> implements VisualTextArea<T>

@@ -8,7 +8,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.debugging.execution;
+package com.dragome.execution;
 
 public class ServerLauncher
 {

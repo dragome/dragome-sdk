@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.EventListener;
 
-import com.dragome.helpers.collections.CollectionHandler;
-import com.dragome.helpers.collections.ItemInvoker;
-import com.dragome.model.interfaces.ListenerMultiplexer;
-import com.dragome.remote.IndetifiableProxy;
+import com.dragome.guia.helper.collections.CollectionHandler;
+import com.dragome.guia.helper.collections.ItemInvoker;
+import com.dragome.guia.listeners.ListenerMultiplexer;
+import com.dragome.model.IndetifiableProxy;
 
 public class ProxyBasedListenerMultiplexer<T extends EventListener> implements InvocationHandler, ListenerMultiplexer<T>, IndetifiableProxy<EventListener>
 {

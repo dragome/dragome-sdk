@@ -19,12 +19,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.model.VisualRadioButton;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.VisualRadioButton;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.listeners.ClickListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.services.ServiceLocator;
 
 public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<VisualRadioButton>

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.dragome.debugging;
 
+import com.dragome.debugging.interfaces.CrossExecutionCommand;
+
 public class CrossExecutionCommandImpl implements CrossExecutionCommand
 {
 	protected String methodName;

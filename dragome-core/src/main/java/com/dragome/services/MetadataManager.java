@@ -16,14 +16,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dragome.annotations.ServiceImplementation;
-import com.dragome.debugging.CrossExecutionCommandProcessor;
 import com.dragome.debugging.CrossExecutionCommandProcessorImpl;
-import com.dragome.debugging.execution.ApplicationExecutorImpl;
+import com.dragome.debugging.interfaces.CrossExecutionCommandProcessor;
+import com.dragome.dispatcher.EventDispatcher;
+import com.dragome.dispatcher.EventDispatcherImpl;
+import com.dragome.execution.ApplicationExecutor;
+import com.dragome.execution.ApplicationExecutorImpl;
 import com.dragome.html.dom.DomHandler;
-import com.dragome.html.dom.EventDispatcher;
 import com.dragome.html.dom.w3c.BrowserDomHandler;
-import com.dragome.model.EventDispatcherImpl;
-import com.dragome.remote.ApplicationExecutor;
 import com.dragome.services.interfaces.AsyncResponseHandler;
 
 public class MetadataManager

@@ -15,6 +15,11 @@
  */
 package com.dragome.model.interfaces;
 
+import com.dragome.guia.components.interfaces.VisualBorder;
+import com.dragome.guia.components.interfaces.VisualBounds;
+import com.dragome.guia.components.interfaces.VisualColor;
+import com.dragome.guia.components.interfaces.VisualComponent;
+
 public interface Style
 {
 	public Style invert();

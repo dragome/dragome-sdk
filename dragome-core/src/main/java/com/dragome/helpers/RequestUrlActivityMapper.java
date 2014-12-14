@@ -8,13 +8,13 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.model;
+package com.dragome.helpers;
 
 import java.util.List;
 
 import com.dragome.annotations.ServiceImplementation;
-import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.helpers.serverside.RequestUrlActivityMapperImpl;
+import com.dragome.view.VisualActivity;
 
 @ServiceImplementation(RequestUrlActivityMapperImpl.class)
 public interface RequestUrlActivityMapper

@@ -8,9 +8,8 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.remote;
+package com.dragome.services.interfaces;
 
-import com.dragome.services.interfaces.AsyncCallback;
 
 public interface AsyncServiceExecutor<T>
 {

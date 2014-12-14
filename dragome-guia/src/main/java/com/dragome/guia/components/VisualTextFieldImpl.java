@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
+import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.model.interfaces.Renderer;
-import com.dragome.model.interfaces.VisualTextField;
 import com.dragome.model.pectin.ComponentWithValueAndRendererImpl;
 
 public class VisualTextFieldImpl<T> extends ComponentWithValueAndRendererImpl<T> implements VisualTextField<T>

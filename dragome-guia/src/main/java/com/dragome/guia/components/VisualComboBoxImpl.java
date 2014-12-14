@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
+import com.dragome.guia.components.interfaces.VisualComboBox;
 import com.dragome.model.interfaces.Renderer;
-import com.dragome.model.interfaces.VisualComboBox;
 
 public class VisualComboBoxImpl<T> extends VisualListBoxImpl<T> implements VisualComboBox<T>
 {

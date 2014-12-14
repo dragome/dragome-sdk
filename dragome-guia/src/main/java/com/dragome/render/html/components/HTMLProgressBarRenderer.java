@@ -18,12 +18,12 @@ package com.dragome.render.html.components;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualProgressBar;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualProgressBar;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.services.ServiceLocator;
 
 public class HTMLProgressBarRenderer implements ComponentRenderer<Element, VisualProgressBar>

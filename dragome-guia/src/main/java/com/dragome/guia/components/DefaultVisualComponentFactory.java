@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
 import java.util.List;
 
+import com.dragome.guia.components.interfaces.VisualButton;
+import com.dragome.guia.components.interfaces.VisualCheckbox;
+import com.dragome.guia.components.interfaces.VisualComponentFactory;
+import com.dragome.guia.components.interfaces.VisualLabel;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.model.interfaces.HasRenderer;
-import com.dragome.model.interfaces.VisualButton;
-import com.dragome.model.interfaces.VisualCheckbox;
-import com.dragome.model.interfaces.VisualComponentFactory;
-import com.dragome.model.interfaces.VisualLabel;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.interfaces.VisualTextField;
 
 public class DefaultVisualComponentFactory implements VisualComponentFactory
 {

@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.debugging.execution;
+package com.dragome.guia;
 
-import com.dragome.model.DefaultVisualActivity;
-import com.dragome.model.VisualPanelImpl;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.remote.ServiceFactory;
+import com.dragome.guia.components.VisualPanelImpl;
+import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.render.html.HTMLTemplateHandlingStrategy;
 import com.dragome.services.interfaces.ParametersHandler;
+import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateHandlingStrategy;
+import com.dragome.view.DefaultVisualActivity;
+import com.dragome.view.VisualActivity;
 
-public abstract class DragomeVisualActivity extends DefaultVisualActivity implements VisualActivity
+public abstract class GuiaVisualActivity extends DefaultVisualActivity implements VisualActivity
 {
 	protected TemplateHandlingStrategy templateHandlingStrategy= new HTMLTemplateHandlingStrategy();
 	protected VisualPanel mainPanel;
 	protected Template mainTemplate;
 	
-	public DragomeVisualActivity()
+	public GuiaVisualActivity()
 	{
 		initialize();
 		updateMainPanel();

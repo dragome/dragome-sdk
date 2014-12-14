@@ -39,8 +39,6 @@ public class BrowserAttribute extends AbstractAttr implements Attr
 		{
 			try
 			{
-				//		if (name.equals("value"))
-				//		    ScriptHelper.eval("foundElement.node.value= aValue");
 				if (name.equals("class"))
 					ScriptHelper.evalNoResult("foundElement.node.className= aValue;", this);
 				else if (name.equals("innerHTML"))

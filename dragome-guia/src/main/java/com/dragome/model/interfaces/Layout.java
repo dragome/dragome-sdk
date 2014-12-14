@@ -15,6 +15,8 @@
  */
 package com.dragome.model.interfaces;
 
+import com.dragome.guia.components.interfaces.VisualPanel;
+
 public interface Layout
 {
 	void setAssociatedPanel(VisualPanel visualPanel);

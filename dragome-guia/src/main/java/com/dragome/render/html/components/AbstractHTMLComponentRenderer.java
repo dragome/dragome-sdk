@@ -23,21 +23,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.KeyboardEvent;
 
-import com.dragome.model.EventDispatcherImpl;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.listeners.BlurListener;
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.model.listeners.DoubleClickListener;
-import com.dragome.model.listeners.InputListener;
-import com.dragome.model.listeners.KeyDownListener;
-import com.dragome.model.listeners.KeyPressListener;
-import com.dragome.model.listeners.KeyUpListener;
-import com.dragome.model.listeners.ListenerChanged;
-import com.dragome.model.listeners.MouseDownListener;
-import com.dragome.model.listeners.MouseOutListener;
-import com.dragome.model.listeners.MouseOverListener;
-import com.dragome.model.listeners.MouseUpListener;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.dispatcher.EventDispatcherImpl;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.listeners.BlurListener;
+import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.listeners.DoubleClickListener;
+import com.dragome.guia.listeners.InputListener;
+import com.dragome.guia.listeners.KeyDownListener;
+import com.dragome.guia.listeners.KeyPressListener;
+import com.dragome.guia.listeners.KeyUpListener;
+import com.dragome.guia.listeners.ListenerChanged;
+import com.dragome.guia.listeners.MouseDownListener;
+import com.dragome.guia.listeners.MouseOutListener;
+import com.dragome.guia.listeners.MouseOverListener;
+import com.dragome.guia.listeners.MouseUpListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.interfaces.ComponentRenderer;
 
 public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRenderer<Element, T>

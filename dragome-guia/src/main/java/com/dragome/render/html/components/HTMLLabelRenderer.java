@@ -17,13 +17,13 @@ package com.dragome.render.html.components;
 
 import org.w3c.dom.Element;
 
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualLabel;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualLabel;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel<Object>>

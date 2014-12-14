@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.interfaces;
+package com.dragome.guia.components.interfaces;
 
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.model.listeners.DoubleClickListener;
-import com.dragome.model.listeners.KeyUpListener;
+import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.listeners.DoubleClickListener;
+import com.dragome.guia.listeners.KeyUpListener;
+import com.dragome.model.interfaces.EventProducer;
+import com.dragome.model.interfaces.HasVisible;
+import com.dragome.model.interfaces.Style;
 
 public interface VisualComponent extends EventProducer, HasVisible
 {

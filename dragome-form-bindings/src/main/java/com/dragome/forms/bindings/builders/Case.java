@@ -15,8 +15,8 @@
  */
 package com.dragome.forms.bindings.builders;
 
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.services.GuiaServiceLocator;
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualComponent;
 
 public class Case
 {

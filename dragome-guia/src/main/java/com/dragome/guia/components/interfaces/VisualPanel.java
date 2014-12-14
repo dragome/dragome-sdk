@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.interfaces;
+package com.dragome.guia.components.interfaces;
 
 import java.util.List;
+
+import com.dragome.model.interfaces.HasLayout;
+import com.dragome.model.interfaces.Layout;
 
 public interface VisualPanel extends VisualComponent, HasLayout
 {

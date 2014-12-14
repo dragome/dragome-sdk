@@ -23,7 +23,6 @@ import com.dragome.commons.compiler.annotations.CompilerType;
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
-	protected String dragomeVersion="0.95.2-beta1";
 	private CompilerType defaultCompilerType= CompilerType.Standard;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
@@ -69,12 +68,12 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	public boolean filterClassPath(String classpathEntry)
 	{
 		boolean include= false || //
-		        classpathEntry.contains("dragome-js-jre-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-js-commons-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-core-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-guia-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-form-bindings-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-method-logger-"+dragomeVersion+".jar") //
+				classpathEntry.contains("dragome-js-jre-") || //
+				classpathEntry.contains("dragome-js-commons-") || //
+				classpathEntry.contains("dragome-core-") || //
+				classpathEntry.contains("dragome-guia-") || //
+				classpathEntry.contains("dragome-form-bindings-") || //
+				classpathEntry.contains("dragome-method-logger-") //
 		;
 
 		return include;
@@ -82,11 +81,11 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 
 	public CompilerType getDefaultCompilerType()
 	{
-	    return defaultCompilerType;
+		return defaultCompilerType;
 	}
 
 	public void setDefaultCompilerType(CompilerType defaultCompilerType)
 	{
-	    this.defaultCompilerType = defaultCompilerType;
+		this.defaultCompilerType= defaultCompilerType;
 	}
 }

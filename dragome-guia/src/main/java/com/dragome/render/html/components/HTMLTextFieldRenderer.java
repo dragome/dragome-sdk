@@ -18,15 +18,15 @@ package com.dragome.render.html.components;
 import org.w3c.dom.Element;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualTextField;
+import com.dragome.guia.listeners.FocusListener;
+import com.dragome.guia.listeners.InputListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualTextField;
-import com.dragome.model.listeners.FocusListener;
-import com.dragome.model.listeners.InputListener;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualTextField<Object>>
 {

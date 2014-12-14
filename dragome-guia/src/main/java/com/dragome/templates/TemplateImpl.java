@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dragome.model.DefaultEventProducer;
+import com.dragome.guia.components.DefaultEventProducer;
 import com.dragome.render.html.HTMLTemplateChangedListener;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;

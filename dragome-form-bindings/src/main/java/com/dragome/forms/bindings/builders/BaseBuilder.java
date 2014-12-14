@@ -24,15 +24,15 @@ import com.dragome.forms.bindings.client.form.metadata.binding.ConditionBinderBu
 import com.dragome.forms.bindings.client.style.StyleBinder;
 import com.dragome.forms.bindings.client.style.StyleBindingBuilder;
 import com.dragome.forms.bindings.client.style.StyleBuilder;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.listeners.BlurListener;
+import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.listeners.DoubleClickListener;
+import com.dragome.guia.listeners.InputListener;
+import com.dragome.guia.listeners.KeyUpListener;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.listeners.BlurListener;
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.model.listeners.DoubleClickListener;
-import com.dragome.model.listeners.InputListener;
-import com.dragome.model.listeners.KeyUpListener;
 import com.dragome.model.pectin.VisualComponentHasEnabled;
 
 public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuilder<C, B>>

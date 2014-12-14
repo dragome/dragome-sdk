@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
+import com.dragome.guia.components.interfaces.VisualBorder;
+import com.dragome.guia.components.interfaces.VisualBounds;
+import com.dragome.guia.components.interfaces.VisualColor;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.listeners.BoundsChangeListener;
+import com.dragome.guia.listeners.StyleChangedListener;
 import com.dragome.model.interfaces.Style;
-import com.dragome.model.interfaces.VisualBorder;
-import com.dragome.model.interfaces.VisualBounds;
-import com.dragome.model.interfaces.VisualColor;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.listeners.StyleChangedListener;
 
 public class DefaultStyle implements Style
 {

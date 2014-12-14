@@ -8,7 +8,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.debugging.execution;
+package com.dragome.execution;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -16,12 +16,13 @@ import java.util.concurrent.Executor;
 import com.dragome.debugging.ServiceInvocationResult;
 import com.dragome.debugging.messages.Receiver;
 import com.dragome.debugging.temp.TempHelper;
+import com.dragome.dispatcher.EventDispatcherHelper;
+import com.dragome.html.dom.DragomeJsException;
 import com.dragome.html.dom.w3c.BrowserDomHandler;
-import com.dragome.model.EventDispatcherHelper;
-import com.dragome.remote.ApplicationExecutor;
 import com.dragome.services.RequestExecutorImpl;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
+import com.dragome.view.VisualActivity;
 
 public class DragomeApplicationLauncher
 {

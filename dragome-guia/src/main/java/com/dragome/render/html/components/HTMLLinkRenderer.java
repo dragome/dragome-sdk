@@ -17,11 +17,11 @@ package com.dragome.render.html.components;
 
 import org.w3c.dom.Element;
 
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualLink;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
-import com.dragome.model.interfaces.VisualLink;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>

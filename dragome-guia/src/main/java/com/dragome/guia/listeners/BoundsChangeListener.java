@@ -1,4 +1,4 @@
-package com.dragome.model;
+package com.dragome.guia.listeners;
 
 public interface BoundsChangeListener
 {

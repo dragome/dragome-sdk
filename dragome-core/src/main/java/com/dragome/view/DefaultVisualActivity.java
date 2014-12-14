@@ -1,10 +1,8 @@
-package com.dragome.model;
+package com.dragome.view;
 
-import com.dragome.debugging.execution.VisualActivity;
-import com.dragome.remote.ServiceFactory;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.interfaces.ParametersHandler;
-import com.google.common.collect.ImmutableBiMap.Builder;
+import com.dragome.services.interfaces.ServiceFactory;
 
 public abstract class DefaultVisualActivity implements VisualActivity
 {

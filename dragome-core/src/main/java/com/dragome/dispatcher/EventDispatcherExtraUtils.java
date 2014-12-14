@@ -8,7 +8,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.model;
+package com.dragome.dispatcher;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import com.dragome.debugging.ScriptCrossExecutionCommand;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 
-public class ExtraUtils
+public class EventDispatcherExtraUtils
 {
 	@MethodAlias(alias= "EventDispatcher.equalsFunction")
 	private static boolean equalsFunction(Object o1, Object o2)

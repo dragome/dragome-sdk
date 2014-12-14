@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
+import com.dragome.guia.components.interfaces.VisualProgressBar;
 import com.dragome.model.interfaces.Renderer;
-import com.dragome.model.interfaces.VisualProgressBar;
 import com.dragome.model.pectin.ComponentWithValueAndRendererImpl;
 
 public class VisualProgressBarImpl extends ComponentWithValueAndRendererImpl<Integer> implements VisualProgressBar

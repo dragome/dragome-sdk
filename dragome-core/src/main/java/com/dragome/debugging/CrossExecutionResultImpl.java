@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.dragome.debugging;
 
+import com.dragome.debugging.interfaces.CrossExecutionResult;
+
 public class CrossExecutionResultImpl implements CrossExecutionResult
 {
 	private String result;

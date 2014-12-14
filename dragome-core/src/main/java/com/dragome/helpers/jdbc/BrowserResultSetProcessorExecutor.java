@@ -8,7 +8,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.helpers;
+package com.dragome.helpers.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

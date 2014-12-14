@@ -15,14 +15,14 @@
  */
 package com.dragome.templates;
 
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.listeners.PanelListener;
 import com.dragome.model.interfaces.HasLayout;
 import com.dragome.model.interfaces.Layout;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.listeners.PanelListener;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.interfaces.Template;
 
 public class TemplateLayout implements Layout

@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.render.interfaces.TemplateHandler;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.interfaces.SimpleItemProcessor;
 import com.dragome.templates.interfaces.Template;
 

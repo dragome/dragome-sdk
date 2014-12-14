@@ -75,6 +75,6 @@ public class CallbackEvictorConfigurator extends InstrumentationDragomeConfigura
 
 	public boolean filterClassPath(String classpathEntry)
 	{
-		return super.filterClassPath(classpathEntry) || classpathEntry.contains("dragome-callback-evictor-" + dragomeVersion + ".jar");
+		return super.filterClassPath(classpathEntry) || classpathEntry.contains("dragome-callback-evictor-");
 	}
 }

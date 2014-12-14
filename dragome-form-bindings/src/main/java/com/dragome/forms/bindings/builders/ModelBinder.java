@@ -26,10 +26,10 @@ import com.dragome.forms.bindings.client.style.StyleBinder;
 import com.dragome.forms.bindings.client.value.ValueHolder;
 import com.dragome.forms.bindings.client.value.ValueModel;
 import com.dragome.forms.bindings.reflect.ReflectionBeanModelProvider;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.model.interfaces.HasValue;
 import com.dragome.model.interfaces.HasVisible;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.model.interfaces.list.HasListModel;
 
 public class ModelBinder<T>

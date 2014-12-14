@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.services;
+package com.dragome.guia;
 
 import com.dragome.render.html.HTMLTemplateHandler;
 import com.dragome.render.interfaces.TemplateHandler;

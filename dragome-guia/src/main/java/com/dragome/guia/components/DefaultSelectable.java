@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
+import com.dragome.guia.listeners.SelectionListener;
 import com.dragome.model.interfaces.Selectable;
-import com.dragome.model.listeners.SelectionListener;
 
 public class DefaultSelectable extends DefaultEventProducer implements Selectable
 {

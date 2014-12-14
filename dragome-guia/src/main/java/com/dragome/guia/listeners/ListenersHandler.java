@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.listeners;
+package com.dragome.guia.listeners;
 
-import com.dragome.model.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualComponent;
 
 public class ListenersHandler<T>
 {

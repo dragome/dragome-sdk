@@ -18,23 +18,22 @@ package com.dragome.helpers;
 import java.util.List;
 
 import com.dragome.annotations.PageAlias;
-import com.dragome.debugging.execution.DragomeVisualActivity;
-import com.dragome.debugging.execution.VisualActivity;
-import com.dragome.model.RequestUrlActivityMapper;
-import com.dragome.model.VisualLabelImpl;
-import com.dragome.model.VisualLinkImpl;
-import com.dragome.model.VisualPanelImpl;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualLink;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.listeners.ClickListener;
+import com.dragome.guia.GuiaVisualActivity;
+import com.dragome.guia.components.VisualLabelImpl;
+import com.dragome.guia.components.VisualLinkImpl;
+import com.dragome.guia.components.VisualPanelImpl;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualLink;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.listeners.ClickListener;
 import com.dragome.render.ItemProcessorImpl;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateRepeater;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.view.VisualActivity;
 
 @PageAlias(alias= "discoverer")
-public class DiscovererPage extends DragomeVisualActivity
+public class DiscovererPage extends GuiaVisualActivity
 {
 	public void build()
 	{

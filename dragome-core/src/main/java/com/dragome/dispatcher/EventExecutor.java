@@ -8,10 +8,9 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.model;
+package com.dragome.dispatcher;
 
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.html.dom.EventDispatcher;
 import com.dragome.services.ServiceLocator;
 
 public class EventExecutor implements Runnable
@@ -45,14 +44,11 @@ public class EventExecutor implements Runnable
 			}
 			else
 			{
-				int clientX= ScriptHelper.evalInt("event.layerX", this);
-				int clientY= ScriptHelper.evalInt("event.layerY", this);
-				//				int offsetLeft= ScriptHelper.evalInt("eventTarget.offsetLeft", this);
-				//				int offsetTop= ScriptHelper.evalInt("eventTarget.offsetTop", this);
-				boolean shiftKey= ScriptHelper.evalBoolean("event.shiftKey", this);
+				int clientX= ScriptHelper.evalInt("event.layerX === undefined ? 0 : event.layerX", this);
+				int clientY= ScriptHelper.evalInt("event.layerY === undefined ? 0 : event.layerY", this);
+				boolean shiftKey= ScriptHelper.evalBoolean("event.shiftKey === undefined ? false : event.shiftKey", this);
 				eventDispatcher.mouseEventPerformedById(eventType, id, clientX, clientY, shiftKey);
 			}
-
 		}
 		catch (Exception e)
 		{

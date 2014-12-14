@@ -17,8 +17,8 @@ package com.dragome.render.html.components;
 
 import org.w3c.dom.Element;
 
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.canvas.HTMLCanvas;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.templates.TemplateLayout;

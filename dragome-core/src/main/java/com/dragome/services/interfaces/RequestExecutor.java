@@ -8,11 +8,9 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.services;
+package com.dragome.services.interfaces;
 
 import java.util.Map;
-
-import com.dragome.services.interfaces.AsyncCallback;
 
 public interface RequestExecutor
 {

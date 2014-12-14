@@ -13,7 +13,7 @@ package com.dragome.services.serialization;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import com.dragome.remote.TimeCollector;
+import com.dragome.helpers.TimeCollector;
 import com.dragome.services.ServiceLocator;
 
 import flexjson.ObjectBinder;

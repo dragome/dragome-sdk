@@ -8,7 +8,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.model;
+package com.dragome.dispatcher;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -19,7 +19,7 @@ import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.debugging.execution.DragomeApplicationLauncher;
+import com.dragome.execution.DragomeApplicationLauncher;
 import com.dragome.helpers.AnnotationsHelper;
 import com.dragome.helpers.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.services.ServiceLocator;
@@ -125,7 +125,7 @@ public class EventDispatcherHelper
 	{
 	}
 
-	private synchronized void runOnlySynchronized(Runnable runnable)
+	public static synchronized void runOnlySynchronized(Runnable runnable)
 	{
 		try
 		{

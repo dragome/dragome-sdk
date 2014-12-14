@@ -21,9 +21,9 @@ import java.util.Set;
 
 import org.w3c.dom.Element;
 
+import com.dragome.guia.listeners.StyleChangedListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Style;
-import com.dragome.model.listeners.StyleChangedListener;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.services.ServiceLocator;
 
 public final class DefaultStyleChangedListener implements StyleChangedListener

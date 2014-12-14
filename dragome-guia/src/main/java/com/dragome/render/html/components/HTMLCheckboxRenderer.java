@@ -18,12 +18,12 @@ package com.dragome.render.html.components;
 import org.w3c.dom.Element;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualCheckbox;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualCheckbox;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.GuiaServiceLocator;
 
 public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCheckbox>
 {

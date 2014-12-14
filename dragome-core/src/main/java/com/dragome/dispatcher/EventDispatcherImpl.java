@@ -8,40 +8,21 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.model;
+package com.dragome.dispatcher;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 
-import com.dragome.html.dom.EventDispatcher;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.html.dom.w3c.KeyboardEventImpl;
 import com.dragome.html.dom.w3c.MouseEventImpl;
-import com.dragome.remote.entities.DragomeEntityManager;
 
 public class EventDispatcherImpl implements EventDispatcher
 {
-	private static boolean processingEvent= false;
 	public static final String ELEMENT_ID_ATTRIBUTE= "data-element-id";
 
 	public EventDispatcherImpl()
 	{
-	}
-
-	private synchronized void runOnlySynchronized(Runnable runnable)
-	{
-		try
-		{
-			//TODO revisar esto cuando se ejecuta en el cliente, posible freeze!
-			if (!processingEvent)
-			{
-				processingEvent= true;
-				runnable.run();
-			}
-		}
-		finally
-		{
-			processingEvent= false;
-		}
 	}
 
 	public static void setEventListener(Element element, EventListener eventListener, String... eventTypes)
@@ -54,7 +35,7 @@ public class EventDispatcherImpl implements EventDispatcher
 
 	public void keyEventPerformedById(final String eventName, final String id, final int code)
 	{
-		runOnlySynchronized(new Runnable()
+		EventDispatcherHelper.runOnlySynchronized(new Runnable()
 		{
 			public void run()
 			{
@@ -67,7 +48,7 @@ public class EventDispatcherImpl implements EventDispatcher
 
 	public void mouseEventPerformedById(final String eventName, final String id, final int clientX, final int clientY, final boolean shiftKey)
 	{
-		runOnlySynchronized(new Runnable()
+		EventDispatcherHelper.runOnlySynchronized(new Runnable()
 		{
 			public void run()
 			{

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.dragome.helpers.collections.CollectionHandler;
-import com.dragome.helpers.collections.ItemInvoker;
+import com.dragome.guia.helper.collections.CollectionHandler;
+import com.dragome.guia.helper.collections.ItemInvoker;
+import com.dragome.guia.listeners.MultipleSelectionListener;
 import com.dragome.model.interfaces.MultiSelectable;
-import com.dragome.model.listeners.MultipleSelectionListener;
 
 public class DefaultMultiSelectable implements MultiSelectable
 {

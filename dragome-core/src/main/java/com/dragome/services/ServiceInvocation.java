@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dragome.commons.ContinueReflection;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.helpers.DragomeEntityManager;
 
 public class ServiceInvocation
 {

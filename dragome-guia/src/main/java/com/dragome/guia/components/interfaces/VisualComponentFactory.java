@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.interfaces;
+package com.dragome.guia.components.interfaces;
 
 import java.util.List;
 
-import com.dragome.model.VisualRadioButton;
+import com.dragome.guia.components.VisualRadioButton;
+import com.dragome.model.interfaces.HasRenderer;
 
 public interface VisualComponentFactory
 {

@@ -13,95 +13,96 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
-import com.dragome.model.interfaces.VisualBounds;
+import com.dragome.guia.components.interfaces.VisualBounds;
+import com.dragome.guia.listeners.BoundsChangeListener;
 
 public class DefaultBounds implements VisualBounds
 {
-    public static final Object ZERO= new DefaultBounds(0, 0, 0, 0);
-    protected int x;
-    protected int y;
-    protected int width;
-    protected int height;
-    private BoundsChangeListener boundsChangeListener= new BoundsChangeListener()
-    {
-	public void boundsChanged()
+	public static final Object ZERO= new DefaultBounds(0, 0, 0, 0);
+	protected int x;
+	protected int y;
+	protected int width;
+	protected int height;
+	private BoundsChangeListener boundsChangeListener= new BoundsChangeListener()
+	{
+		public void boundsChanged()
+		{
+		}
+	};
+
+	public DefaultBounds()
 	{
 	}
-    };
 
-    public DefaultBounds()
-    {
-    }
-
-    public DefaultBounds(int aX, int aY, int aWidth, int aHeight)
-    {
-	x= aX;
-	y= aY;
-	width= aWidth;
-	height= aHeight;
-    }
-
-    public DefaultBounds(int aX, int aY, int aWidth, int aHeight, BoundsChangeListener boundsChangeListener)
-    {
-	this(aX, aY, aWidth, aHeight);
-	this.boundsChangeListener= boundsChangeListener;
-    }
-
-    public boolean equals(Object obj)
-    {
-	if (obj instanceof VisualBounds)
+	public DefaultBounds(int aX, int aY, int aWidth, int aHeight)
 	{
-	    VisualBounds otherBounds= (VisualBounds) obj;
-
-	    return getWidth() == otherBounds.getWidth() && getHeight() == otherBounds.getHeight() && getX() == otherBounds.getX() && getY() == otherBounds.getY();
+		x= aX;
+		y= aY;
+		width= aWidth;
+		height= aHeight;
 	}
 
-	return false;
-    }
+	public DefaultBounds(int aX, int aY, int aWidth, int aHeight, BoundsChangeListener boundsChangeListener)
+	{
+		this(aX, aY, aWidth, aHeight);
+		this.boundsChangeListener= boundsChangeListener;
+	}
 
-    public int getHeight()
-    {
-	return height;
-    }
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof VisualBounds)
+		{
+			VisualBounds otherBounds= (VisualBounds) obj;
 
-    public int getWidth()
-    {
-	return width;
-    }
+			return getWidth() == otherBounds.getWidth() && getHeight() == otherBounds.getHeight() && getX() == otherBounds.getX() && getY() == otherBounds.getY();
+		}
 
-    public int getX()
-    {
-	return x;
-    }
+		return false;
+	}
 
-    public int getY()
-    {
-	return y;
-    }
+	public int getHeight()
+	{
+		return height;
+	}
 
-    public void setHeight(int aHeight)
-    {
-	height= aHeight;
-	boundsChangeListener.boundsChanged();
-    }
+	public int getWidth()
+	{
+		return width;
+	}
 
-    public void setWidth(int aWidth)
-    {
-	width= aWidth;
-	boundsChangeListener.boundsChanged();
-    }
+	public int getX()
+	{
+		return x;
+	}
 
-    public void setX(int aX)
-    {
-	x= aX;
-	boundsChangeListener.boundsChanged();
-    }
+	public int getY()
+	{
+		return y;
+	}
 
-    public void setY(int aY)
-    {
-	y= aY;
-	boundsChangeListener.boundsChanged();
-    }
+	public void setHeight(int aHeight)
+	{
+		height= aHeight;
+		boundsChangeListener.boundsChanged();
+	}
+
+	public void setWidth(int aWidth)
+	{
+		width= aWidth;
+		boundsChangeListener.boundsChanged();
+	}
+
+	public void setX(int aX)
+	{
+		x= aX;
+		boundsChangeListener.boundsChanged();
+	}
+
+	public void setY(int aY)
+	{
+		y= aY;
+		boundsChangeListener.boundsChanged();
+	}
 }

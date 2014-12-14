@@ -12,8 +12,8 @@ package com.dragome.services;
 
 import java.lang.reflect.Proxy;
 
-import com.dragome.remote.AsyncServiceExecutor;
-import com.dragome.remote.ServiceFactory;
+import com.dragome.services.interfaces.AsyncServiceExecutor;
+import com.dragome.services.interfaces.ServiceFactory;
 
 public class ServerSideServiceFactory implements ServiceFactory
 {

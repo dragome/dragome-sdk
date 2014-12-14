@@ -8,14 +8,15 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.debugging.execution;
+package com.dragome.execution;
 
 import java.util.concurrent.Executor;
 
 import com.dragome.debugging.CrossExecutionSemaphore;
 import com.dragome.debugging.ServiceInvocationResult;
-import com.dragome.remote.ApplicationExecutor;
+import com.dragome.html.dom.DragomeJsException;
 import com.dragome.services.ServiceLocator;
+import com.dragome.view.VisualActivity;
 
 public class ApplicationExecutorImpl implements ApplicationExecutor
 {

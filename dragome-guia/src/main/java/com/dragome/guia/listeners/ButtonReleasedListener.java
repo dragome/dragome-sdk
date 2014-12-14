@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.listeners;
+package com.dragome.guia.listeners;
 
 import java.util.EventListener;
 import java.util.EventObject;

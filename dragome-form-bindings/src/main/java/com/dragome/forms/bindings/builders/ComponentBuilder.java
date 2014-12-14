@@ -15,10 +15,10 @@
  */
 package com.dragome.forms.bindings.builders;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.methodlogger.enhancers.MethodInvocationListener;
 import com.dragome.methodlogger.enhancers.MethodInvocationLogger;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualPanel;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 

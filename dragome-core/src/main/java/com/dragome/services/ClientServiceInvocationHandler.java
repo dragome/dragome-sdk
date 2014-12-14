@@ -13,8 +13,8 @@ package com.dragome.services;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import com.dragome.debugging.execution.ApplicationExecutorImpl;
 import com.dragome.debugging.messages.ServerToClientServiceInvoker;
+import com.dragome.execution.ApplicationExecutorImpl;
 
 public class ClientServiceInvocationHandler implements InvocationHandler
 {

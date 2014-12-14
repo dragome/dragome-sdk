@@ -15,7 +15,7 @@
  */
 package com.dragome.model.pectin;
 
-import com.dragome.model.AbstractVisualComponent;
+import com.dragome.guia.components.AbstractVisualComponent;
 import com.dragome.model.interfaces.HandlerRegistration;
 import com.dragome.model.interfaces.HasRenderer;
 import com.dragome.model.interfaces.HasValue;

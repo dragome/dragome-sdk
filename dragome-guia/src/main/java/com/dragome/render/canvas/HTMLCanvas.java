@@ -22,9 +22,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.canvas.interfaces.ConcatCanvas;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateFactory;
 
 public class HTMLCanvas implements Canvas<Element>

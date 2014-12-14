@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.interfaces;
+package com.dragome.guia.components.interfaces;
 
 import java.util.Collection;
 
+import com.dragome.model.interfaces.HasConstrainedValue;
+import com.dragome.model.interfaces.HasRenderer;
+import com.dragome.model.interfaces.IsEditor;
+import com.dragome.model.interfaces.TakesValueEditor;
 import com.dragome.model.interfaces.list.HasListModel;
 
 

@@ -22,15 +22,15 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualListBox;
+import com.dragome.guia.listeners.ClickListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualListBox;
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.remote.entities.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.services.GuiaServiceLocator;
 import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBox<Object>>

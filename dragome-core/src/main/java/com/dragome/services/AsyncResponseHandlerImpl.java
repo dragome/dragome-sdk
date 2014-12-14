@@ -13,7 +13,7 @@ package com.dragome.services;
 import java.util.concurrent.ExecutorService;
 
 import com.dragome.debugging.messages.ServerToClientServiceInvoker;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.interfaces.AsyncResponseHandler;
 
 public class AsyncResponseHandlerImpl implements AsyncResponseHandler

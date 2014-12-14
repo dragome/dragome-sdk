@@ -15,8 +15,8 @@
  */
 package com.dragome.model.pectin;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.model.interfaces.HasEnabled;
-import com.dragome.model.interfaces.VisualComponent;
 
 public class VisualComponentHasEnabled implements HasEnabled
 {

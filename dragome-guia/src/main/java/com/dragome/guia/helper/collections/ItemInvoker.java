@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dragome.helpers.collections;
+package com.dragome.guia.helper.collections;
 
 public interface ItemInvoker<T>
 {

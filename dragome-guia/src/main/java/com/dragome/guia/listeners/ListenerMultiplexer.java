@@ -33,7 +33,7 @@
 //         Sep 7, 2010      fpetrola         Creation
 //                                                                          
 // ---------------------------------------------------------------------------
-package com.dragome.model.interfaces;
+package com.dragome.guia.listeners;
 
 import java.util.EventListener;
 

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
 import java.lang.reflect.Proxy;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dragome.guia.listeners.ListenerChanged;
+import com.dragome.guia.listeners.ListenerMultiplexer;
 import com.dragome.model.interfaces.EventProducer;
-import com.dragome.model.interfaces.ListenerMultiplexer;
-import com.dragome.model.listeners.ListenerChanged;
 
 public class DefaultEventProducer implements EventProducer
 {

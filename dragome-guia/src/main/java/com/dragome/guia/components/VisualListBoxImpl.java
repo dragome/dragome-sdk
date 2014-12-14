@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model;
+package com.dragome.guia.components;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import com.dragome.guia.components.interfaces.VisualListBox;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.TakesValueEditor;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
-import com.dragome.model.interfaces.VisualListBox;
 import com.dragome.model.interfaces.list.ListModel;
 import com.dragome.model.interfaces.list.ListModelChangedEvent;
 import com.dragome.model.interfaces.list.ListModelChangedHandler;

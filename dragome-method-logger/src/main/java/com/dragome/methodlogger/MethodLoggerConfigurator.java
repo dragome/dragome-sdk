@@ -41,6 +41,6 @@ public class MethodLoggerConfigurator extends InstrumentationDragomeConfigurator
 
 	public boolean filterClassPath(String classpathEntry)
 	{
-		return super.filterClassPath(classpathEntry) || classpathEntry.contains("dragome-method-logger-" + dragomeVersion + ".jar");
+		return super.filterClassPath(classpathEntry) || classpathEntry.contains("dragome-method-logger-");
 	}
 }

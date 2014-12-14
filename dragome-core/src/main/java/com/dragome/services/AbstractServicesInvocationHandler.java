@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
+import com.dragome.services.interfaces.RequestExecutor;
 import com.dragome.services.interfaces.SerializationService;
 
 public abstract class AbstractServicesInvocationHandler extends AbstractProxyRelatedInvocationHandler

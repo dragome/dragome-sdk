@@ -8,10 +8,10 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.dragome.remote;
+package com.dragome.execution;
 
 import com.dragome.debugging.ServiceInvocationResult;
-import com.dragome.debugging.execution.DragomeJsException;
+import com.dragome.html.dom.DragomeJsException;
 
 public interface ApplicationExecutor
 {

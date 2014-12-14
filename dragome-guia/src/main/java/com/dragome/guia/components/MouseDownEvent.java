@@ -1,6 +1,6 @@
-package com.dragome.model;
+package com.dragome.guia.components;
 
-import com.dragome.model.listeners.MouseEvent;
+import com.dragome.guia.listeners.MouseEvent;
 
 
 public class MouseDownEvent implements MouseEvent

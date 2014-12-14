@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.interfaces;
+package com.dragome.guia.components.interfaces;
+
+import com.dragome.model.interfaces.HasRenderer;
+import com.dragome.model.interfaces.HasValue;
 
 public interface VisualLink extends VisualComponent, HasValue<String>, HasRenderer<String>
 {

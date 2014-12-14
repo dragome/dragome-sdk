@@ -15,10 +15,11 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
-import com.dragome.remote.AsyncServiceExecutor;
-import com.dragome.remote.ServiceFactory;
 import com.dragome.services.interfaces.AsyncCallback;
+import com.dragome.services.interfaces.AsyncServiceExecutor;
+import com.dragome.services.interfaces.RequestExecutor;
 import com.dragome.services.interfaces.SerializationService;
+import com.dragome.services.interfaces.ServiceFactory;
 
 public class ClientSideServiceFactory implements ServiceFactory
 {
