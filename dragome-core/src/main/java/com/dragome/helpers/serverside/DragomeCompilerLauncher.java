@@ -18,8 +18,8 @@ import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
-import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.services.ServiceLocator;
+import com.dragome.view.VisualActivity;
 
 public class DragomeCompilerLauncher
 {
@@ -33,12 +33,18 @@ public class DragomeCompilerLauncher
 		{
 			public boolean accept(File pathname)
 			{
-				return !pathname.toString().contains(File.separator + "serverside");
+				String string= pathname.toString();
+				boolean isServerSideOnly= string.contains(File.separator + "serverside");
+				boolean isDebuggingPackage= string.contains(File.separator + "debugging");
+				if (!"release".equals(System.getProperty("dragome-compile-mode")))
+					isDebuggingPackage= false;
+
+				return !(isServerSideOnly || isDebuggingPackage);
 			}
 		};
-		
+
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= ServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
-		
+
 		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter);
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
 		bytecodeToJavascriptCompiler.compile();

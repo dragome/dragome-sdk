@@ -20,8 +20,8 @@ import java.util.Arrays;
 
 import com.dragome.forms.bindings.client.binding.AbstractBindingContainer;
 import com.dragome.forms.bindings.client.util.Utils;
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.model.interfaces.UIObject;
-import com.dragome.model.interfaces.VisualComponent;
 
 /**
  * Created by IntelliJ IDEA.

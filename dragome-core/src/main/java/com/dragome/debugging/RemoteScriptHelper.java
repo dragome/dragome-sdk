@@ -11,7 +11,9 @@
 package com.dragome.debugging;
 
 import com.dragome.commons.javascript.ScriptHelperInterface;
-import com.dragome.remote.ServiceFactory;
+import com.dragome.debugging.interfaces.CrossExecutionCommandProcessor;
+import com.dragome.debugging.interfaces.CrossExecutionResult;
+import com.dragome.services.interfaces.ServiceFactory;
 
 public class RemoteScriptHelper implements ScriptHelperInterface
 {

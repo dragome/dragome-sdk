@@ -1,13 +1,18 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
- *  This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dragome.render.html.components;
 
 import java.util.ArrayList;
@@ -18,19 +23,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.KeyboardEvent;
 
-import com.dragome.model.EventDispatcherImpl;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.listeners.BlurListener;
-import com.dragome.model.listeners.ClickListener;
-import com.dragome.model.listeners.DoubleClickListener;
-import com.dragome.model.listeners.InputListener;
-import com.dragome.model.listeners.KeyDownListener;
-import com.dragome.model.listeners.KeyPressListener;
-import com.dragome.model.listeners.KeyUpListener;
-import com.dragome.model.listeners.ListenerChanged;
-import com.dragome.model.listeners.MouseOutListener;
-import com.dragome.model.listeners.MouseOverListener;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.dispatcher.EventDispatcherImpl;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.listeners.BlurListener;
+import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.listeners.DoubleClickListener;
+import com.dragome.guia.listeners.InputListener;
+import com.dragome.guia.listeners.KeyDownListener;
+import com.dragome.guia.listeners.KeyPressListener;
+import com.dragome.guia.listeners.KeyUpListener;
+import com.dragome.guia.listeners.ListenerChanged;
+import com.dragome.guia.listeners.MouseDownListener;
+import com.dragome.guia.listeners.MouseOutListener;
+import com.dragome.guia.listeners.MouseOverListener;
+import com.dragome.guia.listeners.MouseUpListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.interfaces.ComponentRenderer;
 
 public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRenderer<Element, T>
@@ -42,6 +49,8 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 	private static final String BLUR= "blur";
 	private static final String MOUSEOUT= "mouseout";
 	private static final String MOUSEOVER= "mouseover";
+	private static final String MOUSEDOWN= "mousedown";
+	private static final String MOUSEUP= "mouseup";
 	private static final String DBLCLICK= "dblclick";
 	private static final String CLICK= "click";
 	public static final String COMPONENT_ID_ATTRIBUTE= "data-component-id";
@@ -99,6 +108,10 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 					visualComponent.getListener(MouseOverListener.class).mouseOverPerformed(visualComponent);
 				else if (type.equals(MOUSEOUT))
 					visualComponent.getListener(MouseOutListener.class).mouseOutPerformed(visualComponent);
+				else if (type.equals(MOUSEDOWN))
+					visualComponent.getListener(MouseDownListener.class).mouseDownPerformed(null);
+				else if (type.equals(MOUSEUP))
+					visualComponent.getListener(MouseUpListener.class).mouseUpPerformed(visualComponent);
 				else if (type.equals(BLUR))
 					visualComponent.getListener(BlurListener.class).blurPerformed(visualComponent);
 				else if (type.equals(INPUT))

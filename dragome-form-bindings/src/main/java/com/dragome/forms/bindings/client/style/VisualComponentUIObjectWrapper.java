@@ -1,7 +1,7 @@
 package com.dragome.forms.bindings.client.style;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.model.interfaces.UIObject;
-import com.dragome.model.interfaces.VisualComponent;
 
 public class VisualComponentUIObjectWrapper extends UIObject
 {

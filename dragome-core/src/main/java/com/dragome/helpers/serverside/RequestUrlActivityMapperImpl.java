@@ -17,8 +17,8 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import com.dragome.annotations.PageAlias;
-import com.dragome.debugging.execution.VisualActivity;
-import com.dragome.model.RequestUrlActivityMapper;
+import com.dragome.helpers.RequestUrlActivityMapper;
+import com.dragome.view.VisualActivity;
 
 public class RequestUrlActivityMapperImpl implements RequestUrlActivityMapper
 {

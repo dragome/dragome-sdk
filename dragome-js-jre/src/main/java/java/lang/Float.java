@@ -1,13 +1,18 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
- *  This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package java.lang;
 
 import java.util.NotImplementedMethod;
@@ -17,6 +22,17 @@ import com.dragome.commons.javascript.ScriptHelper;
 public final class Float extends Number
 {
 	public static final Class<Float> TYPE= Class.getType("float");
+
+    public static final float POSITIVE_INFINITY = 1.0f / 0.0f;
+    public static final float NEGATIVE_INFINITY = -1.0f / 0.0f;
+    public static final float NaN = 0.0f / 0.0f;
+    public static final float MAX_VALUE = 0x1.fffffeP+127f; // 3.4028235e+38f
+    public static final float MIN_NORMAL = 0x1.0p-126f; // 1.17549435E-38f
+    public static final float MIN_VALUE = 0x0.000002P-126f; // 1.4e-45f
+    public static final int MAX_EXPONENT = 127;
+    public static final int MIN_EXPONENT = -126;
+    public static final int SIZE = 32;
+
 
 	private float value;
 
