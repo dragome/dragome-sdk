@@ -137,4 +137,8 @@ public final class System
 		return ScriptHelper.evalLong("now()*1000*1000;");
 	}
 
+	public static String setProperty(String key, String value)
+	{
+		return properties.put(key, value);
+	}
 }
