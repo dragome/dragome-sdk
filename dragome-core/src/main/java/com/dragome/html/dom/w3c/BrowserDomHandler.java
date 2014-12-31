@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.enhancers.jsdelegate.JsDelegateFactory;
 import com.dragome.html.dom.DomHandler;
 
 public class BrowserDomHandler implements DomHandler
@@ -32,9 +33,18 @@ public class BrowserDomHandler implements DomHandler
 	public Document getDocument()
 	{
 		if (document == null)
-			document= new BrowserHtmlDocument();
+			init();
 
 		return document;
+	}
+
+	private void init()
+	{
+		if (document == null)
+		{
+			Object documentNode= ScriptHelper.eval("document", this);
+			document= JsDelegateFactory.createFrom(documentNode, Document.class);
+		}
 	}
 
 	public void setDocument(Document document)
@@ -44,18 +54,14 @@ public class BrowserDomHandler implements DomHandler
 
 	public Element getElementBySelector(String selector)
 	{
-		BrowserElement foundElement= new BrowserElement();
-
-		ScriptHelper.put("foundElement", foundElement, this);
 		ScriptHelper.put("selector", selector, this);
-		ScriptHelper.evalNoResult("foundElement.node= document.querySelectorAll(selector)[0]", this);
-		boolean exists= ScriptHelper.evalBoolean("foundElement.node != undefined && foundElement.node != null", this);
-
-		return exists ? foundElement : null;
+		Object object= ScriptHelper.eval("document.querySelectorAll(selector)[0]", this);
+		Element result= JsDelegateFactory.createFrom(object, Element.class);
+		return result;
 	}
 
 	public void initDocument()
 	{
-		document= new BrowserHtmlDocument();
+		init();
 	}
 }
