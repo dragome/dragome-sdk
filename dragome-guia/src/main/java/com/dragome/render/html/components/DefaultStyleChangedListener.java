@@ -38,17 +38,18 @@ public final class DefaultStyleChangedListener implements StyleChangedListener
 		Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
 		if (element != null)
 		{
+			String name= style.getName();
 			if (!style.isSynchronized())
 			{
-				String result= (element.getAttribute("class") + (style.getName() != null ? " " + style.getName() : "")).trim();
+				String result= (element.getAttribute("class") + (name != null ? " " + name : "")).trim();
 
 				style.setName(deDup(result));
 				style.setSynchronized(true);
 			}
 			else
 			{
-				if (style.getName().trim().length() > 0)
-					element.setAttribute("class", style.getName());
+				if (name != null && name.trim().length() > 0)
+					element.setAttribute("class", name);
 				else
 					element.removeAttribute("class");
 

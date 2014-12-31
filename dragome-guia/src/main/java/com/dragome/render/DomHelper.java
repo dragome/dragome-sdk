@@ -32,6 +32,9 @@ public class DomHelper
 	public static void addClassName(Element element, String className)
 	{
 		String classes= element.getAttribute("class");
+		if (classes == null)
+			classes= "";
+		
 		if (!classes.contains(className))
 		{
 			classes+= " " + className;
