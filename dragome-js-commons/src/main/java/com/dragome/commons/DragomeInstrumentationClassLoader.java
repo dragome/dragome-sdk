@@ -547,4 +547,9 @@ public final class DragomeInstrumentationClassLoader extends URLClassLoader
 	{
 		bytecodes.put(aName, bytecode);
 	}
+
+	public void setBytecodes(Map<String, byte[]> bytecodes)
+	{
+		this.bytecodes= bytecodes;
+	}
 }

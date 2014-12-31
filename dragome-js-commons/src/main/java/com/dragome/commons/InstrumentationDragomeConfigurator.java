@@ -16,7 +16,9 @@
 package com.dragome.commons;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class InstrumentationDragomeConfigurator extends DefaultDragomeConfigurator
@@ -24,6 +26,8 @@ public class InstrumentationDragomeConfigurator extends DefaultDragomeConfigurat
 	protected Set<String> includedPaths= new HashSet<String>();
 	protected Set<String> loadedFromParent= new HashSet<String>();
 	protected boolean enabled= true;
+	private DragomeInstrumentationClassLoader instrumentationClassLoader;
+	private Map<String, byte[]> bytecodes= new HashMap<String, byte[]>();	
 
 	public InstrumentationDragomeConfigurator()
 	{
@@ -31,7 +35,14 @@ public class InstrumentationDragomeConfigurator extends DefaultDragomeConfigurat
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
-		return new DragomeInstrumentationClassLoader(new URL[0], parent, current, getBytecodeTransformer(), getLoadedFromParent());
+		instrumentationClassLoader= new DragomeInstrumentationClassLoader(new URL[0], parent, current, getBytecodeTransformer(), getLoadedFromParent());
+		instrumentationClassLoader.setBytecodes(bytecodes);
+		return instrumentationClassLoader;
+	}
+	
+	public void addClassBytecode(byte[] bytecode, String aName)
+	{
+		bytecodes.put(aName, bytecode);
 	}
 
 	public Set<String> getIncludedPaths()
@@ -62,5 +73,10 @@ public class InstrumentationDragomeConfigurator extends DefaultDragomeConfigurat
 	public void setEnabled(boolean enabled)
 	{
 		this.enabled= enabled;
+	}
+
+	public DragomeInstrumentationClassLoader getInstrumentationClassLoader()
+	{
+		return instrumentationClassLoader;
 	}
 }

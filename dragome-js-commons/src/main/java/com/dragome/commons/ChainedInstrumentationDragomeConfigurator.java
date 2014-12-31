@@ -31,6 +31,9 @@ public class ChainedInstrumentationDragomeConfigurator extends InstrumentationDr
 
 	public void init(InstrumentationDragomeConfigurator... configurators)
 	{
+		includedPaths.clear();
+		loadedFromParent.clear();
+
 		this.configurators= Arrays.asList(configurators);
 
 		for (InstrumentationDragomeConfigurator configurator : this.configurators)
@@ -43,36 +46,45 @@ public class ChainedInstrumentationDragomeConfigurator extends InstrumentationDr
 
 	public BytecodeTransformer getBytecodeTransformer()
 	{
-		return new BytecodeTransformer()
-		{
-			public byte[] transform(String className, byte[] bytecode)
+		if (configurators.isEmpty())
+			return super.getBytecodeTransformer();
+		else
+			return new BytecodeTransformer()
 			{
-				byte[] transformedBytecode= bytecode;
+				public byte[] transform(String className, byte[] bytecode)
+				{
+					byte[] transformedBytecode= bytecode;
 
-				for (InstrumentationDragomeConfigurator configurator : configurators)
-					if (configurator.isEnabled())
-						transformedBytecode= configurator.getBytecodeTransformer().transform(className, transformedBytecode);
+					for (InstrumentationDragomeConfigurator configurator : configurators)
+						if (configurator.isEnabled())
+							transformedBytecode= configurator.getBytecodeTransformer().transform(className, transformedBytecode);
 
-				return transformedBytecode;
-			}
+					return transformedBytecode;
+				}
 
-			public boolean requiresTransformation(String className)
-			{
-				boolean transform= false;
-				for (InstrumentationDragomeConfigurator configurator : configurators)
-					if (configurator.isEnabled())
-						transform|= configurator.getBytecodeTransformer().requiresTransformation(className);
+				public boolean requiresTransformation(String className)
+				{
+					boolean transform= false;
+					for (InstrumentationDragomeConfigurator configurator : configurators)
+						if (configurator.isEnabled())
+							transform|= configurator.getBytecodeTransformer().requiresTransformation(className);
 
-				return transform;
-			}
-		};
+					return transform;
+				}
+			};
 	}
 
 	public boolean filterClassPath(String classpathEntry)
 	{
 		boolean result= false;
-		for (InstrumentationDragomeConfigurator configurator : configurators)
-			result|= configurator.filterClassPath(classpathEntry);
+
+		if (configurators.isEmpty())
+			result= super.filterClassPath(classpathEntry);
+		else
+		{
+			for (InstrumentationDragomeConfigurator configurator : configurators)
+				result|= configurator.filterClassPath(classpathEntry);
+		}
 
 		return result;
 	}

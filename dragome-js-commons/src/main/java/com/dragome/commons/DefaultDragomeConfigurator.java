@@ -15,6 +15,10 @@
  */
 package com.dragome.commons;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
@@ -24,6 +28,7 @@ import com.dragome.commons.compiler.annotations.CompilerType;
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
 	private CompilerType defaultCompilerType= CompilerType.Standard;
+	private FileFilter classpathFilter;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -87,5 +92,25 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	public void setDefaultCompilerType(CompilerType defaultCompilerType)
 	{
 		this.defaultCompilerType= defaultCompilerType;
+	}
+
+	public FileFilter getClasspathFilter()
+	{
+		return classpathFilter;
+	}
+
+	public void setClasspathFilter(FileFilter classpathFilter)
+	{
+		this.classpathFilter= classpathFilter;
+	}
+
+	public boolean isCheckingCast()
+	{
+		return true;
+	}
+
+	public List<File> getExtraClasspath(String classpath)
+	{
+		return new ArrayList<File>();
 	}
 }

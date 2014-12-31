@@ -91,7 +91,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 	public CompilerType compilerType;
 
-	private BytecodeToJavascriptCompilerConfiguration compilerConfiguration;
+	public BytecodeToJavascriptCompilerConfiguration compilerConfiguration;
 
 	private boolean initialized= false;
 
@@ -141,16 +141,16 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 			Project.singleton= null;
 			//	    compiler.setBasedir(basedir);
-			String classpathElements= compilerConfiguration.classPath;
+			String classpathElements= compilerConfiguration.getClassPath();
 			compiler.addClasspathElements(classpathElements);
-			compiler.addClasspathFilter(compilerConfiguration.classpathFilter);
+			compiler.addClasspathFilter(compilerConfiguration.getClasspathFilter());
 
-			if (compilerConfiguration.bytecodeTransformer != null)
-				compiler.setBytecodeTransformer(compilerConfiguration.bytecodeTransformer);
+			if (compilerConfiguration.getBytecodeTransformer() != null)
+				compiler.setBytecodeTransformer(compilerConfiguration.getBytecodeTransformer());
 
 			Assembly assembly= new Assembly();
-			assembly.setEntryPointClassName(compilerConfiguration.mainClassName);
-			assembly.setTargetLocation(new File(compilerConfiguration.targetDir));
+			assembly.setEntryPointClassName(compilerConfiguration.getMainClassName());
+			assembly.setTargetLocation(new File(compilerConfiguration.getTargetDir()));
 			compiler.addAssembly(assembly);
 			compiler.setGenerateLineNumbers(false);
 			compiler.setCompression(false);
@@ -260,7 +260,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		//		System.out.println((char) 27 + "[01;31m;This text is red." + (char) 27 + "[00;00m");
 		//		System.out.println((char) 27 + "[01;32m;This text is green." + (char) 27 + "[00;00m");
 
-		fileManager= new FileManager(classpath, classpathFilter);
+		fileManager= new FileManager(classpath, classpathFilter, compilerConfiguration.getExtraClasspath());
 		//	Project.singleton= null; //TODO revisar esto, impide cacheo!!
 		Project project= Project.createSingleton(getCacheFile());
 		assembly.setProject(project);
