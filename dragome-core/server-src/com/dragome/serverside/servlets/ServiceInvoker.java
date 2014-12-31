@@ -33,8 +33,6 @@ public class ServiceInvoker
 		{
 			public void run()
 			{
-				ServiceLocator.getInstance().getDomHandler().initDocument(); //TODO revisar!!
-
 				SerializationService serializationService= ServiceLocator.getInstance().getSerializationService();
 
 				Object result= ((ServiceInvocation) serializationService.deserialize(parameter)).invoke();
