@@ -140,7 +140,7 @@ public class ServerToClientServiceInvoker
 		message.append("\"" + callerReferenceHolder.getId() + "\"" + ",");
 		message.append("\"" + escapeChars(callerReferenceHolder.getValue()) + "\"" + ",");
 		message.append("" + callerReferenceHolder.getBooleanValue() + "" + ",");
-		message.append(transformType(callerReferenceHolder.getType() != null ? callerReferenceHolder.getType().getName() : "java.lang.Object"));
+		message.append(transformType(callerReferenceHolder.getType() != null && !callerReferenceHolder.getType().getName().contains("com.sun.proxy.$Proxy") ? callerReferenceHolder.getType().getName() : "java.lang.Object"));
 		message.append(")");
 	}
 
