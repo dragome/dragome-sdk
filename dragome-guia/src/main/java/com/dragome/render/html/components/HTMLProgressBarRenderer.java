@@ -26,7 +26,7 @@ import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.services.ServiceLocator;
 
-public class HTMLProgressBarRenderer implements ComponentRenderer<Element, VisualProgressBar>
+public class HTMLProgressBarRenderer extends AbstractHTMLComponentRenderer<VisualProgressBar> implements ComponentRenderer<Element, VisualProgressBar>
 {
 	public Canvas<Element> render(final VisualProgressBar progressBar)
 	{
@@ -60,7 +60,7 @@ public class HTMLProgressBarRenderer implements ComponentRenderer<Element, Visua
 
 	private void updatePercentage(final Element perDiv, final Element statDiv, VisualProgressBar progressBar)
 	{
-		perDiv.setAttribute("innerHTML", progressBar.getPercentage() + "%");
+		setElementInnerHTML(perDiv, progressBar.getPercentage() + "%");
 		statDiv.setAttribute("style", "width:" + progressBar.getPercentage() + "%;");
 	}
 }

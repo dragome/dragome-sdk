@@ -138,8 +138,9 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					String option= "<option value=\"" + rendered + "\" " + selected + ">" + rendered + "</option>\n";
 					options+= option;
 				}
-				selectElement.setAttribute(HTMLTemplateRenderer.INNER_HTML, options);
-
+				
+				setElementInnerHTML(selectElement, options);
+				
 				addListeners(visualList, selectElement);
 			}
 		});

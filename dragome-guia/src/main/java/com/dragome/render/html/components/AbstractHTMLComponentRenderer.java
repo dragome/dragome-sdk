@@ -23,6 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.KeyboardEvent;
 
+import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.dispatcher.EventDispatcherImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.listeners.BlurListener;
@@ -59,6 +60,13 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 
 	public AbstractHTMLComponentRenderer()
 	{
+	}
+	
+	public static void setElementInnerHTML(Element label1, String aText)
+	{
+		ScriptHelper.put("element", label1, null);
+		ScriptHelper.put("value", aText, null);
+		ScriptHelper.eval("element.node.innerHTML= value", null);
 	}
 
 	public void addListeners(final VisualComponent visualComponent, final Element element)

@@ -18,6 +18,7 @@ package com.dragome.render.html;
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.render.html.components.AbstractHTMLComponentRenderer;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateHandlingStrategy;
@@ -62,7 +63,7 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 		element.appendChild(childElement);
 
 		getContainerElement().getParentNode().appendChild(element);
-		childElement.setAttribute("innerHTML", templateContent);
+		AbstractHTMLComponentRenderer.setElementInnerHTML(childElement, templateContent);
 
 		String aTemplateName= "loaded-template-" + templateNumber++;
 		childElement.setAttribute("data-template", aTemplateName);
@@ -80,7 +81,7 @@ public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
 
 	public void setupContainer()
 	{
-		getContainerElement().setAttribute("innerHTML", templateContent);
+		AbstractHTMLComponentRenderer.setElementInnerHTML(getContainerElement(), templateContent);
 	}
 
 	public void showContainer()

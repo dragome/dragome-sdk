@@ -21,6 +21,7 @@ import java.util.List;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dragome.html.dom.RegExp;
@@ -67,30 +68,42 @@ public class HTMLTemplateFactory
 
 		for (int i= 0; i < childs.getLength(); i++)
 		{
-			Element child= (Element) childs.item(i);
-			boolean isTemplate= new RegExp(aNameRegexp).test(child.getAttribute(DATA_TEMPLATE));
+			Node node= (Node) childs.item(i);
 
-			NamedNodeMap attributes= child.getAttributes();
-			for (int j= 0; j < attributes.getLength(); j++)
+			if (node instanceof Element)
 			{
-				Attr item= (Attr) attributes.item(j);
-				if (item.getName().startsWith("data-attribute-template-"))
+				Element child= (Element) node;
+
+				String attribute= child.getAttribute(DATA_TEMPLATE);
+
+				boolean isTemplate= attribute != null && new RegExp(aNameRegexp).test(attribute);
+
+				NamedNodeMap attributes= child.getAttributes();
+				for (int j= 0; j < attributes.getLength(); j++)
 				{
-					String value= item.getValue().substring(item.getValue().indexOf("${template:") + 11, item.getValue().indexOf("}"));
-					String name= item.getName().substring(item.getName().indexOf("data-attribute-template-") + 24);
-					child.setAttribute(DATA_TEMPLATE, value);
-					child.setAttribute("data-attribute-name", name);
+					Node item2= attributes.item(j);
+					if (item2 instanceof Attr)
+					{
+						Attr item= (Attr) item2;
+						if (item.getName().startsWith("data-attribute-template-"))
+						{
+							String value= item.getValue().substring(item.getValue().indexOf("${template:") + 11, item.getValue().indexOf("}"));
+							String name= item.getName().substring(item.getName().indexOf("data-attribute-template-") + 24);
+							child.setAttribute(DATA_TEMPLATE, value);
+							child.setAttribute("data-attribute-name", name);
 
-					isTemplate= true;
-					result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
+							isTemplate= true;
+							result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
+						}
+					}
 				}
+
+				if (isTemplate)
+					result.add(child);
+
+				if (!isTemplate || deepSearch)
+					result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
 			}
-
-			if (isTemplate)
-				result.add(child);
-
-			if (!isTemplate || deepSearch)
-				result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
 		}
 
 		return result;

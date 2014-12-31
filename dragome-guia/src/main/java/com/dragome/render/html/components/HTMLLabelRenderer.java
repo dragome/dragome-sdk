@@ -24,7 +24,6 @@ import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel<Object>>
 {
@@ -73,8 +72,9 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 					label1.setAttribute(attribute, replaceAll);
 				}
 				else if (aText != null && !aText.trim().isEmpty())
-					label1.setAttribute(HTMLTemplateRenderer.INNER_HTML, aText == null ? "null" : aText);
+					setElementInnerHTML(label1, aText == null ? "null" : aText);
 			}
+
 		});
 
 		return canvas;

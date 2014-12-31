@@ -43,14 +43,14 @@ public class HTMLTextAreaRenderer extends AbstractHTMLComponentRenderer<VisualTe
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
 					{
-						textAreaElement.setAttribute("innerHTML", (String) event.getValue());
+						setElementInnerHTML(textAreaElement, (String) event.getValue());
 					}
 				});
 
 				String value= visualTextArea.getRenderer().render(visualTextArea.getValue());
 				textAreaElement.setAttribute("onchange", "EventDispatcher.setText(this.id, this.value);stopEvent(event);");
 
-				textAreaElement.setAttribute("innerHTML", value);
+				setElementInnerHTML(textAreaElement, value);
 			}
 		});
 

@@ -25,8 +25,6 @@ import com.dragome.templates.interfaces.Template;
 
 public class HTMLTemplateRenderer
 {
-	public static final String INNER_HTML= "innerHTML";
-	public static final String OUTER_HTML= "outerHTML";
 	protected Template template;
 
 	public Template getTemplate()

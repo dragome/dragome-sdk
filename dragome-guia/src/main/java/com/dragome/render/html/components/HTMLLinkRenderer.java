@@ -22,7 +22,6 @@ import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 {
@@ -53,7 +52,7 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 				{
 					Renderer<String> renderer= visualLink.getRenderer();
 					String aText= renderer.render(visualLink.getValue());
-					label1.setAttribute(HTMLTemplateRenderer.INNER_HTML, aText == null ? "null" : aText);
+					setElementInnerHTML(label1, aText == null ? "null" : aText);
 				}
 			}
 		});
