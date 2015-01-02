@@ -41,7 +41,11 @@ public final class DefaultStyleChangedListener implements StyleChangedListener
 			String name= style.getName();
 			if (!style.isSynchronized())
 			{
-				String result= (element.getAttribute("class") + (name != null ? " " + name : "")).trim();
+				String attribute= element.getAttribute("class");
+				if (attribute == null)
+					attribute= "";
+					
+				String result= (attribute + (name != null ? " " + name : "")).trim();
 
 				style.setName(deDup(result));
 				style.setSynchronized(true);
