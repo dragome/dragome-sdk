@@ -56,7 +56,10 @@ public class BrowserDomHandler implements DomHandler
 	{
 		ScriptHelper.put("selector", selector, this);
 		Object object= ScriptHelper.eval("document.querySelectorAll(selector)[0]", this);
-		Element result= JsDelegateFactory.createFrom(object, Element.class);
+		Element result= null;
+		if (object != null)
+			result= JsDelegateFactory.createFrom(object, Element.class);
+		
 		return result;
 	}
 
