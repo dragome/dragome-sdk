@@ -21,7 +21,5 @@ import org.w3c.dom.Element;
 public interface DomHandler
 {
 	public Document getDocument();
-	public void setDocument(Document document);
 	public Element getElementBySelector(String selector);
-	public void initDocument();
 }

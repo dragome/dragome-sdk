@@ -24,32 +24,14 @@ import com.dragome.html.dom.DomHandler;
 
 public class BrowserDomHandler implements DomHandler
 {
-	protected Document document;
-
 	public BrowserDomHandler()
 	{
 	}
 
 	public Document getDocument()
 	{
-		if (document == null)
-			init();
-
-		return document;
-	}
-
-	private void init()
-	{
-		if (document == null)
-		{
-			Object documentNode= ScriptHelper.eval("document", this);
-			document= JsDelegateFactory.createFrom(documentNode, Document.class);
-		}
-	}
-
-	public void setDocument(Document document)
-	{
-		this.document= document;
+		Object documentNode= ScriptHelper.eval("document", this);
+		return JsDelegateFactory.createFrom(documentNode, Document.class);
 	}
 
 	public Element getElementBySelector(String selector)
@@ -59,12 +41,7 @@ public class BrowserDomHandler implements DomHandler
 		Element result= null;
 		if (object != null)
 			result= JsDelegateFactory.createFrom(object, Element.class);
-		
-		return result;
-	}
 
-	public void initDocument()
-	{
-		init();
+		return result;
 	}
 }
