@@ -28,6 +28,8 @@ import com.dragome.services.ServiceLocator;
 
 public final class DefaultStyleChangedListener implements StyleChangedListener
 {
+	private Element element;
+
 	public DefaultStyleChangedListener()
 	{
 	}
@@ -44,7 +46,7 @@ public final class DefaultStyleChangedListener implements StyleChangedListener
 				String attribute= element.getAttribute("class");
 				if (attribute == null)
 					attribute= "";
-					
+
 				String result= (attribute + (name != null ? " " + name : "")).trim();
 
 				style.setName(deDup(result));
@@ -90,13 +92,13 @@ public final class DefaultStyleChangedListener implements StyleChangedListener
 	public void boundsChanged(Style style)
 	{
 		String entityId= DragomeEntityManager.getEntityId(style.getVisualComponent());
-		Element element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
+		if (element == null)
+			element= ServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
+
+		String styleString= "position: relative; left: ${left}px;top: ${top}px;";
+		styleString= styleString.replace("${left}", style.getBounds().getX() + "");
+		styleString= styleString.replace("${top}", style.getBounds().getY() + "");
 		if (element != null)
-		{
-			String styleString= "position: relative; left: ${left}px;top: ${top}px;";
-			styleString= styleString.replace("${left}", style.getBounds().getX() + "");
-			styleString= styleString.replace("${top}", style.getBounds().getY() + "");
 			element.setAttribute("style", styleString);
-		}
 	}
 }
