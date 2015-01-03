@@ -10,33 +10,34 @@
  ******************************************************************************/
 package com.dragome.debugging;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.dragome.html.dom.DragomeJsException;
 
 public class CrossExecutionSemaphore
 {
-	public volatile ServiceInvocationResult result;
-	private volatile boolean resultAvailable= false;
+	private static Map<String, ServiceInvocationResult> results= new Hashtable<String, ServiceInvocationResult>();
 
 	public void pushResult(ServiceInvocationResult result)
 	{
-		this.result= result;
-		this.resultAvailable= true;
+		results.put(result.getId(), result);
 	}
 
 	public Object waitUntilResponse(String id)
 	{
-		while (!(resultAvailable && result.getId().equals(id)))
+		while (!(results.containsKey(id)))
 			;
+
+		ServiceInvocationResult result= results.remove(id);
 
 		if (result.getObjectResult() instanceof DragomeJsException)
 			throw (DragomeJsException) result.getObjectResult();
 
-		resultAvailable= false;
 		return result.obtainRealResult();
 	}
 	public void reset()
 	{
-		result= null;
-		resultAvailable= false;
+		results.clear();
 	}
 }
