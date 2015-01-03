@@ -144,7 +144,7 @@ public class ServiceLocator
 	public EventDispatcher getEventDispatcher()
 	{
 		if (isRemoteDebugging())
-			return getClientSideServiceFactory().createAsyncService(EventDispatcher.class).getService();
+			return RequestExecutorImpl.createRemoteServiceByWebSocket(EventDispatcher.class);
 		else
 			return new EventDispatcherImpl();
 	}
