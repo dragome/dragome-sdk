@@ -85,7 +85,7 @@ public class Window
 		{
 			public void run()
 			{
-				ScriptHelper.eval("window['callback_'+this.javaId].$onSuccess___java_lang_Object$void(new String())", this);
+				ScriptHelper.eval("dragomeJs['callback_'+this.javaId].$onSuccess___java_lang_Object$void(new String())", this);
 			}
 		};
 
@@ -93,7 +93,7 @@ public class Window
 		ScriptHelper.put("javaId", DragomeEntityManager.getEntityId(runnable2), null);
 		ScriptHelper.put("runnable2", runnable2, null);
 		ScriptHelper.eval("runnable2.javaId= javaId", null);
-		ScriptHelper.eval("window['callback_'+javaId]= callback", null);
+		ScriptHelper.eval("dragomeJs['callback_'+javaId]= callback", null);
 		return runnable2;
 	}
 }
