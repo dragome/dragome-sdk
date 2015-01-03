@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.dragome.annotations.PageAlias;
-import com.dragome.commons.DefaultDragomeConfigurator;
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.config.DomHandlerApplicationConfigurator;
 import com.dragome.execution.DragomeApplicationLauncher;
 import com.dragome.helpers.AnnotationsHelper;
 import com.dragome.helpers.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
@@ -84,11 +84,11 @@ public class EventDispatcherHelper
 
 	private static DragomeConfigurator getConfigurator()
 	{
-		DragomeConfigurator configurator= new DefaultDragomeConfigurator();
+		DragomeConfigurator configurator= new DomHandlerApplicationConfigurator();
 		List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(DragomeConfiguratorImplementor.class).getEntries();
 		for (AnnotationEntry annotationEntry : annotationEntries)
 		{
-			if (!annotationEntry.getType().equals(DefaultDragomeConfigurator.class))
+			if (!annotationEntry.getType().equals(DomHandlerApplicationConfigurator.class))
 				configurator= ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
 		}
 		return configurator;
@@ -130,7 +130,7 @@ public class EventDispatcherHelper
 	{
 	}
 
-	public static synchronized void runOnlySynchronized(Runnable runnable)
+	public static void runOnlySynchronized(Runnable runnable)
 	{
 		try
 		{

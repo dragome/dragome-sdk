@@ -14,9 +14,9 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
-import com.dragome.commons.DefaultDragomeConfigurator;
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
+import com.dragome.config.DomHandlerApplicationConfigurator;
 import com.dragome.services.ReflectionServiceImpl;
 
 public class ServerReflectionServiceImpl extends ReflectionServiceImpl
@@ -36,14 +36,14 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 			Reflections reflections= new Reflections("");
 			Set<Class<? extends DragomeConfigurator>> configurators= reflections.getSubTypesOf(DragomeConfigurator.class);
 			for (Class<? extends DragomeConfigurator> class1 : configurators)
-				if (!class1.equals(DefaultDragomeConfigurator.class))
+				if (!class1.equals(DomHandlerApplicationConfigurator.class))
 					foundConfigurator= class1.newInstance();
 
 			if (foundConfigurator == null)
 			{
 				Set<Class<?>> typesAnnotatedWith= reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
 				if (typesAnnotatedWith.isEmpty())
-					foundConfigurator= new DefaultDragomeConfigurator();
+					foundConfigurator= new DomHandlerApplicationConfigurator();
 				else
 					foundConfigurator= (DragomeConfigurator) typesAnnotatedWith.iterator().next().newInstance();
 			}
