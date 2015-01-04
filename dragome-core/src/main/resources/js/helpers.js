@@ -114,7 +114,7 @@ performance.now = (function()
 	};
 })();
 
-function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain)
+function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
 {
 	if (crossDomain != "true")
 	{
@@ -144,9 +144,10 @@ function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain)
 
 		$.ajaxSetup(ajaxParameters);
 
-		var post = $.post(url, parameters);
-		return post.responseText;
-	} else
+		var result = isGet ? $.get(url, parameters) : $.post(url, parameters);
+		return result.responseText;
+	} 
+	else
 	{
 		fileParameter = parameters.file ? "file=" + parameters.file + "&" : "";
 		var a = $.getJSON(url + '?' + fileParameter + 'callback=?', function(data)

@@ -12,7 +12,7 @@ package com.dragome.debugging.messages;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.debugging.RemoteScriptHelper;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.ServiceLocator;
 
 public final class ChannelReceiverImpl implements Receiver

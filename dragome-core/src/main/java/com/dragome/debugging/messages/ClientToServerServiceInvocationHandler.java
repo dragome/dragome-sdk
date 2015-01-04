@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.dragome.debugging.CrossExecutionResult;
 import com.dragome.debugging.CrossExecutionResultImpl;
 import com.dragome.debugging.ServiceInvocationResult;
-import com.dragome.remote.ApplicationExecutor;
+import com.dragome.debugging.interfaces.CrossExecutionResult;
+import com.dragome.execution.ApplicationExecutor;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 

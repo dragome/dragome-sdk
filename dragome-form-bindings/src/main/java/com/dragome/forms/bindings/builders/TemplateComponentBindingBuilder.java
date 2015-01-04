@@ -1,37 +1,42 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
- *  This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dragome.forms.bindings.builders;
 
 import java.util.List;
 
 import com.dragome.forms.bindings.client.form.binding.FormBinder;
 import com.dragome.forms.bindings.client.value.ValueSource;
-import com.dragome.model.VisualButtonImpl;
-import com.dragome.model.VisualCheckboxImpl;
-import com.dragome.model.VisualImageImpl;
-import com.dragome.model.VisualLabelImpl;
-import com.dragome.model.VisualLinkImpl;
-import com.dragome.model.VisualPanelImpl;
-import com.dragome.model.VisualRadioButton;
-import com.dragome.model.VisualRadioButtonImpl;
-import com.dragome.model.VisualTextFieldImpl;
+import com.dragome.guia.components.VisualButtonImpl;
+import com.dragome.guia.components.VisualCheckboxImpl;
+import com.dragome.guia.components.VisualImageImpl;
+import com.dragome.guia.components.VisualLabelImpl;
+import com.dragome.guia.components.VisualLinkImpl;
+import com.dragome.guia.components.VisualPanelImpl;
+import com.dragome.guia.components.VisualRadioButton;
+import com.dragome.guia.components.VisualRadioButtonImpl;
+import com.dragome.guia.components.VisualTextFieldImpl;
+import com.dragome.guia.components.interfaces.VisualButton;
+import com.dragome.guia.components.interfaces.VisualCheckbox;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualImage;
+import com.dragome.guia.components.interfaces.VisualLabel;
+import com.dragome.guia.components.interfaces.VisualLink;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.model.interfaces.HasValue;
-import com.dragome.model.interfaces.VisualButton;
-import com.dragome.model.interfaces.VisualCheckbox;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualImage;
-import com.dragome.model.interfaces.VisualLabel;
-import com.dragome.model.interfaces.VisualLink;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.interfaces.VisualTextField;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;

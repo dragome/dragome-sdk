@@ -46,13 +46,15 @@ import com.dragome.compiler.DragomeJsCompiler;
 
 public class FileManager
 {
-
 	private List<Object> path= new ArrayList<Object>();
 	private FileFilter classpathFilter;
 
-	public FileManager(List<File> classPath, FileFilter classpathFilter)
+	public FileManager(List<File> classPath, FileFilter classpathFilter, List<File> extraClasspath)
 	{
 		this.classpathFilter= classpathFilter;
+		
+		classPath.addAll(extraClasspath);
+		
 		Log.getLogger().debug("Resolving class path " + classPath);
 
 		for (File file : classPath)

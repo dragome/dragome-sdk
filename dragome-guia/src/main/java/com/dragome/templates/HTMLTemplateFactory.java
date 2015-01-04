@@ -1,13 +1,18 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
- *  This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dragome.templates;
 
 import java.util.ArrayList;
@@ -16,6 +21,7 @@ import java.util.List;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dragome.html.dom.RegExp;
@@ -62,30 +68,42 @@ public class HTMLTemplateFactory
 
 		for (int i= 0; i < childs.getLength(); i++)
 		{
-			Element child= (Element) childs.item(i);
-			boolean isTemplate= new RegExp(aNameRegexp).test(child.getAttribute(DATA_TEMPLATE));
+			Node node= (Node) childs.item(i);
 
-			NamedNodeMap attributes= child.getAttributes();
-			for (int j= 0; j < attributes.getLength(); j++)
+			if (node instanceof Element)
 			{
-				Attr item= (Attr) attributes.item(j);
-				if (item.getName().startsWith("data-attribute-template-"))
+				Element child= (Element) node;
+
+				String attribute= child.getAttribute(DATA_TEMPLATE);
+
+				boolean isTemplate= attribute != null && new RegExp(aNameRegexp).test(attribute);
+
+				NamedNodeMap attributes= child.getAttributes();
+				for (int j= 0; j < attributes.getLength(); j++)
 				{
-					String value= item.getValue().substring(item.getValue().indexOf("${template:") + 11, item.getValue().indexOf("}"));
-					String name= item.getName().substring(item.getName().indexOf("data-attribute-template-") + 24);
-					child.setAttribute(DATA_TEMPLATE, value);
-					child.setAttribute("data-attribute-name", name);
+					Node item2= attributes.item(j);
+					if (item2 instanceof Attr)
+					{
+						Attr item= (Attr) item2;
+						if (item.getName().startsWith("data-attribute-template-"))
+						{
+							String value= item.getValue().substring(item.getValue().indexOf("${template:") + 11, item.getValue().indexOf("}"));
+							String name= item.getName().substring(item.getName().indexOf("data-attribute-template-") + 24);
+							child.setAttribute(DATA_TEMPLATE, value);
+							child.setAttribute("data-attribute-name", name);
 
-					isTemplate= true;
-					result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
+							isTemplate= true;
+							result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
+						}
+					}
 				}
+
+				if (isTemplate)
+					result.add(child);
+
+				if (!isTemplate || deepSearch)
+					result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
 			}
-
-			if (isTemplate)
-				result.add(child);
-
-			if (!isTemplate || deepSearch)
-				result.addAll(getTemplateElements(child, aNameRegexp, deepSearch));
 		}
 
 		return result;
