@@ -384,4 +384,9 @@ public class LinkedList<E> extends ArrayList<E> implements List<E>, Queue<E>, Se
 		}
 		return false;
 	}
+	
+	public boolean isEmpty()
+	{
+		return size == 0;
+	}
 }

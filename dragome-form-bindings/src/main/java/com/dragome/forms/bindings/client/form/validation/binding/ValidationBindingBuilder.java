@@ -18,11 +18,11 @@ package com.dragome.forms.bindings.client.form.validation.binding;
 
 import com.dragome.forms.bindings.client.form.validation.HasValidationResult;
 import com.dragome.forms.bindings.client.style.VisualComponentUIObjectWrapper;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.model.interfaces.UIObject;
 import com.dragome.model.interfaces.ValidationDisplay;
 import com.dragome.model.interfaces.ValidationStyles;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualLabel;
 import com.dragome.model.pectin.ValidationDisplayAdapter;
 
 /**

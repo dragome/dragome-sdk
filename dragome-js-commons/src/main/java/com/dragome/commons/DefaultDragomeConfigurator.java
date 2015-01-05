@@ -1,15 +1,24 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
- *  This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dragome.commons;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
@@ -18,8 +27,8 @@ import com.dragome.commons.compiler.annotations.CompilerType;
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
-	protected String dragomeVersion="0.95.2-beta1";
 	private CompilerType defaultCompilerType= CompilerType.Standard;
+	private FileFilter classpathFilter;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -64,12 +73,12 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	public boolean filterClassPath(String classpathEntry)
 	{
 		boolean include= false || //
-		        classpathEntry.contains("dragome-js-jre-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-js-commons-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-core-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-guia-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-form-bindings-"+dragomeVersion+".jar") || //
-		        classpathEntry.contains("dragome-method-logger-"+dragomeVersion+".jar") //
+				classpathEntry.contains("dragome-js-jre-") || //
+				classpathEntry.contains("dragome-js-commons-") || //
+				classpathEntry.contains("dragome-core-") || //
+				classpathEntry.contains("dragome-guia-") || //
+				classpathEntry.contains("dragome-form-bindings-") || //
+				classpathEntry.contains("dragome-method-logger-") //
 		;
 
 		return include;
@@ -77,11 +86,31 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 
 	public CompilerType getDefaultCompilerType()
 	{
-	    return defaultCompilerType;
+		return defaultCompilerType;
 	}
 
 	public void setDefaultCompilerType(CompilerType defaultCompilerType)
 	{
-	    this.defaultCompilerType = defaultCompilerType;
+		this.defaultCompilerType= defaultCompilerType;
+	}
+
+	public FileFilter getClasspathFilter()
+	{
+		return classpathFilter;
+	}
+
+	public void setClasspathFilter(FileFilter classpathFilter)
+	{
+		this.classpathFilter= classpathFilter;
+	}
+
+	public boolean isCheckingCast()
+	{
+		return true;
+	}
+
+	public List<File> getExtraClasspath(String classpath)
+	{
+		return new ArrayList<File>();
 	}
 }

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.dragome.debugging;
 
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.helpers.DragomeEntityManager;
 
 public class ReferenceHolder
 {

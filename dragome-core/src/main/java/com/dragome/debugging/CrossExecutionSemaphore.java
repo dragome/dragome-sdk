@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.dragome.debugging;
 
-import com.dragome.debugging.execution.DragomeJsException;
+import com.dragome.html.dom.DragomeJsException;
 
 public class CrossExecutionSemaphore
 {

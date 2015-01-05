@@ -1,35 +1,39 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
- *  This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- ******************************************************************************/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dragome.helpers;
 
 import java.util.List;
 
 import com.dragome.annotations.PageAlias;
-import com.dragome.debugging.execution.DragomeVisualActivity;
-import com.dragome.debugging.execution.VisualActivity;
-import com.dragome.model.RequestUrlActivityMapper;
-import com.dragome.model.VisualLabelImpl;
-import com.dragome.model.VisualLinkImpl;
-import com.dragome.model.VisualPanelImpl;
-import com.dragome.model.interfaces.VisualComponent;
-import com.dragome.model.interfaces.VisualLink;
-import com.dragome.model.interfaces.VisualPanel;
-import com.dragome.model.listeners.ClickListener;
+import com.dragome.guia.GuiaVisualActivity;
+import com.dragome.guia.components.VisualLabelImpl;
+import com.dragome.guia.components.VisualLinkImpl;
+import com.dragome.guia.components.VisualPanelImpl;
+import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualLink;
+import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.listeners.ClickListener;
 import com.dragome.render.ItemProcessorImpl;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateRepeater;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.view.VisualActivity;
 
 @PageAlias(alias= "discoverer")
-public class DiscovererPage extends DragomeVisualActivity
+public class DiscovererPage extends GuiaVisualActivity
 {
 	public void build()
 	{

@@ -12,14 +12,15 @@ package com.dragome.helpers.serverside;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.List;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
-import com.dragome.debugging.execution.VisualActivity;
 import com.dragome.services.ServiceLocator;
+import com.dragome.view.VisualActivity;
 
 public class DragomeCompilerLauncher
 {
@@ -29,17 +30,16 @@ public class DragomeCompilerLauncher
 		String mainClassName= VisualActivity.class.getName();
 		CompilerType defaultCompilerType= configurator.getDefaultCompilerType();
 		BytecodeTransformer bytecodeTransformer= configurator.getBytecodeTransformer();
-		FileFilter classpathFilter= new FileFilter()
-		{
-			public boolean accept(File pathname)
-			{
-				return !pathname.toString().contains(File.separator + "serverside");
-			}
-		};
-		
+
+		FileFilter classpathFilter= configurator.getClasspathFilter();
+		if (classpathFilter == null)
+			classpathFilter= new DefaultClasspathFilter();
+
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= ServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
-		
-		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter);
+
+		List<File> extraClasspath= configurator.getExtraClasspath(classPath);
+
+		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter, configurator.isCheckingCast(), extraClasspath);
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
 		bytecodeToJavascriptCompiler.compile();
 	}

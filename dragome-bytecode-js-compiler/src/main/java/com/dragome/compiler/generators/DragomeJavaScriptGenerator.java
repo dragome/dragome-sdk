@@ -75,7 +75,6 @@ import com.dragome.compiler.parser.Pass1;
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.units.ClassUnit;
 import com.dragome.compiler.units.FieldUnit;
-import com.dragome.compiler.units.MemberUnit;
 import com.dragome.compiler.units.ProcedureUnit;
 import com.dragome.compiler.utils.Log;
 import com.dragome.compiler.utils.Utils;
@@ -346,7 +345,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		while (iterator.hasNext())
 		{
 			VariableDeclaration decl= iterator.next();
-			
+
 			if (hasToEscapeVariable(decl.getName()))
 				print("_");
 			decl.visit(this);
@@ -835,12 +834,14 @@ public class DragomeJavaScriptGenerator extends Generator
 		String name= methodBinding.getName();
 		List args= invocation.getArguments();
 		String firstArg;
+		boolean isVariable= false;
 		if (!(args.get(0) instanceof StringLiteral))
 		{
 			if (args.get(0) instanceof VariableBinding)
 			{
 				VariableBinding variableBinding= (VariableBinding) args.get(0);
 				firstArg= variableBinding.getName();
+				isVariable= true;
 			}
 			else
 				throw new RuntimeException("First argument to " + methodBinding + " must be a string literal");
@@ -850,16 +851,29 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if (name.equals("put"))
 		{
-			if (firstArg.indexOf('.') == -1)
+			if (isVariable)
 			{
-				print("var ");
+				print("eval(\"var \"+");
+				print(firstArg + "+\"=");
+				((ASTNode) args.get(1)).visit(this);
+				print("\")");
 			}
-			print(firstArg + "=");
-			((ASTNode) args.get(1)).visit(this);
+			else
+			{
+				if (firstArg.indexOf('.') == -1)
+				{
+					print("var ");
+				}
+				print(firstArg + "=");
+				((ASTNode) args.get(1)).visit(this);
+			}
 		}
 		else if (name.startsWith("eval"))
 		{
-			print(firstArg);
+			if (isVariable)
+				print("eval(" + firstArg + ")");
+			else
+				print(firstArg);
 		}
 		else
 			throw new IllegalArgumentException("Cannot handle method " + name);
@@ -1209,7 +1223,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (reference.getVariableDeclaration().getLocation() == VariableDeclaration.LOCAL_PARAMETER)
 			if (hasToEscapeVariable(reference.getName()))
 				print("_");
-		
+
 		print(escapeVariable(reference.getName()));
 	}
 
@@ -1286,10 +1300,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(CastExpression cast)
 	{
-		if (cast.getTypeBinding() != Type.VOID)
-		{ // &&
-		  // dragomeJsCompiler.compiler.isCheckCast())
-		  // {
+		if (cast.getTypeBinding() != Type.VOID && DragomeJsCompiler.compiler.compilerConfiguration.isCheckingCast())
+		{
 			print("dragomeJs.checkCast(");
 			cast.getExpression().visit(this);
 			String string= cast.getTypeBinding().toString();

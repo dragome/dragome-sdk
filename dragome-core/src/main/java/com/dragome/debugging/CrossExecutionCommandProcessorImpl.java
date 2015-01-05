@@ -16,7 +16,10 @@ import java.util.Map.Entry;
 
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.remote.entities.DragomeEntityManager;
+import com.dragome.debugging.interfaces.CrossExecutionCommand;
+import com.dragome.debugging.interfaces.CrossExecutionCommandProcessor;
+import com.dragome.debugging.interfaces.CrossExecutionResult;
+import com.dragome.helpers.DragomeEntityManager;
 
 public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommandProcessor
 {
