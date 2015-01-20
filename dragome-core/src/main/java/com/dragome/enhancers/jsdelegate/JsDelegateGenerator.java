@@ -15,14 +15,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtMethod;
-import javassist.CtNewConstructor;
-import javassist.CtNewMethod;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.bytecode.AccessFlag;
 import javassist.bytecode.Descriptor;
 
@@ -90,6 +83,9 @@ public class JsDelegateGenerator
 			CtClass resolveCtClass= resolveCtClass(interface1);
 			cc.addInterface(resolveCtClass);
 			Class<?> scriptHelperClass= ScriptHelper.class;
+
+            pool.insertClassPath(new ClassClassPath(Object.class));
+            pool.insertClassPath(new ClassClassPath(scriptHelperClass));
 
 			StringBuilder constructorBody= new StringBuilder();
 			constructorBody.append(scriptHelperClass.getName() + ".put(\"$1\", $1, this);");
