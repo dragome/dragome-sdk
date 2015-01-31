@@ -5,10 +5,17 @@
   <groupId>com.dragome</groupId>
   <artifactId>dragome-sdk</artifactId>
   <packaging>pom</packaging>
-  <version>0.95.2-beta1</version>
+  <version>${dragome.version}</version>
   <name>Dragome SDK</name>
   <description>Dragome SDK is a tool for creating dynamic web application in pure Java</description>
   <url>http://www.dragome.com</url>
+
+  <properties>
+    <dragome.version>0.95.5-beta1</dragome.version>
+    <skip.gpg>true</skip.gpg>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 
   <licenses>
     <license>
@@ -44,12 +51,6 @@
     <module>dragome-maven-plugins</module>
   </modules>
 
-  <properties>
-    <skip.gpg>true</skip.gpg>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
-  
   <repositories>
     <repository>
       <id>dragome</id>
@@ -95,42 +96,42 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-bytecode-js-compiler</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-jre</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-callback-evictor</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-form-bindings</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-core</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-method-logger</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-guia</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
   </dependencies>
 

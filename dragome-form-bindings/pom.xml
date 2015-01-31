@@ -2,11 +2,18 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-form-bindings</artifactId>
-  <version>0.95.2-beta1</version>
+  <version>${dragome.version}</version>
   <name>dragome-form-bindings</name>
 
   <description>Dragome SDK module: form bindings</description>
   <url>http://www.dragome.com</url>
+
+  <properties>
+    <dragome.version>0.95.5-beta1</dragome.version>
+    <skip.gpg>true</skip.gpg>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 
   <licenses>
     <license>
@@ -28,32 +35,26 @@
     <connection>scm:git:git@github.com:dragome/dragome-sdk.git</connection>
     <developerConnection>scm:git:git@github.com:dragome/dragome-sdk.git</developerConnection>
     <url>git@github.com:dragome/dragome-sdk.git</url>
-  </scm>  
-  
-  <properties>
-    <skip.gpg>true</skip.gpg>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
-  
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-core</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-method-logger</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-guia</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
   </dependencies>
-  
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
@@ -75,7 +76,7 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -96,7 +97,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -114,7 +115,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -131,18 +132,18 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-	<version>2.5</version>
-	<configuration>
-	    <charset>UTF-8</charset>
-	    <docencoding>UTF-8</docencoding>
-	    <docfilessubdirs>true</docfilessubdirs>
-	    <links>
-		<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-	    </links>
-	    <show>protected</show>
-	    <source>1.5</source>
-	    <sourcepath>${basedir}/src/main/java/com/dragome/forms/bindings/builders</sourcepath>
-	</configuration>
+        <version>2.5</version>
+        <configuration>
+          <charset>UTF-8</charset>
+          <docencoding>UTF-8</docencoding>
+          <docfilessubdirs>true</docfilessubdirs>
+          <links>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+          </links>
+          <show>protected</show>
+          <source>1.5</source>
+          <sourcepath>${basedir}/src/main/java/com/dragome/forms/bindings/builders</sourcepath>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -153,7 +154,7 @@
         </executions>
       </plugin>
 
-      
+
     </plugins>
   </build>
 </project>

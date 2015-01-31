@@ -3,10 +3,17 @@
   <name>dragome-js-jre</name>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-js-jre</artifactId>
-  <version>0.95.2-beta1</version>
+  <version>${dragome.version}</version>
 
   <description>Dragome SDK module: js-jre</description>
   <url>http://www.dragome.com</url>
+
+  <properties>
+    <dragome.version>0.95.5-beta1</dragome.version>
+    <skip.gpg>true</skip.gpg>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 
   <licenses>
     <license>
@@ -29,12 +36,6 @@
     <developerConnection>scm:git:git@github.com:dragome/dragome-sdk.git</developerConnection>
     <url>git@github.com:dragome/dragome-sdk.git</url>
   </scm>
-
-  <properties>
-    <skip.gpg>true</skip.gpg>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
 
   <distributionManagement>
     <snapshotRepository>
@@ -120,7 +121,7 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
   </dependencies>
 </project>

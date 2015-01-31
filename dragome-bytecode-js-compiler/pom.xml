@@ -3,10 +3,17 @@
   <name>dragome-bytecode-js-compiler</name>
   <groupId>com.dragome</groupId>
   <artifactId>dragome-bytecode-js-compiler</artifactId>
-  <version>0.95.2-beta1</version>
-  
+  <version>${dragome.version}</version>
+
   <description>Dragome SDK module: bytecode to javascript compiler</description>
   <url>http://www.dragome.com</url>
+
+  <properties>
+    <dragome.version>0.95.5-beta1</dragome.version>
+    <skip.gpg>true</skip.gpg>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 
   <licenses>
     <license>
@@ -28,13 +35,7 @@
     <connection>scm:git:git@github.com:dragome/dragome-sdk.git</connection>
     <developerConnection>scm:git:git@github.com:dragome/dragome-sdk.git</developerConnection>
     <url>git@github.com:dragome/dragome-sdk.git</url>
-  </scm>  
-
-  <properties>
-    <skip.gpg>true</skip.gpg>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
+  </scm>
 
   <repositories>
     <repository>
@@ -43,7 +44,7 @@
       <url>https://raw.github.com/dragome/dragome/master/maven</url>
     </repository>
   </repositories>
-  
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
@@ -94,7 +95,7 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
-      <version>0.95.2-beta1</version>
+      <version>${dragome.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -181,22 +182,22 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-	<version>2.5</version>
-	<configuration>
-	    <charset>UTF-8</charset>
-	    <docencoding>UTF-8</docencoding>
-	    <docfilessubdirs>true</docfilessubdirs>
-	    <links>
-		<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-	    </links>
-	    <show>protected</show>
-	    <source>1.5</source>
-	    <sourcepath>${basedir}/src/main/java/com/dragome/compiler/annotations</sourcepath>
-	</configuration>
+        <version>2.5</version>
+        <configuration>
+          <charset>UTF-8</charset>
+          <docencoding>UTF-8</docencoding>
+          <docfilessubdirs>true</docfilessubdirs>
+          <links>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+          </links>
+          <show>protected</show>
+          <source>1.5</source>
+          <sourcepath>${basedir}/src/main/java/com/dragome/compiler/annotations</sourcepath>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
