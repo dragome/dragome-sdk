@@ -18,8 +18,4 @@ package com.dragome.templates.interfaces;
 public interface Content<T>
 {
 	public T getValue();
-
-	boolean isInAttribute();
-
-	void setInAttribute(boolean inAttribute);
 }

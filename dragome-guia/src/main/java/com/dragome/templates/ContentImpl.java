@@ -20,17 +20,6 @@ import com.dragome.templates.interfaces.Content;
 public class ContentImpl<T> implements Content<T>
 {
 	private T value;
-	private boolean inAttribute;
-
-	public boolean isInAttribute()
-	{
-		return inAttribute;
-	}
-
-	public void setInAttribute(boolean inAttribute)
-	{
-		this.inAttribute= inAttribute;
-	}
 
 	public ContentImpl()
 	{
@@ -39,13 +28,6 @@ public class ContentImpl<T> implements Content<T>
 	public ContentImpl(T value)
 	{
 		this.value= value;
-	}
-
-	public ContentImpl(T value, boolean isAttribute)
-	{
-		this.value= value;
-		this.inAttribute= isAttribute;
-
 	}
 
 	public T getValue()
