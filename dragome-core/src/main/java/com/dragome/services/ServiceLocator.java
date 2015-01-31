@@ -44,7 +44,7 @@ import com.dragome.services.serverside.ServerReflectionServiceImpl;
 public class ServiceLocator
 {
 	protected static ServiceLocator instance;
- 
+
 	public static ServiceLocator getInstance()
 	{
 		if (instance == null)
@@ -63,6 +63,7 @@ public class ServiceLocator
 	protected MetadataManager metadataManager;
 	protected ExecutorService fixedThreadPool;
 	protected DragomeConfigurator configurator;
+	protected boolean localExecution= false;
 
 	public boolean isClientSideEnabled()
 	{
@@ -120,9 +121,11 @@ public class ServiceLocator
 
 	public ServiceFactory getServiceFactory()
 	{
-		return getClientSideServiceFactory();
+		if (localExecution)
+			return new LocalServiceFactory();
+		else
+			return getClientSideServiceFactory();
 	}
-
 	public ServiceFactory getClientSideServiceFactory()
 	{
 		return new ClientSideServiceFactory();
@@ -230,5 +233,15 @@ public class ServiceLocator
 		ReflectionService reflectionService= getReflectionService();
 		Class<BytecodeToJavascriptCompiler> clazz= (Class<BytecodeToJavascriptCompiler>) reflectionService.getSubTypesOf(BytecodeToJavascriptCompiler.class).iterator().next();
 		return reflectionService.createClassInstance(clazz);
+	}
+
+	public boolean isLocalExecution()
+	{
+		return localExecution;
+	}
+
+	public void setLocalExecution(boolean localExecution)
+	{
+		this.localExecution= localExecution;
 	}
 }
