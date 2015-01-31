@@ -1718,7 +1718,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:add-int-lit*
       ================  -->
-<xsl:template match="dex:add-int-lit8|add-int-lit16">
+<xsl:template match="dex:add-int-lit8|dex:add-int-lit16">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vx" />
@@ -2249,7 +2249,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:iget*
       ===============  -->
-<xsl:template match="dex:iget|dex:iget-wide|dex:iget-object|dex:iget-boolean|dex:iget-byte|dex:iget-char">
+<xsl:template match="dex:iget|dex:iget-wide|dex:iget-object|dex:iget-boolean|dex:iget-byte|dex:iget-char|dex:iget-short">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vx" />
@@ -2263,7 +2263,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:iput*
       ================  -->
-<xsl:template match="dex:iput|dex:iput-wide|dex:iput-object|dex:iput-boolean|dex:iput-byte|dex:iput-char">
+<xsl:template match="dex:iput|dex:iput-wide|dex:iput-object|dex:iput-boolean|dex:iput-byte|dex:iput-char|dex:iput-short">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vy" />
@@ -2796,6 +2796,30 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vx"/>
   <xsl:text>);</xsl:text>
 </xsl:template>
+
+<!--  arreglar esto!! -->
+<xsl:template match="dex:shr-int-lit8|dex:shr-int-lit16">
+  <xsl:text>
+           __r</xsl:text>
+  <xsl:value-of select="@vx"/>
+  <xsl:text> = __r</xsl:text>
+  <xsl:value-of select="@vy"/>
+  <xsl:text> &gt;&gt; </xsl:text>
+  <xsl:value-of select="@value"/>
+  <xsl:text>;</xsl:text>
+</xsl:template>
+
+<xsl:template match="dex:ushr-int-lit8|dex:ushr-int-lit16">
+  <xsl:text>
+           __r</xsl:text>
+  <xsl:value-of select="@vx"/>
+  <xsl:text> = __r</xsl:text>
+  <xsl:value-of select="@vy"/>
+  <xsl:text> &gt;&gt;&gt; </xsl:text>
+  <xsl:value-of select="@value"/>
+  <xsl:text>;</xsl:text>
+</xsl:template>
+
 
 
 <!--  isObjectRef
