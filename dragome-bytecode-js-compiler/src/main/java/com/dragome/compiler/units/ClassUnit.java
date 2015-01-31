@@ -374,25 +374,7 @@ public class ClassUnit extends Unit
 		writer.write("statics:\n");
 		writer.write("{\n");
 
-		if (clinitMethod != null)
-		{
-			String name= DragomeJavaScriptGenerator.normalizeExpression(clinitMethod.getDeclaringClass().getName());
-			String replace= clinitMethod.getData().replace("this.", name + ".");
-			replace= replace.replace("{", "{ this.$$clinit_=function(){return this};");
-			replace= replace.substring(0, replace.length() - 2) + "\n return this;\n}";
-
-			String memberData= clinitMethod.getData();
-			clinitMethod.setData(replace.replace(STATIC_MEMBER, ""));
-			clinitMethod.write(depth, writer);
-			clinitMethod.setData(memberData);
-			String modifyMethodName= DragomeJavaScriptGenerator.normalizeExpression(clinitMethod.getSignature());
-			project.getClinits().add("initClass(" + name + ");");
-		}
-		else
-		{
-			String replace= "$$clinit_: function(){return this}";
-			writer.write(replace);
-		}
+		writeClinit(depth, writer, clinitMethod, staticMethods);
 
 		boolean hasStaticMembers= staticMethods.size() > 0;
 		if (hasStaticMembers)
@@ -427,9 +409,9 @@ public class ClassUnit extends Unit
 			}
 		}
 
-		first= addSuperStaticMethods(writer, !hasStaticMembers ^ first);
+		first= addSuperStaticMethods(writer, !hasStaticMembers ^ first, staticMethods);
 
-//		addAnnotationsAsStaticMember(writer, first);
+		//		addAnnotationsAsStaticMember(writer, first);
 
 		writer.write("\n}\n");
 
@@ -437,6 +419,68 @@ public class ClassUnit extends Unit
 		writer.write(");\n");
 
 		return writer.toString();
+	}
+
+	private void writeClinit(int depth, Writer writer, MemberUnit clinitMethod, List<MemberUnit> staticMethods) throws IOException
+	{
+		String superStaticFields= createSuperStaticFieldsReferences(depth, clinitMethod, staticMethods);
+
+		if (clinitMethod != null)
+		{
+			String name= DragomeJavaScriptGenerator.normalizeExpression(clinitMethod.getDeclaringClass().getName());
+			String replace= clinitMethod.getData().replace("this.", name + ".");
+			replace= replace.replace("{", "{ this.$$clinit_=function(){return this};\n" + superStaticFields);
+			replace= replace.substring(0, replace.length() - 2) + "\n return this;\n}";
+
+			String memberData= clinitMethod.getData();
+			clinitMethod.setData(replace.replace(STATIC_MEMBER, ""));
+			clinitMethod.write(depth, writer);
+			clinitMethod.setData(memberData);
+			String modifyMethodName= DragomeJavaScriptGenerator.normalizeExpression(clinitMethod.getSignature());
+			project.getClinits().add("initClass(" + name + ");");
+		}
+		else
+		{
+			String replace= "$$clinit_: function(){this.$$clinit_=function(){return this};\n" + superStaticFields + " return this;}";
+			writer.write(replace);
+		}
+	}
+
+	private String createSuperStaticFieldsReferences(int depth, MemberUnit clinitMethod, List<MemberUnit> staticMethods) throws IOException
+	{
+		boolean first= true;
+		StringBuilder result= new StringBuilder();
+
+		if (superUnit != null)
+			for (MemberUnit member : superUnit.getDeclaredMembers())
+			{
+				if (member.getData() != null && member.getData().startsWith(STATIC_MEMBER))
+				{
+					//					if (!containsSignature(member.getSignature(), staticMethods))
+					if (!(member instanceof MethodUnit))
+					{
+						if (!member.toString().equals("java.lang.Object#hashCodeCount"))
+						{
+							if (!containsSignature(member.getSignature(), staticMethods))
+							{
+								String methodData= member.getData().replace(STATIC_MEMBER, "");
+								String substring= methodData.substring(0, methodData.indexOf(":"));
+								String fieldName= DragomeJavaScriptGenerator.normalizeExpression(getName()) + ".$$clinit_()." + substring + "=" + DragomeJavaScriptGenerator.normalizeExpression(member.getDeclaringClass().getName()) + ".$$clinit_()." + substring;
+
+								result.append(fieldName);
+								result.append(";\n");
+								first= false;
+
+								FieldUnit newField= new FieldUnit(member.getSignature(), this);
+								newField.setData(member.getData());
+								addMemberUnit(newField);
+							}
+						}
+					}
+				}
+			}
+
+		return result.toString();
 	}
 
 	private void addAnnotationsAsStaticMember(Writer writer, boolean first) throws IOException
@@ -448,8 +492,8 @@ public class ClassUnit extends Unit
 
 		for (Entry<String, String> entry : annotationsValues.entrySet())
 		{
-			writer.write(entry.getKey()+"\n");
-			writer.write(entry.getValue()+"\n");
+			writer.write(entry.getKey() + "\n");
+			writer.write(entry.getValue() + "\n");
 		}
 
 		writer.write("}\n");
@@ -528,28 +572,47 @@ public class ClassUnit extends Unit
 		return member.getSignature().toString().equals("<clinit>()void");
 	}
 
-	private boolean addSuperStaticMethods(Writer writer, boolean first) throws IOException
+	private boolean addSuperStaticMethods(Writer writer, boolean first, List<MemberUnit> staticMethods) throws IOException
 	{
 		if (superUnit != null)
 			for (MemberUnit member : superUnit.getDeclaredMembers())
 			{
-				if (member.getData() != null && member.getData().startsWith(STATIC_MEMBER) && member instanceof MethodUnit && !isClinit(member))
+				if (member.getData() != null && member.getData().startsWith(STATIC_MEMBER))
 				{
-					String methodData= member.getData().replace(STATIC_MEMBER, "");
-					String substring= methodData.substring(0, methodData.indexOf("{"));
-					String methodName= substring.replace(": function", "").replace("\n", "");
-					substring+= "{ \n\t return this.superclass." + methodName + ";\n}";
+					if (member instanceof MethodUnit)
+					{
+						if (!isClinit(member))
+							if (!containsSignature(member.getSignature(), staticMethods))
+							{
+								addMemberUnit(member);
+								String methodData= member.getData().replace(STATIC_MEMBER, "");
+								String substring= methodData.substring(0, methodData.indexOf("{"));
+								String methodName= substring.replace(": function", "").replace("\n", "");
+								substring+= "{ \n\t return this.superclass." + methodName + ";\n}";
 
-					if (!first)
-						writer.write(",\n");
+								if (!first)
+									writer.write(",\n");
 
-					writer.write(substring);
-					first= false;
+								writer.write(substring);
+								first= false;
+							}
+					}
 				}
 			}
 
 		return first;
 	}
+	private boolean containsSignature(Signature signature, List<MemberUnit> staticMethods)
+	{
+		for (MemberUnit memberUnit : staticMethods)
+		{
+			if (memberUnit.getSignature().equals(signature))
+				return true;
+		}
+
+		return false;
+	}
+
 	private void writeMethodAlternative(int depth, Writer writer, MemberUnit member) throws IOException
 	{
 		if (member instanceof MethodUnit)
