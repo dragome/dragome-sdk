@@ -34,4 +34,5 @@ public interface ReflectionService
 	public Class<?> forName(String className);
 	public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type);
 	public DragomeConfigurator getConfigurator();
+	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1);
 }

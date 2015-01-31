@@ -71,4 +71,10 @@ public class ReflectionServiceImpl implements ReflectionService
     {
 	    return null;
     }
+	@Override
+	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

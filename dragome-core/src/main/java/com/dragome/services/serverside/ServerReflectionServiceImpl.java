@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.dragome.services.serverside;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -23,9 +25,17 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
+//		return null;
 		Reflections reflections= new Reflections("^");
 		Set<Class<? extends T>> implementations= reflections.getSubTypesOf(type);
 		return implementations;
+	}
+	
+	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
+	{
+//		return null;
+		Reflections reflections= new Reflections("^");
+		return reflections.getTypesAnnotatedWith((Class<? extends Annotation>) class1);
 	}
 
 	public DragomeConfigurator getConfigurator()
@@ -41,7 +51,8 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 
 			if (foundConfigurator == null)
 			{
-				Set<Class<?>> typesAnnotatedWith= reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
+				Set<Class<?>> typesAnnotatedWith= new HashSet<Class<?>>();
+				typesAnnotatedWith= reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
 				if (typesAnnotatedWith.isEmpty())
 					foundConfigurator= new DomHandlerApplicationConfigurator();
 				else

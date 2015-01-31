@@ -14,19 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.reflections.Reflections;
-
 import com.dragome.annotations.PageAlias;
 import com.dragome.helpers.RequestUrlActivityMapper;
+import com.dragome.services.ServiceLocator;
+import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.view.VisualActivity;
 
 public class RequestUrlActivityMapperImpl implements RequestUrlActivityMapper
 {
 	public String getActivityClassNameFromUrl(String uri)
 	{
-		Reflections reflections= new Reflections("");
-		Set<Class<? extends VisualActivity>> modules= reflections.getSubTypesOf(VisualActivity.class);
-		Set<Class<?>> aliases= reflections.getTypesAnnotatedWith(PageAlias.class);
+		ReflectionService reflectionService= ServiceLocator.getInstance().getReflectionService();
+		
+		Set<Class<? extends VisualActivity>> modules= reflectionService.getSubTypesOf(VisualActivity.class);
+		Set<Class<?>> aliases= reflectionService.getTypesAnnotatedWith(PageAlias.class);
 
 		for (Class<?> type : aliases)
 		{
@@ -46,8 +47,9 @@ public class RequestUrlActivityMapperImpl implements RequestUrlActivityMapper
 
 	public List<Class<? extends VisualActivity>> getExistingVisualActivities()
 	{
-		Reflections reflections= new Reflections("");
-		Set<Class<? extends VisualActivity>> classes= reflections.getSubTypesOf(VisualActivity.class);
+		ReflectionService reflectionService= ServiceLocator.getInstance().getReflectionService();
+		
+		Set<Class<? extends VisualActivity>> classes= reflectionService.getSubTypesOf(VisualActivity.class);
 		return new ArrayList<Class<? extends VisualActivity>>(classes);
 	}
 
