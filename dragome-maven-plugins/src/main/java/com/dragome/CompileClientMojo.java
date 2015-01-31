@@ -1,14 +1,7 @@
 package com.dragome;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.List;
-
+import com.dragome.helpers.serverside.DragomeCompilerLauncher;
+import com.dragome.services.ServiceLocator;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -17,9 +10,14 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
+import ro.isdc.wro.model.resource.processor.support.JSMin;
 
-import com.dragome.helpers.serverside.DragomeCompilerLauncher;
-import com.dragome.services.ServiceLocator;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
 
 @Mojo(name = "compileclient"
 )
@@ -64,7 +62,37 @@ public class CompileClientMojo extends AbstractMojo {
         }
     }
 
-    private void compile() throws URISyntaxException, DependencyResolutionRequiredException, MalformedURLException {
+    private void copyResourceMinifyJS(String aResourceName, String aLocation) {
+
+        JSMinProcessor theMinProcessor = new JSMinProcessor();
+
+        getLog().info("Copy " + aResourceName+" to minified " + aLocation);
+        InputStream theInputStream = getClass().getResourceAsStream(aResourceName);
+        if (theInputStream != null) {
+            int theLastPathIndex = aLocation.lastIndexOf('/');
+            if (theLastPathIndex > 0) {
+                String thePath = aLocation.substring(0, theLastPathIndex);
+                thePath = thePath.replace('/', IOUtils.DIR_SEPARATOR);
+                File theTargetDir = new File(destinationDirectory, thePath);
+                if (!theTargetDir.exists()) {
+                    if (!theTargetDir.mkdirs()) {
+                        throw new RuntimeException("Cannot create directory " +theTargetDir);
+                    }
+                }
+            }
+            String theSystemLocation = aLocation.replace('/', IOUtils.DIR_SEPARATOR);
+            File theDestinatioFile = new File(destinationDirectory, theSystemLocation);
+            try {
+                theMinProcessor.process(new InputStreamReader(theInputStream), new FileWriter(theDestinatioFile));
+            } catch (Exception e) {
+                throw new RuntimeException("Cannot write data to " + theDestinatioFile, e);
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot find ressource " + aResourceName+" in ClassPath");
+        }
+    }
+
+    private void compile() throws URISyntaxException, DependencyResolutionRequiredException, IOException {
 
     	System.setProperty("dragome-compile-mode", "release");
 
@@ -96,7 +124,7 @@ public class CompileClientMojo extends AbstractMojo {
             }
         }
 
-        File theTargetDir = new File(destinationDirectory, "compiled-js");
+        File theTargetDir = new File(destinationDirectory, "dragome");
         if (!theTargetDir.exists() && !theTargetDir.mkdirs()) {
             throw new RuntimeException("Cannot create directory " + theTargetDir);
         }
@@ -115,9 +143,15 @@ public class CompileClientMojo extends AbstractMojo {
 
         DragomeCompilerLauncher.compileWithMainClass(theClassPathForCompiler.toString(), theTargetDir.toString());
 
+        // Ok, now we have a webapp.js file, do we need to minify it?
+        getLog().info("Minifying webapp.js to compiled.js");
+        JSMinProcessor theProcessor = new JSMinProcessor();
+        theProcessor.process(new FileReader(theWebAppJS), new FileWriter(new File(theTargetDir, "compiled.js")));
+
         // Finally remove the cache file
         if (removeCache) {
             File theCacheFile = new File(theTargetDir, "dragome.cache");
+            getLog().info("Removing cache file " + theCacheFile);
             if (!theCacheFile.delete()) {
                 throw new RuntimeException("Cannot delete cache file" + theCacheFile);
             }
@@ -130,17 +164,18 @@ public class CompileClientMojo extends AbstractMojo {
         getLog().info("Generating Dragome Client Application at " + destinationDirectory);
 
         // Copy Resources
-        copyResource("/dragome-debug.js", "dragome-resources/dragome-debug.js");
-        copyResource("/js/jquery.js", "dragome-resources/js/jquery.js");
+        copyResourceMinifyJS("/dragome-debug.js", "dragome-resources/dragome-debug.js");
+        copyResourceMinifyJS("/dragome-production.js", "dragome-resources/dragome-production.js");
+        copyResourceMinifyJS("/js/jquery.js", "dragome-resources/js/jquery.js");
         copyResource("/css/dragome.css", "dragome-resources/css/dragome.css");
-        copyResource("/js/hashtable.js", "dragome-resources/js/hashtable.js");
-        copyResource("/js/deflate.js", "dragome-resources/js/deflate.js");
-        copyResource("/js/console.js", "dragome-resources/js/console.js");
-        copyResource("/js/helpers.js", "dragome-resources/js/helpers.js");
-        copyResource("/js/String.js", "dragome-resources/js/String.js");
-        copyResource("/js/jquery.atmosphere.js", "dragome-resources/js/jquery.atmosphere.js");
-        copyResource("/js/application.js", "dragome-resources/js/application.js");
-        copyResource("/js/q-3.0.js", "dragome-resources/js/q-3.0.js");
+        copyResourceMinifyJS("/js/hashtable.js", "dragome-resources/js/hashtable.js");
+        copyResourceMinifyJS("/js/deflate.js", "dragome-resources/js/deflate.js");
+        copyResourceMinifyJS("/js/console.js", "dragome-resources/js/console.js");
+        copyResourceMinifyJS("/js/helpers.js", "dragome-resources/js/helpers.js");
+        copyResourceMinifyJS("/js/String.js", "dragome-resources/js/String.js");
+        copyResourceMinifyJS("/js/jquery.atmosphere.js", "dragome-resources/js/jquery.atmosphere.js");
+        copyResourceMinifyJS("/js/application.js", "dragome-resources/js/application.js");
+        copyResourceMinifyJS("/js/q-3.0.js", "dragome-resources/js/q-3.0.js");
 
         try {
             compile();

@@ -68,6 +68,10 @@ public final class Long
 		return new Long(value);
 	}
 
+    public static Long valueOf(String aValue) {
+        return new Long(aValue);
+    }
+
 	/**
 	 * Returns the value of this Long as a long.
 	 */
