@@ -23,16 +23,15 @@ public final class Float extends Number
 {
 	public static final Class<Float> TYPE= Class.getType("float");
 
-    public static final float POSITIVE_INFINITY = 1.0f / 0.0f;
-    public static final float NEGATIVE_INFINITY = -1.0f / 0.0f;
-    public static final float NaN = 0.0f / 0.0f;
-    public static final float MAX_VALUE = 0x1.fffffeP+127f; // 3.4028235e+38f
-    public static final float MIN_NORMAL = 0x1.0p-126f; // 1.17549435E-38f
-    public static final float MIN_VALUE = 0x0.000002P-126f; // 1.4e-45f
-    public static final int MAX_EXPONENT = 127;
-    public static final int MIN_EXPONENT = -126;
-    public static final int SIZE = 32;
-
+	public static final float POSITIVE_INFINITY= 1.0f / 0.0f;
+	public static final float NEGATIVE_INFINITY= -1.0f / 0.0f;
+	public static final float NaN= 0.0f / 0.0f;
+	public static final float MAX_VALUE= 0x1.fffffeP+127f; // 3.4028235e+38f
+	public static final float MIN_NORMAL= 0x1.0p-126f; // 1.17549435E-38f
+	public static final float MIN_VALUE= 0x0.000002P-126f; // 1.4e-45f
+	public static final int MAX_EXPONENT= 127;
+	public static final int MIN_EXPONENT= -126;
+	public static final int SIZE= 32;
 
 	private float value;
 
@@ -79,9 +78,10 @@ public final class Float extends Number
 		return new Float(f);
 	}
 
-    public static Float valueOf(String aFloat) {
-        return new Float(parseFloat(aFloat));
-    }
+	public static Float valueOf(String aFloat)
+	{
+		return new Float(parseFloat(aFloat));
+	}
 
 	static public boolean isNaN(float v)
 	{
@@ -101,27 +101,36 @@ public final class Float extends Number
 		//	return result;
 	}
 
-	public static int compare(float f1, float f2)
+	public static int compare(float x, float y)
 	{
-		if (f1 < f2)
-			return -1; // Neither val is NaN, thisVal is smaller
-		if (f1 > f2)
-			return 1; // Neither val is NaN, thisVal is larger
-
-		// Cannot use floatToRawIntBits because of possibility of NaNs.
-		int thisBits= Float.floatToIntBits(f1);
-		int anotherBits= Float.floatToIntBits(f2);
-
-		return (thisBits == anotherBits ? 0 : // Values are equal
-		        (thisBits < anotherBits ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
-		                1)); // (0.0, -0.0) or (NaN, !NaN)
+		if (x < y)
+			return -1;
+		else if (x > y)
+			return 1;
+		else
+			return 0;
 	}
-	
-	
+
+	//	public static int compare(float f1, float f2)
+	//	{
+	//		if (f1 < f2)
+	//			return -1; // Neither val is NaN, thisVal is smaller
+	//		if (f1 > f2)
+	//			return 1; // Neither val is NaN, thisVal is larger
+	//
+	//		// Cannot use floatToRawIntBits because of possibility of NaNs.
+	//		int thisBits= Float.floatToIntBits(f1);
+	//		int anotherBits= Float.floatToIntBits(f2);
+	//
+	//		return (thisBits == anotherBits ? 0 : // Values are equal
+	//				(thisBits < anotherBits ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
+	//						1)); // (0.0, -0.0) or (NaN, !NaN)
+	//	}
+
 	public String toString()
 	{
 		ScriptHelper.put("value", value, this);
 		return (String) ScriptHelper.eval("String(value)", this);
 	}
-	
+
 }
