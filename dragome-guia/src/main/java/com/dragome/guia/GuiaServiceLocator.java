@@ -15,15 +15,17 @@
  */
 package com.dragome.guia;
 
-import com.dragome.render.html.HTMLTemplateHandler;
+import com.dragome.render.html.HTMLGuiaServiceFactory;
 import com.dragome.render.interfaces.TemplateHandler;
-import com.dragome.templates.HTMLTemplateManager;
+import com.dragome.templates.interfaces.TemplateListener;
+import com.dragome.templates.interfaces.TemplateLoadingStrategy;
 import com.dragome.templates.interfaces.TemplateManager;
 
 public class GuiaServiceLocator
 {
 	protected static GuiaServiceLocator instance;
 	protected TemplateManager templateManager;
+	protected GuiaServiceFactory serviceFactory= new HTMLGuiaServiceFactory();
 
 	public static GuiaServiceLocator getInstance()
 	{
@@ -38,7 +40,7 @@ public class GuiaServiceLocator
 		if (templateManager == null)
 		{
 			//			if (isClientSide())
-			templateManager= new HTMLTemplateManager();
+			templateManager= serviceFactory.createTemplateManager();
 			//			else
 			//				templateManager= getServerSideServiceFactory().createSyncService(TemplateManager.class);
 		}
@@ -48,6 +50,21 @@ public class GuiaServiceLocator
 
 	public TemplateHandler getTemplateHandler()
 	{
-		return new HTMLTemplateHandler();
+		return serviceFactory.createTemplateHandler();
+	}
+
+	public TemplateLoadingStrategy getTemplateHandlingStrategy()
+	{
+		return serviceFactory.createTemplateHandlingStrategy();
+	}
+
+	public void setServiceFactory(GuiaServiceFactory serviceFactory)
+	{
+		this.serviceFactory= serviceFactory;
+	}
+
+	public TemplateListener getTemplateListener()
+	{
+		return serviceFactory.getTemplateListener();
 	}
 }

@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.DefaultEventProducer;
-import com.dragome.render.html.HTMLTemplateChangedListener;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateListener;
@@ -69,13 +69,13 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	protected Boolean inner= Boolean.FALSE;
 	private Template parent;
 	protected List<Template> childrenList= new ArrayList<Template>();
-	protected TemplateListener templateListener= new HTMLTemplateChangedListener();
+	protected TemplateListener templateListener= GuiaServiceLocator.getInstance().getTemplateListener();
 
-	protected TemplateImpl()
+	public TemplateImpl()
 	{
 	}
 
-	protected TemplateImpl(String aName)
+	public TemplateImpl(String aName)
 	{
 		this();
 		name= aName;

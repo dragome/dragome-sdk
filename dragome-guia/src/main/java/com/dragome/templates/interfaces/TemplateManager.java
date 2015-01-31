@@ -23,7 +23,7 @@ public interface TemplateManager
 {
 //	public Template getTemplate(String anAlias);
 	public TemplateHandler getTemplateHandler();
-	public TemplateHandlingStrategy getTemplateHandlingStrategy();
+	public TemplateLoadingStrategy getTemplateHandlingStrategy();
 	public CanvasFactory getCanvasFactory();
 	public Template createTemplate(String aTemplateName);
 	public ComponentRenderer getComponentRenderer();
