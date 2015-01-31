@@ -17,17 +17,16 @@ package com.dragome.guia;
 
 import com.dragome.guia.components.VisualPanelImpl;
 import com.dragome.guia.components.interfaces.VisualPanel;
-import com.dragome.render.html.HTMLTemplateHandlingStrategy;
 import com.dragome.services.interfaces.ParametersHandler;
 import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.templates.interfaces.Template;
-import com.dragome.templates.interfaces.TemplateHandlingStrategy;
+import com.dragome.templates.interfaces.TemplateLoadingStrategy;
 import com.dragome.view.DefaultVisualActivity;
 import com.dragome.view.VisualActivity;
 
 public abstract class GuiaVisualActivity extends DefaultVisualActivity implements VisualActivity
 {
-	protected TemplateHandlingStrategy templateHandlingStrategy= new HTMLTemplateHandlingStrategy();
+	protected TemplateLoadingStrategy templateHandlingStrategy= GuiaServiceLocator.getInstance().getTemplateHandlingStrategy();
 	protected VisualPanel mainPanel;
 	protected Template mainTemplate;
 	
@@ -61,7 +60,7 @@ public abstract class GuiaVisualActivity extends DefaultVisualActivity implement
 	{
 		return serviceFactory;
 	}
-	public TemplateHandlingStrategy getTemplateHandlingStrategy()
+	public TemplateLoadingStrategy getTemplateHandlingStrategy()
 	{
 		return templateHandlingStrategy;
 	}

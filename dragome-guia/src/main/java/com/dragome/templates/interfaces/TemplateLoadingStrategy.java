@@ -16,7 +16,7 @@
 package com.dragome.templates.interfaces;
 
 
-public interface TemplateHandlingStrategy
+public interface TemplateLoadingStrategy
 {
 	void loadMainTemplate(String templateName);
 	void hideContainer();

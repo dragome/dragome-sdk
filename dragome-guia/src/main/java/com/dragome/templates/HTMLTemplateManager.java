@@ -20,13 +20,13 @@ import org.w3c.dom.Element;
 import com.dragome.render.canvas.HTMLCanvasFactory;
 import com.dragome.render.canvas.interfaces.CanvasFactory;
 import com.dragome.render.html.HTMLTemplateHandler;
-import com.dragome.render.html.HTMLTemplateHandlingStrategy;
+import com.dragome.render.html.HTMLTemplateLoadingStrategy;
 import com.dragome.render.html.components.HTMLComponentRenderer;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.render.interfaces.TemplateHandler;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.interfaces.Template;
-import com.dragome.templates.interfaces.TemplateHandlingStrategy;
+import com.dragome.templates.interfaces.TemplateLoadingStrategy;
 import com.dragome.templates.interfaces.TemplateManager;
 
 public class HTMLTemplateManager implements TemplateManager
@@ -36,9 +36,9 @@ public class HTMLTemplateManager implements TemplateManager
 		return new HTMLTemplateHandler();
 	}
 
-	public TemplateHandlingStrategy getTemplateHandlingStrategy()
+	public TemplateLoadingStrategy getTemplateHandlingStrategy()
 	{
-		return new HTMLTemplateHandlingStrategy();
+		return new HTMLTemplateLoadingStrategy();
 	}
 
 	public CanvasFactory<Element> getCanvasFactory()

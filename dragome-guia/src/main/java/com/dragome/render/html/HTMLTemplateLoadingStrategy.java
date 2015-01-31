@@ -21,14 +21,14 @@ import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.render.html.components.AbstractHTMLComponentRenderer;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.interfaces.Template;
-import com.dragome.templates.interfaces.TemplateHandlingStrategy;
+import com.dragome.templates.interfaces.TemplateLoadingStrategy;
 
-public class HTMLTemplateHandlingStrategy implements TemplateHandlingStrategy
+public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 {
 	protected String templateContent;
 	private int templateNumber= 0;
 
-	public HTMLTemplateHandlingStrategy()
+	public HTMLTemplateLoadingStrategy()
 	{
 	}
 
