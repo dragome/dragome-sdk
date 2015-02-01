@@ -55,24 +55,30 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 	private static final String DBLCLICK= "dblclick";
 	private static final String CLICK= "click";
 	public static final String COMPONENT_ID_ATTRIBUTE= "data-component-id";
-	
+
 	private List<String> listeners= new ArrayList<String>();
 
 	public AbstractHTMLComponentRenderer()
 	{
 	}
-	
+
 	public static void setElementInnerHTML(Element label1, String aText)
 	{
 		ScriptHelper.put("element", label1, null);
 		ScriptHelper.put("value", aText, null);
-		ScriptHelper.eval("element.node.innerHTML= value", null);
+		ScriptHelper.evalNoResult("element.node.innerHTML= value", null);
+	}
+
+	public static String getElementInnerHTML(Element label1)
+	{
+		ScriptHelper.put("element", label1, null);
+		return (String) ScriptHelper.eval("element.node.innerHTML", null);
 	}
 
 	public void addListeners(final VisualComponent visualComponent, final Element element)
 	{
 		element.setAttribute(COMPONENT_ID_ATTRIBUTE, DragomeEntityManager.add(visualComponent));
-		
+
 		visualComponent.addListener(ListenerChanged.class, new ListenerChanged()
 		{
 			public <T extends EventListener> void listenerAdded(Class<? extends T> type, T listener)
