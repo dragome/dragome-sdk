@@ -25,7 +25,6 @@ public class MethodLoggerConfigurator extends InstrumentationDragomeConfigurator
 {
 	public MethodLoggerConfigurator()
 	{
-		loadedFromParent.addAll(Arrays.asList("org.atmosphere", "com.dragome.commons.ProxyRelatedInvocationHandler", "java.", "javax.", "net.sf.saxon"));
 	}
 
 	public MethodLoggerConfigurator(String... includedPaths)

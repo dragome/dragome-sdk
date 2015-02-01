@@ -46,10 +46,10 @@ public class ClassTransformerDragomeWebSocketHandler extends WebSocketHandlerAda
 
 				DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
 				if (configurator != null)
-                {
-	                ClassLoader parentClassloader= ClassTransformerDragomeWebSocketHandler.class.getClassLoader();
-	                classLoader= configurator.getNewClassloaderInstance(parentClassloader, parentClassloader);
-                }
+				{
+					ClassLoader parentClassloader= ClassTransformerDragomeWebSocketHandler.class.getClassLoader();
+					classLoader= configurator.getNewClassloaderInstance(parentClassloader, parentClassloader);
+				}
 			}
 
 			Thread.currentThread().setContextClassLoader(classLoader);
@@ -64,6 +64,7 @@ public class ClassTransformerDragomeWebSocketHandler extends WebSocketHandlerAda
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 

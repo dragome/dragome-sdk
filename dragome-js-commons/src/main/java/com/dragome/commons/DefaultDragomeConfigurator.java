@@ -37,7 +37,18 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 
 	public BytecodeTransformer getBytecodeTransformer()
 	{
-		return null;
+		return new BytecodeTransformer()
+		{
+			public byte[] transform(String className, byte[] bytecode)
+			{
+				return bytecode;
+			}
+			
+			public boolean requiresTransformation(String className)
+			{
+				return false;
+			}
+		};
 	}
 
 	public ExecutionHandler getExecutionHandler()

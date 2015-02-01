@@ -16,6 +16,7 @@
 package com.dragome.commons;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Set;
 public class InstrumentationDragomeConfigurator extends DefaultDragomeConfigurator
 {
 	protected Set<String> includedPaths= new HashSet<String>();
-	protected Set<String> loadedFromParent= new HashSet<String>();
+	protected Set<String> loadedFromParent= new HashSet<String>(Arrays.asList("org.atmosphere", "com.dragome.commons.ProxyRelatedInvocationHandler", "java.", "javax.", "net.sf.saxon"));
 	protected boolean enabled= true;
 	private DragomeInstrumentationClassLoader instrumentationClassLoader;
 	private Map<String, byte[]> bytecodes= new HashMap<String, byte[]>();	

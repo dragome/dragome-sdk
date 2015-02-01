@@ -31,9 +31,6 @@ public class ChainedInstrumentationDragomeConfigurator extends InstrumentationDr
 
 	public void init(InstrumentationDragomeConfigurator... configurators)
 	{
-		includedPaths.clear();
-		loadedFromParent.clear();
-
 		this.configurators= Arrays.asList(configurators);
 
 		for (InstrumentationDragomeConfigurator configurator : this.configurators)

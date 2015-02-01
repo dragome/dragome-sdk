@@ -419,7 +419,7 @@ public final class DragomeInstrumentationClassLoader extends URLClassLoader
 				}
 
 				byte[] newData;
-				if (!bytecodeTransformer.requiresTransformation(classname) || loadingClass.contains(classname))
+				if (bytecodeTransformer == null || !bytecodeTransformer.requiresTransformation(classname) || loadingClass.contains(classname))
 					newData= classData;
 				else
 				{
