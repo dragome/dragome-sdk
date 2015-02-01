@@ -22,5 +22,5 @@
 ## Architecture Diagrams
 * [Architecture](diagrams.md)
 
-## Examples at gigthub
+## Examples at github
 * [example applications](https://github.com/dragome/dragome-examples) 
