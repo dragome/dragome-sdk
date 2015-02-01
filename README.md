@@ -8,6 +8,8 @@ You may use your favorite IDE, your favorite Java frameworks and tools because D
 ### See it in action: how Eclipse and Chrome interact on debug mode and production mode.
 [![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
 
+Also take a look at these [example applications](https://github.com/dragome/dragome-examples) 
+
 ----------
 ##Concept
 
