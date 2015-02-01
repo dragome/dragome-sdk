@@ -23,4 +23,4 @@
 * [Architecture](diagrams.md)
 
 ## Examples at github
-* [example applications](https://github.com/dragome/dragome-examples) 
+* [Example applications](https://github.com/dragome/dragome-examples) 
