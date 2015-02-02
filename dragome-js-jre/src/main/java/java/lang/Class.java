@@ -16,6 +16,7 @@
 package java.lang;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -89,6 +90,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		Class<?> clazz= classesByName.get(className);
 		if (clazz == null)
 		{
+			if (className.startsWith("[") && className.endsWith(";") )
+				className= Array.class.getName();
+			
 			String jsClassName= className.replaceAll("\\.", "_");
 			if ("boolean".equals(jsClassName))
 				jsClassName= "java_lang_Boolean";
