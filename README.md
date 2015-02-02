@@ -4,6 +4,13 @@ Based on bytecode to javascript compilation, you can execute applications writte
 You may use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
 
 ----------
+
+### See it in action: how Eclipse and Chrome interact on debug mode and production mode.
+[![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
+
+Also take a look at these [example applications](https://github.com/dragome/dragome-examples) 
+
+----------
 ##Concept
 
 Dragome is implemented using several open source projects as a base. Many of them were adapted to match requirements, solving inherited bugs, adding new features, and making them all run together as an emergent new piece of software.
@@ -12,11 +19,6 @@ Folllowing diagram shows the hidden complexity behind the simple concepts expose
 You can see which part was implemented from scratch, which one was used as base project, and also which are the required tools it depends on.
 
 ![dragome dependencies](doc/dragome-dependencies.png)
-
-----------
-
-### See it in action: how Eclipse and Chrome interact on debug mode and production mode.
-[![ScreenShot](doc/crud-debugging-screenshot.jpg)](http://youtu.be/WyseTuRZkNk)
 
 ----------
 

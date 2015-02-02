@@ -12,12 +12,14 @@ The browser will perform the action usually in a different thread, and trigger t
 
 ####Example of synchronous invocation
 ``` Java
-public interface TravelDemo
+public class TravelDemo
 {
-    TravelService travelService= serviceFactory.createSyncService(TravelService.class);
-    
-    Departure departure= travelService.getDeparture(user.getEmail());
-    System.out.println("flight id:" + departure.getFlightId());
+	public void run() 
+	{
+		TravelService travelService= serviceFactory.createSyncService(TravelService.class);
+		Departure departure= travelService.getDeparture(user.getEmail());
+		System.out.println("flight id:" + departure.getFlightId());
+	}	
 }
 ```
 This service usage requires the getDeparture() to be blocking, which will freeze the user interface until the data is fetched.
