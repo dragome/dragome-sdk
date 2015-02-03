@@ -29,7 +29,7 @@ public abstract class Enum<E>
 	{
 		ScriptHelper.put("enumType", enumType, null);
 		ScriptHelper.put("name", name, null);
-		return (T) ScriptHelper.eval("enumType.$$$nativeClass[\"$$$\"+name]", null);
+		return (T) ScriptHelper.eval("enumType.$$$nativeClass.$$clinit_()[\"$$$\"+name]", null);
 	}
 
 	/**
