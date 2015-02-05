@@ -58,6 +58,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>javolution</groupId>
+      <artifactId>javolution</artifactId>
+      <version>5.4.5</version>
+    </dependency>
+    <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm-all</artifactId>
       <version>5.0.2</version>

@@ -532,7 +532,7 @@ public class ReferenceCounting
 		processRecAdd(RegisterSet.none(), RegisterSet.none(), toProcess.get(0), createNewCodePath(null));
 		processWhileCallsToDo();
 		// Debug print for state at this stage.
-		printInstSeq(toProcess);
+		//printInstSeq(toProcess);
 	}
 
 	/*

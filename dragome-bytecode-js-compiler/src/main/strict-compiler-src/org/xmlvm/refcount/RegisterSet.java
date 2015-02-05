@@ -20,8 +20,9 @@
 
 package org.xmlvm.refcount;
 
-import java.util.BitSet;
 import java.util.Iterator;
+
+import javolution.util.FastBitSet;
 
 /**
  * A class for representing a set of registers. The set is represented via a
@@ -30,7 +31,7 @@ import java.util.Iterator;
 public class RegisterSet implements java.lang.Iterable<Integer>
 {
 
-	private BitSet map= new BitSet();
+	private FastBitSet map= new FastBitSet();
 
 	/**
 	 * |= operator
@@ -73,7 +74,8 @@ public class RegisterSet implements java.lang.Iterable<Integer>
 	public RegisterSet clone()
 	{
 		RegisterSet toRet= new RegisterSet();
-		toRet.map= (BitSet) this.map.clone();
+//		toRet.map= (FastBitSet) this.map.clone();
+		toRet.map.or(this.map);
 		return toRet;
 	}
 
@@ -170,9 +172,9 @@ public class RegisterSet implements java.lang.Iterable<Integer>
 		return this.map.equals(((RegisterSet) regs).map);
 	}
 
-	class BitSetIterator implements Iterator<Integer>
+	class FastBitSetIterator implements Iterator<Integer>
 	{
-		public BitSetIterator(RegisterSet toIterate)
+		public FastBitSetIterator(RegisterSet toIterate)
 		{
 			this.toIterate= toIterate;
 		}
@@ -189,15 +191,8 @@ public class RegisterSet implements java.lang.Iterable<Integer>
 		public boolean hasNext()
 		{
 			int tmp= cur;
-			while (tmp < toIterate.map.length())
-			{
-				if (toIterate.map.get(tmp))
-				{
-					return true;
-				}
-				tmp++;
-			}
-			return false;
+			tmp= toIterate.map.nextSetBit(cur);
+			return tmp != -1;
 		}
 
 		/*
@@ -208,15 +203,9 @@ public class RegisterSet implements java.lang.Iterable<Integer>
 
 		public Integer next()
 		{
-			while (cur < toIterate.map.length())
-			{
-				cur++;
-				if (toIterate.map.get(cur - 1))
-				{
-					return cur - 1;
-				}
-			}
-			throw new RuntimeException("Impossible");
+			int nextSetBit= toIterate.map.nextSetBit(cur);
+			cur= nextSetBit + 1;
+			return nextSetBit;
 		}
 
 		/*
@@ -239,7 +228,7 @@ public class RegisterSet implements java.lang.Iterable<Integer>
 
 	public Iterator<Integer> iterator()
 	{
-		return new BitSetIterator(this);
+		return new FastBitSetIterator(this);
 	}
 
 	/**
