@@ -20,7 +20,7 @@ Second case is almost the same concept but since label component is read only we
 
 ``` Java
 @PageAlias(alias= "simple-binding")
-public class SimpleBinding extends DragomeVisualActivity
+public class SimpleBinding extends GuiaVisualActivity
 {
 	protected String text;
 	
@@ -75,7 +75,7 @@ We can see here that instead of declaring which kind of component we want to ins
 
 ``` Java
 @PageAlias(alias= "combo-label-binding")
-public class ComboLabelBinding extends DragomeVisualActivity
+public class ComboLabelBinding extends GuiaVisualActivity
 {
 	protected String nickname;
 	
@@ -134,7 +134,7 @@ Using "repeat" method we indicate we want to visit each item in provided list to
  
 ``` Java 
 @PageAlias(alias= "simple-repeater")
-public class SimpleRepeater extends DragomeVisualActivity
+public class SimpleRepeater extends GuiaVisualActivity
 {
 	public void build() 
 	{
@@ -188,7 +188,7 @@ Note that we are using getFilterText method instead of a direct member access be
 
 ``` Java 
 @PageAlias(alias= "repeat-with-filter")
-public class RepeatWithFilter extends DragomeVisualActivity
+public class RepeatWithFilter extends GuiaVisualActivity
 {
 	String filterText= "";
 
@@ -257,7 +257,7 @@ For calling "orderBy" method we provide a comparable as first argument (we retur
 
 ``` Java 
 @PageAlias(alias= "repeat-with-order-by")
-public class RepeatWithOrderBy extends DragomeVisualActivity
+public class RepeatWithOrderBy extends GuiaVisualActivity
 {
 	protected Order order= Order.ASC;
 
