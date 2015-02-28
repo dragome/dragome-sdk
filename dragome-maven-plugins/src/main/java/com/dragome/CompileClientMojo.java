@@ -1,7 +1,17 @@
 package com.dragome;
 
-import com.dragome.helpers.serverside.DragomeCompilerLauncher;
-import com.dragome.services.ServiceLocator;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -10,14 +20,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
-import ro.isdc.wro.model.resource.processor.support.JSMin;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.List;
+import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
+
+import com.dragome.services.ServiceLocator;
+import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
 @Mojo(name = "compileclient"
 )
