@@ -60,5 +60,5 @@ public abstract class AbstractServicesInvocationHandler extends AbstractProxyRel
 		return parameters;
 	}
 
-	abstract Object execute(Map<String, String> parameters, RequestExecutor requestExecutor, SerializationService serializationService, boolean returnsValue);
+	public abstract Object execute(Map<String, String> parameters, RequestExecutor requestExecutor, SerializationService serializationService, boolean returnsValue);
 }

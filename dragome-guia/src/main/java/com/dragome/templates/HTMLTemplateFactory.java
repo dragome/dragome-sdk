@@ -24,8 +24,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.dragome.html.dom.RegExp;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.html.dom.RegExp;
 
 public class HTMLTemplateFactory
 {

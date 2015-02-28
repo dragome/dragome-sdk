@@ -31,7 +31,6 @@ import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.templates.HTMLTemplateRenderer;
 
 public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBox<Object>>
 {

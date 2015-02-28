@@ -17,7 +17,6 @@ package com.dragome.helpers;
 
 import java.util.List;
 
-import com.dragome.annotations.PageAlias;
 import com.dragome.guia.GuiaVisualActivity;
 import com.dragome.guia.components.VisualLabelImpl;
 import com.dragome.guia.components.VisualLinkImpl;
@@ -31,6 +30,8 @@ import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateRepeater;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.view.VisualActivity;
+import com.dragome.web.annotations.PageAlias;
+import com.dragome.web.helpers.RequestUrlActivityMapper;
 
 @PageAlias(alias= "discoverer")
 public class DiscovererPage extends GuiaVisualActivity

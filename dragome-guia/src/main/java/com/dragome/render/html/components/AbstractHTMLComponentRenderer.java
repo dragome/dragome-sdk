@@ -24,7 +24,6 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.KeyboardEvent;
 
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.dispatcher.EventDispatcherImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.listeners.BlurListener;
 import com.dragome.guia.listeners.ClickListener;
@@ -40,6 +39,7 @@ import com.dragome.guia.listeners.MouseOverListener;
 import com.dragome.guia.listeners.MouseUpListener;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.web.dispatcher.EventDispatcherImpl;
 
 public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRenderer<Element, T>
 {

@@ -22,17 +22,9 @@ import java.util.concurrent.Executors;
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.annotations.MethodAlias;
-import com.dragome.debugging.messages.ClientToServerMessageChannel;
-import com.dragome.debugging.messages.MessageChannel;
-import com.dragome.debugging.messages.ServerToClientMessageChannel;
-import com.dragome.dispatcher.EventDispatcher;
-import com.dragome.dispatcher.EventDispatcherImpl;
 import com.dragome.helpers.TimeCollector;
-import com.dragome.helpers.jdbc.BrowserResultSetProcessorExecutor;
 import com.dragome.helpers.jdbc.NullResultSetProcessorExecutor;
 import com.dragome.helpers.jdbc.ResultSetProcessorExecutor;
-import com.dragome.html.dom.DomHandler;
-import com.dragome.html.dom.w3c.BrowserDomHandler;
 import com.dragome.services.interfaces.ParametersHandler;
 import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.services.interfaces.RequestExecutor;
@@ -40,6 +32,17 @@ import com.dragome.services.interfaces.SerializationService;
 import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.services.serialization.FlexJsonSerializationService;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
+import com.dragome.web.debugging.messages.ClientToServerMessageChannel;
+import com.dragome.web.debugging.messages.MessageChannel;
+import com.dragome.web.debugging.messages.ServerToClientMessageChannel;
+import com.dragome.web.dispatcher.EventDispatcher;
+import com.dragome.web.dispatcher.EventDispatcherImpl;
+import com.dragome.web.helpers.jdbc.BrowserResultSetProcessorExecutor;
+import com.dragome.web.html.dom.DomHandler;
+import com.dragome.web.html.dom.w3c.BrowserDomHandler;
+import com.dragome.web.services.BrowserParametersHandler;
+import com.dragome.web.services.ClientSideServiceFactory;
+import com.dragome.web.services.RequestExecutorImpl;
 
 public class ServiceLocator
 {

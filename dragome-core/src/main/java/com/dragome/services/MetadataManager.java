@@ -15,45 +15,15 @@
  */
 package com.dragome.services;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import com.dragome.annotations.ServiceImplementation;
-import com.dragome.debugging.CrossExecutionCommandProcessorImpl;
-import com.dragome.debugging.interfaces.CrossExecutionCommandProcessor;
-import com.dragome.dispatcher.EventDispatcher;
-import com.dragome.dispatcher.EventDispatcherImpl;
-import com.dragome.execution.ApplicationExecutor;
-import com.dragome.execution.ApplicationExecutorImpl;
-import com.dragome.html.dom.DomHandler;
-import com.dragome.html.dom.w3c.BrowserDomHandler;
-import com.dragome.services.interfaces.AsyncResponseHandler;
 
 public class MetadataManager
 {
 	private Map<Class<?>, Class<?>> implementations= new HashMap<Class<?>, Class<?>>();
-
-	public static String getIdFieldOf(Type type)
-	{
-		return null;
-	}
-
-	public static Class<?> getMainInterfaceFor(Object object)
-	{
-		return getMainInterfaceForClass(object.getClass());
-	}
-
-	public static Class<?> getMainInterfaceForClass(Class type)
-	{
-		if (ApplicationExecutorImpl.class.isAssignableFrom(type))
-		{
-			return ApplicationExecutor.class;
-		}
-		else
-			return type;
-	}
 
 	public Class<?> getImplementationForInterface(Class type)
 	{
@@ -66,34 +36,6 @@ public class MetadataManager
 			if (implementation != null)
 			{
 				return implementation;
-			}
-			else if (ApplicationExecutor.class.isAssignableFrom(type))
-			{
-				return ApplicationExecutorImpl.class;
-			}
-			else if (CrossExecutionCommandProcessor.class.isAssignableFrom(type))
-			{
-				return CrossExecutionCommandProcessorImpl.class;
-			}
-//			else if (TemplateManager.class.isAssignableFrom(type))
-//			{
-//				return HTMLTemplateManager.class;
-//			}
-			else if (DomHandler.class.isAssignableFrom(type))
-			{
-				return BrowserDomHandler.class;
-			}
-			else if (EventDispatcher.class.isAssignableFrom(type))
-			{
-				return EventDispatcherImpl.class;
-			}
-//			else if (HtmlTemplateStorage.class.isAssignableFrom(type))
-//			{
-//				return HtmlTemplateStorageImpl.class;
-//			}
-			else if (AsyncResponseHandler.class.isAssignableFrom(type))
-			{
-				return AsyncResponseHandlerImpl.class;
 			}
 			else
 			{

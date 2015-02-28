@@ -18,8 +18,8 @@ import org.reflections.Reflections;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
-import com.dragome.config.DomHandlerApplicationConfigurator;
 import com.dragome.services.ReflectionServiceImpl;
+import com.dragome.web.config.DomHandlerApplicationConfigurator;
 
 public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {

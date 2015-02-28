@@ -19,6 +19,7 @@ import java.lang.reflect.Proxy;
 
 import com.dragome.services.interfaces.AsyncServiceExecutor;
 import com.dragome.services.interfaces.ServiceFactory;
+import com.dragome.web.services.ClientServiceInvocationHandler;
 
 public class ServerSideServiceFactory implements ServiceFactory
 {
