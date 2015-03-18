@@ -34,7 +34,7 @@ import java.util.Map;
 
 import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
-public class WatchDir
+public class DirectoryWatcher
 {
 	ReschedulableTimer reschedulableTimer= new ReschedulableTimer();
 
@@ -102,7 +102,7 @@ public class WatchDir
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	WatchDir(Path dir, boolean recursive, String classPath, String path) throws IOException
+	DirectoryWatcher(Path dir, boolean recursive, String classPath, String path) throws IOException
 	{
 		this.classPath= classPath;
 		this.path= path;
@@ -246,7 +246,7 @@ public class WatchDir
 
 			compile(classPath, path);
 			Path dir= Paths.get(args[dirArg]);
-			new WatchDir(dir, recursive, classPath, path).processEvents();
+			new DirectoryWatcher(dir, recursive, classPath, path).processEvents();
 		}
 		catch (IOException e)
 		{

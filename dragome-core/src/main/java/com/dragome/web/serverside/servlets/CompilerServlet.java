@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dragome.services.ServiceLocator;
-import com.dragome.web.serverside.compile.watchers.WatchDir;
+import com.dragome.web.serverside.compile.watchers.DirectoryWatcher;
 
 //@WebServlet(loadOnStartup= 1, value= "/compiler-service")
 public class CompilerServlet extends GetPostServlet
@@ -32,7 +32,7 @@ public class CompilerServlet extends GetPostServlet
 
 	protected void doService(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
-		resp.getWriter().write(WatchDir.lastCompilation + "");
+		resp.getWriter().write(DirectoryWatcher.lastCompilation + "");
 	}
 
 	public void init() throws ServletException
@@ -80,7 +80,7 @@ public class CompilerServlet extends GetPostServlet
 		{
 			public void run()
 			{
-				WatchDir.main(new String[] { "-r", classesFolder2 }, classPath.toString(), path);
+				DirectoryWatcher.main(new String[] { "-r", classesFolder2 }, classPath.toString(), path);
 			}
 		}.start();
 	}
