@@ -1,4 +1,4 @@
-package com.dragome.guia.listeners;
+package com.dragome.guia.events.listeners.interfaces;
 
 import java.util.EventListener;
 

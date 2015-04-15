@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.dragome.guia.events.listeners.interfaces.MultipleSelectionListener;
 import com.dragome.guia.helper.collections.CollectionHandler;
 import com.dragome.guia.helper.collections.ItemInvoker;
-import com.dragome.guia.listeners.MultipleSelectionListener;
 import com.dragome.model.interfaces.MultiSelectable;
 
 public class DefaultMultiSelectable implements MultiSelectable

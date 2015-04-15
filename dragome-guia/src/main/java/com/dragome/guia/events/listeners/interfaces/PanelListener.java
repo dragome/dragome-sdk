@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.guia.listeners;
+package com.dragome.guia.events.listeners.interfaces;
 
 import com.dragome.guia.components.interfaces.VisualComponent;
 

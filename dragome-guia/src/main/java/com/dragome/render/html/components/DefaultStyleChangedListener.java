@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.w3c.dom.Element;
 
-import com.dragome.guia.listeners.StyleChangedListener;
+import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Style;
 import com.dragome.services.ServiceLocator;

@@ -15,8 +15,8 @@
  */
 package com.dragome.model.interfaces;
 
-import com.dragome.guia.listeners.ChangeEventListener;
-import com.dragome.guia.listeners.HasListeners;
+import com.dragome.guia.events.listeners.interfaces.ChangeEventListener;
+import com.dragome.guia.events.listeners.interfaces.HasListeners;
 
 public interface TextDocument extends HasListeners<ChangeEventListener>
 {

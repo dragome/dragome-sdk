@@ -16,7 +16,7 @@
 package com.dragome.guia.components;
 
 import com.dragome.guia.components.interfaces.VisualLink;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.pectin.ComponentWithValueAndRendererImpl;
 

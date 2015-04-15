@@ -16,7 +16,7 @@
 package com.dragome.guia.components;
 
 import com.dragome.guia.components.interfaces.VisualCheckbox;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 
 public class VisualCheckboxImpl extends SelectableButtonComponent implements VisualCheckbox
 {

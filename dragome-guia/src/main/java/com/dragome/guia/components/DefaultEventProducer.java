@@ -20,8 +20,8 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dragome.guia.listeners.ListenerChanged;
-import com.dragome.guia.listeners.ListenerMultiplexer;
+import com.dragome.guia.events.listeners.interfaces.ListenerChanged;
+import com.dragome.guia.events.listeners.interfaces.ListenerMultiplexer;
 import com.dragome.model.interfaces.EventProducer;
 
 public class DefaultEventProducer implements EventProducer

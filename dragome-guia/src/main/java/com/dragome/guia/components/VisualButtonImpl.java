@@ -16,7 +16,7 @@
 package com.dragome.guia.components;
 
 import com.dragome.guia.components.interfaces.VisualButton;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 
 public class VisualButtonImpl extends SelectableButtonComponent implements VisualButton
 {

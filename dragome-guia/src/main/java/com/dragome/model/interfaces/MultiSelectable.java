@@ -18,7 +18,7 @@ package com.dragome.model.interfaces;
 import java.util.List;
 import java.util.Set;
 
-import com.dragome.guia.listeners.MultipleSelectionListener;
+import com.dragome.guia.events.listeners.interfaces.MultipleSelectionListener;
 
 public interface MultiSelectable
 {

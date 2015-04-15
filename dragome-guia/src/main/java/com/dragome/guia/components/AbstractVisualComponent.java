@@ -17,11 +17,11 @@ package com.dragome.guia.components;
 
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
-import com.dragome.guia.listeners.ClickListener;
-import com.dragome.guia.listeners.DoubleClickListener;
-import com.dragome.guia.listeners.FocusListener;
-import com.dragome.guia.listeners.KeyUpListener;
-import com.dragome.guia.listeners.StyleChangedListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
+import com.dragome.guia.events.listeners.interfaces.FocusListener;
+import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
+import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
 import com.dragome.model.interfaces.Style;
 import com.dragome.render.html.components.DefaultStyleChangedListener;
 

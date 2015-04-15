@@ -16,7 +16,7 @@
 package com.dragome.model.pectin;
 
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.model.interfaces.ClickEvent;
 import com.dragome.model.interfaces.ClickHandler;
 import com.dragome.model.interfaces.GwtEvent;

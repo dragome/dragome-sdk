@@ -15,7 +15,7 @@
  */
 package com.dragome.guia.components;
 
-import com.dragome.guia.listeners.SelectionListener;
+import com.dragome.guia.events.listeners.interfaces.SelectionListener;
 import com.dragome.model.interfaces.Selectable;
 
 public class DefaultSelectable extends DefaultEventProducer implements Selectable

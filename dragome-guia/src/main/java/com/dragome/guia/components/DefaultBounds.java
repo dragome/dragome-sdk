@@ -16,7 +16,7 @@
 package com.dragome.guia.components;
 
 import com.dragome.guia.components.interfaces.VisualBounds;
-import com.dragome.guia.listeners.BoundsChangeListener;
+import com.dragome.guia.events.listeners.interfaces.BoundsChangeListener;
 
 public class DefaultBounds implements VisualBounds
 {

@@ -22,7 +22,7 @@ import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.VisualRadioButton;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.services.ServiceLocator;

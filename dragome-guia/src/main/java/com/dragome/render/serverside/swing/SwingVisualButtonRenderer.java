@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractButton;
 
 import com.dragome.guia.components.interfaces.VisualButton;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.html.components.Mergeable;

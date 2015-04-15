@@ -24,7 +24,7 @@ import com.dragome.guia.components.VisualPanelImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.guia.components.interfaces.VisualPanel;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.render.ItemProcessorImpl;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateRepeater;

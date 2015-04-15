@@ -15,9 +15,9 @@
  */
 package com.dragome.guia.components.interfaces;
 
-import com.dragome.guia.listeners.ClickListener;
-import com.dragome.guia.listeners.DoubleClickListener;
-import com.dragome.guia.listeners.KeyUpListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
+import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
 import com.dragome.model.interfaces.EventProducer;
 import com.dragome.model.interfaces.HasVisible;
 import com.dragome.model.interfaces.Style;

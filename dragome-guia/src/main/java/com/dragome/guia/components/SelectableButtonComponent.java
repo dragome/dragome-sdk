@@ -16,7 +16,7 @@
 package com.dragome.guia.components;
 
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.listeners.ClickListener;
+import com.dragome.guia.events.listeners.interfaces.ClickListener;
 
 public class SelectableButtonComponent extends SelectableComponent
 {

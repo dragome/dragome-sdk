@@ -18,7 +18,7 @@ package com.dragome.templates;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
-import com.dragome.guia.listeners.PanelListener;
+import com.dragome.guia.events.listeners.interfaces.PanelListener;
 import com.dragome.model.interfaces.HasLayout;
 import com.dragome.model.interfaces.Layout;
 import com.dragome.render.canvas.interfaces.Canvas;

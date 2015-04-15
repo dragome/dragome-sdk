@@ -20,9 +20,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.EventListener;
 
+import com.dragome.guia.events.listeners.interfaces.ListenerMultiplexer;
 import com.dragome.guia.helper.collections.CollectionHandler;
 import com.dragome.guia.helper.collections.ItemInvoker;
-import com.dragome.guia.listeners.ListenerMultiplexer;
 import com.dragome.model.IndetifiableProxy;
 
 public class ProxyBasedListenerMultiplexer<T extends EventListener> implements InvocationHandler, ListenerMultiplexer<T>, IndetifiableProxy<EventListener>

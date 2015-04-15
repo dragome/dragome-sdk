@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
-import com.dragome.guia.listeners.PanelListener;
+import com.dragome.guia.events.listeners.interfaces.PanelListener;
 import com.dragome.model.interfaces.Layout;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
