@@ -1,4 +1,4 @@
-package com.dragome.web.html.dom.html5canvas;
+package com.dragome.web.html.dom.html5canvas.interfaces;
 
 import org.w3c.dom.html.HTMLElement;
 

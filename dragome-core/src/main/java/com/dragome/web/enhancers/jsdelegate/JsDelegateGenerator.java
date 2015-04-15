@@ -21,7 +21,7 @@ import javassist.bytecode.Descriptor;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
-import com.dragome.web.html.dom.html5canvas.HTMLCanvasElement;
+import com.dragome.web.html.dom.html5canvas.interfaces.HTMLCanvasElement;
 
 public class JsDelegateGenerator
 {

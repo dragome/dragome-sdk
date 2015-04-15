@@ -33,9 +33,9 @@ import com.dragome.helpers.Utils;
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
-import com.dragome.web.html.dom.html5canvas.CanvasImageSource;
-import com.dragome.web.html.dom.html5canvas.CanvasRenderingContext2D;
-import com.dragome.web.html.dom.html5canvas.HTMLCanvasElement;
+import com.dragome.web.html.dom.html5canvas.interfaces.CanvasImageSource;
+import com.dragome.web.html.dom.html5canvas.interfaces.CanvasRenderingContext2D;
+import com.dragome.web.html.dom.html5canvas.interfaces.HTMLCanvasElement;
 
 @DragomeConfiguratorImplementor
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
