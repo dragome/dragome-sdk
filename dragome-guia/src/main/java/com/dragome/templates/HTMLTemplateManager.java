@@ -21,7 +21,7 @@ import com.dragome.render.canvas.HTMLCanvasFactory;
 import com.dragome.render.canvas.interfaces.CanvasFactory;
 import com.dragome.render.html.HTMLTemplateHandler;
 import com.dragome.render.html.HTMLTemplateLoadingStrategy;
-import com.dragome.render.html.components.HTMLComponentRenderer;
+import com.dragome.render.html.renderers.HTMLComponentRenderer;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.render.interfaces.TemplateHandler;
 import com.dragome.services.ServiceLocator;

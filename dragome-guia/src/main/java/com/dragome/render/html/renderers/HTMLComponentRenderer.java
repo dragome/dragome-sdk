@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.render.html.components;
+package com.dragome.render.html.renderers;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -9,7 +9,7 @@ import com.dragome.guia.components.interfaces.VisualButton;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.render.html.components.Mergeable;
+import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
 
 public class SwingVisualButtonRenderer implements ComponentRenderer<Object, VisualButton>

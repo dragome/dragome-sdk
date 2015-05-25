@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.dragome.render.html.components.Mergeable;
+import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.templates.TemplateImpl;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;

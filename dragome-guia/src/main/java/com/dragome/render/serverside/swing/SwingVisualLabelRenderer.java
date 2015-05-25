@@ -7,7 +7,7 @@ import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.render.html.components.Mergeable;
+import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
 
 public class SwingVisualLabelRenderer implements ComponentRenderer<Object, VisualLabel<Object>>

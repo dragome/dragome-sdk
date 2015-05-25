@@ -18,7 +18,7 @@ package com.dragome.render.html;
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
-import com.dragome.render.html.components.AbstractHTMLComponentRenderer;
+import com.dragome.render.html.renderers.AbstractHTMLComponentRenderer;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateLoadingStrategy;

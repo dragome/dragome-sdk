@@ -7,7 +7,7 @@ import javax.swing.event.ChangeListener;
 import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.render.html.components.Mergeable;
+import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
 
 public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, VisualTextField<Object>>

@@ -23,7 +23,7 @@ import com.dragome.guia.events.listeners.interfaces.FocusListener;
 import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
 import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
 import com.dragome.model.interfaces.Style;
-import com.dragome.render.html.components.DefaultStyleChangedListener;
+import com.dragome.render.html.renderers.DefaultStyleChangedListener;
 
 public class AbstractVisualComponent extends DefaultEventProducer implements VisualComponent
 {
