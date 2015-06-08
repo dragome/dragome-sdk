@@ -132,5 +132,9 @@ public final class Float extends Number
 		ScriptHelper.put("value", value, this);
 		return (String) ScriptHelper.eval("String(value)", this);
 	}
-
+	
+	public static String toString(float f)
+	{
+		return f + "";
+	}
 }

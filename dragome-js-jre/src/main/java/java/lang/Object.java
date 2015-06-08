@@ -51,6 +51,7 @@ public class Object
 	public Class getClass()
 	{
 		String className= (String) ScriptHelper.eval("this.classname", this);
+		className= className.replace("_", ".");
 		try
 		{
 			return Class.forName(className);
