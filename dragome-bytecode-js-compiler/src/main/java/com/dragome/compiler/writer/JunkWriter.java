@@ -1,6 +1,8 @@
 package com.dragome.compiler.writer;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilterWriter;
 import java.io.IOException;
@@ -19,6 +21,8 @@ public class JunkWriter extends FilterWriter
 	private int sizeOfCurrentJunk;
 
 	private int sizeOfAllJunks= 0;
+
+	private String fileName;
 
 	public JunkWriter(File assembly) throws IOException
 	{
@@ -39,9 +43,9 @@ public class JunkWriter extends FilterWriter
 		}
 
 		Log logger= Log.getLogger();
-		String newJunkName= "webapp.js";
-		logger.debug("Creating assembly " + newJunkName);
-		out= new FileWriter(new File(assembly, newJunkName));
+		fileName= "webapp.js";
+		logger.debug("Creating assembly " + fileName);
+		out= new FileWriter(new File(assembly, fileName));
 		sizeOfCurrentJunk= 0;
 		junkCount++;
 	}
@@ -84,6 +88,10 @@ public class JunkWriter extends FilterWriter
 		// Set to 0 in case super.close() calls flush().
 		sizeOfCurrentJunk= 0;
 		super.close();
+
+		File file= new File(assembly, fileName);
+		File outFile= new File(assembly, fileName.replace(".js", "-1.js"));
+		DeflateEncoder.encode(file, outFile);
 	}
 
 	public int getSize()
