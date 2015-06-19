@@ -15,39 +15,21 @@
  */
 package com.dragome.services;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.dragome.commons.DragomeConfigurator;
-import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
-import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.helpers.TimeCollector;
-import com.dragome.helpers.jdbc.NullResultSetProcessorExecutor;
 import com.dragome.helpers.jdbc.ResultSetProcessorExecutor;
 import com.dragome.services.interfaces.ParametersHandler;
 import com.dragome.services.interfaces.ReflectionService;
-import com.dragome.services.interfaces.RequestExecutor;
 import com.dragome.services.interfaces.SerializationService;
 import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.services.serialization.FlexJsonSerializationService;
-import com.dragome.services.serverside.ServerReflectionServiceImpl;
-import com.dragome.web.debugging.messages.ClientToServerMessageChannel;
-import com.dragome.web.debugging.messages.MessageChannel;
-import com.dragome.web.debugging.messages.ServerToClientMessageChannel;
-import com.dragome.web.dispatcher.EventDispatcher;
-import com.dragome.web.dispatcher.EventDispatcherImpl;
-import com.dragome.web.helpers.jdbc.BrowserResultSetProcessorExecutor;
-import com.dragome.web.html.dom.DomHandler;
-import com.dragome.web.html.dom.w3c.BrowserDomHandler;
-import com.dragome.web.services.BrowserParametersHandler;
-import com.dragome.web.services.ClientSideServiceFactory;
-import com.dragome.web.services.RequestExecutorImpl;
 
 public class ServiceLocator
 {
 	protected static ServiceLocator instance;
-
 	public static ServiceLocator getInstance()
 	{
 		if (instance == null)
@@ -56,153 +38,65 @@ public class ServiceLocator
 		return instance;
 	}
 
-	protected boolean clientSideEnabled= false;
-
-	protected DomHandler domHandler;
+	protected boolean localExecution= false;
 	protected TimeCollector timeCollector;
-	protected MessageChannel serverToClientMessageChannel;
-	protected MessageChannel clientToServerMessageChannel;
 	protected SerializationService serializationService;
 	protected MetadataManager metadataManager;
 	protected ExecutorService fixedThreadPool;
 	protected DragomeConfigurator configurator;
-	protected boolean localExecution= false;
+	protected ReflectionService reflectionService;
+	protected ResultSetProcessorExecutor resultSetProcessorExecutor;
+	protected ParametersHandler parametersHandler;
+	protected ServiceFactory serviceFactory;
 
-	public boolean isClientSideEnabled()
+	public ServiceLocator()
 	{
-		return clientSideEnabled;
-	}
-
-	@MethodAlias(alias= "this.setClientSideEnabled")
-	public void setClientSideEnabled(boolean clientSideEnabled)
-	{
-		this.clientSideEnabled= clientSideEnabled;
+		serializationService= new FlexJsonSerializationService();
+		reflectionService= new ReflectionServiceImpl();
+		configurator= reflectionService.getConfigurator();
+		fixedThreadPool= Executors.newCachedThreadPool();
+		timeCollector= new TimeCollector();
+		metadataManager= new MetadataManager();
+		serviceFactory= new LocalServiceFactory();
 	}
 
 	public ReflectionService getReflectionService()
 	{
-		if (isClientSide())
-			return new ReflectionServiceImpl();
-		else
-			return new ServerReflectionServiceImpl();
-	}
-
-	public DomHandler getDomHandler()
-	{
-		if (domHandler == null)
-			domHandler= new BrowserDomHandler();
-		return domHandler;
-	}
-	public void setDomHandler(DomHandler domHandler)
-	{
-		this.domHandler= domHandler;
+		return reflectionService;
 	}
 
 	public ResultSetProcessorExecutor getResultSetProcessorExecutor()
 	{
-		if (!isClientSide())
-			return new NullResultSetProcessorExecutor();
-		else
-			return new BrowserResultSetProcessorExecutor();
+		return resultSetProcessorExecutor;
 	}
 
 	public ParametersHandler getParametersHandler()
 	{
-		//	if (isClientSide())
-		return new BrowserParametersHandler();
-		//	else
-		//	    return new CommandLineParametersHandler();
+		return parametersHandler;
 	}
 
 	public SerializationService getSerializationService()
 	{
-		if (serializationService == null)
-			serializationService= new FlexJsonSerializationService();
-
 		return serializationService;
 	}
 
 	public ServiceFactory getServiceFactory()
 	{
-		if (localExecution)
-			return new LocalServiceFactory();
-		else
-			return getClientSideServiceFactory();
-	}
-	public ServiceFactory getClientSideServiceFactory()
-	{
-		return new ClientSideServiceFactory();
-	}
-
-	public ServiceFactory getServerSideServiceFactory()
-	{
-		return new ServerSideServiceFactory();
+		return serviceFactory;
 	}
 
 	public TimeCollector getTimeCollector()
 	{
-		if (timeCollector == null)
-			timeCollector= new TimeCollector();
-
 		return timeCollector;
-	}
-
-	public EventDispatcher getEventDispatcher()
-	{
-		if (isRemoteDebugging())
-			return RequestExecutorImpl.createRemoteServiceByWebSocket(EventDispatcher.class);
-		else
-			return new EventDispatcherImpl();
-	}
-
-	public boolean isRemoteDebugging()
-	{
-		return Boolean.parseBoolean(getParametersHandler().getParameter("debug"));
-	}
-
-	public boolean isClientSide()
-	{
-		return clientSideEnabled;
-	}
-
-	public boolean isMethodVoid(Method method)
-	{
-		return method.getReturnType().equals(Void.class) || method.getReturnType().equals(void.class);
-	}
-
-	public MessageChannel getServerToClientMessageChannel()
-	{
-		if (serverToClientMessageChannel == null)
-			serverToClientMessageChannel= new ServerToClientMessageChannel();
-
-		return serverToClientMessageChannel;
-	}
-
-	public void setMessageChannelToClientSide(MessageChannel messageChannel)
-	{
-		serverToClientMessageChannel= messageChannel;
-	}
-
-	public MessageChannel getClientToServerMessageChannel()
-	{
-		if (clientToServerMessageChannel == null)
-			clientToServerMessageChannel= new ClientToServerMessageChannel();
-
-		return clientToServerMessageChannel;
 	}
 
 	public MetadataManager getMetadataManager()
 	{
-		if (metadataManager == null)
-			metadataManager= new MetadataManager();
-
 		return metadataManager;
 	}
 
 	public ExecutorService getExecutorService()
 	{
-		if (fixedThreadPool == null)
-			fixedThreadPool= Executors.newCachedThreadPool();
 		return fixedThreadPool;
 	}
 
@@ -213,29 +107,7 @@ public class ServiceLocator
 
 	public DragomeConfigurator getConfigurator()
 	{
-		try
-		{
-			if (configurator == null && !isClientSide())
-				configurator= getReflectionService().getConfigurator();
-
-			return configurator;
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
-	public RequestExecutor getRequestExecutor()
-	{
-		return new RequestExecutorImpl(false);
-	}
-
-	public BytecodeToJavascriptCompiler getBytecodeToJavascriptCompiler()
-	{
-		ReflectionService reflectionService= getReflectionService();
-		Class<BytecodeToJavascriptCompiler> clazz= (Class<BytecodeToJavascriptCompiler>) reflectionService.getSubTypesOf(BytecodeToJavascriptCompiler.class).iterator().next();
-		return reflectionService.createClassInstance(clazz);
+		return configurator;
 	}
 
 	public boolean isLocalExecution()
@@ -246,5 +118,40 @@ public class ServiceLocator
 	public void setLocalExecution(boolean localExecution)
 	{
 		this.localExecution= localExecution;
+	}
+
+	public void setTimeCollector(TimeCollector timeCollector)
+	{
+		this.timeCollector= timeCollector;
+	}
+
+	public void setSerializationService(SerializationService serializationService)
+	{
+		this.serializationService= serializationService;
+	}
+
+	public void setMetadataManager(MetadataManager metadataManager)
+	{
+		this.metadataManager= metadataManager;
+	}
+
+	public void setReflectionService(ReflectionService reflectionService)
+	{
+		this.reflectionService= reflectionService;
+	}
+
+	public void setResultSetProcessorExecutor(ResultSetProcessorExecutor resultSetProcessorExecutor)
+	{
+		this.resultSetProcessorExecutor= resultSetProcessorExecutor;
+	}
+
+	public void setParametersHandler(ParametersHandler parametersHandler)
+	{
+		this.parametersHandler= parametersHandler;
+	}
+
+	public void setServiceFactory(ServiceFactory serviceFactory)
+	{
+		this.serviceFactory= serviceFactory;
 	}
 }
