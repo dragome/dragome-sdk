@@ -41,7 +41,14 @@ public class MetadataManager
 			{
 				Set<Class<?>> implementations=ServiceLocator.getInstance().getReflectionService().getSubTypesOf(type);
 				if (!implementations.isEmpty())
-					return implementations.iterator().next();
+				{
+					for (Class<?> class1 : implementations)
+					{
+						if (!class1.getName().contains("$")) //TODO fixit 
+							return class1;
+					}
+					return null;
+				}
 			}
 		}
 

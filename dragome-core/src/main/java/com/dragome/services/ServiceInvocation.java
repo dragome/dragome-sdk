@@ -93,7 +93,8 @@ public class ServiceInvocation
 			Object service= services.get(type);
 			if (service == null)
 			{
-				service= ServiceLocator.getInstance().getMetadataManager().getImplementationForInterface(type).newInstance();
+				Class<?> implementationForInterface= ServiceLocator.getInstance().getMetadataManager().getImplementationForInterface(type);
+				service= implementationForInterface.newInstance();
 				services.put(type, service);
 //				System.out.println("service " + type.getName() + " created");
 			}

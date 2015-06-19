@@ -63,20 +63,37 @@ public class ReflectionServiceImpl implements ReflectionService
 
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
-		Class<? extends T> result= null;
-		if (type.getName().equals("com.dragome.guia.GuiaServiceFactory"))
-			try
-			{
-				result= (Class<? extends T>) Class.forName("com.dragome.render.html.HTMLGuiaServiceFactory");
-			}
-			catch (ClassNotFoundException e)
-			{
-			}
+		Class<? extends T> result= getHardcodedImplementation(type);
 
 		//		Reflections reflections= new Reflections("");
 		//		Set<Class<?>> implementations= reflections.getSubTypesOf(type);
 
 		return result != null ? new HashSet<Class<? extends T>>(Arrays.asList(result)) : null;
+	}
+	private <T> Class<? extends T> getHardcodedImplementation(final Class<T> type)
+	{
+		String[] implementations= new String[] { // 
+		"com.dragome.guia.GuiaServiceFactory", "com.dragome.render.html.HTMLGuiaServiceFactory", //
+				"com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor", "com.dragome.web.debugging.CrossExecutionCommandProcessorImpl" };
+
+		for (int i= 0; i < implementations.length; i++)
+		{
+			Class<? extends T> result= null;
+			String checkType= implementations[i];
+			String testImplementation= implementations[i + 1];
+
+			if (type.getName().equals(checkType))
+				try
+				{
+					result= (Class<? extends T>) Class.forName(testImplementation);
+					return result;
+				}
+				catch (ClassNotFoundException e)
+				{
+				}
+		}
+
+		return null;
 	}
 	@Override
 	public DragomeConfigurator getConfigurator()
