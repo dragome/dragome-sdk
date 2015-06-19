@@ -43,7 +43,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 			{
 				return bytecode;
 			}
-			
+
 			public boolean requiresTransformation(String className)
 			{
 				return false;
@@ -89,8 +89,8 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 				classpathEntry.contains("dragome-core-") || //
 				classpathEntry.contains("dragome-guia-") || //
 				classpathEntry.contains("dragome-form-bindings-") || //
-				classpathEntry.contains("dragome-method-logger-") //
-		;
+				classpathEntry.contains("dragome-method-logger-") || //
+				classpathEntry.contains("dragome-web-");
 
 		return include;
 	}
