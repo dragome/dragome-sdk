@@ -15,6 +15,7 @@
  */
 package com.dragome.guia.components;
 
+import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
@@ -23,7 +24,6 @@ import com.dragome.guia.events.listeners.interfaces.FocusListener;
 import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
 import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
 import com.dragome.model.interfaces.Style;
-import com.dragome.render.html.renderers.DefaultStyleChangedListener;
 
 public class AbstractVisualComponent extends DefaultEventProducer implements VisualComponent
 {
@@ -31,8 +31,8 @@ public class AbstractVisualComponent extends DefaultEventProducer implements Vis
 	protected VisualPanel parent;
 	protected Style style= new DefaultStyle(this);
 
-	protected static DefaultStyleChangedListener styleChangedListener= new DefaultStyleChangedListener();
-
+	protected static StyleChangedListener styleChangedListener= GuiaServiceLocator.getInstance().getStyleChangeListener();
+	
 	public AbstractVisualComponent()
 	{
 		initListeners();
