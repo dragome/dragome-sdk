@@ -47,7 +47,9 @@
     <module>dragome-form-bindings</module>
     <module>dragome-callback-evictor</module>
     <module>dragome-method-logger</module>
+    <module>dragome-web</module>
     <module>dragome-guia</module>
+    <module>dragome-guia-web</module>
     <module>dragome-maven-plugins</module>
   </modules>
 
@@ -130,7 +132,17 @@
     </dependency>
     <dependency>
       <groupId>com.dragome</groupId>
+      <artifactId>dragome-web</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
       <artifactId>dragome-guia</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-guia-web</artifactId>
       <version>${dragome.version}</version>
     </dependency>
   </dependencies>
