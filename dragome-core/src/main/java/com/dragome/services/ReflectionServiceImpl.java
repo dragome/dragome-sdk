@@ -17,6 +17,8 @@ package com.dragome.services;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -59,18 +61,28 @@ public class ReflectionServiceImpl implements ReflectionService
 		return ReflectionHelper.forName(className);
 	}
 
-	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type) 
+	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
+		Class<? extends T> result= null;
+		if (type.getName().equals("com.dragome.guia.GuiaServiceFactory"))
+			try
+			{
+				result= (Class<? extends T>) Class.forName("com.dragome.render.html.HTMLGuiaServiceFactory");
+			}
+			catch (ClassNotFoundException e)
+			{
+			}
+
 		//		Reflections reflections= new Reflections("");
 		//		Set<Class<?>> implementations= reflections.getSubTypesOf(type);
 
-		return null;
+		return result != null ? new HashSet<Class<? extends T>>(Arrays.asList(result)) : null;
 	}
 	@Override
-    public DragomeConfigurator getConfigurator()
-    {
-	    return null;
-    }
+	public DragomeConfigurator getConfigurator()
+	{
+		return null;
+	}
 	@Override
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
 	{
