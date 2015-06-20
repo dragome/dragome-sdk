@@ -2,11 +2,8 @@ package com.dragome;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,9 +20,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
-
 import com.dragome.services.ServiceLocator;
+import com.dragome.services.serverside.ServerReflectionServiceImpl;
 import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
 @Mojo(name= "compileclient")
@@ -83,8 +79,7 @@ public class CompileClientMojo extends AbstractMojo
 
 	private void copyResourceMinifyJS(String aResourceName, String aLocation)
 	{
-
-		JSMinProcessor theMinProcessor= new JSMinProcessor();
+//		JSMinProcessor theMinProcessor= new JSMinProcessor();
 
 		getLog().info("Copy " + aResourceName + " to minified " + aLocation);
 		InputStream theInputStream= getClass().getResourceAsStream(aResourceName);
@@ -108,7 +103,9 @@ public class CompileClientMojo extends AbstractMojo
 			File theDestinatioFile= new File(destinationDirectory, theSystemLocation);
 			try
 			{
-				theMinProcessor.process(new InputStreamReader(theInputStream), new FileWriter(theDestinatioFile));
+				Files.copy(theInputStream, theDestinatioFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				
+//				theMinProcessor.process(new InputStreamReader(theInputStream), new FileWriter(theDestinatioFile));
 			}
 			catch (Exception e)
 			{
@@ -117,7 +114,7 @@ public class CompileClientMojo extends AbstractMojo
 		}
 		else
 		{
-			throw new IllegalArgumentException("Cannot find ressource " + aResourceName + " in ClassPath");
+			throw new IllegalArgumentException("Cannot find resource " + aResourceName + " in ClassPath");
 		}
 	}
 
@@ -131,12 +128,17 @@ public class CompileClientMojo extends AbstractMojo
 
 		URLClassLoader theCurrentClassLoader= (URLClassLoader) getClass().getClassLoader();
 		URL[] theConfiguredURLs= theCurrentClassLoader.getURLs();
+		ServiceLocator serviceLocator= ServiceLocator.getInstance();
+		serviceLocator.setReflectionService(new ServerReflectionServiceImpl());
+		if (serviceLocator.getConfigurator() == null)
+			serviceLocator.setConfigurator(serviceLocator.getReflectionService().getConfigurator());
+		
 		for (URL theURL : theConfiguredURLs)
 		{
 			getLog().info("Found classpath element " + theURL);
 			String theClassPathEntry= new File(theURL.toURI()).toString();
 			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
-			boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(theClassPathEntry);
+			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
 			if (isClassesFolder || addToClasspath)
 			{
 				theClassPathForCompiler.append(theClassPathEntry + ";");
@@ -183,7 +185,7 @@ public class CompileClientMojo extends AbstractMojo
 
 		// Ok, now we have a webapp.js file, do we need to minify it?
 		getLog().info("Minifying webapp.js to compiled.js");
-		JSMinProcessor theProcessor= new JSMinProcessor();
+//		JSMinProcessor theProcessor= new JSMinProcessor();
 
 		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
