@@ -200,7 +200,7 @@
           </links>
           <show>protected</show>
           <source>1.5</source>
-          <sourcepath>${basedir}/src/main/java/com/dragome/annotations</sourcepath>
+          <sourcepath>${basedir}/src/main/java/com/dragome/helpers</sourcepath>
         </configuration>
         <executions>
           <execution>
