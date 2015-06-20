@@ -54,36 +54,41 @@ public class CompilerServlet extends GetPostServlet
 		final StringBuilder classPath= new StringBuilder();
 
 		ClassLoader c= getClass().getClassLoader();
-		URLClassLoader u= (URLClassLoader) c;
-		URL[] urls= u.getURLs();
-		String classesFolder= "";
-		for (URL i : urls)
+		if (c instanceof URLClassLoader)
 		{
-			String classPathEntry= new File(i.toURI()).toString();
-			boolean isClassesFolder= i.toString().endsWith("/classes/") || i.toString().endsWith("/classes");
-			boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(classPathEntry);
-
-			if (isClassesFolder || addToClasspath)
-				classPath.append(classPathEntry + ";");
-
-			if (isClassesFolder)
-				classesFolder= classPathEntry;
-
-			LOGGER.log(Level.INFO, "classpath entry: " + classPathEntry);
-		}
-
-		final String path= new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString() + File.separator + "compiled-js";
-
-		LOGGER.log(Level.INFO, "classes: " + path);
-
-		final String classesFolder2= classesFolder;
-
-		new Thread()
-		{
-			public void run()
+			URLClassLoader urlClassLoader= (URLClassLoader) c;
+			URL[] urls= urlClassLoader.getURLs();
+			String classesFolder= "";
+			for (URL i : urls)
 			{
-				DirectoryWatcher.main(new String[] { "-r", classesFolder2 }, classPath.toString(), path);
+				String classPathEntry= new File(i.toURI()).toString();
+				boolean isClassesFolder= i.toString().endsWith("/classes/") || i.toString().endsWith("/classes");
+				boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(classPathEntry);
+
+				if (isClassesFolder || addToClasspath)
+					classPath.append(classPathEntry + ";");
+
+				if (isClassesFolder)
+					classesFolder= classPathEntry;
+
+				LOGGER.log(Level.INFO, "classpath entry: " + classPathEntry);
 			}
-		}.start();
+
+			final String path= new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString() + File.separator + "compiled-js";
+
+			LOGGER.log(Level.INFO, "classes: " + path);
+
+			final String classesFolder2= classesFolder;
+
+			new Thread()
+			{
+				public void run()
+				{
+					DirectoryWatcher.main(new String[] { "-r", classesFolder2 }, classPath.toString(), path);
+				}
+			}.start();
+		}
+		else 
+			LOGGER.log(Level.SEVERE, "Cannot start compiler because there is no URLClassLoader available");
 	}
 }
