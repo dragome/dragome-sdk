@@ -28,6 +28,13 @@ public class DragomeEntityManager
 		entities.put(identityHashCode, entity);
 		return identityHashCode;
 	}
+	
+	public static Object remove(Object entity)
+	{
+		String identityHashCode= getEntityId(entity);
+		return entities.remove(identityHashCode);
+	}
+
 
 	public static Object get(String id)
 	{

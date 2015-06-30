@@ -37,6 +37,20 @@ public class EventDispatcherImpl implements EventDispatcher
 
 		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
 	}
+	
+	public static void remmoveEventListener(Element element, String... eventTypes)
+	{
+		for (String eventType : eventTypes)
+			element.removeAttribute("on" + eventType);
+		
+		element.removeAttribute(ELEMENT_ID_ATTRIBUTE);
+	}
+
+	public static void remmoveEventListener(Element element, EventListener eventListener, String... eventTypes)
+	{
+		remmoveEventListener(element, eventTypes);
+		DragomeEntityManager.remove(eventListener);
+	}
 
 	public void keyEventPerformedById(final String eventName, final String id, final int code)
 	{
