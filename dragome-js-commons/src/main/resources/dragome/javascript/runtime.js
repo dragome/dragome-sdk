@@ -443,11 +443,16 @@ function createProxyOf(types, methods, handler1, handler)
 		membersMap[methodName] = createInvoker(methods.$$$array[i]);
 	}
 
+	
+	var nativeTypes = new Array(types.length);
+	for ( var i in types)
+		nativeTypes[i]= types[i].$$$nativeClass;
+	
 	var nextNumber = objectId({});
 
 	qx.Class.define("ProxyOf_" + nextNumber, {
 		extend : java_lang_Object,
-		implement : types,
+		implement : nativeTypes,
 		construct : function()
 		{
 		},
