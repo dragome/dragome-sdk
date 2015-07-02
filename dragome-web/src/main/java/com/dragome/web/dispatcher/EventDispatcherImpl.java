@@ -38,7 +38,7 @@ public class EventDispatcherImpl implements EventDispatcher
 		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
 	}
 	
-	public static void remmoveEventListener(Element element, String... eventTypes)
+	public static void removeEventListener(Element element, String... eventTypes)
 	{
 		for (String eventType : eventTypes)
 			element.removeAttribute("on" + eventType);
@@ -46,9 +46,9 @@ public class EventDispatcherImpl implements EventDispatcher
 		element.removeAttribute(ELEMENT_ID_ATTRIBUTE);
 	}
 
-	public static void remmoveEventListener(Element element, EventListener eventListener, String... eventTypes)
+	public static void removeEventListener(Element element, EventListener eventListener, String... eventTypes)
 	{
-		remmoveEventListener(element, eventTypes);
+		removeEventListener(element, eventTypes);
 		DragomeEntityManager.remove(eventListener);
 	}
 
