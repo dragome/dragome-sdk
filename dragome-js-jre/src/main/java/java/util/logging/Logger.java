@@ -73,4 +73,13 @@ public class Logger
 		log(Level.FINEST, msg);
 	}
 
+	public void severe(String msg)
+	{
+		log(Level.SEVERE, msg);
+	}
+
+	public void warning(String msg)
+	{
+		log(Level.WARNING, msg);
+	}
 }

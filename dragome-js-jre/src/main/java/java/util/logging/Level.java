@@ -35,6 +35,8 @@ public class Level
 	public static final Level OFF= new Level("OFF", Integer.MAX_VALUE);
 	
     public static final Level FINEST = new Level("FINEST", 300);
+    
+    public static final Level SEVERE = new Level("SEVERE",1000);    
 
 	
 

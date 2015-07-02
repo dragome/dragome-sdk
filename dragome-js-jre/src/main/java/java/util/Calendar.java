@@ -137,7 +137,7 @@ public class Calendar
 	*/
 	private Date date;
 	private TimeZone timeZone;
-	private String zID;
+	private String zID= "";
 
 	public Calendar()
 	{
@@ -217,7 +217,7 @@ public class Calendar
 			throw new IllegalArgumentException("Field number not allowed: " + field);
 
 		ScriptHelper.put("functionName", "get" + functionName, this);
-		int value= ScriptHelper.evalInt("this.date.nativeDate[functionName]()", this);
+		int value= ScriptHelper.evalInt("this.$$$date.nativeDate[functionName]()", this);
 
 		if (field == DAY_OF_WEEK)
 		{
@@ -257,7 +257,7 @@ public class Calendar
 
 		ScriptHelper.put("value", value, this);
 		ScriptHelper.put("functionName", "set" + functionName, this);
-		ScriptHelper.eval("this.date.nativeDate[functionName](value)", this);
+		ScriptHelper.eval("this.$$$date.nativeDate[functionName](value)", this);
 	}
 
 	public boolean equals(Object obj)
