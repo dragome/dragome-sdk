@@ -384,9 +384,31 @@ public class LinkedList<E> extends ArrayList<E> implements List<E>, Queue<E>, Se
 		}
 		return false;
 	}
-	
+
 	public boolean isEmpty()
 	{
 		return size == 0;
+	}
+
+	public E get(int index)
+	{
+		Node<E> node= getNode(index);
+
+		return node.value;
+	}
+
+	private Node<E> getNode(int index)
+	{
+		Node<E> node= header.next;
+		for (int i= 0; i < index; ++i)
+			node= node.next;
+		return node;
+	}
+
+	public E remove(int index)
+	{
+		Node<E> node= getNode(index);
+		node.remove();
+		return node.value;
 	}
 }
