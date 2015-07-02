@@ -129,6 +129,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 
 	protected ArrayList(ArrayList<E> theBackingList, int theStart, int theEnd)
 	{
+		this();
 		start= theStart;
 		end= theEnd;
 		backingList= theBackingList;
@@ -140,6 +141,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 	 */
 	public ArrayList(int initialCapacity)
 	{
+		this();
 		initialCapacity++;
 	}
 
