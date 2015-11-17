@@ -2,6 +2,7 @@ package com.dragome.forms.bindings.client.command;
 
 import com.dragome.forms.bindings.extra.user.client.Command;
 
+
 /**
  * AbstractUiCommand provides a support for managing enabled state.
  *

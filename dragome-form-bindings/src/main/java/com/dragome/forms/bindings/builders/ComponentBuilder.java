@@ -19,6 +19,7 @@ import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.methodlogger.enhancers.MethodInvocationListener;
 import com.dragome.methodlogger.enhancers.MethodInvocationLogger;
+import com.dragome.templates.TemplateImpl;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 
@@ -77,11 +78,10 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 			TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
 			template= templateLayout.getTemplate();
 		}
-		
+
 		if (template == null)
 			throw new RuntimeException("VisualPanel has not template associated");
-		
-		
+
 		configureMethodListener();
 	}
 
@@ -94,7 +94,26 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 
 	public TemplateBindingBuilder bindTemplate(String aChildTemplateName)
 	{
-		return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName), parentBuilder);
+		Template child;
+		if (template.hasChild(aChildTemplateName))
+			child= template.getChild(aChildTemplateName);
+		else
+			child= TemplateImpl.findTemplate(getTopParent(template), aChildTemplateName);
+
+		return new TemplateBindingBuilder((VisualPanel) component, child, parentBuilder);
+	}
+
+	private Template getTopParent(Template template)
+	{
+		while (template.getParent() != null)
+			template= template.getParent();
+		
+		return template;
+	}
+
+	public TemplateBindingBuilder template(String aChildTemplateName)
+	{
+		return bindTemplate(aChildTemplateName);
 	}
 
 	public VisualPanel panel()

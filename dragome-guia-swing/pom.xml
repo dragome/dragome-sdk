@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.dragome</groupId>
-  <artifactId>dragome-core</artifactId>
+  <artifactId>dragome-guia-swing</artifactId>
   <version>${dragome.version}</version>
-  <name>dragome-core</name>
+  <name>dragome-guia-swing</name>
   <packaging>jar</packaging>
 
-  <description>Dragome SDK module: core</description>
+  <description>Dragome SDK module: Guia Swing</description>
   <url>http://www.dragome.com</url>
 
   <properties>
@@ -61,15 +61,31 @@
 
 
   <dependencies>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-all</artifactId>
-      <version>5.0.2</version>
-    </dependency>
+
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
       <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-core</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.miglayout</groupId>
+      <artifactId>miglayout</artifactId>
+      <version>3.7.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-guia</artifactId>
+      <version>0.96-beta2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-web</artifactId>
+      <version>0.96-beta2</version>
     </dependency>
   </dependencies>
 
@@ -150,7 +166,7 @@
           </links>
           <show>protected</show>
           <source>1.5</source>
-          <sourcepath>${basedir}/src/main/java/com/dragome/annotations</sourcepath>
+          <sourcepath>${basedir}/src/main/java/com/dragome/helpers</sourcepath>
         </configuration>
         <executions>
           <execution>

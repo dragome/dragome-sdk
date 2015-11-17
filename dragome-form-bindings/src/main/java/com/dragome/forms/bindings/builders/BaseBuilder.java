@@ -16,7 +16,6 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.dragome.forms.bindings.client.form.binding.FormBinder;

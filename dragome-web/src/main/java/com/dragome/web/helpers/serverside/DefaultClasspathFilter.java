@@ -10,11 +10,12 @@ public class DefaultClasspathFilter implements FileFilter
 	public boolean accept(File pathname)
 	{
 		String string= pathname.toString();
+		boolean isCompilerPackage= string.contains("com" + File.separator + "dragome" + File.separator + "compiler");
 		boolean isServerSideOnly= string.contains(File.separator + "serverside");
 		boolean isDebuggingPackage= string.contains(File.separator + "debugging");
 		if (!CompilerMode.Production.toString().equals(System.getProperty("dragome-compile-mode")))
 			isDebuggingPackage= false;
 
-		return !(isServerSideOnly || isDebuggingPackage);
+		return !(isServerSideOnly || isDebuggingPackage || isCompilerPackage);
 	}
 }

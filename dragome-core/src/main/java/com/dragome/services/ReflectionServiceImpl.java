@@ -74,9 +74,10 @@ public class ReflectionServiceImpl implements ReflectionService
 	{
 		String[] implementations= new String[] { // 
 		"com.dragome.guia.GuiaServiceFactory", "com.dragome.render.html.HTMLGuiaServiceFactory", //
+				"com.dragome.guia.GuiaServiceFactory", "com.dragome.android.AndroidGuiaServiceFactory", //
 				"com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor", "com.dragome.web.debugging.CrossExecutionCommandProcessorImpl" };
 
-		for (int i= 0; i < implementations.length; i++)
+		for (int i= 0; i < implementations.length; i+= 2)
 		{
 			Class<? extends T> result= null;
 			String checkType= implementations[i];

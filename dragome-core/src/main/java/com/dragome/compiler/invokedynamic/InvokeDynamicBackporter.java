@@ -11,7 +11,7 @@
 
 package com.dragome.compiler.invokedynamic;
 
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
+import static org.objectweb.asm.Opcodes.*;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -48,6 +48,7 @@ public class InvokeDynamicBackporter implements BytecodeTransformer
 
 		public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
 		{
+			version= Opcodes.V1_6;
 			super.visit(version, access, name, signature, superName, interfaces);
 			this.classAccess= access;
 			this.className= name;
@@ -93,6 +94,14 @@ public class InvokeDynamicBackporter implements BytecodeTransformer
 			this.myClassName= myClassName;
 		}
 
+		public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf)
+		{
+			if (opcode == INVOKESTATIC && itf)
+				itf= false;
+			
+			super.visitMethodInsn(opcode, owner, name, desc, itf);
+		}
+		
 		public void visitInvokeDynamicInsn(String name, String desc, Handle bsm, Object... bsmArgs)
 		{
 			backportLambda(name, Type.getType(desc), bsm, bsmArgs);
@@ -119,6 +128,7 @@ public class InvokeDynamicBackporter implements BytecodeTransformer
 
 			String runnableSignature= "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;";
 			this.visitMethodInsn(INVOKESTATIC, "com/dragome/utils/DragomeCallsiteFactory", "create", runnableSignature, false);
+			this.visitTypeInsn(CHECKCAST, returnTypeName.replace(".", "/"));
 		}
 
 		private void createArrayWithParameters(int parametersCount, Type[] argumentTypes)

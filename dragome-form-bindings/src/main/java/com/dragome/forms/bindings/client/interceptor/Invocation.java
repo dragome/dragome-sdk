@@ -2,6 +2,7 @@ package com.dragome.forms.bindings.client.interceptor;
 
 import com.dragome.forms.bindings.extra.user.client.Command;
 
+
 /**
  * This class represents one link in an interceptor chain.  Invocations allow {@link Interceptor}
  * instances to stop the execution of a command.  In order to continue the execution of a command the interceptor

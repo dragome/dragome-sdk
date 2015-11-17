@@ -8,7 +8,7 @@ import com.dragome.templates.interfaces.TemplateListener;
 import com.dragome.templates.interfaces.TemplateLoadingStrategy;
 import com.dragome.templates.interfaces.TemplateManager;
 
-public class SwingGuiaServiceFactory 
+public class SwingGuiaServiceFactory implements GuiaServiceFactory
 {
 	public TemplateManager createTemplateManager()
 	{
@@ -37,7 +37,7 @@ public class SwingGuiaServiceFactory
 			public void styleChanged(Style style)
 			{
 			}
-			
+
 			public void boundsChanged(Style style)
 			{
 			}

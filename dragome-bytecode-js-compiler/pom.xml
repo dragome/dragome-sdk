@@ -114,6 +114,11 @@
       <artifactId>dragome-js-commons</artifactId>
       <version>${dragome.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-core</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <resources>

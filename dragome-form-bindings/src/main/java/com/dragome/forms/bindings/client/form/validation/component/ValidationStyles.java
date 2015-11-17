@@ -21,7 +21,7 @@ import java.util.TreeMap;
 
 import com.dragome.forms.bindings.client.form.validation.Severity;
 import com.dragome.forms.bindings.client.form.validation.ValidationResult;
-import com.dragome.forms.bindings.extra.user.client.ui.UIObject;
+import com.dragome.model.interfaces.UIObject;
 
 /**
  * Created by IntelliJ IDEA.
