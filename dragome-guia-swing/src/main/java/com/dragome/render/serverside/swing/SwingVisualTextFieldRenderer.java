@@ -1,10 +1,12 @@
 package com.dragome.render.serverside.swing;
 
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.JTextComponent;
 
 import com.dragome.guia.components.interfaces.VisualTextField;
+import com.dragome.model.interfaces.ValueChangeEvent;
+import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.html.renderers.Mergeable;
@@ -20,7 +22,7 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 		{
 			public void mergeWith(Object element)
 			{
-				final JTextField jTextField= (JTextField) element;
+				final JTextComponent jTextField= (JTextComponent) element;
 
 				SwingUtils.addChangeListener(jTextField, new ChangeListener()
 				{
@@ -31,6 +33,16 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 				});
 
 				jTextField.setText(visualTextField.getValue() + "");
+
+				visualTextField.addValueChangeHandler(new ValueChangeHandler<Object>()
+				{
+					public void onValueChange(ValueChangeEvent<Object> event)
+					{
+						String value= visualTextField.getRenderer().render(event.getValue());
+						jTextField.setText(value);
+					}
+				});
+
 			}
 		});
 		return canvasImpl;

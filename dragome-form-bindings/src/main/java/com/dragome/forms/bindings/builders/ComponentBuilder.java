@@ -34,7 +34,7 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 			{
 				private int setters= 0;
 
-				public void onMethodEnter(Object instance, String name)
+				public synchronized void onMethodEnter(Object instance, String name)
 				{
 					if (isGetter(name))
 					{
@@ -48,7 +48,7 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 					}
 				}
 
-				public void onMethodExit(Object instance, String name)
+				public synchronized void onMethodExit(Object instance, String name)
 				{
 					if (isSetter(name))
 					{
@@ -107,7 +107,7 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 	{
 		while (template.getParent() != null)
 			template= template.getParent();
-		
+
 		return template;
 	}
 

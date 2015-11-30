@@ -43,7 +43,11 @@ public class MethodVisitedEvent
 
 	public boolean equals(Object obj)
 	{
+		if (obj == null)
+			return false;
+			
 		MethodVisitedEvent methodVisitedEvent= (MethodVisitedEvent) obj;
+			
 		return instance == methodVisitedEvent.instance && name.equals(methodVisitedEvent.name);
 	}
 

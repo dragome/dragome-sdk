@@ -37,6 +37,12 @@ public class StringBuilder
 		append(s);
 	}
 
+	public StringBuilder(CharSequence seq)
+	{
+		this();
+		append(seq);
+	}
+
 	public StringBuilder(int length)
 	{
 		this();
@@ -253,4 +259,31 @@ public class StringBuilder
 	{
 		return append(s, 0, s.length());
 	}
+
+	public CharSequence subSequence(int start, int end)
+	{
+		return toString().subSequence(start, end);
+	}
+
+	public StringBuilder replace(int start, int end, String replacement)
+	{
+		ScriptHelper.put("start", start, this);
+		ScriptHelper.put("end", end, this);
+		ScriptHelper.put("replacement", replacement, this);
+
+		ScriptHelper.eval("s = this.buffer[0]; this.buffer[0] = s.substr(0, start) + replacement + s.substr(end)", this);
+
+		return this;
+	}
+
+	public String substring(int start, int end)
+	{
+		return toString().substring(start, end);
+	}
+
+	public String substring(int start)
+	{
+		return toString().substring(start);
+	}
+
 }

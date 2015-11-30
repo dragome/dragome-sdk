@@ -74,6 +74,7 @@ public class ReflectionServiceImpl implements ReflectionService
 	{
 		String[] implementations= new String[] { // 
 		"com.dragome.guia.GuiaServiceFactory", "com.dragome.render.html.HTMLGuiaServiceFactory", //
+		"com.dragome.commons.compiler.BytecodeToJavascriptCompiler", "com.dragome.compiler.DragomeJsCompiler", //
 				"com.dragome.guia.GuiaServiceFactory", "com.dragome.android.AndroidGuiaServiceFactory", //
 				"com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor", "com.dragome.web.debugging.CrossExecutionCommandProcessorImpl" };
 

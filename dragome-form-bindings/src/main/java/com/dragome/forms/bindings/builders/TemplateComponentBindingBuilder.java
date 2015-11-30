@@ -54,6 +54,9 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 		setParentBuilder((BaseBuilder<? extends VisualComponent, TemplateComponentBindingBuilder<C>>) parentBuilder);
 		this.panel= panel;
 		this.template= template;
+		
+		this.componentType= componentType;
+		
 		if (componentType.equals(VisualPanel.class))
 			this.componentType= VisualPanelImpl.class;
 		else if (componentType.equals(VisualTextField.class))

@@ -14,7 +14,7 @@ public class LocalServiceFactory implements ServiceFactory
 
 	public <T> T createFixedSyncService(Class<? extends T> type)
 	{
-		return (T) ServiceLocator.getInstance().getMetadataManager().getImplementationForInterface(type);
+		return createSyncService(type);
 	}
 
 	public <T> AsyncServiceExecutor<T> createAsyncService(Class<? extends T> type)

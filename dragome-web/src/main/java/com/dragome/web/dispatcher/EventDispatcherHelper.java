@@ -90,7 +90,7 @@ public class EventDispatcherHelper
 		for (AnnotationEntry annotationEntry : annotationEntries)
 		{
 			if (!annotationEntry.getType().equals(DomHandlerApplicationConfigurator.class))
-				configurator= ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
+				return ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
 		}
 		return configurator;
 	}

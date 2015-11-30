@@ -87,6 +87,16 @@
       <artifactId>dragome-web</artifactId>
       <version>0.96-beta2</version>
     </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-js-jre</artifactId>
+      <version>0.96-beta2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
   </dependencies>
 
   <build>

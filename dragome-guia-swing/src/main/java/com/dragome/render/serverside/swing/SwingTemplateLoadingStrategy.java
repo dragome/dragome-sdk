@@ -61,8 +61,12 @@ public class SwingTemplateLoadingStrategy implements TemplateLoadingStrategy
 			{
 				Template createTemplate= createTemplate(child, template);
 
-				if (createTemplate != null)
+				template.setFiringEvents(false);
+				
+				if (createTemplate != null && createTemplate != template)
 					template.addChild(createTemplate);
+				
+				template.setFiringEvents(true);
 
 				createTemplate.setFiringEvents(true);
 			}

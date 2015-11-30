@@ -16,6 +16,7 @@
 package com.dragome.model.pectin;
 
 import com.dragome.guia.components.AbstractVisualComponent;
+import com.dragome.guia.components.SimpleRenderer;
 import com.dragome.model.interfaces.HandlerRegistration;
 import com.dragome.model.interfaces.HasRenderer;
 import com.dragome.model.interfaces.HasValue;
@@ -30,11 +31,13 @@ public class ComponentWithValueAndRendererImpl<T> extends AbstractVisualComponen
 
 	public ComponentWithValueAndRendererImpl()
 	{
+		this("");
 	}
 
 	public ComponentWithValueAndRendererImpl(String name)
 	{
 		super(name);
+		renderer= new SimpleRenderer<T>();
 	}
 
 	public ComponentWithValueAndRendererImpl(String aName, Renderer<T> renderer)

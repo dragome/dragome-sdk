@@ -94,7 +94,7 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 		return show(component).when(supplier);
 	}
 
-	public B disable(C visualComponent)
+	public B disable(VisualComponent visualComponent)
 	{
 		conditionBinderBuilder= binder.disable(new VisualComponentHasEnabled(component));
 		return (B) this;
