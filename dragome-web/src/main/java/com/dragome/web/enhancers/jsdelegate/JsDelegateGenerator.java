@@ -148,6 +148,8 @@ public class JsDelegateGenerator
 				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalInt");
 			else if (typeIsEqual(returnType, Double.class) || typeIsEqual(returnType, double.class))
 				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalDouble");
+			else if (typeIsEqual(returnType, Float.class) || typeIsEqual(returnType, float.class))
+				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalFloat");
 			else if (typeIsEqual(returnType, String.class))
 				body= body.replace("$eval$", "return (java.lang.String)" + scriptHelperClass.getName() + ".eval");
 			else
