@@ -14,33 +14,28 @@ package com.dragome.web.enhancers.jsdelegate;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
+import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
 public class DefaultDelegateStrategy implements DelegateStrategy
 {
-	public boolean isPropertyWriteMethod(CtMethod method)
-	{
-		try
-		{
-			return method.getName().startsWith("set") && method.getParameterTypes().length == 1;
+	@Override
+	public String createMethodCall(CtMethod method, StringBuffer code, String params) throws NotFoundException  {
+		
+		if(method.getName().startsWith("set") && method.getParameterTypes().length == 1)
+		{ //
+			CtClass parameterType= method.getParameterTypes()[0];
+			code.append("$eval$(\"this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "= " + JsDelegateGenerator.createVariableForEval("$1", parameterType) + "\", this);");
+			return null;
 		}
-		catch (NotFoundException e)
+		else if(method.getName().startsWith("get") && method.getParameterTypes().length == 0)
 		{
-			throw new RuntimeException(e);
+			code.append("$eval$(\"this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "\", this);");
+			return null;
 		}
-	}
-	
-	public boolean isPropertyReadMethod(CtMethod method)
-	{
-		try
-		{
-			return method.getName().startsWith("get") && method.getParameterTypes().length == 0;
-		}
-		catch (NotFoundException e)
-		{
-			throw new RuntimeException(e);
-		}
+		
+		return null;
 	}
 
 	public String getSubTypeExtractorFor(Class<?> interface1, String methodName)
