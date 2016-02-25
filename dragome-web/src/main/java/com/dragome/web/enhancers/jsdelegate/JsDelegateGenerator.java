@@ -111,12 +111,17 @@ public class JsDelegateGenerator
 	{
 		StringBuffer code= new StringBuffer();
 
-		if (delegateStrategy.isPropertyWriteMethod(method))
-			createSetterMethodCall(scriptHelperClass, method, code);
-		else if (delegateStrategy.isPropertyReadMethod(method))
-			createGetterMethodCall(method, code);
+		String customCode = null;
+		String params = createParameters(method, code);
+		int length = code.length();
+		customCode = delegateStrategy.createMethodCall(method, code, params);
+		if(customCode == null)
+		{
+			if(code.length() == length)
+				code.append("$eval$(\"this.node." + method.getName() + "(" + params + ")\", this);");
+		}
 		else
-			createGenericDelegateMethodCall(scriptHelperClass, method, code);
+			code.append("$eval$(\"" + customCode + "\", this);");
 
 		String body= code.toString();
 
@@ -185,12 +190,28 @@ public class JsDelegateGenerator
 	{
 		return returnType.equals(resolveCtClass(class1));
 	}
-
-	private static void createSetterMethodCall(Class<?> scriptHelperClass, CtMethod method, StringBuffer code) throws NotFoundException
+	
+	private static String createParameters(CtMethod method, StringBuffer code) throws NotFoundException
 	{
-		CtClass parameterType= method.getParameterTypes()[0];
-		code.append(scriptHelperClass.getName() + ".put(\"$1\", " + createParameterForPut("$1", parameterType) + ", this);");
-		code.append("$eval$(\"this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "= " + createVariableForEval("$1", parameterType) + "\", this);");
+		Class<?> scriptHelperClass = ScriptHelper.class;
+		int parametersCount= method.getParameterTypes().length;
+		if (parametersCount > 0)
+		{
+			StringBuilder parameters = new StringBuilder();
+			for (int i= 0; i < parametersCount; i++)
+			{
+				String variableName= "$" + (i + 1);
+				CtClass parameterType= method.getParameterTypes()[i];
+				code.append("" + scriptHelperClass.getName() + ".put(\"" + variableName + "\", " + createParameterForPut(variableName, parameterType) + ", this);");
+
+				if (i != 0)
+					parameters.append(", ");
+
+				parameters.append(createVariableForEval(variableName, parameterType));
+			}
+			return parameters.toString();
+		}
+		return null;
 	}
 
 	private static String createParameterForPut(String string, CtClass ctClass)
@@ -209,41 +230,14 @@ public class JsDelegateGenerator
 			return string;
 	}
 
-	private static String createVariableForEval(String string, CtClass ctClass)
+	public static String createVariableForEval(String string, CtClass ctClass)
 	{
 		if (ctClass.isInterface())
 			return string + ".node";
 		else
 			return string;
 	}
-
-	private static void createGetterMethodCall(CtMethod method, StringBuffer code)
-	{
-		code.append("$eval$(\"this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "\", this);");
-	}
-
-	private static void createGenericDelegateMethodCall(Class<?> scriptHelperClass, CtMethod method, StringBuffer code) throws NotFoundException
-	{
-		StringBuilder parameters= new StringBuilder();
-		int parametersCount= method.getParameterTypes().length;
-		if (parametersCount > 0)
-		{
-			for (int i= 0; i < parametersCount; i++)
-			{
-				String variableName= "$" + (i + 1);
-				CtClass parameterType= method.getParameterTypes()[i];
-				code.append("" + scriptHelperClass.getName() + ".put(\"" + variableName + "\", " + createParameterForPut(variableName, parameterType) + ", this);");
-
-				if (i != 0)
-					parameters.append(", ");
-
-				parameters.append(createVariableForEval(variableName, parameterType));
-			}
-		}
-
-		code.append("$eval$(\"this.node." + method.getName() + "(" + parameters.toString() + ")\", this);");
-	}
-
+	
 	private CtClass resolveCtClass(Class<?> clazz) throws NotFoundException
 	{
 		ClassPool pool= ClassPool.getDefault();

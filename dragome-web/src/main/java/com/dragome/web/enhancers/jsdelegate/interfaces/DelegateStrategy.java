@@ -12,12 +12,15 @@
 package com.dragome.web.enhancers.jsdelegate.interfaces;
 
 import javassist.CtMethod;
+import javassist.NotFoundException;
 
 public interface DelegateStrategy
 {
-	boolean isPropertyWriteMethod(CtMethod method);
-
-	boolean isPropertyReadMethod(CtMethod method);
+	/**
+	 * This makes you have a custom javascript code for interface methods. For a custom code you can return javascript code in a string or use the rawCode param and return null. <br>
+	 * Returning null without touching rawCode will use a generic code. Javascript parameters is already added for you. You access them by using $1, $2 and so on.
+	 */
+	String createMethodCall(CtMethod method, StringBuffer rawCode, String params) throws NotFoundException;
 
 	String getSubTypeExtractorFor(Class<?> interface1, String methodName);
 
