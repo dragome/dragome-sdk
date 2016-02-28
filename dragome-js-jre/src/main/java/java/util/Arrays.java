@@ -64,10 +64,10 @@ public class Arrays
 		ScriptHelper.put("array", array, null);
 		ScriptHelper.put("fromIndex", fromIndex, null);
 		ScriptHelper.put("toIndex", toIndex, null);
-		
+
 		Object subarray= ScriptHelper.eval("array.slice(fromIndex, toIndex)", null);
 		ScriptHelper.put("subarray", subarray, null);
-		
+
 		ScriptHelper.eval("subarray.sort()", null);
 		ScriptHelper.eval("for (var i= fromIndex; i < toIndex; ++i)	array[i]= subarray[i - fromIndex]", null);
 	}
@@ -75,12 +75,12 @@ public class Arrays
 	public static <T> void sort(T[] a, int fromIndex, int toIndex, Comparator<? super T> comparator)
 	{
 		T[] subarray= (T[]) new Object[toIndex - fromIndex];
-		
+
 		for (int i= fromIndex; i < toIndex; ++i)
 			subarray[i - fromIndex]= a[i];
 
 		sort(subarray, comparator);
-		
+
 		for (int i= fromIndex; i < toIndex; ++i)
 			a[i]= subarray[i - fromIndex];
 	}
@@ -93,7 +93,7 @@ public class Arrays
 		ScriptHelper.put("array", array, null);
 		if (comparator == null)
 			comparator= new NaturalOrder();
-		
+
 		ScriptHelper.put("c", comparator, null);
 		ScriptHelper.eval("array.sort(function(o1, o2) {return c.$compare___java_lang_Object__java_lang_Object$int(o1, o2)})", null);
 	}
@@ -120,5 +120,11 @@ public class Arrays
 	{
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public static void fill(char[] a, char val)
+	{
+		for (int i= 0, len= a.length; i < len; i++)
+			a[i]= val;
 	}
 }

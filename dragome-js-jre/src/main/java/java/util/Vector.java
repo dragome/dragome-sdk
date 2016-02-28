@@ -140,5 +140,8 @@ public class Vector<E> extends ArrayList<E>
 	{
 		add(obj);
 	}
-
+	
+	public synchronized E elementAt(int index) {
+        return get(index);
+    }
 }

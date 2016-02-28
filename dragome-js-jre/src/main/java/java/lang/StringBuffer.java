@@ -248,4 +248,9 @@ public class StringBuffer
 		append(value.toCharArray(), start, end);
 	}
 
+	public synchronized String substring(int start, int end)
+	{
+		return toString().substring(start, end);
+	}
+
 }
