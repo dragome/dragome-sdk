@@ -341,17 +341,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			closingString= "}";
 		}
 
-		Iterator<VariableDeclaration> iterator= method.getParameters().iterator();
-		while (iterator.hasNext())
-		{
-			VariableDeclaration decl= iterator.next();
-
-			if (hasToEscapeVariable(decl.getName()))
-				print("_");
-			decl.visit(this);
-			print(iterator.hasNext() ? ", " : "");
-		}
-
+		printParams(method);
 		println(")");
 		println("{");
 
@@ -389,7 +379,11 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (local_alias != null)
 		{
 			print(", \n");
-			print(local_alias + ": function() {return this." + signatureReplaced + "(arguments)}");
+			print(local_alias + ": function(");
+			printParams(method);
+			print(") {return this." + signatureReplaced + "(");
+			printParams(method);
+			print(")}");
 		}
 
 		//println(",");
@@ -397,6 +391,21 @@ public class DragomeJavaScriptGenerator extends Generator
 		unit.setData(reset());
 		Log.getLogger().debug("Generating JavaScript for " + unit);
 	}
+	
+	private void printParams(MethodDeclaration method)
+	{
+		Iterator<VariableDeclaration> iterator= method.getParameters().iterator();
+		while (iterator.hasNext())
+		{
+			VariableDeclaration decl= iterator.next();
+
+			if (hasToEscapeVariable(decl.getName()))
+				print("_");
+			decl.visit(this);
+			print(iterator.hasNext() ? ", " : "");
+		}
+	}
+	
 	public static String normalizeExpression(Object object)
 	{
 		if (object instanceof Signature)
