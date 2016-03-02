@@ -218,9 +218,7 @@ public class JsDelegateGenerator
 	{
 		String javaName= toJavaName(ctClass);
 
-		if (javaName.equals(Boolean.class.getName()) || javaName.equals(boolean.class.getName()))
-			return string + " + \"\"";
-		else if (javaName.equals(Integer.class.getName()) || javaName.equals(int.class.getName()) || //
+		if (javaName.equals(Integer.class.getName()) || javaName.equals(int.class.getName()) || //
 				javaName.equals(Double.class.getName()) || javaName.equals(double.class.getName()) || //
 				javaName.equals(Short.class.getName()) || javaName.equals(short.class.getName()) || //
 				javaName.equals(Float.class.getName()) || javaName.equals(float.class.getName()) || //
@@ -233,7 +231,7 @@ public class JsDelegateGenerator
 	public static String createVariableForEval(String string, CtClass ctClass)
 	{
 		if (ctClass.isInterface())
-			return string + ".node";
+			return string + " ? " + string + ".node" + " : " + string;
 		else
 			return string;
 	}
