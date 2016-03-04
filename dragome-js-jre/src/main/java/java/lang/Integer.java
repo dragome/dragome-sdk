@@ -236,4 +236,21 @@ public class Integer extends Number implements Comparable<Integer>
 	{
 		return (int) (value ^ (value >>> 32));
 	}
+	
+	public static int numberOfTrailingZeros(int i)
+	{
+		if (i == 0) 
+		{
+			return 32;
+		} 
+		else
+		{
+			int rtn = 0;
+			for (int r = 1; (r & i) == 0; r <<= 1)
+			{
+				rtn++;
+			}
+			return rtn;
+		}
+	}
 }
