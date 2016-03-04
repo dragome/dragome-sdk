@@ -37,9 +37,12 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.Annotations;
@@ -188,9 +191,13 @@ public class Parser
 		{
 			Method method= bcelMethods[i];
 
-			Attribute[] attributes= method.getAttributes();
-
-			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes);
+			Map<String, String> methodAnnotationsValues = null;
+			
+			try {
+				methodAnnotationsValues = checkSuperAnnotations(method.getName(), jc, "MethodAlias", 0, 4);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 
 			MethodBinding binding= MethodBinding.lookup(jc.getClassName(), method.getName(), method.getSignature());
 
@@ -220,7 +227,71 @@ public class Parser
 
 		return typeDecl;
 	}
+	
+	// Recursive algorithm to check for annotations. If the super method has the annotation it will use it. if the child has it, it will skip the super method.
+	private Map<String, String> checkSuperAnnotations(final String methodName, JavaClass curClass, final String annoationName, int nDepth, final int maxRecursive) throws ClassNotFoundException
+	{ 
+		nDepth++;
+		Map<String, String> curAnnotationsValues = null;
+		
+		Method curMethod = null;
+		Method[] methods = curClass.getMethods();
+		for(int j = 0; j < methods.length;j++) { // find the method if there is one.
+			if(methods[j].getName().equals(methodName)) { 
+				curMethod = methods[j];
+				break;
+			}
+		}
+		
+		if(curMethod != null) {
+			Attribute[] attributes = curMethod.getAttributes();
+			curAnnotationsValues = getAnnotationsValues(attributes);
+			
+			Set<Entry<String, String>> entrySet = curAnnotationsValues.entrySet();
+			Iterator<Entry<String, String>> iterator = entrySet.iterator();
+			while(iterator.hasNext()) { 
+				Entry<String, String> next = iterator.next();
+				String key = next.getKey();
+				if(key.contains(annoationName))	
+					return curAnnotationsValues; // if contains the annotation already skip checking the super methods.
+			}
+		}
+		else
+			curAnnotationsValues = new LinkedHashMap<String, String>();
 
+		if(nDepth >= maxRecursive)
+			return curAnnotationsValues;
+		
+		JavaClass[] interfaces = curClass.getInterfaces();
+		for(int i = 0; i < interfaces.length;i++) { // check interfaces
+			JavaClass javaClass = interfaces[i];
+			Map<String, String> returnedAnnotation = checkSuperAnnotations(methodName, javaClass, annoationName, nDepth, maxRecursive);
+			mergeAnno(curAnnotationsValues, returnedAnnotation, annoationName);
+		}
+		JavaClass superClass = curClass.getSuperClass(); // check super class
+		if(superClass != null && superClass.getClassName().contains("java.lang.Object") == false) { // stop checking super when It detects root java object.
+			Map<String, String> returnedAnnotation = checkSuperAnnotations(methodName, superClass, annoationName, nDepth, maxRecursive);
+			mergeAnno(curAnnotationsValues, returnedAnnotation, annoationName);
+		}
+		return curAnnotationsValues;
+	}
+	
+	private void mergeAnno(Map<String, String> curAnnotationsValues, Map<String, String> returnedAnnotation, String annoationName)
+	{
+		Set<Entry<String, String>> entrySet = returnedAnnotation.entrySet();
+		Iterator<Entry<String, String>> iterator = entrySet.iterator();
+		while(iterator.hasNext()) {
+			Entry<String, String> next = iterator.next();
+			String key = next.getKey();
+			String value = next.getValue();
+			if(key.contains(annoationName))	{
+				boolean containsKey = curAnnotationsValues.containsKey(key);
+				if(containsKey == false)
+					curAnnotationsValues.put(key, value);
+			}
+		}
+	}
+	
 	private Map<String, String> getAnnotationsValues(Attribute[] attributes)
 	{
 		Map<String, String> result= new LinkedHashMap<String, String>();
