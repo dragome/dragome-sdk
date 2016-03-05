@@ -21,6 +21,6 @@ public class Date
 {
 	public long getTime()
 	{
-		return ScriptHelper.evalLong("new Date().getTime()");
+		return ScriptHelper.evalLong("new Date().getTime()", this);
 	}
 }

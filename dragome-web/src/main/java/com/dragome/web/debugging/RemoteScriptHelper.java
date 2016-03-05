@@ -48,9 +48,9 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), stackTraceElement.getMethodName()));
 	}
 
-	public long evalLong(String jsCode)
+	public long evalLong(String jsCode, Object caller)
 	{
-		return 0;
+		return evalInt(jsCode, caller);
 	}
 
 	public int evalInt(String script, Object caller)
@@ -62,22 +62,19 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 		return Integer.parseInt(crossExecutionResult.getResult() + "");
 	}
 
-	public float evalFloat(String jsCode)
+	public float evalFloat(String jsCode, Object caller)
 	{
-
-		return 0;
+		return evalInt(jsCode, caller);
 	}
 
-	public double evalDouble(String jsCode)
+	public double evalDouble(String jsCode, Object caller)
 	{
-
-		return 0;
+		return evalFloat(jsCode, caller);
 	}
 
-	public char evalChar(String jsCode)
+	public char evalChar(String jsCode, Object caller)
 	{
-
-		return 0;
+		return eval(jsCode, caller).toString().charAt(0);
 	}
 
 	public boolean evalBoolean(String script, Object caller)

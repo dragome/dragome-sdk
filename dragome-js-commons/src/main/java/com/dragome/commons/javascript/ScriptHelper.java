@@ -45,24 +45,24 @@ public final class ScriptHelper
 		return scriptHelperInterface.evalInt(jsCode, callerInstance);
 	}
 
-	public static long evalLong(String jsCode)
+	public static long evalLong(String jsCode, Object callerInstance)
 	{
-		return scriptHelperInterface.evalLong(jsCode);
+		return scriptHelperInterface.evalLong(jsCode, callerInstance);
 	}
 
 	public static float evalFloat(String jsCode, Object callerInstance)
 	{
-		return scriptHelperInterface.evalFloat(jsCode);
+		return scriptHelperInterface.evalFloat(jsCode, callerInstance);
 	}
 
 	public static double evalDouble(String jsCode, Object callerInstance)
 	{
-		return scriptHelperInterface.evalDouble(jsCode);
+		return scriptHelperInterface.evalDouble(jsCode, callerInstance);
 	}
 
 	public static char evalChar(String jsCode, Object callerInstance)
 	{
-		return scriptHelperInterface.evalChar(jsCode);
+		return scriptHelperInterface.evalChar(jsCode, callerInstance);
 	}
 
 	public static boolean evalBoolean(String jsCode, Object callerInstance)

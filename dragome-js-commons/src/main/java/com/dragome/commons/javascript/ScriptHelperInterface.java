@@ -27,13 +27,13 @@ public interface ScriptHelperInterface
 
 	public int evalInt(String jsCode, Object caller);
 
-	public long evalLong(String jsCode);
+	public long evalLong(String jsCode, Object caller);
 
-	public float evalFloat(String jsCode);
+	public float evalFloat(String jsCode, Object caller);
 
-	public double evalDouble(String jsCode);
+	public double evalDouble(String jsCode, Object caller);
 
-	public char evalChar(String jsCode);
+	public char evalChar(String jsCode, Object caller);
 
 	public boolean evalBoolean(String jsCode, Object caller);
 

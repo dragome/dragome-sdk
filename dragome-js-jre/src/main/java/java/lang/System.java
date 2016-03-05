@@ -60,7 +60,7 @@ public final class System
 	 */
 	public static long currentTimeMillis()
 	{
-		return ScriptHelper.evalLong("new Date().getTime()");
+		return ScriptHelper.evalLong("new Date().getTime()", null);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public final class System
 
 	public static long nanoTime()
 	{
-		return ScriptHelper.evalLong("now()*1000*1000;");
+		return ScriptHelper.evalLong("now()*1000*1000;", null);
 	}
 
 	public static String setProperty(String key, String value)

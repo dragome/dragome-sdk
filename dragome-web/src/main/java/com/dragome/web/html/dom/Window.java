@@ -38,11 +38,17 @@ public class Window
 		return ScriptHelper.evalInt("window.innerHeight", this);
 	}
 
-	public void requestAnimationFrame(Runnable aRunnable)
+	public long requestAnimationFrame(Runnable aRunnable)
 	{
 		Runnable runnableForDebugging= wrapRunnableForDebugging(aRunnable);
 		ScriptHelper.put("ra", runnableForDebugging, this);
-		ScriptHelper.evalNoResult("requestAnimationFrame(function(time) {ra.$run$void();})", this);
+		return ScriptHelper.evalLong("requestAnimationFrame(function(time) {ra.$run$void();})", this);
+	}
+
+	public void cancelAnimationFrame(long requestID)
+	{
+		ScriptHelper.put("requestID", requestID, this);
+		ScriptHelper.evalNoResult("cancelAnimationFrame(requestID)", this);
 	}
 
 	public void addEventListener(EventListener aEventListener, String... aEvent)

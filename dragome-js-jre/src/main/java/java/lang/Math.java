@@ -176,7 +176,7 @@ public final class Math
 	public static long abs(long a)
 	{
 		ScriptHelper.put("a", a, null);
-		return ScriptHelper.evalLong("Math.abs(a)");
+		return ScriptHelper.evalLong("Math.abs(a)", null);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public final class Math
 	{
 		ScriptHelper.put("a", a, null);
 		ScriptHelper.put("b", b, null);
-		return ScriptHelper.evalLong("Math.max(a, b)");
+		return ScriptHelper.evalLong("Math.max(a, b)", null);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public final class Math
 	{
 		ScriptHelper.put("a", a, null);
 		ScriptHelper.put("b", b, null);
-		return ScriptHelper.evalLong("Math.min(a, b)");
+		return ScriptHelper.evalLong("Math.min(a, b)", null);
 	}
 
 	/**

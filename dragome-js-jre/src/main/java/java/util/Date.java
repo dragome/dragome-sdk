@@ -20,7 +20,7 @@ public class Date
 
 	public long getTime()
 	{
-		return ScriptHelper.evalLong("this.nativeDate.getTime()");
+		return ScriptHelper.evalLong("this.nativeDate.getTime()", this);
 	}
 
 	public void setTime(long millis)
