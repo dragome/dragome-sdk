@@ -1140,8 +1140,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if ("length".equals(fr.getName()))
 		{
-			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
-				System.out.println("sdgsdg");
+//			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
+//				System.out.println("sdgsdg");
 
 			prefix= "";
 		}

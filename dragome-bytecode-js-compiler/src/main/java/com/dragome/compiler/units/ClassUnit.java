@@ -429,7 +429,7 @@ public class ClassUnit extends Unit
 		{
 			String name= DragomeJavaScriptGenerator.normalizeExpression(clinitMethod.getDeclaringClass().getName());
 			String replace= clinitMethod.getData().replace("this.", name + ".");
-			replace= replace.replace("{", "{ this.$$clinit_=function(){return this};\n" + superStaticFields);
+			replace= replace.replaceFirst("function \\(\\)\\n\\{", "function ()\n{\nthis.\\$\\$clinit_=function(){return this};\n" + superStaticFields.replace("$", "\\$"));
 			replace= replace.substring(0, replace.length() - 2) + "\n return this;\n}";
 
 			String memberData= clinitMethod.getData();
@@ -445,7 +445,7 @@ public class ClassUnit extends Unit
 			writer.write(replace);
 		}
 	}
-
+	
 	private String createSuperStaticFieldsReferences(int depth, MemberUnit clinitMethod, List<MemberUnit> staticMethods) throws IOException
 	{
 		boolean first= true;
