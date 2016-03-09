@@ -194,7 +194,7 @@ public class Parser
 			Map<String, String> methodAnnotationsValues = null;
 			
 			try {
-				methodAnnotationsValues = checkSuperAnnotations(method.getName(), jc, "MethodAlias", 0, 4);
+				methodAnnotationsValues = checkSuperAnnotations(method, jc, "MethodAlias", 0, 4);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -229,15 +229,16 @@ public class Parser
 	}
 	
 	// Recursive algorithm to check for annotations. If the super method has the annotation it will use it. if the child has it, it will skip the super method.
-	private Map<String, String> checkSuperAnnotations(final String methodName, JavaClass curClass, final String annoationName, int nDepth, final int maxRecursive) throws ClassNotFoundException
+	private Map<String, String> checkSuperAnnotations(final Method method, JavaClass curClass, final String annoationName, int nDepth, final int maxRecursive) throws ClassNotFoundException
 	{ 
+		String methodName= method.getName();
 		nDepth++;
 		Map<String, String> curAnnotationsValues = null;
 		
 		Method curMethod = null;
 		Method[] methods = curClass.getMethods();
 		for(int j = 0; j < methods.length;j++) { // find the method if there is one.
-			if(methods[j].getName().equals(methodName)) { 
+			if(methods[j].getName().equals(methodName) && methods[j].getArgumentTypes().length == method.getArgumentTypes().length ) { 
 				curMethod = methods[j];
 				break;
 			}
@@ -265,12 +266,12 @@ public class Parser
 		JavaClass[] interfaces = curClass.getInterfaces();
 		for(int i = 0; i < interfaces.length;i++) { // check interfaces
 			JavaClass javaClass = interfaces[i];
-			Map<String, String> returnedAnnotation = checkSuperAnnotations(methodName, javaClass, annoationName, nDepth, maxRecursive);
+			Map<String, String> returnedAnnotation = checkSuperAnnotations(method, javaClass, annoationName, nDepth, maxRecursive);
 			mergeAnno(curAnnotationsValues, returnedAnnotation, annoationName);
 		}
 		JavaClass superClass = curClass.getSuperClass(); // check super class
 		if(superClass != null && superClass.getClassName().contains("java.lang.Object") == false) { // stop checking super when It detects root java object.
-			Map<String, String> returnedAnnotation = checkSuperAnnotations(methodName, superClass, annoationName, nDepth, maxRecursive);
+			Map<String, String> returnedAnnotation = checkSuperAnnotations(method, superClass, annoationName, nDepth, maxRecursive);
 			mergeAnno(curAnnotationsValues, returnedAnnotation, annoationName);
 		}
 		return curAnnotationsValues;
