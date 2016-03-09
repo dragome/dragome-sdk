@@ -74,6 +74,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	protected List<Method> declaredMethods;
 	protected Method[] declaredMethodsInDepth;
 	protected Class<?>[] interfacesCache;
+	protected boolean isArray;
+	protected String type;
 
 	private Class(Object theNativeClass)
 	{
@@ -90,8 +92,49 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		Class<?> clazz= classesByName.get(className);
 		if (clazz == null)
 		{
-			if (className.startsWith("[") && className.endsWith(";") )
-				className= Array.class.getName();
+			if (className.startsWith("["))
+			{ // temp fix  for [].getClass();  
+				
+				String jsClassName = "java_lang_reflect_Array";
+				
+				ScriptHelper.put("jsClassName", jsClassName, null);
+				Object nativeClass= null;
+				ScriptHelper.eval("try{var result= eval(jsClassName)}catch(e){}", null);
+				nativeClass= ScriptHelper.eval("result", null);
+
+				if (nativeClass == null)
+					throw new ClassNotFoundException(jsClassName);
+				
+				String type = className.replaceAll("\\[", "");
+				
+				if(type.startsWith("L"))
+					type = type.replace("L", "");
+				else if(type.startsWith("Z"))
+					type= "boolean";
+				else if(type.startsWith("B"))
+					type= "byte";
+				else if(type.startsWith("C"))
+					type= "char";
+				else if(type.startsWith("D"))
+					type= "double";
+				else if(type.startsWith("F"))
+					type= "float";
+				else if(type.startsWith("I"))
+					type= "int";
+				else if(type.startsWith("J"))
+					type= "long";
+				else if(type.startsWith("S"))
+					type= "short";
+				
+				clazz= new Class(nativeClass);
+				clazz.isArray = true;
+				clazz.type = type;
+				ScriptHelper.put("clazz", clazz, null);
+				ScriptHelper.put("className", className, null);
+				ScriptHelper.eval("clazz.realName=className", null);
+				classesByName.put(className, clazz);
+				return clazz;
+			}
 			
 			String jsClassName= className.replaceAll("\\.", "_");
 			if ("boolean".equals(jsClassName))
@@ -143,7 +186,15 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	 */
 	public Class<?> getComponentType()
 	{
-		throw new UnsupportedOperationException();
+		if(isArray() == false)
+			return null;
+		else
+			try {
+				return Class.forName(type);
+			} catch (java.lang.ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		return null;
 	}
 
 	public T newInstance() throws InstantiationException, IllegalAccessException
@@ -199,7 +250,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public boolean isArray()
 	{
-		return false;
+		return isArray;
 	}
 
 	/**
@@ -214,11 +265,15 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		String result;
 
-		if (isInterface())
-			result= (String) ScriptHelper.eval("this.$$$nativeClass.name", this);
+		if(isArray == false)
+		{
+			if (isInterface())
+				result= (String) ScriptHelper.eval("this.$$$nativeClass.name", this);
+			else
+				result= (String) ScriptHelper.eval("this.$$$nativeClass.classname", this);
+		}
 		else
-			result= (String) ScriptHelper.eval("this.$$$nativeClass.classname", this);
-
+			result = (java.lang.String) ScriptHelper.eval("this.realName", null);
 		return result != null ? result.replace("_", ".") : "java.lang.Object"; //TODO arreglar, no se pueden usar nombre de clases con _!!
 	}
 
