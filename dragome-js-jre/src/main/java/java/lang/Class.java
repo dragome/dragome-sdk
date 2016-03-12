@@ -538,6 +538,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	@Override
 	public boolean equals(java.lang.Object obj)
 	{
+		if(obj == null)
+			return false;
 		ScriptHelper.put("obj", obj, this);
 		boolean result= ScriptHelper.evalBoolean("obj.$$$nativeClass == this.$$$nativeClass", this);
 		return result;
