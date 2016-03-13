@@ -108,7 +108,6 @@
               <sources>
                 <source>json</source>
                 <source>src</source>
-                <source>server-src</source>
               </sources>
             </configuration>
           </execution>
