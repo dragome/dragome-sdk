@@ -1,15 +1,13 @@
 */target/**
-.settings/
 bin/
 target/
-.project
 /bin/
 .metadata
-bin/
-*/.settings/
-*/.project
-*/.externalToolBuilders/
-*/.launch
-*/.classpath
-*/.factorypath
+.settings
+.project
+.externalToolBuilders/
+.launch
+.classpath
+.factorypath
+*.jar
 
