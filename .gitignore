@@ -4,4 +4,12 @@ bin/
 target/
 .project
 /bin/
-/bin/
+.metadata
+bin/
+*/.settings/
+*/.project
+*/.externalToolBuilders/
+*/.launch
+*/.classpath
+*/.factorypath
+
