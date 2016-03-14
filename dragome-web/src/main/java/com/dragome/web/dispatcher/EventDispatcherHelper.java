@@ -20,10 +20,10 @@ import java.util.concurrent.Executor;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
+import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.MethodAlias;
+import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.helpers.AnnotationsHelper;
-import com.dragome.helpers.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.ParametersHandler;

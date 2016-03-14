@@ -57,6 +57,7 @@ import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.ParameterAnnotationEntry;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.io.IOUtils;
@@ -149,12 +150,29 @@ public class Parser
 		org.apache.bcel.classfile.Method[] bcelMethods= jc.getMethods();
 
 		ObjectType type= new ObjectType(jc.getClassName());
-		Map<String, String> annotationsValues= getAnnotationsValues(jc.getAttributes());
-		TypeDeclaration typeDecl= new TypeDeclaration(type, jc.getAccessFlags(), annotationsValues);
-		Project.singleton.addTypeAnnotations(typeDecl);
+		Map<String, String> annotationsValues= getAnnotationsValues(jc.getAttributes(), "");
 
+		for (Method method : bcelMethods)
+		{
+			Attribute[] attributes= method.getAttributes();
+			String name= method.getName() + "/";
+			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes, name);
+
+			ParameterAnnotationEntry[] parameterAnnotationEntries= method.getParameterAnnotationEntries();
+			for (int i= 0; i < parameterAnnotationEntries.length; i++)
+			{
+				AnnotationEntry[] annotationEntries= parameterAnnotationEntries[i].getAnnotationEntries();
+				putEntries(name + "arg" + i + "/", annotationsValues, annotationEntries);
+			}
+
+			annotationsValues.putAll(methodAnnotationsValues);
+		}
+
+		TypeDeclaration typeDecl= new TypeDeclaration(type, jc.getAccessFlags(), annotationsValues);
 		fileUnit.isInterface= Modifier.isInterface(typeDecl.getAccess());
+
 		fileUnit.isAbstract= Modifier.isAbstract(typeDecl.getAccess());
+		Project.singleton.addTypeAnnotations(typeDecl);
 
 		fileUnit.setAnnotations(annotationsValues);
 
@@ -191,11 +209,14 @@ public class Parser
 		{
 			Method method= bcelMethods[i];
 
-			Map<String, String> methodAnnotationsValues = null;
-			
-			try {
-				methodAnnotationsValues = checkSuperAnnotations(method, jc, "MethodAlias", 0, 4);
-			} catch (ClassNotFoundException e) {
+			Map<String, String> methodAnnotationsValues= null;
+
+			try
+			{
+				methodAnnotationsValues= checkSuperAnnotations(method, jc, "MethodAlias", 0, 4);
+			}
+			catch (ClassNotFoundException e)
+			{
 				e.printStackTrace();
 			}
 
@@ -227,73 +248,81 @@ public class Parser
 
 		return typeDecl;
 	}
-	
+
 	// Recursive algorithm to check for annotations. If the super method has the annotation it will use it. if the child has it, it will skip the super method.
-	private Map<String, String> checkSuperAnnotations(final Method method, JavaClass curClass, final String annoationName, int nDepth, final int maxRecursive) throws ClassNotFoundException
-	{ 
+	private Map<String, String> checkSuperAnnotations(final Method method, JavaClass curClass, final String annotationName, int nDepth, final int maxRecursive) throws ClassNotFoundException
+	{
 		String methodName= method.getName();
 		nDepth++;
-		Map<String, String> curAnnotationsValues = null;
-		
-		Method curMethod = null;
-		Method[] methods = curClass.getMethods();
-		for(int j = 0; j < methods.length;j++) { // find the method if there is one.
-			if(methods[j].getName().equals(methodName) && methods[j].getArgumentTypes().length == method.getArgumentTypes().length ) { 
-				curMethod = methods[j];
+		Map<String, String> curAnnotationsValues= null;
+
+		Method curMethod= null;
+		Method[] methods= curClass.getMethods();
+		for (int j= 0; j < methods.length; j++)
+		{ // find the method if there is one.
+			if (methods[j].getName().equals(methodName) && methods[j].getArgumentTypes().length == method.getArgumentTypes().length)
+			{
+				curMethod= methods[j];
 				break;
 			}
 		}
-		
-		if(curMethod != null) {
-			Attribute[] attributes = curMethod.getAttributes();
-			curAnnotationsValues = getAnnotationsValues(attributes);
-			
-			Set<Entry<String, String>> entrySet = curAnnotationsValues.entrySet();
-			Iterator<Entry<String, String>> iterator = entrySet.iterator();
-			while(iterator.hasNext()) { 
-				Entry<String, String> next = iterator.next();
-				String key = next.getKey();
-				if(key.contains(annoationName))	
+
+		if (curMethod != null)
+		{
+			Attribute[] attributes= curMethod.getAttributes();
+			curAnnotationsValues= getAnnotationsValues(attributes, "");
+
+			Set<Entry<String, String>> entrySet= curAnnotationsValues.entrySet();
+			Iterator<Entry<String, String>> iterator= entrySet.iterator();
+			while (iterator.hasNext())
+			{
+				Entry<String, String> next= iterator.next();
+				String key= next.getKey();
+				if (key.contains(annotationName))
 					return curAnnotationsValues; // if contains the annotation already skip checking the super methods.
 			}
 		}
 		else
-			curAnnotationsValues = new LinkedHashMap<String, String>();
+			curAnnotationsValues= new LinkedHashMap<String, String>();
 
-		if(nDepth >= maxRecursive)
+		if (nDepth >= maxRecursive)
 			return curAnnotationsValues;
-		
-		JavaClass[] interfaces = curClass.getInterfaces();
-		for(int i = 0; i < interfaces.length;i++) { // check interfaces
-			JavaClass javaClass = interfaces[i];
-			Map<String, String> returnedAnnotation = checkSuperAnnotations(method, javaClass, annoationName, nDepth, maxRecursive);
-			mergeAnno(curAnnotationsValues, returnedAnnotation, annoationName);
+
+		JavaClass[] interfaces= curClass.getInterfaces();
+		for (int i= 0; i < interfaces.length; i++)
+		{ // check interfaces
+			JavaClass javaClass= interfaces[i];
+			Map<String, String> returnedAnnotation= checkSuperAnnotations(method, javaClass, annotationName, nDepth, maxRecursive);
+			mergeAnno(curAnnotationsValues, returnedAnnotation, annotationName);
 		}
-		JavaClass superClass = curClass.getSuperClass(); // check super class
-		if(superClass != null && superClass.getClassName().contains("java.lang.Object") == false) { // stop checking super when It detects root java object.
-			Map<String, String> returnedAnnotation = checkSuperAnnotations(method, superClass, annoationName, nDepth, maxRecursive);
-			mergeAnno(curAnnotationsValues, returnedAnnotation, annoationName);
+		JavaClass superClass= curClass.getSuperClass(); // check super class
+		if (superClass != null && superClass.getClassName().contains("java.lang.Object") == false)
+		{ // stop checking super when It detects root java object.
+			Map<String, String> returnedAnnotation= checkSuperAnnotations(method, superClass, annotationName, nDepth, maxRecursive);
+			mergeAnno(curAnnotationsValues, returnedAnnotation, annotationName);
 		}
 		return curAnnotationsValues;
 	}
-	
+
 	private void mergeAnno(Map<String, String> curAnnotationsValues, Map<String, String> returnedAnnotation, String annoationName)
 	{
-		Set<Entry<String, String>> entrySet = returnedAnnotation.entrySet();
-		Iterator<Entry<String, String>> iterator = entrySet.iterator();
-		while(iterator.hasNext()) {
-			Entry<String, String> next = iterator.next();
-			String key = next.getKey();
-			String value = next.getValue();
-			if(key.contains(annoationName))	{
-				boolean containsKey = curAnnotationsValues.containsKey(key);
-				if(containsKey == false)
+		Set<Entry<String, String>> entrySet= returnedAnnotation.entrySet();
+		Iterator<Entry<String, String>> iterator= entrySet.iterator();
+		while (iterator.hasNext())
+		{
+			Entry<String, String> next= iterator.next();
+			String key= next.getKey();
+			String value= next.getValue();
+			if (key.contains(annoationName))
+			{
+				boolean containsKey= curAnnotationsValues.containsKey(key);
+				if (containsKey == false)
 					curAnnotationsValues.put(key, value);
 			}
 		}
 	}
-	
-	private Map<String, String> getAnnotationsValues(Attribute[] attributes)
+
+	private Map<String, String> getAnnotationsValues(Attribute[] attributes, String prefix)
 	{
 		Map<String, String> result= new LinkedHashMap<String, String>();
 		for (Attribute attribute : attributes)
@@ -303,20 +332,24 @@ public class Parser
 				Annotations annotations= (Annotations) attribute;
 				AnnotationEntry[] entries= annotations.getAnnotationEntries();
 				List<AnnotationEntry> newEntries= new ArrayList<AnnotationEntry>();
-				for (AnnotationEntry entry : entries)
-				{
-					if (entry.getElementValuePairs().length == 0)
-						result.put(Type.getType(entry.getAnnotationType()) + "# ", " ");
-
-					for (int i= 0; i < entry.getElementValuePairs().length; i++)
-					{
-						ElementValuePair elementValuePair= entry.getElementValuePairs()[i];
-						result.put(Type.getType(entry.getAnnotationType()) + "#" + elementValuePair.getNameString(), elementValuePair.getValue().toString());
-					}
-				}
+				putEntries(prefix, result, entries);
 			}
 		}
 		return result;
+	}
+	private void putEntries(String prefix, Map<String, String> result, AnnotationEntry[] entries)
+	{
+		for (AnnotationEntry entry : entries)
+		{
+			if (entry.getElementValuePairs().length == 0)
+				result.put(Type.getType(entry.getAnnotationType()) + "# ", " ");
+
+			for (int i= 0; i < entry.getElementValuePairs().length; i++)
+			{
+				ElementValuePair elementValuePair= entry.getElementValuePairs()[i];
+				result.put(Type.getType(entry.getAnnotationType()) + "#" + prefix + elementValuePair.getNameString(), elementValuePair.getValue().toString());
+			}
+		}
 	}
 
 	public void parseMethod(TypeDeclaration typeDecl, MethodDeclaration methodDecl, Method method)

@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.helpers;
+package com.dragome.commons.compiler.annotations;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.dragome.commons.compiler.annotations.MethodAlias;
-import com.dragome.services.ServiceLocator;
-import com.dragome.services.WebServiceLocator;
 
 public class AnnotationsHelper
 {
@@ -75,7 +69,7 @@ public class AnnotationsHelper
 	}
 
 	private static Map<Class<? extends Annotation>, AnnotationContainer> annotationsByType= new HashMap<Class<? extends Annotation>, AnnotationContainer>();
-	private static List<String> annotations= new ArrayList<String>();
+	public static List<String> annotations= new ArrayList<String>();
 
 	public static AnnotationContainer getAnnotationsByType(Class<? extends Annotation> aType)
 	{
@@ -84,25 +78,5 @@ public class AnnotationsHelper
 			annotationsByType.put(aType, annotationContainer= new AnnotationContainer());
 
 		return annotationContainer;
-	}
-
-	@MethodAlias(alias= "dragomeJs.addTypeAnnotation")
-	public static void addTypeAnnotation(String className, String annotationClassName, String annotationKey, String annotationValue)
-	{
-		try
-		{
-			WebServiceLocator.getInstance().setClientSideEnabled(true);
-			Class<?> type= ServiceLocator.getInstance().getReflectionService().forName(className);
-			Class<? extends Annotation> annotationClass= (Class<? extends Annotation>) ServiceLocator.getInstance().getReflectionService().forName(annotationClassName);
-
-			AnnotationContainer map= getAnnotationsByType(annotationClass);
-			map.add(type, annotationKey, annotationValue);
-
-			annotations.add(className + "|" + annotationClassName + "|" + annotationKey + "|" + annotationValue);
-		}
-		catch (Exception e)
-		{
-			Logger.getLogger(AnnotationsHelper.class.getName()).log(Level.FINEST, "Cannot add type annotation", e);
-		}
 	}
 }

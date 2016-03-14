@@ -502,7 +502,7 @@ public class Project implements Serializable
 		for (Iterator<String> iterator= getTypeDeclarationsWithAnnotations().iterator(); iterator.hasNext();)
 		{
 			String declaredAnnotation= (String) iterator.next();
-			if (declaredAnnotation.startsWith(typeDecl.getClassName()))
+			if (declaredAnnotation.equals(typeDecl.getClassName()))
 				iterator.remove();
 		}
 

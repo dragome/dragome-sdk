@@ -221,9 +221,9 @@ public final class Method
 		return modifiers;
 	}
 
-	public <T> T getAnnotation(Class<T> class1)
+	public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
 	{
-		return null;
+		return Class.getAnnotationInternal(getDeclaringClass(), annotationClass, getName(), null);
 	}
 
 	public Class<?> getReturnType()
@@ -308,5 +308,16 @@ public final class Method
 			}
 		}
 		return args;
+	}
+
+	public Parameter[] getParameters()
+	{
+		List<Parameter> result= new ArrayList<>();
+
+		Class<?>[] parameterTypes= getParameterTypes();
+		for (int i= 0; i < parameterTypes.length; i++)
+			result.add(new Parameter(getDeclaringClass(), this, "arg" + i, 0, i));
+
+		return result.toArray(new Parameter[0]);
 	}
 }

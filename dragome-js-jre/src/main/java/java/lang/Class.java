@@ -42,11 +42,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return simpleName.substring(simpleName.lastIndexOf('.') + 1);
 	}
 
-	private class AnnotationInvocationHandler implements InvocationHandler
+	private class AnnotationInvocationHandler2 implements InvocationHandler
 	{
 		private JSObject<?> object;
 
-		AnnotationInvocationHandler(JSObject<?> theObject)
+		AnnotationInvocationHandler2(JSObject<?> theObject)
 		{
 			object= theObject;
 		}
@@ -349,7 +349,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		int i= 0;
 		for (Object map : maps)
 		{
-			InvocationHandler handler= new AnnotationInvocationHandler(new JSObject(map));
+			InvocationHandler handler= new AnnotationInvocationHandler2(new JSObject(map));
 			Annotation annotation= (Annotation) Proxy.newProxyInstance(null, new Class[] { null }, handler);
 			annotations[i++]= annotation;
 		}
@@ -413,7 +413,16 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public <A extends Annotation> A getAnnotation(Class<A> annotationClass)
 	{
-		return null;
+		return getAnnotationInternal(this, annotationClass, null, null);
+	}
+
+	public static <A extends Annotation> A getAnnotationInternal(Class<?> aClass, Class<A> annotationClass, String methodName, Integer parameterIndex)
+	{
+		if (annotationClass.getName().startsWith("org.junit"))
+			return null;
+
+		A annotation= (A) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex));
+		return annotation;
 	}
 
 	public Annotation[] getAnnotations()
