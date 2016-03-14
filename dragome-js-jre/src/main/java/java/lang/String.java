@@ -356,6 +356,16 @@ public final class String implements CharSequence, Comparable<String>
 		ScriptHelper.put("position", position, this);
 		return ScriptHelper.evalInt("this.indexOf(str, position)", this);
 	}
+	
+	/**
+	 *  Returns the index within this string of the first occurrence of the specified substring, starting at the specified index.
+	 */
+	public int indexOf(int strr, int position)
+	{ //FIXME dragome is making char as a int when using charAt( ) so this method is needed or it will give error by saying method dont exist.
+		ScriptHelper.evalNoResult("var str = String.fromCharCode(strr)", this);
+		ScriptHelper.put("position", position, this);
+		return ScriptHelper.evalInt("this.indexOf(str, position)", this);
+	}
 
 	/**
 	 *  Returns the index within this string of the first occurrence of the specified character.
@@ -534,14 +544,72 @@ public final class String implements CharSequence, Comparable<String>
 	/**
 	 *    Splits this string around matches of the given regular expression.
 	 */
-	public String[] split(String regex)
+	public String[] split(String regex) 
 	{
-		ScriptHelper.put("regex", regex, this);
-		// String.prototype.split(separator, limit) accepts both a string and a regular expression as separator.
-		// However, the string is not converted to a regular expression, so we have to do it.
-		return (String[]) ScriptHelper.eval("this.split(new RegExp(regex))", this);
+		return split(regex, 0);
+	}
+	
+	public String[] split(String regex, int maxMatch) 
+	{ // from GWT
+		// The compiled regular expression created from the string
+		Object compiled = ScriptHelper.eval("new RegExp(regex, 'g');", this);
+	    // the Javascipt array to hold the matches prior to conversion
+	    String[] out = new String[0];
+	    // how many matches performed so far
+	    int count = 0;
+	    // The current string that is being matched; trimmed as each piece matches
+	    String trail = this;
+	    // used to detect repeated zero length matches
+	    // Must be null to start with because the first match of "" makes no
+	    // progress by intention
+	    String lastTrail = null;
+	    // We do the split manually to avoid Javascript incompatibility
+	    while (true) {
+	      // None of the information in the match returned are useful as we have no
+	      // subgroup handling
+	    	
+	      Object matchObj = ScriptHelper.eval("compiled.exec(trail)", this);
+	      if (matchObj == null || trail == "" || (count == (maxMatch - 1) && maxMatch > 0)) {
+	        out[count] = trail;
+	        break;
+	      } else {
+	        out[count] = trail.substring(0, getMatchIndex(matchObj));
+	        trail = trail.substring(
+	            getMatchIndex(matchObj) + getMatchLength(matchObj, 0), trail.length());
+	        // Force the compiled pattern to reset internal state
+	        ScriptHelper.evalNoResult("compiled.lastIndex = 0", this);
+	        // Only one zero length match per character to ensure termination
+	        if (lastTrail == trail) {
+	          out[count] = trail.substring(0, 1);
+	          trail = trail.substring(1);
+	        }
+	        lastTrail = trail;
+	        count++;
+	      }
+	    }
+	    // all blank delimiters at the end are supposed to disappear if maxMatch == 0;
+	    // however, if the input string is empty, the output should consist of a
+	    // single empty string
+	    if (maxMatch == 0 && this.length() > 0) {
+	      int lastNonEmpty = out.length;
+	      while (lastNonEmpty > 0 && out[lastNonEmpty - 1] == "") {
+	        --lastNonEmpty;
+	      }
+	      if (lastNonEmpty < out.length) {
+	        ScriptHelper.evalNoResult("out.length = lastNonEmpty", this);
+	      }
+	    }
+	    return out;
 	}
 
+	private static int getMatchIndex(Object matchObject) {
+		return ScriptHelper.evalInt("matchObject.index", null);
+	};
+
+	private static int getMatchLength(Object matchObject, int index) {
+		return ScriptHelper.evalInt("matchObject[index].length", null);
+	};
+	
 	/**
 	 * Tells whether or not this string matches the given regular expression.
 	 */

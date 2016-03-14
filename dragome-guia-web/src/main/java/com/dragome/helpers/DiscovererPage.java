@@ -33,7 +33,7 @@ import com.dragome.view.VisualActivity;
 import com.dragome.web.annotations.PageAlias;
 import com.dragome.web.helpers.RequestUrlActivityMapper;
 
-@PageAlias(alias= "discoverer")
+@PageAlias(alias= "dragome-discoverer")
 public class DiscovererPage extends GuiaVisualActivity
 {
 	public void build()

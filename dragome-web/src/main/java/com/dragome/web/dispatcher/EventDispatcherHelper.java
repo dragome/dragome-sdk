@@ -15,6 +15,7 @@
  */
 package com.dragome.web.dispatcher;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -48,14 +49,20 @@ public class EventDispatcherHelper
 			if (className == null || className.trim().length() == 0)
 			{
 				String requestURL= parametersHandler.getRequestURL();
+				List<AnnotationEntry> annotationEntries= new ArrayList<>(AnnotationsHelper.getAnnotationsByType(PageAlias.class).getEntries());
 
-				List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(PageAlias.class).getEntries();
-				for (AnnotationEntry annotationEntry : annotationEntries)
-				{
-					boolean isUnique= annotationEntries.size() == 2 && !"discoverer".equals(annotationEntry.getAnnotationValue());
-					if (isUnique || (annotationEntry.getAnnotationKey().equals("alias") && requestURL.contains(annotationEntry.getAnnotationValue())))
-						className= annotationEntry.getType().getName();
-				}
+				className= findDiscovererPage(className, annotationEntries);
+
+				if (className == null)
+					for (AnnotationEntry annotationEntry : annotationEntries)
+					{
+						boolean isUnique= annotationEntries.size() == 1;
+						boolean urlContainsAlias= requestURL.contains(annotationEntry.getAnnotationValue());
+						boolean isAliasKey= annotationEntry.getAnnotationKey().equals("alias");
+						
+						if (isUnique || (isAliasKey && urlContainsAlias))
+							className= annotationEntry.getType().getName();
+					}
 			}
 
 			launch(className);
@@ -65,6 +72,24 @@ public class EventDispatcherHelper
 			alert("ERROR (more info on browser console):" + e.getMessage());
 			throw e;
 		}
+	}
+
+	private static String findDiscovererPage(String requestURL, List<AnnotationEntry> annotationEntries)
+	{
+		String className= null;
+		
+		for (AnnotationEntry annotationEntry : annotationEntries)
+		{
+			boolean isDiscoverPage= annotationEntry.getType().getSimpleName().equals("DiscovererPage");
+			if (isDiscoverPage)
+			{
+				annotationEntries.remove(annotationEntry);
+
+				if (requestURL.contains(annotationEntry.getAnnotationValue()))
+					className= annotationEntry.getType().getName();
+			}
+		}
+		return className;
 	}
 
 	private static void launch(String className) throws Exception

@@ -19,6 +19,7 @@ import javassist.*;
 import javassist.bytecode.AccessFlag;
 import javassist.bytecode.Descriptor;
 
+import com.dragome.commons.DelegateCode;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.html.dom.html5canvas.interfaces.HTMLCanvasElement;
@@ -94,11 +95,15 @@ public class JsDelegateGenerator
 			CtClass objectCtClass= resolveCtClass(Object.class);
 
 			addConstructors(cc, constructorBody, objectCtClass);
-
+			
 			for (CtMethod method : resolveCtClass.getMethods())
+			{
+				DelegateCode annotation = (DelegateCode) method.getAnnotation(DelegateCode.class);
+				if(annotation != null && annotation.ignore())
+					continue;
 				if (!method.getDeclaringClass().equals(objectCtClass))
-					cc.addMethod(createDelegateMethod(interface1, cc, scriptHelperClass, method));
-
+					cc.addMethod(createDelegateMethod(interface1, cc, scriptHelperClass, method, annotation));
+			}
 			return cc;
 		}
 		catch (Exception e)
@@ -107,21 +112,27 @@ public class JsDelegateGenerator
 		}
 	}
 
-	private CtMethod createDelegateMethod(Class<?> interface1, CtClass cc, Class<?> scriptHelperClass, CtMethod method) throws NotFoundException, CannotCompileException
+	private CtMethod createDelegateMethod(Class<?> interface1, CtClass cc, Class<?> scriptHelperClass, CtMethod method, DelegateCode annotation) throws NotFoundException, CannotCompileException
 	{
 		StringBuffer code= new StringBuffer();
 
 		String customCode = null;
 		String params = createParameters(method, code);
-		int length = code.length();
-		customCode = delegateStrategy.createMethodCall(method, code, params);
-		if(customCode == null)
-		{
-			if(code.length() == length)
-				code.append("$eval$(\"this.node." + method.getName() + "(" + params + ")\", this);");
-		}
+		
+		if(annotation != null && !annotation.eval().isEmpty())
+			code.append("$eval$(\"" + annotation.eval() + "\", this);");
 		else
-			code.append("$eval$(\"" + customCode + "\", this);");
+		{
+			int length = code.length();
+			customCode = delegateStrategy.createMethodCall(method, code, params);
+			if(customCode == null)
+			{
+				if(code.length() == length)
+					code.append("$eval$(\"this.node." + method.getName() + "(" + params + ")\", this);");
+			}
+			else
+				code.append("$eval$(\"" + customCode + "\", this);");
+		}
 
 		String body= code.toString();
 
