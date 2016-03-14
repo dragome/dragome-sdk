@@ -1,7 +1,5 @@
-*/target/**
 bin/
 target/
-/bin/
 .metadata
 .settings
 .project
@@ -10,4 +8,3 @@ target/
 .classpath
 .factorypath
 *.jar
-
