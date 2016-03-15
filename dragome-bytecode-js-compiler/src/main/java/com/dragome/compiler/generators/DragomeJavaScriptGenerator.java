@@ -589,6 +589,10 @@ public class DragomeJavaScriptGenerator extends Generator
 			{
 				println("");
 			}
+			else if(lastChar == ';')
+			{
+				getOutputStream().println("");
+			}
 			else
 			{
 				println(";");
