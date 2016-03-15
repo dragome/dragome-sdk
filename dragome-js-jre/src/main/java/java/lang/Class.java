@@ -28,8 +28,10 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
+import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.commons.javascript.JSObject;
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -94,9 +96,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		{
 			if (className.startsWith("["))
 			{ // temp fix  for [].getClass();  
-				
-				String jsClassName = "java_lang_reflect_Array";
-				
+
+				String jsClassName= "java_lang_reflect_Array";
+
 				ScriptHelper.put("jsClassName", jsClassName, null);
 				Object nativeClass= null;
 				ScriptHelper.eval("try{var result= eval(jsClassName)}catch(e){}", null);
@@ -104,38 +106,38 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 				if (nativeClass == null)
 					throw new ClassNotFoundException(jsClassName);
-				
-				String type = className.replaceAll("\\[", "");
-				
-				if(type.startsWith("L"))
-					type = type.replace("L", "");
-				else if(type.startsWith("Z"))
+
+				String type= className.replaceAll("\\[", "");
+
+				if (type.startsWith("L"))
+					type= type.replace("L", "");
+				else if (type.startsWith("Z"))
 					type= "boolean";
-				else if(type.startsWith("B"))
+				else if (type.startsWith("B"))
 					type= "byte";
-				else if(type.startsWith("C"))
+				else if (type.startsWith("C"))
 					type= "char";
-				else if(type.startsWith("D"))
+				else if (type.startsWith("D"))
 					type= "double";
-				else if(type.startsWith("F"))
+				else if (type.startsWith("F"))
 					type= "float";
-				else if(type.startsWith("I"))
+				else if (type.startsWith("I"))
 					type= "int";
-				else if(type.startsWith("J"))
+				else if (type.startsWith("J"))
 					type= "long";
-				else if(type.startsWith("S"))
+				else if (type.startsWith("S"))
 					type= "short";
-				
+
 				clazz= new Class(nativeClass);
-				clazz.isArray = true;
-				clazz.type = type;
+				clazz.isArray= true;
+				clazz.type= type;
 				ScriptHelper.put("clazz", clazz, null);
 				ScriptHelper.put("className", className, null);
 				ScriptHelper.eval("clazz.realName=className", null);
 				classesByName.put(className, clazz);
 				return clazz;
 			}
-			
+
 			String jsClassName= className.replaceAll("\\.", "_");
 			if ("boolean".equals(jsClassName))
 				jsClassName= "java_lang_Boolean";
@@ -186,12 +188,15 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	 */
 	public Class<?> getComponentType()
 	{
-		if(isArray() == false)
+		if (isArray() == false)
 			return null;
 		else
-			try {
+			try
+			{
 				return Class.forName(type);
-			} catch (java.lang.ClassNotFoundException e) {
+			}
+			catch (java.lang.ClassNotFoundException e)
+			{
 				e.printStackTrace();
 			}
 		return null;
@@ -265,7 +270,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		String result;
 
-		if(isArray == false)
+		if (isArray == false)
 		{
 			if (isInterface())
 				result= (String) ScriptHelper.eval("this.$$$nativeClass.name", this);
@@ -273,7 +278,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 				result= (String) ScriptHelper.eval("this.$$$nativeClass.classname", this);
 		}
 		else
-			result = (java.lang.String) ScriptHelper.eval("this.realName", null);
+			result= (java.lang.String) ScriptHelper.eval("this.realName", null);
 		return result != null ? result.replace("_", ".") : "java.lang.Object"; //TODO arreglar, no se pueden usar nombre de clases con _!!
 	}
 
@@ -473,7 +478,14 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public static <A extends Annotation> A getAnnotationInternal(Class<?> aClass, Class<A> annotationClass, String methodName, Integer parameterIndex)
 	{
-		if (annotationClass.getName().startsWith("org.junit"))
+		List<AnnotationEntry> annotationEntries= new ArrayList<>(AnnotationsHelper.getAnnotationsByType(annotationClass).getEntries());
+		boolean annotationFound= false;
+
+		for (AnnotationEntry annotationEntry : annotationEntries)
+			if (annotationEntry.getType().equals(aClass))
+				annotationFound= true;
+
+		if (!annotationFound)
 			return null;
 
 		A annotation= (A) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex));
@@ -547,7 +559,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	@Override
 	public boolean equals(java.lang.Object obj)
 	{
-		if(obj == null)
+		if (obj == null)
 			return false;
 		ScriptHelper.put("obj", obj, this);
 		boolean result= ScriptHelper.evalBoolean("obj.$$$nativeClass == this.$$$nativeClass", this);
