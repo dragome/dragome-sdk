@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -148,9 +148,18 @@ public class Parser
 		classWalker.visit();
 
 		org.apache.bcel.classfile.Method[] bcelMethods= jc.getMethods();
+		org.apache.bcel.classfile.Field[] bcelFields= jc.getFields();
 
 		ObjectType type= new ObjectType(jc.getClassName());
 		Map<String, String> annotationsValues= getAnnotationsValues(jc.getAttributes(), "");
+
+		for (Field field : bcelFields)
+		{
+			Attribute[] attributes= field.getAttributes();
+			String name= "@" + field.getName() + "/";
+			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes, name);
+			annotationsValues.putAll(methodAnnotationsValues);
+		}
 
 		for (Method method : bcelMethods)
 		{

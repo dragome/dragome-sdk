@@ -199,7 +199,7 @@ public final class Parameter implements AnnotatedElement
 	 */
 	public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
 	{
-		return Class.getAnnotationInternal(type, annotationClass, method.getName(), index);
+		return Class.getAnnotationInternal(type, annotationClass, method.getName(), index, null);
 	}
 
 	public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass)
