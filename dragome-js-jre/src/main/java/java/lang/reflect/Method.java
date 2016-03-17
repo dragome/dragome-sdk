@@ -110,7 +110,7 @@ public final class Method
 
 	public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
-		boxArguments(args);
+		boxArguments(getParameterTypes(), args);
 
 		Object result= null;
 		if (obj == null)
@@ -130,74 +130,74 @@ public final class Method
 		else
 			result= ScriptHelper.eval("obj[sig].apply(obj, args)", this);
 
-		result= adaptResult(result);
+		result= adaptResult(result, getReturnType());
 		return result;
 	}
 
-	private void boxArguments(Object... args)
+	public static void boxArguments(Class<?>[] parameterTypes, Object... args)
 	{
-		ScriptHelper.put("args", args, this);
-
-		Class<?>[] parameterTypes= getParameterTypes();
+		ScriptHelper.put("args", args, null);
 
 		for (int i= 0; i < parameterTypes.length; i++)
 		{
-			ScriptHelper.put("parameterType", parameterTypes[i], this);
+			ScriptHelper.put("parameterType", parameterTypes[i], null);
 
 			if (args[i] != null)
 			{
-				if (ScriptHelper.evalBoolean("parameterType.realName == 'boolean'", this) && args[i] instanceof Boolean)
-					ScriptHelper.put("argValue", Boolean.parseBoolean(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'int'", this) && args[i] instanceof Integer)
-					ScriptHelper.put("argValue", Integer.parseInt(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'long'", this) && args[i] instanceof Long)
-					ScriptHelper.put("argValue", Long.parseLong(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'short'", this) && args[i] instanceof Short)
-					ScriptHelper.put("argValue", Short.parseShort(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'float'", this) && args[i] instanceof Float)
-					ScriptHelper.put("argValue", Float.parseFloat(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'double'", this) && args[i] instanceof Double)
-					ScriptHelper.put("argValue", Double.parseDouble(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'byte'", this) && args[i] instanceof Byte)
-					ScriptHelper.put("argValue", Byte.parseByte(args[i].toString()), this);
-				else if (ScriptHelper.evalBoolean("parameterType.realName == 'char'", this) && args[i] instanceof Character)
-					ScriptHelper.put("argValue", ((Character) args[i]).charValue(), this);
+				if (ScriptHelper.evalBoolean("parameterType.realName == 'boolean'", null) && args[i] instanceof Boolean)
+					ScriptHelper.put("argValue", Boolean.parseBoolean(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'int'", null) && args[i] instanceof Integer)
+					ScriptHelper.put("argValue", Integer.parseInt(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'long'", null) && args[i] instanceof Long)
+					ScriptHelper.put("argValue", Long.parseLong(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'short'", null) && args[i] instanceof Short)
+					ScriptHelper.put("argValue", Short.parseShort(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'float'", null) && args[i] instanceof Float)
+					ScriptHelper.put("argValue", Float.parseFloat(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'double'", null) && args[i] instanceof Double)
+					ScriptHelper.put("argValue", Double.parseDouble(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'byte'", null) && args[i] instanceof Byte)
+					ScriptHelper.put("argValue", Byte.parseByte(args[i].toString()), null);
+				else if (ScriptHelper.evalBoolean("parameterType.realName == 'char'", null) && args[i] instanceof Character)
+					ScriptHelper.put("argValue", ((Character) args[i]).charValue(), null);
 				else
-					ScriptHelper.put("argValue", args[i], this);
+					ScriptHelper.put("argValue", args[i], null);
 
-				ScriptHelper.put("i", i, this);
-				ScriptHelper.eval("args[i]= argValue", this);
+				ScriptHelper.put("i", i, null);
+				ScriptHelper.eval("args[i]= argValue", null);
 			}
 		}
 	}
 
-	private Object adaptResult(Object result)
+	public static Object adaptResult(Object result, Class<?> returnType)
 	{
-		ScriptHelper.put("result", result, this);
+		ScriptHelper.put("result", result, null);
 
 		try
 		{
-			Class<?> currentReturnType= getReturnType();
+			Class<?> currentReturnType= returnType;
 
-			if (currentReturnType.equals(Boolean.class))
-				result= result instanceof Boolean ? result : (ScriptHelper.evalBoolean("result", this) ? Boolean.TRUE : Boolean.FALSE);
-			else if (currentReturnType.equals(Integer.class))
-				result= Integer.parseInt(ScriptHelper.evalInt("result", this) + "");
-			else if (currentReturnType.equals(Long.class))
-				result= Long.parseLong(ScriptHelper.evalInt("result", this) + "");
-			else if (currentReturnType.equals(Short.class))
-				result= Short.parseShort(ScriptHelper.evalInt("result", this) + "");
-			else if (currentReturnType.equals(Float.class))
-				result= Float.parseFloat(ScriptHelper.evalFloat("result", this) + "");
-			else if (currentReturnType.equals(Double.class))
-				result= Double.parseDouble(ScriptHelper.evalDouble("result", this) + "");
-			else if (currentReturnType.equals(Byte.class))
-				result= Byte.valueOf((byte) ScriptHelper.evalChar("result", this));
-			else if (currentReturnType.equals(Character.class))
-				result= Character.valueOf((ScriptHelper.eval("result", this) + "").charAt(0));
+			if (currentReturnType != null)
+				if (currentReturnType.equals(Boolean.class))
+					result= result instanceof Boolean ? result : (ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE);
+				else if (currentReturnType.equals(Integer.class))
+					result= Integer.parseInt(ScriptHelper.evalInt("result", null) + "");
+				else if (currentReturnType.equals(Long.class))
+					result= Long.parseLong(ScriptHelper.evalInt("result", null) + "");
+				else if (currentReturnType.equals(Short.class))
+					result= Short.parseShort(ScriptHelper.evalInt("result", null) + "");
+				else if (currentReturnType.equals(Float.class))
+					result= Float.parseFloat(ScriptHelper.evalFloat("result", null) + "");
+				else if (currentReturnType.equals(Double.class))
+					result= Double.parseDouble(ScriptHelper.evalDouble("result", null) + "");
+				else if (currentReturnType.equals(Byte.class))
+					result= Byte.valueOf((byte) ScriptHelper.evalChar("result", null));
+				else if (currentReturnType.equals(Character.class))
+					result= Character.valueOf((ScriptHelper.eval("result", null) + "").charAt(0));
 		}
 		catch (Exception e)
 		{
+			System.out.println("adaptResult failed");
 		}
 		return result;
 	}
@@ -223,7 +223,7 @@ public final class Method
 
 	public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
 	{
-		return Class.getAnnotationInternal(getDeclaringClass(), annotationClass, getName(), null);
+		return Class.getAnnotationInternal(getDeclaringClass(), annotationClass, getName(), null, null);
 	}
 
 	public Class<?> getReturnType()

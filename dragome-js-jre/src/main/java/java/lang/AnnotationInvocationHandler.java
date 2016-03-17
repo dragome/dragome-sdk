@@ -15,13 +15,15 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 	private Class<? extends Annotation> annotationClass;
 	private String methodName;
 	private Integer parameterIndex;
+	private String fieldName;
 
-	public AnnotationInvocationHandler(Class<T> class1, Class<? extends Annotation> annotationClass, String methodName, Integer parameterIndex)
+	public AnnotationInvocationHandler(Class<T> class1, Class<? extends Annotation> annotationClass, String methodName, Integer parameterIndex, String fieldName)
 	{
 		this.clazz= class1;
 		this.annotationClass= annotationClass;
 		this.methodName= methodName;
 		this.parameterIndex= parameterIndex;
+		this.fieldName= fieldName;
 	}
 
 	public Object invoke(Object proxy, Method method, Object[] args)
@@ -36,10 +38,15 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 			for (AnnotationEntry annotationEntry : annotationEntries)
 			{
 				String key= method.getName();
-				if (parameterIndex != null)
-					key= "arg" + parameterIndex.toString() + "/" + key;
-				if (methodName != null)
-					key= methodName + "/" + key;
+				if (fieldName != null)
+					key= "@" + fieldName + "/" + key;
+				else
+				{
+					if (parameterIndex != null)
+						key= "arg" + parameterIndex.toString() + "/" + key;
+					if (methodName != null)
+						key= methodName + "/" + key;
+				}
 
 				if (annotationEntry.getType().equals(clazz) && annotationEntry.getAnnotationKey().equals(key))
 					return annotationEntry.getAnnotationValue();

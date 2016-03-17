@@ -16,7 +16,6 @@
 package java.lang;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -29,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
+import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
-import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.commons.javascript.JSObject;
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -70,10 +69,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	private static JSObject<Class<?>> classesByName= new JSObject<Class<?>>();
 	private static JSObject<Method> foundMethods= new JSObject<Method>();
+	private static JSObject<Field> foundFields= new JSObject<Field>();
 
 	protected Object nativeClass;
 	protected Method[] methods;
 	protected List<Method> declaredMethods;
+	protected List<Field> declaredFields;
 	protected Method[] declaredMethodsInDepth;
 	protected Class<?>[] interfacesCache;
 	protected boolean isArray;
@@ -95,7 +96,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (clazz == null)
 		{
 			if (className.startsWith("["))
-			{ // temp fix  for [].getClass();  
+			{ // temp fix  for [].getClass();
 
 				String jsClassName= "java_lang_reflect_Array";
 
@@ -312,13 +313,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	private void addMethods(String[] signatures, int modifier)
 	{
-		for (int i= 0, j= 0; i < signatures.length; i++)
+		for (int i= 0; i < signatures.length; i++)
 		{
 			String signature= signatures[i];
 			if (signature.startsWith("$$init_") || signature.startsWith("$$clinit_") /*|| signature.indexOf("_") == -1*/)
 				continue;
 			declaredMethods.add(new Method(this, signatures[i], modifier));
-			j++;
 		}
 	}
 
@@ -434,7 +434,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			for (Method method : declaredMethods)
 			{
 				if (method.getName().equals(name) && //
-						arrayContentsEq(parameterTypes, method.getParameterTypes()) && // 
+						arrayContentsEq(parameterTypes, method.getParameterTypes()) && //
 						(foundMethod == null || foundMethod.getReturnType().isAssignableFrom(method.getReturnType())))
 					foundMethods.put(key, foundMethod= method);
 			}
@@ -473,10 +473,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public <A extends Annotation> A getAnnotation(Class<A> annotationClass)
 	{
-		return getAnnotationInternal(this, annotationClass, null, null);
+		return getAnnotationInternal(this, annotationClass, null, null, null);
 	}
 
-	public static <A extends Annotation> A getAnnotationInternal(Class<?> aClass, Class<A> annotationClass, String methodName, Integer parameterIndex)
+	public static <A extends Annotation> A getAnnotationInternal(Class<?> aClass, Class<A> annotationClass, String methodName, Integer parameterIndex, String fieldName)
 	{
 		List<AnnotationEntry> annotationEntries= new ArrayList<>(AnnotationsHelper.getAnnotationsByType(annotationClass).getEntries());
 		boolean annotationFound= false;
@@ -488,7 +488,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (!annotationFound)
 			return null;
 
-		A annotation= (A) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex));
+		A annotation= (A) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex, fieldName));
 		return annotation;
 	}
 
@@ -522,12 +522,47 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Field[] getDeclaredFields() throws SecurityException
 	{
-		return new Field[0];
+		if (declaredFields == null)
+		{
+			declaredFields= new ArrayList<Field>();
+			String[] signatures= new String[0];
+			ScriptHelper.put("signatures", signatures, this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass.$$members) { if (e.startsWith('$$$')) signatures.push(e); }", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass.prototype) { if (e.startsWith('$$$')) signatures.push(e); }", this);
+			addFields(signatures, Modifier.PUBLIC);
+			signatures= new String[0];
+			ScriptHelper.eval("for (var e in this.$$$nativeClass) { if (e.startsWith('$$$')) signatures.push(e); }", this);
+			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
+		}
+		return declaredFields.toArray(new Field[0]);
+	}
+
+	private void addFields(String[] signatures, int modifier)
+	{
+		for (int i= 0; i < signatures.length; i++)
+			declaredFields.add(new Field(this, signatures[i], modifier));
 	}
 
 	public Field getDeclaredField(String name) throws NoSuchFieldException, SecurityException
 	{
-		return null;
+		return getField(name);
+	}
+
+	public Field getField(String name) throws NoSuchFieldException, SecurityException
+	{
+		Field foundField= foundFields.get(name);
+		if (foundField == null)
+		{
+			Field[] declaredFields= getDeclaredFields();
+			for (Field method : declaredFields)
+				if (method.getName().equals(name))
+					foundFields.put(name, foundField= method);
+		}
+
+		if (foundField == null)
+			throw new NoSuchFieldException(getName() + "." + name);
+
+		return foundField;
 	}
 
 	public Constructor<?>[] getDeclaredConstructors() throws SecurityException
