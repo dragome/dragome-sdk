@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  *  This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -85,8 +85,8 @@ public class JsDelegateGenerator
 			cc.addInterface(resolveCtClass);
 			Class<?> scriptHelperClass= ScriptHelper.class;
 
-            pool.insertClassPath(new ClassClassPath(Object.class));
-            pool.insertClassPath(new ClassClassPath(scriptHelperClass));
+			pool.insertClassPath(new ClassClassPath(Object.class));
+			pool.insertClassPath(new ClassClassPath(scriptHelperClass));
 
 			StringBuilder constructorBody= new StringBuilder();
 			constructorBody.append(scriptHelperClass.getName() + ".put(\"$1\", $1, this);");
@@ -95,11 +95,11 @@ public class JsDelegateGenerator
 			CtClass objectCtClass= resolveCtClass(Object.class);
 
 			addConstructors(cc, constructorBody, objectCtClass);
-			
+
 			for (CtMethod method : resolveCtClass.getMethods())
 			{
-				DelegateCode annotation = (DelegateCode) method.getAnnotation(DelegateCode.class);
-				if(annotation != null && annotation.ignore())
+				DelegateCode annotation= (DelegateCode) method.getAnnotation(DelegateCode.class);
+				if (annotation != null && annotation.ignore())
 					continue;
 				if (!method.getDeclaringClass().equals(objectCtClass))
 					cc.addMethod(createDelegateMethod(interface1, cc, scriptHelperClass, method, annotation));
@@ -116,18 +116,18 @@ public class JsDelegateGenerator
 	{
 		StringBuffer code= new StringBuffer();
 
-		String customCode = null;
-		String params = createParameters(method, code);
-		
-		if(annotation != null && !annotation.eval().isEmpty())
+		String customCode= null;
+		String params= createParameters(method, code);
+
+		if (annotation != null && !annotation.eval().isEmpty())
 			code.append("$eval$(\"" + annotation.eval() + "\", this);");
 		else
 		{
-			int length = code.length();
-			customCode = delegateStrategy.createMethodCall(method, code, params);
-			if(customCode == null)
+			int length= code.length();
+			customCode= delegateStrategy.createMethodCall(method, code, params);
+			if (customCode == null)
 			{
-				if(code.length() == length)
+				if (code.length() == length)
 					code.append("$eval$(\"this.node." + method.getName() + "(" + params + ")\", this);");
 			}
 			else
@@ -156,23 +156,26 @@ public class JsDelegateGenerator
 
 	private String configureEvaluation(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType) throws NotFoundException
 	{
-		if (!typeIsEqual(returnType, Void.class) && !typeIsEqual(returnType, void.class))
+		String scriptHelperClassname= scriptHelperClass.getName();
+		String returnTypeName= returnType.getName();
+
+		if (!returnTypeName.equals(Void.class.getName()) && !returnTypeName.equals(void.class.getName()))
 		{
-			if (typeIsEqual(returnType, Boolean.class) || typeIsEqual(returnType, boolean.class))
-				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalBoolean");
-			else if (typeIsEqual(returnType, Integer.class) || typeIsEqual(returnType, int.class) || typeIsEqual(returnType, Short.class) || typeIsEqual(returnType, short.class))
-				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalInt");
-			else if (typeIsEqual(returnType, Double.class) || typeIsEqual(returnType, double.class))
-				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalDouble");
-			else if (typeIsEqual(returnType, Float.class) || typeIsEqual(returnType, float.class))
-				body= body.replace("$eval$", "return " + scriptHelperClass.getName() + ".evalFloat");
-			else if (typeIsEqual(returnType, String.class))
-				body= body.replace("$eval$", "return (java.lang.String)" + scriptHelperClass.getName() + ".eval");
+			if (returnTypeName.equals(Boolean.class.getName()) || returnTypeName.equals(boolean.class.getName()))
+				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalBoolean");
+			else if (returnTypeName.equals(Integer.class.getName()) || returnTypeName.equals(int.class.getName()) || returnTypeName.equals(Short.class.getName()) || returnTypeName.equals(short.class.getName()))
+				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalInt");
+			else if (returnTypeName.equals(Double.class.getName()) || returnTypeName.equals(double.class.getName()))
+				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalDouble");
+			else if (returnTypeName.equals(Float.class.getName()) || returnTypeName.equals(float.class.getName()))
+				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalFloat");
+			else if (returnTypeName.equals(String.class.getName()))
+				body= body.replace("$eval$", "return (java.lang.String)" + scriptHelperClassname + ".eval");
 			else
 				body= createBodyForReference(interface1, scriptHelperClass, method, body, returnType);
 		}
 		else
-			body= body.replace("$eval$", scriptHelperClass.getName() + ".evalNoResult");
+			body= body.replace("$eval$", scriptHelperClassname + ".evalNoResult");
 		return body;
 	}
 
@@ -197,18 +200,13 @@ public class JsDelegateGenerator
 		return Descriptor.toJavaName(Descriptor.toJvmName(returnType));
 	}
 
-	private boolean typeIsEqual(CtClass returnType, Class<?> class1) throws NotFoundException
-	{
-		return returnType.equals(resolveCtClass(class1));
-	}
-	
 	private static String createParameters(CtMethod method, StringBuffer code) throws NotFoundException
 	{
-		Class<?> scriptHelperClass = ScriptHelper.class;
+		Class<?> scriptHelperClass= ScriptHelper.class;
 		int parametersCount= method.getParameterTypes().length;
 		if (parametersCount > 0)
 		{
-			StringBuilder parameters = new StringBuilder();
+			StringBuilder parameters= new StringBuilder();
 			for (int i= 0; i < parametersCount; i++)
 			{
 				String variableName= "$" + (i + 1);
@@ -246,7 +244,7 @@ public class JsDelegateGenerator
 		else
 			return string;
 	}
-	
+
 	private CtClass resolveCtClass(Class<?> clazz) throws NotFoundException
 	{
 		ClassPool pool= ClassPool.getDefault();
