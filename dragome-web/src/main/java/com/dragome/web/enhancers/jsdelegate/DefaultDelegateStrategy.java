@@ -13,11 +13,18 @@ package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
 
+import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
 public class DefaultDelegateStrategy implements DelegateStrategy
 {
+	@MethodAlias(alias= "window.getSimpleClassname")
+	public String getSimpleClassname(Class<?> instance)
+	{
+		return instance.getSimpleName();
+	}
+
 	public String createMethodCall(Method method, String params)
 	{
 		String result= "";
@@ -29,6 +36,10 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 		else if (method.getName().startsWith("get") && method.getParameterTypes().length == 0)
 		{
 			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4);
+		}
+		else if (method.getName().equals("createInstanceOf"))
+		{
+			result= "eval('new '+ getSimpleClassname($1) + '(" + params.replace("$1, ", "") + ")')";
 		}
 		else
 		{
@@ -46,5 +57,13 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 	public Class<? extends SubTypeFactory> getSubTypeFactoryClassFor(Class<?> interface1, String methodName)
 	{
 		return null;
+	}
+
+	public String createReturnExpression(Method method)
+	{
+		if (method.getName().equals("createInstanceOf"))
+			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, $1);";
+		else
+			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + method.getReturnType().getName() + ".class" + ");";
 	}
 }
