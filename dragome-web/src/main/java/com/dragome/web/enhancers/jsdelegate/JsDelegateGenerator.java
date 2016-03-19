@@ -14,7 +14,9 @@ package com.dragome.web.enhancers.jsdelegate;
 import java.io.File;
 
 import com.dragome.commons.DelegateCode;
+import com.dragome.commons.compiler.InMemoryClasspathFile;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.config.DomHandlerApplicationConfigurator;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 
 import javassist.CannotCompileException;
@@ -277,6 +279,11 @@ public class JsDelegateGenerator
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	public InMemoryClasspathFile generateAsClasspathFile(Class<?> class1)
+	{
+		return new InMemoryClasspathFile(createDelegateClassName(class1.getName()), generate(class1));
 	}
 
 	public static String createDelegateClassName(String type)
