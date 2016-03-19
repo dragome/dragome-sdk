@@ -57,13 +57,11 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 
 			for (Class<?> class1 : classes)
 			{
-				byte[] bytecode= jsDelegateGenerator.generate(class1);
-				String classname= JsDelegateGenerator.createDelegateClassName(class1.getName());
-				addClassBytecode(bytecode, classname);
-				result.add(new InMemoryClasspathFile(classname, bytecode));
+				InMemoryClasspathFile inMemoryClasspathFile= jsDelegateGenerator.generateAsClasspathFile(class1);
+				addClassBytecode(inMemoryClasspathFile.getBytecode(), inMemoryClasspathFile.getClassname());
+				result.add(inMemoryClasspathFile);
 			}
 		}
-
 
 		return result;
 	}
