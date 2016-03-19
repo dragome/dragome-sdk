@@ -44,12 +44,12 @@ import java.util.Set;
 
 import org.apache.commons.io.output.StringBuilderWriter;
 
+import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.type.TypeCollector;
-import com.dragome.compiler.utils.FileObject;
 import com.dragome.compiler.utils.Log;
 
 public class ClassUnit extends Unit
@@ -83,7 +83,7 @@ public class ClassUnit extends Unit
 
 	private transient boolean isResolved= false;
 
-	private transient FileObject classFile;
+	private transient ClasspathFile classFile;
 
 	private List<ClassUnit> implementors= new ArrayList<ClassUnit>();
 
@@ -676,7 +676,7 @@ public class ClassUnit extends Unit
 		super.setSignature(theSignature);
 	}
 
-	public FileObject getClassFile()
+	public ClasspathFile getClassFile()
 	{
 		if (classFile == null)
 		{
@@ -685,7 +685,7 @@ public class ClassUnit extends Unit
 		return classFile;
 	}
 
-	public void setClassFile(FileObject classFile)
+	public void setClassFile(ClasspathFile classFile)
 	{
 		this.classFile= classFile;
 	}

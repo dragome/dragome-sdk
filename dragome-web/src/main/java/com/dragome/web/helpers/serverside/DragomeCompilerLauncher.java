@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.dragome.web.helpers.serverside;
 
-import java.io.File;
 import java.io.FileFilter;
 import java.util.List;
 
@@ -18,6 +17,7 @@ import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
@@ -38,7 +38,7 @@ public class DragomeCompilerLauncher
 
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= WebServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
 
-		List<File> extraClasspath= configurator.getExtraClasspath(classPath);
+		List<ClasspathFile> extraClasspath= configurator.getExtraClasspath(classPath);
 
 		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter, configurator.isCheckingCast(), extraClasspath);
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);

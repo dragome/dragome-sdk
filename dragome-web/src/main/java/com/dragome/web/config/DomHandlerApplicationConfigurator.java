@@ -29,8 +29,11 @@ import org.w3c.dom.Text;
 
 import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
+import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.InMemoryClasspathFile;
 import com.dragome.helpers.Utils;
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
+import com.dragome.web.enhancers.jsdelegate.InstrumentedClassPersister;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 import com.dragome.web.html.dom.html5canvas.interfaces.CanvasImageSource;
@@ -42,9 +45,9 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 {
 	protected JsDelegateGenerator jsDelegateGenerator;
 
-	public List<File> getExtraClasspath(String classpath)
+	public List<ClasspathFile> getExtraClasspath(String classpath)
 	{
-		List<File> result= new ArrayList<File>();
+		List<ClasspathFile> result= new ArrayList<ClasspathFile>();
 		if (jsDelegateGenerator == null)
 		{
 			createJsDelegateGenerator(classpath);
@@ -52,20 +55,21 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			Class<?>[] classes= new Class[] { Document.class, Element.class, Attr.class, NodeList.class, Node.class, //
 					NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, CanvasImageSource.class };
 
-			for (Class<?> class1 : classes) 
+			for (Class<?> class1 : classes)
 			{
 				byte[] bytecode= jsDelegateGenerator.generate(class1);
-				addClassBytecode(bytecode, JsDelegateGenerator.createDelegateClassName(class1.getName()));
+				String classname= JsDelegateGenerator.createDelegateClassName(class1.getName());
+				addClassBytecode(bytecode, classname);
+				result.add(new InMemoryClasspathFile(classname, bytecode));
 			}
 		}
 
-		result.add(jsDelegateGenerator.getBaseDir());
 
 		return result;
 	}
 	private void createJsDelegateGenerator(String classpath)
 	{
-		jsDelegateGenerator= new JsDelegateGenerator(Utils.createTempDir("jsdelegate"), classpath.replace(";", ":"), new DefaultDelegateStrategy()
+		jsDelegateGenerator= new JsDelegateGenerator(classpath.replace(";", ":"), new DefaultDelegateStrategy()
 		{
 			public String getSubTypeExtractorFor(Class<?> interface1, String methodName)
 			{
