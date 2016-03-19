@@ -201,7 +201,7 @@ public class JsDelegateGenerator
 		cc.addConstructor(CtNewConstructor.make(new CtClass[] {}, new CtClass[] {}, "{}", cc));
 	}
 
-	private String configureEvaluation(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType) throws NotFoundException
+	private String configureEvaluation(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType) throws Exception
 	{
 		String scriptHelperClassname= scriptHelperClass.getName();
 		String returnTypeName= toJavaName(returnType);
@@ -229,7 +229,7 @@ public class JsDelegateGenerator
 		return body;
 	}
 
-	private String createBodyForReference(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType)
+	private String createBodyForReference(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType) throws Exception
 	{
 		body= body.replace("$eval$", "Object temp= " + scriptHelperClass.getName() + ".eval");
 		String jvmName= toJavaName(returnType) + ".class";
@@ -242,7 +242,8 @@ public class JsDelegateGenerator
 			body+= scriptHelperClass.getName() + ".put (\"temp\", temp, this);";
 		}
 
-		body= body + "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + jvmName + ");";
+		Method javaMethod= toJavaMethod(interface1, method);
+		body= body + delegateStrategy.createReturnExpression(javaMethod);
 		return body;
 	}
 
