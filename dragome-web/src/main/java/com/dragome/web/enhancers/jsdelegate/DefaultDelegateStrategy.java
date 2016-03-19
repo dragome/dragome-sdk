@@ -18,22 +18,24 @@ import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
 public class DefaultDelegateStrategy implements DelegateStrategy
 {
-	@Override
-	public String createMethodCall(Method method, StringBuffer code, String params)
+	public String createMethodCall(Method method, String params)
 	{
+		String result= "";
 		if (method.getName().startsWith("set") && method.getParameterTypes().length == 1)
-		{ //
+		{
 			Class<?> parameterType= method.getParameterTypes()[0];
-			code.append("$eval$(\"this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "= " + JsDelegateGenerator.createVariableForEval("$1", parameterType) + "\", this);");
-			return null;
+			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "= " + JsDelegateGenerator.createVariableForEval("$1", parameterType);
 		}
 		else if (method.getName().startsWith("get") && method.getParameterTypes().length == 0)
 		{
-			code.append("$eval$(\"this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "\", this);");
-			return null;
+			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4);
+		}
+		else
+		{
+			result= "this.node." + method.getName() + "(" + params + ")";
 		}
 
-		return null;
+		return result;
 	}
 
 	public String getSubTypeExtractorFor(Class<?> interface1, String methodName)

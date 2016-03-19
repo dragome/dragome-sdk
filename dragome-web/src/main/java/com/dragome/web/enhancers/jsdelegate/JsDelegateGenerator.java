@@ -37,7 +37,6 @@ import javassist.bytecode.Descriptor;
 public class JsDelegateGenerator
 {
 	private DelegateStrategy delegateStrategy;
-	private String classpath= "";
 
 	public JsDelegateGenerator(DelegateStrategy delegateStrategy)
 	{
@@ -58,7 +57,6 @@ public class JsDelegateGenerator
 	public JsDelegateGenerator(String classpath)
 	{
 		this();
-		this.classpath= classpath;
 		appendClasspath(classpath);
 	}
 
@@ -143,15 +141,8 @@ public class JsDelegateGenerator
 			code.append("$eval$(\"" + delegateCodeAnnotation.eval() + "\", this);");
 		else
 		{
-			int length= code.length();
-			customCode= delegateStrategy.createMethodCall(toJavaMethod(interface1, method), code, params);
-			if (customCode == null)
-			{
-				if (code.length() == length)
-					code.append("$eval$(\"this.node." + method.getName() + "(" + params + ")\", this);");
-			}
-			else
-				code.append("$eval$(\"" + customCode + "\", this);");
+			customCode= delegateStrategy.createMethodCall(toJavaMethod(interface1, method), params);
+			code.append("$eval$(\"" + customCode + "\", this);");
 		}
 
 		String body= code.toString();
@@ -184,22 +175,22 @@ public class JsDelegateGenerator
 		return result.toArray(new Class[0]);
 	}
 
-	private Class<?> getJavaClass(String javaName) throws ClassNotFoundException
+	public static Class<?> getJavaClass(String classname) throws ClassNotFoundException
 	{
-		if (javaName.equals("boolean"))
+		if (classname.equals("boolean"))
 			return boolean.class;
-		else if (javaName.equals("int"))
+		else if (classname.equals("int"))
 			return int.class;
-		else if (javaName.equals("short"))
+		else if (classname.equals("short"))
 			return short.class;
-		else if (javaName.equals("long"))
+		else if (classname.equals("long"))
 			return long.class;
-		else if (javaName.equals("float"))
+		else if (classname.equals("float"))
 			return float.class;
-		else if (javaName.equals("double"))
+		else if (classname.equals("double"))
 			return double.class;
 		else
-			return Class.forName(javaName);
+			return Class.forName(classname);
 	}
 
 	private void addConstructors(CtClass cc, StringBuilder constructorBody, CtClass objectCtClass) throws CannotCompileException

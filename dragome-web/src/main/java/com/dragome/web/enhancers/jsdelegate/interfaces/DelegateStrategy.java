@@ -19,7 +19,7 @@ public interface DelegateStrategy
 	 * This makes you have a custom javascript code for interface methods. For a custom code you can return javascript code in a string or use the rawCode param and return null. <br>
 	 * Returning null without touching rawCode will use a generic code. Javascript parameters is already added for you. You access them by using $1, $2 and so on.
 	 */
-	String createMethodCall(Method method, StringBuffer rawCode, String params);
+	String createMethodCall(Method method, String params);
 
 	String getSubTypeExtractorFor(Class<?> interface1, String methodName);
 
