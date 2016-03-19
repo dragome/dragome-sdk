@@ -15,13 +15,13 @@
  */
 package com.dragome.commons;
 
-import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.annotations.CompilerType;
 
 @DragomeConfiguratorImplementor
@@ -120,8 +120,8 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return true;
 	}
 
-	public List<File> getExtraClasspath(String classpath)
+	public List<ClasspathFile> getExtraClasspath(String classpath)
 	{
-		return new ArrayList<File>();
+		return new ArrayList<ClasspathFile>();
 	}
 }

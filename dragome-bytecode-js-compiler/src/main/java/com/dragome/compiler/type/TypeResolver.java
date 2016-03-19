@@ -84,7 +84,7 @@ public class TypeResolver implements TypeVisitor
 		}
 		catch (Exception e)
 		{
-		    Log.getLogger().debug("parse error:" + e.getMessage(), e);
+			Log.getLogger().debug("parse error:" + e.getMessage(), e);
 		}
 
 		{
@@ -92,8 +92,8 @@ public class TypeResolver implements TypeVisitor
 
 			if (!classUnit.getNotReversibleMethods().isEmpty())
 			{
-				File file= classUnit.getClassFile().getFile();
-				classUnit.setAlternativeCompilation(ClassToJs.transformClassFileToJs(file != null ? file.getName() : "", classUnit.getBytecode()));
+				String filename= classUnit.getClassFile().getFilename();
+				classUnit.setAlternativeCompilation(ClassToJs.transformClassFileToJs(filename, classUnit.getBytecode()));
 				project.incrementBadMethods(classUnit.getNotReversibleMethods().size());
 			}
 

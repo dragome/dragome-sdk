@@ -79,7 +79,7 @@ import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
 import com.dragome.compiler.invokedynamic.InvokeDynamicBackporter;
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.units.ClassUnit;
-import com.dragome.compiler.utils.FileObject;
+import com.dragome.compiler.utils.JavaFileClasspathFile;
 import com.dragome.compiler.utils.Log;
 import com.dragome.compiler.utils.Utils;
 
@@ -460,24 +460,4 @@ public class Parser
 	{
 		return jc.getClassName();
 	}
-
-	public static void main(String[] args) throws Exception
-	{
-		String className= args[0];
-		DragomeJsCompiler.compiler= new DragomeJsCompiler(CompilerType.Standard);
-
-		Project.createSingleton(null);
-		ClassUnit classUnit= new ClassUnit(Project.singleton, Project.singleton.getSignature(className));
-		classUnit.setClassFile(new FileObject(new File(args[1])));
-		Parser parser= new Parser(classUnit);
-		TypeDeclaration typeDecl= parser.parse();
-		DragomeJavaScriptGenerator dragomeJavaScriptGenerator= new DragomeJavaScriptGenerator(Project.singleton);
-		dragomeJavaScriptGenerator.setOutputStream(new PrintStream(new FileOutputStream(new File("/tmp/webapp.js"))));
-		dragomeJavaScriptGenerator.visit(typeDecl);
-
-		FileInputStream fis= new FileInputStream(new File("/tmp/webapp.js"));
-		String md5= org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
-		System.out.println(md5);
-	}
-
 }

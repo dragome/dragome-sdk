@@ -30,9 +30,9 @@ public class BytecodeToJavascriptCompilerConfiguration
 	private BytecodeTransformer bytecodeTransformer;
 	private FileFilter classpathFilter;
 	private boolean checkingCast;
-	private List<File> extraClasspath;
+	private List<ClasspathFile> extraClasspath;
 
-	public BytecodeToJavascriptCompilerConfiguration(String classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, FileFilter classpathFilter, boolean isCheckingCast, List<File> extraClasspath)
+	public BytecodeToJavascriptCompilerConfiguration(String classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, FileFilter classpathFilter, boolean isCheckingCast, List<ClasspathFile> extraClasspath)
 	{
 		this.classPath= classPath;
 		this.targetDir= targetDir;
@@ -79,7 +79,7 @@ public class BytecodeToJavascriptCompilerConfiguration
 		return checkingCast;
 	}
 
-	public List<File> getExtraClasspath()
+	public List<ClasspathFile> getExtraClasspath()
 	{
 		return extraClasspath;
 	}

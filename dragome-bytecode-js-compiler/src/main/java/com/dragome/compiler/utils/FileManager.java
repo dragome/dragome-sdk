@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -42,19 +42,20 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
+import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.compiler.DragomeJsCompiler;
 
 public class FileManager
 {
 	private List<Object> path= new ArrayList<Object>();
 	private FileFilter classpathFilter;
+	private List<ClasspathFile> extraClasspathFiles;
 
-	public FileManager(List<File> classPath, FileFilter classpathFilter, List<File> extraClasspath)
+	public FileManager(List<File> classPath, FileFilter classpathFilter, List<ClasspathFile> extraCompilableFiles)
 	{
 		this.classpathFilter= classpathFilter;
-		
-		classPath.addAll(extraClasspath);
-		
+		this.extraClasspathFiles= extraCompilableFiles;
+
 		Log.getLogger().debug("Resolving class path " + classPath);
 
 		for (File file : classPath)
@@ -84,8 +85,12 @@ public class FileManager
 		}
 	}
 
-	public FileObject getFileForInput(String relativeName)
+	public ClasspathFile getFileForInput(String relativeName)
 	{
+		for (ClasspathFile compilableFile : extraClasspathFiles)
+			if (compilableFile.getPath().equals(relativeName))
+				return compilableFile;
+
 		for (Object o : path)
 		{
 			if (o instanceof JarFile)
@@ -94,7 +99,7 @@ public class FileManager
 				JarEntry entry= jarFile.getJarEntry(relativeName);
 				if (entry != null)
 				{
-					return new FileObject(jarFile, entry);
+					return new InsideJarClasspathFile(jarFile, entry, relativeName);
 				}
 			}
 			else
@@ -102,7 +107,7 @@ public class FileManager
 				File file= new File(((File) o), relativeName);
 				if (file.exists())
 				{
-					return new FileObject(file);
+					return new JavaFileClasspathFile(file, relativeName);
 				}
 			}
 		}
@@ -128,6 +133,14 @@ public class FileManager
 	public Collection<String> getAllFilesInClasspath()
 	{
 		Collection<String> files= new ArrayList<String>();
+
+		for (ClasspathFile classpathFile : extraClasspathFiles)
+		{
+			File file= new File(classpathFile.getPath());
+			if (classpathFilter == null || classpathFilter.accept(file))
+				files.add(classpathFile.getPath().replace(".class", ""));
+		}
+
 		for (Object o : path)
 		{
 			if (o instanceof JarFile)
@@ -160,4 +173,23 @@ public class FileManager
 		}
 		return files;
 	}
+
+	//	public static void main(String[] args) throws Exception
+	//	{
+	//		String className= args[0];
+	//		DragomeJsCompiler.compiler= new DragomeJsCompiler(CompilerType.Standard);
+	//
+	//		Project.createSingleton(null);
+	//		ClassUnit classUnit= new ClassUnit(Project.singleton, Project.singleton.getSignature(className));
+	//		classUnit.setClassFile(new JavaFileCompilableFile(new File(args[1])));
+	//		Parser parser= new Parser(classUnit);
+	//		TypeDeclaration typeDecl= parser.parse();
+	//		DragomeJavaScriptGenerator dragomeJavaScriptGenerator= new DragomeJavaScriptGenerator(Project.singleton);
+	//		dragomeJavaScriptGenerator.setOutputStream(new PrintStream(new FileOutputStream(new File("/tmp/webapp.js"))));
+	//		dragomeJavaScriptGenerator.visit(typeDecl);
+	//
+	//		FileInputStream fis= new FileInputStream(new File("/tmp/webapp.js"));
+	//		String md5= org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+	//		System.out.println(md5);
+	//	}
 }

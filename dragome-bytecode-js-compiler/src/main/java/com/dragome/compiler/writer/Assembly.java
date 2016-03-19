@@ -43,6 +43,7 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 
+import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
@@ -52,7 +53,6 @@ import com.dragome.compiler.units.ClassUnit;
 import com.dragome.compiler.units.ConstructorUnit;
 import com.dragome.compiler.units.MemberUnit;
 import com.dragome.compiler.units.ProcedureUnit;
-import com.dragome.compiler.utils.FileObject;
 import com.dragome.compiler.utils.Log;
 
 public class Assembly
@@ -85,7 +85,7 @@ public class Assembly
 
 	private void pipeFileToStream(Writer writer, String relativeFilePath) throws IOException
 	{
-		FileObject fileObject= DragomeJsCompiler.compiler.fileManager.getFileForInput(relativeFilePath);
+		ClasspathFile fileObject= DragomeJsCompiler.compiler.fileManager.getFileForInput(relativeFilePath);
 		String content;
 		if (DragomeJsCompiler.compiler.isCompression())
 		{

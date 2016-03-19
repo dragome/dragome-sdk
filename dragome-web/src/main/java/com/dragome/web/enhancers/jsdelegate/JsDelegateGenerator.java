@@ -12,24 +12,27 @@
 package com.dragome.web.enhancers.jsdelegate;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import javassist.*;
-import javassist.bytecode.AccessFlag;
-import javassist.bytecode.Descriptor;
 
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
-import com.dragome.web.html.dom.html5canvas.interfaces.HTMLCanvasElement;
+
+import javassist.CannotCompileException;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtMethod;
+import javassist.CtNewConstructor;
+import javassist.CtNewMethod;
+import javassist.NotFoundException;
+import javassist.bytecode.AccessFlag;
+import javassist.bytecode.Descriptor;
 
 public class JsDelegateGenerator
 {
 	private DelegateStrategy delegateStrategy;
 	private String classpath= "";
-	private Map<Class<?>, File> generatedFiles= new HashMap<Class<?>, File>();
-	private File baseDir;
 
 	public JsDelegateGenerator(DelegateStrategy delegateStrategy)
 	{
@@ -41,10 +44,9 @@ public class JsDelegateGenerator
 		this(new DefaultDelegateStrategy());
 	}
 
-	public JsDelegateGenerator(File tempDir, String classpath, DelegateStrategy delegateStrategy)
+	public JsDelegateGenerator(String classpath, DelegateStrategy delegateStrategy)
 	{
 		this(classpath);
-		this.baseDir= tempDir;
 		this.delegateStrategy= delegateStrategy;
 	}
 
@@ -57,7 +59,6 @@ public class JsDelegateGenerator
 	public JsDelegateGenerator(File baseDir)
 	{
 		this();
-		this.baseDir= baseDir;
 	}
 
 	public byte[] generateBytecode(String className, Class<?> interface1)
@@ -252,13 +253,6 @@ public class JsDelegateGenerator
 		return pool.get(clazz.getName());
 	}
 
-	public static void main(String[] args) throws Exception
-	{
-		File baseDir= new File(System.getProperty("java.io.tmpdir"));
-
-		byte[] generateFile= new JsDelegateGenerator(baseDir).generate(HTMLCanvasElement.class);
-	}
-
 	public byte[] generateBytecode(Class<?> interface1)
 	{
 		return generateBytecode("JsDelegate" + interface1.getSimpleName(), interface1);
@@ -268,19 +262,15 @@ public class JsDelegateGenerator
 	{
 		try
 		{
-			File file= generatedFiles.get(interface1);
 			String type= interface1.getName();
 			String classname= createDelegateClassName(type);
+			CtClass ctClass= ClassPool.getDefault().getOrNull(classname);
 
-			if (file == null)
+			if (ctClass == null)
 			{
-				CtClass generateCtClass= generateCtClass(classname, interface1);
-				generateCtClass.writeFile(baseDir.getAbsolutePath());
-				file= new File(baseDir.getAbsolutePath() + File.separatorChar + classname.replace('.', File.separatorChar) + ".class");
-				generatedFiles.put(interface1, file);
+				ctClass= generateCtClass(classname, interface1);
 			}
 
-			CtClass ctClass= ClassPool.getDefault().get(classname);
 			return ctClass.toBytecode();
 		}
 		catch (Exception e)
@@ -294,10 +284,5 @@ public class JsDelegateGenerator
 		int lastIndexOf= type.lastIndexOf(".");
 		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
 		return classname;
-	}
-
-	public File getBaseDir()
-	{
-		return baseDir;
 	}
 }
