@@ -12,12 +12,15 @@
 package com.dragome.web.enhancers.jsdelegate;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.compiler.InMemoryClasspathFile;
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.web.config.DomHandlerApplicationConfigurator;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
+import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
 import javassist.CannotCompileException;
 import javassist.ClassClassPath;
@@ -56,6 +59,20 @@ public class JsDelegateGenerator
 	{
 		this();
 		this.classpath= classpath;
+		appendClasspath(classpath);
+	}
+
+	private void appendClasspath(String classpath)
+	{
+		try
+		{
+			ClassPool pool= ClassPool.getDefault();
+			pool.appendPathList(classpath);
+		}
+		catch (NotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public JsDelegateGenerator(File baseDir)
@@ -115,19 +132,19 @@ public class JsDelegateGenerator
 		}
 	}
 
-	private CtMethod createDelegateMethod(Class<?> interface1, CtClass cc, Class<?> scriptHelperClass, CtMethod method, DelegateCode annotation) throws NotFoundException, CannotCompileException
+	private CtMethod createDelegateMethod(Class<?> interface1, CtClass cc, Class<?> scriptHelperClass, CtMethod method, DelegateCode delegateCodeAnnotation) throws Exception
 	{
 		StringBuffer code= new StringBuffer();
 
 		String customCode= null;
 		String params= createParameters(method, code);
 
-		if (annotation != null && !annotation.eval().isEmpty())
-			code.append("$eval$(\"" + annotation.eval() + "\", this);");
+		if (delegateCodeAnnotation != null && !delegateCodeAnnotation.eval().isEmpty())
+			code.append("$eval$(\"" + delegateCodeAnnotation.eval() + "\", this);");
 		else
 		{
 			int length= code.length();
-			customCode= delegateStrategy.createMethodCall(method, code, params);
+			customCode= delegateStrategy.createMethodCall(toJavaMethod(interface1, method), code, params);
 			if (customCode == null)
 			{
 				if (code.length() == length)
@@ -149,6 +166,42 @@ public class JsDelegateGenerator
 		return ctMethod;
 	}
 
+	private Method toJavaMethod(Class<?> interface1, CtMethod method) throws Exception
+	{
+		CtClass[] parameterTypes= method.getParameterTypes();
+		return interface1.getMethod(method.getName(), toJavaClass(parameterTypes));
+	}
+
+	private Class<?>[] toJavaClass(CtClass[] parameterTypes) throws Exception
+	{
+		List<Class<?>> result= new ArrayList<>();
+		for (CtClass ctClass : parameterTypes)
+		{
+			String javaName= toJavaName(ctClass);
+			result.add(getJavaClass(javaName));
+		}
+
+		return result.toArray(new Class[0]);
+	}
+
+	private Class<?> getJavaClass(String javaName) throws ClassNotFoundException
+	{
+		if (javaName.equals("boolean"))
+			return boolean.class;
+		else if (javaName.equals("int"))
+			return int.class;
+		else if (javaName.equals("short"))
+			return short.class;
+		else if (javaName.equals("long"))
+			return long.class;
+		else if (javaName.equals("float"))
+			return float.class;
+		else if (javaName.equals("double"))
+			return double.class;
+		else
+			return Class.forName(javaName);
+	}
+
 	private void addConstructors(CtClass cc, StringBuilder constructorBody, CtClass objectCtClass) throws CannotCompileException
 	{
 		CtConstructor ctConstructor= CtNewConstructor.make(new CtClass[] { objectCtClass }, new CtClass[] {}, "{" + constructorBody.toString() + "}", cc);
@@ -160,7 +213,7 @@ public class JsDelegateGenerator
 	private String configureEvaluation(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType) throws NotFoundException
 	{
 		String scriptHelperClassname= scriptHelperClass.getName();
-		String returnTypeName= returnType.getName();
+		String returnTypeName= toJavaName(returnType);
 
 		if (!returnTypeName.equals(Void.class.getName()) && !returnTypeName.equals(void.class.getName()))
 		{
@@ -172,6 +225,8 @@ public class JsDelegateGenerator
 				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalDouble");
 			else if (returnTypeName.equals(Float.class.getName()) || returnTypeName.equals(float.class.getName()))
 				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalFloat");
+			else if (returnTypeName.equals(Long.class.getName()) || returnTypeName.equals(long.class.getName()))
+				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalLong");
 			else if (returnTypeName.equals(String.class.getName()))
 				body= body.replace("$eval$", "return (java.lang.String)" + scriptHelperClassname + ".eval");
 			else
@@ -179,6 +234,7 @@ public class JsDelegateGenerator
 		}
 		else
 			body= body.replace("$eval$", scriptHelperClassname + ".evalNoResult");
+
 		return body;
 	}
 
@@ -186,11 +242,12 @@ public class JsDelegateGenerator
 	{
 		body= body.replace("$eval$", "Object temp= " + scriptHelperClass.getName() + ".eval");
 		String jvmName= toJavaName(returnType) + ".class";
-		String subTypeExtractor= delegateStrategy.getSubTypeExtractorFor(interface1, method.getName());
-		if (subTypeExtractor != null)
+		String subTypeExtractorExpression= delegateStrategy.getSubTypeExtractorFor(interface1, method.getName());
+		if (subTypeExtractorExpression != null)
 		{
-			String s= scriptHelperClass.getName() + ".eval(\"" + subTypeExtractor + "\", this)";
-			jvmName= "new " + delegateStrategy.getSubTypeFactoryClassFor(interface1, method.getName()).getName() + "().getSubTypeWith(" + s + ")";
+			String subTypeId= scriptHelperClass.getName() + ".eval(\"" + subTypeExtractorExpression + "\", this)";
+			Class<? extends SubTypeFactory> subTypeFactoryClass= delegateStrategy.getSubTypeFactoryClassFor(interface1, method.getName());
+			jvmName= "new " + subTypeFactoryClass.getName() + "().getSubTypeWith(" + subTypeId + ")";
 			body+= scriptHelperClass.getName() + ".put (\"temp\", temp, this);";
 		}
 
@@ -240,6 +297,11 @@ public class JsDelegateGenerator
 			return string;
 	}
 
+	public static String createVariableForEval(String string, Class<?> ctClass)
+	{
+		return createVariableForEval(string, resolveCtClass(ctClass));
+	}
+
 	public static String createVariableForEval(String string, CtClass ctClass)
 	{
 		if (ctClass.isInterface())
@@ -248,11 +310,17 @@ public class JsDelegateGenerator
 			return string;
 	}
 
-	private CtClass resolveCtClass(Class<?> clazz) throws NotFoundException
+	private static CtClass resolveCtClass(Class<?> clazz)
 	{
-		ClassPool pool= ClassPool.getDefault();
-		pool.appendPathList(classpath);
-		return pool.get(clazz.getName());
+		try
+		{
+			ClassPool pool= ClassPool.getDefault();
+			return pool.get(clazz.getName());
+		}
+		catch (NotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public byte[] generateBytecode(Class<?> interface1)

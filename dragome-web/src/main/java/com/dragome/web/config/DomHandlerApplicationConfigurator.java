@@ -15,7 +15,6 @@
  */
 package com.dragome.web.config;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +30,7 @@ import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.InMemoryClasspathFile;
-import com.dragome.helpers.Utils;
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
-import com.dragome.web.enhancers.jsdelegate.InstrumentedClassPersister;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 import com.dragome.web.html.dom.html5canvas.interfaces.CanvasImageSource;
