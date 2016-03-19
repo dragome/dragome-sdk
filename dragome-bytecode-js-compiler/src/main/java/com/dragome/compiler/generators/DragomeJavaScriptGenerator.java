@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -253,7 +253,7 @@ public class DragomeJavaScriptGenerator extends Generator
 	//	    println(";");
 	//	}
 	//
-	//	superMethods.clear(); 
+	//	superMethods.clear();
 	//    }
 
 	public void visit(MethodDeclaration method)
@@ -280,14 +280,15 @@ public class DragomeJavaScriptGenerator extends Generator
 		MethodBinding methodBinding= method.getMethodBinding();
 		ProcedureUnit unit= project.getProcedureUnit(methodBinding);
 
-		if (method.getBody() == null && Modifier.isNative(method.getAccess()))
-		{
-			if (Modifier.isNative(method.getAccess()) || Modifier.isAbstract(method.getAccess()) || Modifier.isInterface(typeDecl.getAccess()))
-			{
-				return;
-			}
-			throw new RuntimeException("Method " + method + " with access " + method.getAccess() + " may not have empty body");
-		}
+		boolean isNative= Modifier.isNative(method.getAccess());
+//		if (method.getBody() == null && isNative)
+//		{
+//			if (isNative || Modifier.isAbstract(method.getAccess()) || Modifier.isInterface(typeDecl.getAccess()))
+//			{
+//				return;
+//			}
+//			throw new RuntimeException("Method " + method + " with access " + method.getAccess() + " may not have empty body");
+//		}
 
 		//	if (!dragomeJsCompiler.compiler.isCompression())
 		//	{
@@ -367,8 +368,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if (method.getBody() != null)
 			visit_(method.getBody());
-
-		//	println ("//llamar al servidor");
+		else if (isNative)
+			println("return dragomeJs.resolveNativeMethod(this, \"" + signatureReplaced + "\").apply(this, arguments);");
 
 		if (method.isInstanceConstructor())
 			print("return this;\n");
@@ -386,12 +387,10 @@ public class DragomeJavaScriptGenerator extends Generator
 			print(")}");
 		}
 
-		//println(",");
-
 		unit.setData(reset());
 		Log.getLogger().debug("Generating JavaScript for " + unit);
 	}
-	
+
 	private void printParams(MethodDeclaration method)
 	{
 		Iterator<VariableDeclaration> iterator= method.getParameters().iterator();
@@ -405,7 +404,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			print(iterator.hasNext() ? ", " : "");
 		}
 	}
-	
+
 	public static String normalizeExpression(Object object)
 	{
 		if (object instanceof Signature)
