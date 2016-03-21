@@ -243,7 +243,7 @@ public class JsDelegateGenerator
 		}
 
 		Method javaMethod= toJavaMethod(interface1, method);
-		body= body + delegateStrategy.createReturnExpression(javaMethod);
+		body= body + delegateStrategy.createReturnExpression(interface1, javaMethod);
 		return body;
 	}
 
