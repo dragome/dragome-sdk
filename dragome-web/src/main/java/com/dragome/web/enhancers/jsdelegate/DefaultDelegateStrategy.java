@@ -12,10 +12,12 @@
 package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
 
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
+import com.google.common.reflect.TypeToken;
 
 public class DefaultDelegateStrategy implements DelegateStrategy
 {
@@ -59,11 +61,15 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 		return null;
 	}
 
-	public String createReturnExpression(Method method)
+	public String createReturnExpression(Class<?> clazz, Method method)
 	{
+
 		if (method.getName().equals("createInstanceOf"))
 			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, $1);";
 		else
-			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + method.getReturnType().getName() + ".class" + ");";
+		{
+			Class<?> rawType= TypeToken.of(clazz).resolveType(method.getGenericReturnType()).getRawType();
+			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + rawType.getName() + ".class" + ");";
+		}
 	}
 }
