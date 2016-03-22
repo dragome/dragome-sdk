@@ -2,15 +2,11 @@
 
 package org.w3c.dom;
 
-import org.w3c.dom.file.Blob;
-import org.w3c.dom.html.Function;
-import org.w3c.dom.typedarray.ArrayBuffer;
-
 public interface XMLHttpRequest extends XMLHttpRequestEventTarget
 {
     // XMLHttpRequest
-    public Function getOnreadystatechange();
-    public void setOnreadystatechange(Function onreadystatechange);
+    public EventHandler getOnreadystatechange();
+    public void setOnreadystatechange(EventHandler onreadystatechange);
     public static final short UNSENT = 0;
     public static final short OPENED = 1;
     public static final short HEADERS_RECEIVED = 2;
@@ -19,8 +15,8 @@ public interface XMLHttpRequest extends XMLHttpRequestEventTarget
     public short getReadyState();
     public void open(String method, String url);
     public void open(String method, String url, boolean async);
-    public void open(String method, String url, boolean async, String user);
-    public void open(String method, String url, boolean async, String user, String password);
+    public void open(String method, String url, boolean async, String username);
+    public void open(String method, String url, boolean async, String username, String password);
     public void setRequestHeader(String header, String value);
     public int getTimeout();
     public void setTimeout(int timeout);
@@ -28,11 +24,7 @@ public interface XMLHttpRequest extends XMLHttpRequestEventTarget
     public void setWithCredentials(boolean withCredentials);
     public XMLHttpRequestUpload getUpload();
     public void send();
-    public void send(ArrayBuffer data);
-    public void send(Blob data);
-    public void send(Document data);
-    public void send(FormData data);
-    public void send(String data);
+    public void send(Object data);
     public void abort();
     public short getStatus();
     public String getStatusText();
