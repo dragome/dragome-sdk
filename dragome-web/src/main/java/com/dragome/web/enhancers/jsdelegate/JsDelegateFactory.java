@@ -53,6 +53,8 @@ public class JsDelegateFactory
 				return (T) new Boolean(ScriptHelper.evalBoolean("instance", null));
 			else if (type.equals(Short.class))
 				return (T) new Short((short) ScriptHelper.evalInt("instance", null));
+			else if (type.equals(String.class))
+				return (T) ScriptHelper.eval("instance", null);
 			else
 			{
 				String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());

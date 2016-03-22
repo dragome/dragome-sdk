@@ -86,6 +86,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	{
 		boolean include= false || //
 				classpathEntry.contains("dragome-js-jre-") || //
+				classpathEntry.contains("dragome-w3c-standards-") || //
 				classpathEntry.contains("dragome-js-commons-") || //
 				classpathEntry.contains("dragome-core-") || //
 				classpathEntry.contains("dragome-guia-") || //
