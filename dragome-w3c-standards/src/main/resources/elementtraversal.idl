@@ -1,0 +1,24 @@
+/*
+ * elementtraversal.idl
+ *
+ * Element Traversal Specification, rewritten in Web IDL.
+ *
+ * Original W3C Recommendation 22 December 2008:
+ *
+ *   http://www.w3.org/TR/2008/REC-ElementTraversal-20081222/
+ */
+
+module traversal {
+
+  typedef dom::Element Element;
+
+  interface ElementTraversal {
+    readonly attribute Element        firstElementChild;
+    readonly attribute Element        lastElementChild;
+    readonly attribute Element        previousElementSibling;
+    readonly attribute Element        nextElementSibling;
+    readonly attribute unsigned long  childElementCount;
+  };
+
+  Element implements ElementTraversal;
+};

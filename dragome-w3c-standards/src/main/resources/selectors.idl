@@ -1,0 +1,20 @@
+/*
+ * selectors.idl
+ *
+ * Selectors API Level 1
+ *
+ * Original W3C Candidate Recommendation 22 December 2009:
+ *
+ *   http://www.w3.org/TR/2009/CR-selectors-api-20091222/
+ */
+
+module dom {
+  [Supplemental, NoInterfaceObject]
+  interface NodeSelector {
+    Element   querySelector(in DOMString selectors);
+    NodeList  querySelectorAll(in DOMString selectors);
+  };
+  Document implements NodeSelector;
+  DocumentFragment implements NodeSelector;
+  Element implements NodeSelector;
+};

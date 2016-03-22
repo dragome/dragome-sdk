@@ -1,0 +1,329 @@
+/*
+ * dom3events.idl
+ *
+ * Document Object Model (DOM) Level 3 Events Specification, revised for esidl.
+ *
+ * Original W3C Working Draft 31 May 2011:
+ *
+ *   http://www.w3.org/TR/2011/WD-DOM-Level-3-Events-20110531/
+ */
+
+module events {
+
+typedef dom::DOMObject DOMObject;
+typedef dom::Document Document;
+typedef dom::DOMTimeStamp DOMTimeStamp;
+typedef dom::Node Node;
+typedef dom::DOMException DOMException;
+
+typedef html::Window AbstractView;  // AbstractView has been practically obsoleted.
+
+#if 0  // obsoleted by DOM Core
+
+// Introduced in DOM Level 2:
+interface Event {
+
+  // PhaseType
+  const unsigned short               CAPTURING_PHASE      = 1;
+  const unsigned short               AT_TARGET            = 2;
+  const unsigned short               BUBBLING_PHASE       = 3;
+
+  readonly attribute DOMString       type;
+  readonly attribute EventTarget     target;
+  readonly attribute EventTarget     currentTarget;
+  readonly attribute unsigned short  eventPhase;
+  readonly attribute boolean         bubbles;
+  readonly attribute boolean         cancelable;
+  readonly attribute DOMTimeStamp    timeStamp;
+  void                               stopPropagation();
+  void                               preventDefault();
+  void                               initEvent(in DOMString eventTypeArg, 
+                                               in boolean canBubbleArg, 
+                                               in boolean cancelableArg);
+  // Introduced in DOM Level 3:
+  void                               stopImmediatePropagation();
+  readonly attribute boolean         defaultPrevented;
+  readonly attribute boolean         isTrusted;
+};
+                
+
+
+// Introduced in DOM Level 3:
+interface CustomEvent : Event {
+  readonly attribute any             detail;
+  void                               initCustomEvent(in DOMString typeArg, 
+                                                     in boolean   canBubbleArg, 
+                                                     in boolean   cancelableArg, 
+                                                     in any       detailArg);
+};
+                
+
+
+// Introduced in DOM Level 2:
+interface EventTarget {
+  // Modified in DOM Level 3:
+  void               addEventListener(in DOMString type, 
+                                      in EventListener listener, 
+                                      in boolean useCapture);
+  void               removeEventListener(in DOMString type, 
+                                         in EventListener listener, 
+                                         in boolean useCapture);
+  boolean            dispatchEvent(in Event evt)
+                                   raises(EventException, 
+                                   DOMException);
+                                   
+};
+                
+
+
+// Introduced in DOM Level 2:
+interface EventListener {
+  void               handleEvent(in Event evt);
+};
+                
+#endif
+
+
+// Introduced in DOM Level 2:
+exception EventException {
+  // EventExceptionCode
+  const unsigned short      UNSPECIFIED_EVENT_TYPE_ERR     = 0;
+  // Introduced in DOM Level 3:
+  const unsigned short      DISPATCH_REQUEST_ERR           = 1;
+
+  // Introduced in DOM Level 2:
+  unsigned short            code;
+};
+                
+#if 0  // obsoleted by DOM Core
+
+
+// Introduced in DOM Level 2:
+interface DocumentEvent {
+  // Modified in DOM Level 3:
+  Event                     createEvent(in DOMString eventInterface)
+                                        raises(DOMException);
+};
+
+#endif                  
+
+
+// Introduced in DOM Level 2:
+interface UIEvent : Event {
+  readonly attribute AbstractView view;
+  readonly attribute long            detail;
+  void                               initUIEvent(in DOMString typeArg, 
+                                                 in boolean canBubbleArg, 
+                                                 in boolean cancelableArg, 
+                                                 in AbstractView viewArg, 
+                                                 in long detailArg);
+};
+                
+
+
+// Introduced in DOM Level 3:
+interface FocusEvent : UIEvent {
+  readonly attribute EventTarget   relatedTarget;
+  void                             initFocusEvent(in DOMString typeArg, 
+                                                  in boolean canBubbleArg, 
+                                                  in boolean cancelableArg, 
+                                                  in AbstractView viewArg, 
+                                                  in long detailArg, 
+                                                  in EventTarget relatedTargetArg);
+};
+              
+
+
+// Modified in DOM Level 3:
+interface MouseEvent : UIEvent {
+  readonly attribute long            screenX;
+  readonly attribute long            screenY;
+  readonly attribute long            clientX;
+  readonly attribute long            clientY;
+  readonly attribute boolean         ctrlKey;
+  readonly attribute boolean         shiftKey;
+  readonly attribute boolean         altKey;
+  readonly attribute boolean         metaKey;
+  readonly attribute unsigned short  button;  
+  readonly attribute unsigned short  buttons;
+  readonly attribute                 EventTarget     relatedTarget;
+  void                               initMouseEvent(in DOMString typeArg, 
+                                                in boolean canBubbleArg, 
+                                                in boolean cancelableArg, 
+                                                in AbstractView viewArg, 
+                                                in long detailArg, 
+                                                in long screenXArg, 
+                                                in long screenYArg, 
+                                                in long clientXArg, 
+                                                in long clientYArg, 
+                                                in boolean ctrlKeyArg, 
+                                                in boolean altKeyArg, 
+                                                in boolean shiftKeyArg, 
+                                                in boolean metaKeyArg, 
+                                                in unsigned short buttonArg,										
+                                                in EventTarget relatedTargetArg);
+  // Introduced in DOM Level 3:
+  boolean                            getModifierState(in DOMString keyArg);
+};
+              
+
+
+// Introduced in DOM Level 3:
+interface WheelEvent : MouseEvent {
+
+  // DeltaModeCode
+  const unsigned long                DOM_DELTA_PIXEL       = 0x00;
+  const unsigned long                DOM_DELTA_LINE        = 0x01;
+  const unsigned long                DOM_DELTA_PAGE        = 0x02;
+
+  readonly attribute float            deltaX;
+  readonly attribute float            deltaY;
+  readonly attribute float            deltaZ;
+  readonly attribute unsigned long   deltaMode;    
+  void                               initWheelEvent(in DOMString typeArg, 
+                                                    in boolean canBubbleArg, 
+                                                    in boolean cancelableArg, 
+                                                    in AbstractView viewArg, 
+                                                    in long detailArg, 
+                                                    in long screenXArg, 
+                                                    in long screenYArg, 
+                                                    in long clientXArg, 
+                                                    in long clientYArg, 
+                                                    in unsigned short buttonArg, 
+                                                    in EventTarget relatedTargetArg, 
+                                                    in DOMString modifiersListArg, 
+                                                    in float deltaXArg,
+                                                    in float deltaYArg,
+                                                    in float deltaZArg,
+                                                    in unsigned long deltaMode);
+};
+              
+
+
+// Introduced in DOM Level 3:
+interface TextEvent : UIEvent {
+
+  // InputMethodCode
+  const unsigned long                DOM_INPUT_METHOD_UNKNOWN       = 0x00;
+  const unsigned long                DOM_INPUT_METHOD_KEYBOARD      = 0x01;
+  const unsigned long                DOM_INPUT_METHOD_PASTE         = 0x02;
+  const unsigned long                DOM_INPUT_METHOD_DROP          = 0x03;
+  const unsigned long                DOM_INPUT_METHOD_IME           = 0x04;
+  const unsigned long                DOM_INPUT_METHOD_OPTION        = 0x05;
+  const unsigned long                DOM_INPUT_METHOD_HANDWRITING   = 0x06;
+  const unsigned long                DOM_INPUT_METHOD_VOICE         = 0x07;
+  const unsigned long                DOM_INPUT_METHOD_MULTIMODAL    = 0x08;
+  const unsigned long                DOM_INPUT_METHOD_SCRIPT        = 0x09;
+
+  readonly attribute DOMString       data;
+  readonly attribute unsigned long   inputMethod;  
+  readonly attribute DOMString       locale;
+  void                               initTextEvent(in DOMString typeArg, 
+                                                   in boolean canBubbleArg, 
+                                                   in boolean cancelableArg, 
+                                                   in AbstractView viewArg, 
+                                                   in DOMString dataArg, 
+                                                   in unsigned long inputMethod, 
+                                                   in DOMString localeArg);
+};
+                
+
+
+// Introduced in DOM Level 3:
+interface KeyboardEvent : UIEvent {
+
+  // KeyLocationCode
+  const unsigned long                DOM_KEY_LOCATION_STANDARD      = 0x00;
+  const unsigned long                DOM_KEY_LOCATION_LEFT          = 0x01;
+  const unsigned long                DOM_KEY_LOCATION_RIGHT         = 0x02;
+  const unsigned long                DOM_KEY_LOCATION_NUMPAD        = 0x03;
+  const unsigned long                DOM_KEY_LOCATION_MOBILE        = 0x04;
+  const unsigned long                DOM_KEY_LOCATION_JOYSTICK      = 0x05;
+
+  readonly attribute DOMString       char;
+  readonly attribute DOMString       key;
+  readonly attribute unsigned long   location;
+  readonly attribute boolean         ctrlKey;
+  readonly attribute boolean         shiftKey;
+  readonly attribute boolean         altKey;
+  readonly attribute boolean         metaKey;
+  readonly attribute boolean         repeat;
+  readonly attribute DOMString       locale;
+  boolean                            getModifierState(in DOMString keyArg);
+  void                               initKeyboardEvent(in DOMString typeArg, 
+                                                       in boolean canBubbleArg, 
+                                                       in boolean cancelableArg, 
+                                                       in AbstractView viewArg, 
+                                                       in DOMString charArg, 
+                                                       in DOMString keyArg, 
+                                                       in unsigned long locationArg, 
+                                                       in DOMString modifiersListArg,
+                                                       in boolean repeat,
+                                                       in DOMString localeArg); 
+};
+                
+
+
+// Introduced in DOM Level 3:
+interface CompositionEvent : UIEvent {
+  readonly attribute DOMString       data;
+  readonly attribute DOMString       locale;
+  void                               initCompositionEvent(in DOMString typeArg, 
+                                                          in boolean canBubbleArg, 
+                                                          in boolean cancelableArg, 
+                                                          in AbstractView viewArg, 
+                                                          in DOMString dataArg,
+                                                          in DOMString localeArg);
+};
+                
+
+
+// Introduced in DOM Level 2:
+interface MutationEvent : Event {
+
+  // attrChangeType
+  const unsigned short      MODIFICATION                   = 1;
+  const unsigned short      ADDITION                       = 2;
+  const unsigned short      REMOVAL                        = 3;
+
+  readonly attribute DOMObject       relatedNode;  // Note Attr is not a Node in DOM Core
+  readonly attribute DOMString       prevValue;
+  readonly attribute DOMString       newValue;
+  readonly attribute DOMString       attrName;
+  readonly attribute unsigned short  attrChange;
+  void               initMutationEvent(in DOMString typeArg, 
+                                       in boolean canBubbleArg, 
+                                       in boolean cancelableArg, 
+                                       in DOMObject relatedNodeArg, 
+                                       in DOMString prevValueArg, 
+                                       in DOMString newValueArg, 
+                                       in DOMString attrNameArg, 
+                                       in unsigned short attrChangeArg);
+};
+                
+
+
+// Introduced in DOM Level 3:
+interface MutationNameEvent : MutationEvent {
+  readonly attribute DOMString       prevNamespaceURI;
+  readonly attribute DOMString       prevNodeName;
+  // Introduced in DOM Level 3:
+  void                               initMutationNameEvent(in DOMString typeArg, 
+                                                           in boolean canBubbleArg, 
+                                                           in boolean cancelableArg, 
+                                                           in Node relatedNodeArg, 
+                                                           in DOMString prevNamespaceURIArg, 
+                                                           in DOMString prevNodeNameArg);
+};
+                
+
+
+// Legacy, introduced in DOM Level 3:
+[Supplemental]
+interface KeyboardEvent {
+  readonly attribute unsigned long   charCode;
+  readonly attribute unsigned long   keyCode;
+  readonly attribute unsigned long   which;
+};
+
+};

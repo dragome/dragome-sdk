@@ -1,0 +1,88 @@
+/*
+ * xhr2.idl
+ *
+ * XMLHttpRequest Level 2
+ *
+ * Original Editor's Draft 4 March 2011:
+ *
+ *   http://dev.w3.org/2006/webapi/XMLHttpRequest-2/
+ */
+
+module dom {
+
+typedef events::EventTarget EventTarget;
+typedef file::Blob Blob;
+typedef html::Function Function;
+typedef html::HTMLFormElement HTMLFormElement;
+typedef typedarray::ArrayBuffer ArrayBuffer;
+
+[NoInterfaceObject]
+interface XMLHttpRequestEventTarget : EventTarget {
+  // event handler attributes
+           attribute Function onloadstart;
+           attribute Function onprogress;
+           attribute Function onabort;
+           attribute Function onerror;
+           attribute Function onload;
+           attribute Function ontimeout;
+           attribute Function onloadend;
+};
+
+interface XMLHttpRequestUpload : XMLHttpRequestEventTarget {
+
+};
+
+[Constructor]
+interface XMLHttpRequest : XMLHttpRequestEventTarget {
+  // event handler attributes
+           attribute Function onreadystatechange;
+
+  // states
+  const unsigned short UNSENT = 0;
+  const unsigned short OPENED = 1;
+  const unsigned short HEADERS_RECEIVED = 2;
+  const unsigned short LOADING = 3;
+  const unsigned short DONE = 4;
+  readonly attribute unsigned short readyState;
+
+  // request
+  void open(DOMString method, DOMString url);
+  void open(DOMString method, DOMString url, boolean async);
+  void open(DOMString method, DOMString url, boolean async, DOMString? user);
+  void open(DOMString method, DOMString url, boolean async, DOMString? user, DOMString? password);
+  void setRequestHeader(DOMString header, DOMString value);
+           attribute unsigned long timeout;
+           attribute boolean withCredentials;
+  readonly attribute XMLHttpRequestUpload upload;
+  void send();
+  void send(ArrayBuffer data);
+  void send(Blob data);
+  void send(Document data);
+  void send(FormData data);
+  void send([AllowAny] DOMString? data);
+  void abort();
+
+  // response
+  readonly attribute unsigned short status;
+  readonly attribute DOMString statusText;
+  DOMString getResponseHeader(DOMString header);
+  DOMString getAllResponseHeaders();
+  void overrideMimeType(DOMString mime);
+           attribute DOMString responseType;
+  readonly attribute any response;
+  readonly attribute DOMString responseText;
+  readonly attribute Document responseXML;
+};
+
+[Constructor]
+interface AnonXMLHttpRequest : XMLHttpRequest {
+};
+
+[Constructor,
+ Constructor(HTMLFormElement form)]
+interface FormData {
+  void append(DOMString name, Blob value);
+  void append(DOMString name, DOMString value);
+};
+
+};

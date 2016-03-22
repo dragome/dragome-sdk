@@ -1,0 +1,41 @@
+/*
+ * microdata.idl
+ *
+ * HTML Microdata
+ *
+ * Original W3C Working Draft 24 June 2010:
+ *
+ *   http://www.w3.org/TR/2010/WD-microdata-20100624/
+ */
+
+module html {
+
+interface HTMLPropertiesCollection : HTMLCollection {
+  // inherits length and item()
+  caller getter PropertyNodeList namedItem(in DOMString name); // overrides inherited namedItem()
+  readonly attribute DOMStringList names;
+};
+
+typedef sequence<any> PropertyValueArray;
+
+interface PropertyNodeList : NodeList {
+  readonly attribute PropertyValueArray values;
+};
+
+[Supplemental] interface HTMLDocument {
+  NodeList getItems(in optional DOMString typeNames); // microdata
+};
+
+[Supplemental] interface HTMLElement {
+  // microdata
+           attribute boolean itemScope;
+           attribute DOMString itemType;
+           attribute DOMString itemId;
+  [PutForwards=value] readonly attribute DOMSettableTokenList itemRef;
+  [PutForwards=value] readonly attribute DOMSettableTokenList itemProp;
+  readonly attribute HTMLPropertiesCollection properties;
+           attribute any itemValue;
+};
+
+};
+
