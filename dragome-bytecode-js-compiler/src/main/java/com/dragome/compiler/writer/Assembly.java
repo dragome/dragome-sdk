@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 
 import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
@@ -66,7 +67,7 @@ public class Assembly
 	String[] patterns;
 	private Collection<ClassUnit> resolvedTypes= new ArrayList<ClassUnit>();
 	private transient File targetLocation;
-	private FileFilter classpathFilter;
+	private ClasspathFileFilter classpathFilter;
 
 	public Assembly()
 	{
@@ -288,7 +289,8 @@ public class Assembly
 	public void processSingle(Signature signature)
 	{
 		ClassUnit clazz= resolve(signature.className());
-		if (classpathFilter.accept(new File(signature.className().replace(".", "/"))))
+		File file= new File(signature.className().replace(".", "/"));
+		if (classpathFilter.accept(file, file))
 		{
 			String methodPart= signature.relativeSignature();
 			boolean found= false;
@@ -491,7 +493,7 @@ public class Assembly
 		entryPoints.add(memberSignature);
 	}
 
-	public void setClasspathFilter(FileFilter classpathFilter)
+	public void setClasspathFilter(ClasspathFileFilter classpathFilter)
 	{
 		this.classpathFilter= classpathFilter;
 	}

@@ -1,13 +1,13 @@
 package com.dragome.web.helpers.serverside;
 
 import java.io.File;
-import java.io.FileFilter;
 
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.CompilerMode;
 
-public class DefaultClasspathFilter implements FileFilter
+public class DefaultClasspathFilter implements ClasspathFileFilter
 {
-	public boolean accept(File pathname)
+	public boolean accept(File pathname, File folder)
 	{
 		String string= pathname.toString();
 		boolean isServerSideOnly= string.contains(File.separator + "serverside");

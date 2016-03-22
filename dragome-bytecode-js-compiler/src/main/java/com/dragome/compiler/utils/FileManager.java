@@ -29,7 +29,6 @@
 package com.dragome.compiler.utils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,15 +42,16 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.compiler.DragomeJsCompiler;
 
 public class FileManager
 {
 	private List<Object> path= new ArrayList<Object>();
-	private FileFilter classpathFilter;
+	private ClasspathFileFilter classpathFilter;
 	private List<ClasspathFile> extraClasspathFiles;
 
-	public FileManager(List<File> classPath, FileFilter classpathFilter, List<ClasspathFile> extraCompilableFiles)
+	public FileManager(List<File> classPath, ClasspathFileFilter classpathFilter, List<ClasspathFile> extraCompilableFiles)
 	{
 		this.classpathFilter= classpathFilter;
 		this.extraClasspathFiles= extraCompilableFiles;
@@ -137,7 +137,7 @@ public class FileManager
 		for (ClasspathFile classpathFile : extraClasspathFiles)
 		{
 			File file= new File(classpathFile.getPath());
-			if (classpathFilter == null || classpathFilter.accept(file))
+			if (classpathFilter == null || classpathFilter.accept(file, new File(".")))
 				files.add(classpathFile.getPath().replace(".class", ""));
 		}
 
@@ -151,7 +151,7 @@ public class FileManager
 
 				for (String file : classesInJar)
 				{
-					if (classpathFilter == null || classpathFilter.accept(new File(file)))
+					if (classpathFilter == null || classpathFilter.accept(new File(file), new File(jarFile.getName())))
 					{
 						files.add(file);
 					}
@@ -163,9 +163,10 @@ public class FileManager
 				Collection<File> listFiles= FileUtils.listFiles(folder, new WildcardFileFilter("*.class"), DirectoryFileFilter.DIRECTORY);
 				for (File file : listFiles)
 				{
-					if (classpathFilter == null || classpathFilter.accept(file))
+					String substring= file.toString().substring(folder.toString().length() + 1);
+
+					if (classpathFilter == null || classpathFilter.accept(file, folder))
 					{
-						String substring= file.toString().substring(folder.toString().length() + 1);
 						files.add(substring.replace(".class", ""));
 					}
 				}
