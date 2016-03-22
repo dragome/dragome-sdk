@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.dragome.web.helpers.serverside;
 
-import java.io.FileFilter;
 import java.util.List;
 
 import com.dragome.commons.DragomeConfigurator;
@@ -18,6 +17,7 @@ import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
@@ -32,7 +32,7 @@ public class DragomeCompilerLauncher
 		CompilerType defaultCompilerType= configurator.getDefaultCompilerType();
 		BytecodeTransformer bytecodeTransformer= configurator.getBytecodeTransformer();
 
-		FileFilter classpathFilter= configurator.getClasspathFilter();
+		ClasspathFileFilter classpathFilter= configurator.getClasspathFilter();
 		if (classpathFilter == null)
 			classpathFilter= new DefaultClasspathFilter();
 

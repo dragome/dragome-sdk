@@ -189,6 +189,8 @@ public class JsDelegateGenerator
 			return float.class;
 		else if (classname.equals("double"))
 			return double.class;
+		else if (classname.equals("byte"))
+			return byte.class;
 		else
 			return Class.forName(classname);
 	}
@@ -210,18 +212,24 @@ public class JsDelegateGenerator
 		{
 			if (returnTypeName.equals(Boolean.class.getName()) || returnTypeName.equals(boolean.class.getName()))
 				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalBoolean");
-			else if (returnTypeName.equals(Integer.class.getName()) || returnTypeName.equals(int.class.getName()) || returnTypeName.equals(Short.class.getName()) || returnTypeName.equals(short.class.getName()))
-				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalInt");
-			else if (returnTypeName.equals(Double.class.getName()) || returnTypeName.equals(double.class.getName()))
-				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalDouble");
-			else if (returnTypeName.equals(Float.class.getName()) || returnTypeName.equals(float.class.getName()))
-				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalFloat");
-			else if (returnTypeName.equals(Long.class.getName()) || returnTypeName.equals(long.class.getName()))
-				body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalLong");
-			else if (returnTypeName.equals(String.class.getName()))
-				body= body.replace("$eval$", "return (java.lang.String)" + scriptHelperClassname + ".eval");
 			else
-				body= createBodyForReference(interface1, scriptHelperClass, method, body, returnType);
+			{
+				boolean isInteger= returnTypeName.equals(Integer.class.getName()) || returnTypeName.equals(int.class.getName());
+				boolean isShort= returnTypeName.equals(Short.class.getName()) || returnTypeName.equals(short.class.getName());
+				boolean isByte= returnTypeName.equals(Byte.class.getName()) || returnTypeName.equals(byte.class.getName());
+				if (isInteger || isShort || isByte)
+					body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalInt");
+				else if (returnTypeName.equals(Double.class.getName()) || returnTypeName.equals(double.class.getName()))
+					body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalDouble");
+				else if (returnTypeName.equals(Float.class.getName()) || returnTypeName.equals(float.class.getName()))
+					body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalFloat");
+				else if (returnTypeName.equals(Long.class.getName()) || returnTypeName.equals(long.class.getName()))
+					body= body.replace("$eval$", "return " + scriptHelperClassname + ".evalLong");
+				else if (returnTypeName.equals(String.class.getName()))
+					body= body.replace("$eval$", "return (java.lang.String)" + scriptHelperClassname + ".eval");
+				else
+					body= createBodyForReference(interface1, scriptHelperClass, method, body, returnType);
+			}
 		}
 		else
 			body= body.replace("$eval$", scriptHelperClassname + ".evalNoResult");
@@ -283,6 +291,7 @@ public class JsDelegateGenerator
 				javaName.equals(Double.class.getName()) || javaName.equals(double.class.getName()) || //
 				javaName.equals(Short.class.getName()) || javaName.equals(short.class.getName()) || //
 				javaName.equals(Float.class.getName()) || javaName.equals(float.class.getName()) || //
+				javaName.equals(Byte.class.getName()) || javaName.equals(byte.class.getName()) || //
 				javaName.equals(Long.class.getName()) || javaName.equals(long.class.getName()))
 			return "(double)" + string;
 		else

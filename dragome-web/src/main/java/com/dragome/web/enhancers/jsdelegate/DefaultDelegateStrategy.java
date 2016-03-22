@@ -30,12 +30,12 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 	public String createMethodCall(Method method, String params)
 	{
 		String result= "";
-		if (method.getName().startsWith("set") && method.getParameterTypes().length == 1)
+		if (method.getName().startsWith("set") && method.getName().length() > 3 && method.getParameterTypes().length == 1)
 		{
 			Class<?> parameterType= method.getParameterTypes()[0];
 			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "= " + JsDelegateGenerator.createVariableForEval("$1", parameterType);
 		}
-		else if (method.getName().startsWith("get") && method.getParameterTypes().length == 0)
+		else if (method.getName().startsWith("get") && method.getName().length() > 3 && method.getParameterTypes().length == 0)
 		{
 			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4);
 		}

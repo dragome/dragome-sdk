@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import java.util.List;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.compiler.generators.AbstractVisitor;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
@@ -85,7 +86,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 	private Log logger;
 
-	private FileFilter classpathFilter;
+	private ClasspathFileFilter classpathFilter;
 
 	public BytecodeTransformer bytecodeTransformer;
 
@@ -499,7 +500,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		assemblies.add(assembly);
 	}
 
-	public void addClasspathFilter(FileFilter classpathFilter)
+	public void addClasspathFilter(ClasspathFileFilter classpathFilter)
 	{
 		this.classpathFilter= classpathFilter;
 	}

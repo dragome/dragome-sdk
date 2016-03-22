@@ -22,13 +22,14 @@ import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
 	private CompilerType defaultCompilerType= CompilerType.Standard;
-	private FileFilter classpathFilter;
+	private ClasspathFileFilter classpathFilter;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -105,12 +106,12 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		this.defaultCompilerType= defaultCompilerType;
 	}
 
-	public FileFilter getClasspathFilter()
+	public ClasspathFileFilter getClasspathFilter()
 	{
 		return classpathFilter;
 	}
 
-	public void setClasspathFilter(FileFilter classpathFilter)
+	public void setClasspathFilter(ClasspathFileFilter classpathFilter)
 	{
 		this.classpathFilter= classpathFilter;
 	}
