@@ -20,10 +20,11 @@ import com.dragome.commons.javascript.ScriptHelper;
 /**
  * The Character class wraps a value of the primitive type char in an object.
  *
- * 
+ *
  */
 public final class Character
 {
+	public static final char MIN_HIGH_SURROGATE= '\uD800';
 
 	public static final Class<Character> TYPE= Class.getType("char");
 
@@ -164,4 +165,8 @@ public final class Character
 		return ScriptHelper.evalBoolean("null != String.fromCharCode(c).match(/[A-Z\\d]/i)", null);
 	};
 
+	public static int toChars(int codePoint, char[] dst, int dstIndex)
+	{
+		return 1;
+	}
 }
