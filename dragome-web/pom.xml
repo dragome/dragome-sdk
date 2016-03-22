@@ -126,6 +126,11 @@
       <artifactId>dragome-core</artifactId>
       <version>0.96-beta3-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-w3c-standards</artifactId>
+      <version>0.96-beta3-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>

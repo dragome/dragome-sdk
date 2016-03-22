@@ -51,6 +51,7 @@
     <module>dragome-guia</module>
     <module>dragome-guia-web</module>
     <module>dragome-maven-plugins</module>
+    <module>dragome-w3c-standards</module>
   </modules>
 
   <repositories>
