@@ -16,6 +16,8 @@
 package com.dragome.web.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.w3c.dom.Attr;
@@ -38,6 +40,17 @@ import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
 {
 	protected JsDelegateGenerator jsDelegateGenerator;
+	protected List<Class<?>> classes= new ArrayList<>(Arrays.asList(Document.class, Element.class, Attr.class, NodeList.class, //
+			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class));
+
+	public DomHandlerApplicationConfigurator()
+	{
+	}
+
+	public DomHandlerApplicationConfigurator(List<? extends Class<?>> additionalDelegates)
+	{
+		classes.addAll(additionalDelegates);
+	}
 
 	public List<ClasspathFile> getExtraClasspath(String classpath)
 	{
@@ -45,9 +58,6 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 		if (jsDelegateGenerator == null)
 		{
 			createJsDelegateGenerator(classpath);
-
-			Class<?>[] classes= new Class[] { Document.class, Element.class, Attr.class, NodeList.class, Node.class, //
-					NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class };
 
 			for (Class<?> class1 : classes)
 			{
