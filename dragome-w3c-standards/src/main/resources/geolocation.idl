@@ -1,0 +1,88 @@
+/*
+ * geolocation.idl
+ *
+ * Geolocation API IDL definitions scraped from the W3C specification, revised for esidl.
+ *
+ * Original Editor's Draft 10 February 2010:
+ *
+ *   http://dev.w3.org/geo/api/spec-source.html
+ */
+
+module geolocation {
+
+ typedef dom::DOMTimeStamp DOMTimeStamp;
+ typedef html::Navigator Navigator;
+
+ [NoInterfaceObject]
+ interface NavigatorGeolocation {
+   readonly attribute Geolocation geolocation;
+ };
+
+ Navigator implements NavigatorGeolocation;
+  
+
+
+ [NoInterfaceObject]
+ interface Geolocation { 
+   void getCurrentPosition(in PositionCallback successCallback,
+                           in optional PositionErrorCallback errorCallback,
+                           in optional PositionOptions options);
+
+   long watchPosition(in PositionCallback successCallback,
+                      in optional PositionErrorCallback errorCallback,
+                      in optional PositionOptions options);
+
+   void clearWatch(in long watchId);
+ };
+
+ [Callback=FunctionOnly, NoInterfaceObject]
+ interface PositionCallback {
+   void handleEvent(in Position position);
+ };
+
+ [Callback=FunctionOnly, NoInterfaceObject]
+ interface PositionErrorCallback {
+   void handleEvent(in PositionError error);
+ };
+ 
+
+
+  [Callback, NoInterfaceObject]
+  interface PositionOptions {
+    attribute boolean enableHighAccuracy;
+    attribute long timeout;
+    attribute long maximumAge;
+  };
+
+  
+
+
+  interface Position {
+    readonly attribute Coordinates coords;
+    readonly attribute DOMTimeStamp timestamp;
+  };
+  
+
+
+  interface Coordinates {
+    readonly attribute double latitude;
+    readonly attribute double longitude;
+    readonly attribute double? altitude;
+    readonly attribute double accuracy;
+    readonly attribute double? altitudeAccuracy;
+    readonly attribute double? heading;
+    readonly attribute double? speed;
+  };
+  
+
+
+  interface PositionError {
+    const unsigned short PERMISSION_DENIED = 1;
+    const unsigned short POSITION_UNAVAILABLE = 2;
+    const unsigned short TIMEOUT = 3;
+    readonly attribute unsigned short code;
+    readonly attribute DOMString message;
+  };
+  
+};
+

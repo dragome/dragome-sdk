@@ -1,0 +1,28 @@
+/*
+ * smil.idl
+ *
+ * SMIL Animation IDL definitions, rewritten in Web IDL.
+ *
+ * Original OMG IDL:
+ *
+ *   http://www.w3.org/TR/2001/REC-smil-animation-20010904/
+ */
+
+module smil
+{
+  interface ElementTimeControl {
+    void            beginElement();
+    void            beginElementAt(in float offset);
+    void            endElement();
+    void            endElementAt(in float offset);
+  };
+
+  interface TimeEvent : events::Event {
+    readonly attribute views::AbstractView  view;
+    readonly attribute long             detail;
+    void               initTimeEvent(in DOMString typeArg,
+                                     in views::AbstractView viewArg,
+                                     in long detailArg);
+  };
+};
+	

@@ -1,0 +1,232 @@
+/*
+ * indexeddb.idl
+ *
+ * Indexed Database API
+ *
+ * Original W3C Editor's Draft 10 February 2011:
+ *
+ *   http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html
+ */
+
+module indexeddb {
+
+typedef dom::DOMException DOMException;
+typedef dom::DOMStringList DOMStringList;
+typedef events::Event Event;
+typedef events::EventTarget EventTarget;
+typedef html::Function Function;
+typedef html::Window Window;
+typedef workers::WorkerUtils WorkerUtils;
+
+interface IDBKeyRange {
+    readonly attribute any     lower;
+    readonly attribute any     upper;
+    readonly attribute boolean lowerOpen;
+    readonly attribute boolean upperOpen;
+};
+
+[NoInterfaceObject]
+interface IDBKeyRangeConstructors {
+    IDBKeyRange only (in any value) raises (IDBDatabaseException);
+    IDBKeyRange lowerBound (in any bound, in optional boolean open) raises (IDBDatabaseException);
+    IDBKeyRange upperBound (in any bound, in optional boolean open) raises (IDBDatabaseException);
+    IDBKeyRange bound (in any lower, in any upper, in optional boolean lowerOpen, in optional boolean upperOpen) raises (IDBDatabaseException);
+};
+
+exception IDBDatabaseException {
+    const unsigned short UNKNOWN_ERR = 0;
+    const unsigned short NON_TRANSIENT_ERR = 1;
+    const unsigned short NOT_FOUND_ERR = 2;
+    const unsigned short CONSTRAINT_ERR = 3;
+    const unsigned short DATA_ERR = 4;
+    const unsigned short NOT_ALLOWED_ERR = 5;
+    const unsigned short TRANSACTION_INACTIVE_ERR = 6;
+    const unsigned short ABORT_ERR = 7;
+    const unsigned short READ_ONLY_ERR = 11;
+    const unsigned short RECOVERABLE_ERR = 21;
+    const unsigned short TRANSIENT_ERR = 31;
+    const unsigned short TIMEOUT_ERR = 32;
+    const unsigned short DEADLOCK_ERR = 33;
+    unsigned short code;
+};
+
+interface IDBEvent : Event {
+    readonly attribute any source;
+};
+
+interface IDBSuccessEvent : IDBEvent {
+    readonly attribute any result;
+};
+
+interface IDBTransactionEvent : IDBSuccessEvent {
+    readonly attribute IDBTransaction transaction;
+};
+
+interface IDBErrorEvent : IDBEvent {
+    readonly attribute unsigned short code;
+    readonly attribute DOMString      message;
+};
+
+interface IDBVersionChangeEvent : IDBEvent {
+    readonly attribute DOMString version;
+};
+
+interface IDBRequest : EventTarget {
+    const unsigned short LOADING = 1;
+    const unsigned short DONE = 2;
+    readonly attribute unsigned short readyState;
+             attribute Function       onsuccess;
+             attribute Function       onerror;
+};
+
+interface IDBVersionChangeRequest : IDBRequest {
+    attribute Function onblocked;
+};
+
+Window implements IDBEnvironment;
+
+[NoInterfaceObject]
+interface IDBEnvironment {
+    readonly attribute IDBFactory indexedDB;
+};
+
+interface IDBFactory {
+    IDBRequest open (in DOMString name);
+    IDBRequest deleteDatabase (in DOMString name);
+};
+
+interface IDBDatabase {
+    readonly attribute DOMString     name;
+    readonly attribute DOMString     version;
+    readonly attribute DOMStringList objectStoreNames;
+    IDBObjectStore          createObjectStore (in DOMString name, [TreatNullAs=EmptyString] in optional DOMString keyPath, in optional boolean autoIncrement) raises (IDBDatabaseException);
+    IDBRequest              deleteObjectStore (in DOMString name) raises (IDBDatabaseException);
+    IDBVersionChangeRequest setVersion ([TreatNullAs=EmptyString] in DOMString version);
+    IDBTransaction          transaction (in optional DOMStringList storeNames, in optional unsigned short mode, in optional unsigned long timeout) raises (IDBDatabaseException);
+    void                    close ();
+};
+
+interface IDBObjectStore {
+    readonly attribute DOMString     name;
+    readonly attribute DOMString     keyPath;
+    readonly attribute DOMStringList indexNames;
+    IDBRequest put (in any value, in optional any key) raises (IDBDatabaseException, DOMException);
+    IDBRequest add (in any value, in optional any key) raises (IDBDatabaseException, DOMException);
+    IDBRequest delete (in any key) raises (IDBDatabaseException);
+    IDBRequest get (in any key) raises (IDBDatabaseException);
+    IDBRequest clear () raises (IDBDatabaseException);
+    IDBRequest openCursor (in optional any range, in optional unsigned short direction) raises (IDBDatabaseException);
+    IDBIndex   createIndex (in DOMString name, in DOMString keyPath, in optional boolean unique) raises (IDBDatabaseException);
+    IDBIndex   index (in DOMString name) raises (IDBDatabaseException);
+    void       deleteIndex (in DOMString indexName) raises (IDBDatabaseException);
+};
+
+interface IDBIndex {
+    readonly attribute DOMString name;
+    readonly attribute DOMString storeName;
+    readonly attribute DOMString keyPath;
+    readonly attribute boolean   unique;
+    IDBRequest openCursor (in optional IDBKeyRange range, in optional unsigned short direction) raises (IDBDatabaseException);
+    IDBRequest openKeyCursor (in optional IDBKeyRange range, in optional unsigned short direction) raises (IDBDatabaseException);
+    IDBRequest get (in any key) raises (IDBDatabaseException);
+    IDBRequest getKey (in any key) raises (IDBDatabaseException);
+};
+
+interface IDBCursor {
+    const unsigned short NEXT = 0;
+    const unsigned short NEXT_NO_DUPLICATE = 1;
+    const unsigned short PREV = 2;
+    const unsigned short PREV_NO_DUPLICATE = 3;
+    readonly attribute unsigned short direction;
+    readonly attribute any            key;
+    readonly attribute any            value;
+    IDBRequest update (in any value) raises (IDBDatabaseException, DOMException);
+    void       continue (in optional any key) raises (IDBDatabaseException);
+    IDBRequest delete () raises (IDBDatabaseException);
+};
+
+interface IDBTransaction : EventTarget {
+    const unsigned short READ_ONLY = 0;
+    const unsigned short READ_WRITE = 1;
+    const unsigned short VERSION_CHANGE = 2;
+    readonly attribute unsigned short mode;
+    readonly attribute IDBDatabase    db;
+    IDBObjectStore objectStore (in DOMString name) raises (IDBDatabaseException);
+    void           abort () raises (IDBDatabaseException);
+             attribute Function       onabort;
+             attribute Function       oncomplete;
+             attribute Function       ontimeout;
+};
+
+WorkerUtils implements IDBEnvironmentSync;
+
+[NoInterfaceObject]
+interface IDBEnvironmentSync {
+    readonly attribute IDBFactorySync indexedDBSync;
+};
+
+interface IDBFactorySync {
+    IDBDatabaseSync open (in DOMString name);
+    void            deleteDatabase (in DOMString name);
+};
+
+interface IDBDatabaseSync {
+    readonly attribute DOMString     name;
+    readonly attribute DOMString     description;
+    readonly attribute DOMString     version;
+    readonly attribute DOMStringList objectStoreNames;
+    IDBObjectStoreSync createObjectStore (in DOMString name, in DOMString? keyPath, in optional boolean autoIncrement) raises (IDBDatabaseException);
+    IDBObjectStoreSync openObjectStore (in DOMString name, in optional unsigned short mode) raises (IDBDatabaseException);
+    void               deleteObjectStore (in DOMString storeName) raises (IDBDatabaseException);
+    void               setVersion ([TreatNullAs=EmptyString] in DOMString version);
+    IDBTransactionSync transaction (in optional DOMStringList storeNames, in optional unsigned long timeout) raises (IDBDatabaseException);
+};
+
+interface IDBObjectStoreSync {
+    const unsigned short READ_WRITE = 0;
+    const unsigned short READ_ONLY = 1;
+    readonly attribute unsigned short mode;
+    readonly attribute DOMString      name;
+    readonly attribute DOMString      keyPath;
+    readonly attribute DOMStringList  indexNames;
+    any           put (in any value, in optional any key) raises (IDBDatabaseException);
+    any           add (in any value, in optional any key) raises (IDBDatabaseException);
+    void          delete (in any key) raises (IDBDatabaseException);
+    any           get (in any key) raises (IDBDatabaseException);
+    void          clear () raises (IDBDatabaseException);
+    IDBIndexSync  createIndex (in DOMString name, in DOMString keyPath, in optional boolean unique);
+    IDBIndexSync  index (in DOMString name) raises (IDBDatabaseException);
+    void          deleteIndex (in DOMString indexName) raises (IDBDatabaseException);
+    IDBCursorSync openCursor (in optional IDBKeyRange range, in optional unsigned short direction) raises (IDBDatabaseException);
+};
+
+interface IDBIndexSync {
+    readonly attribute DOMString name;
+    readonly attribute DOMString storeName;
+    readonly attribute DOMString keyPath;
+    readonly attribute boolean   unique;
+    void openCursor (in optional IDBKeyRange range, in optional unsigned short direction) raises (IDBDatabaseException);
+    void openKeyCursor (in optional IDBKeyRange range, in optional unsigned short direction) raises (IDBDatabaseException);
+    any  get (in any key) raises (IDBDatabaseException);
+    any  getKey (in any key) raises (IDBDatabaseException);
+};
+
+interface IDBCursorSync {
+    const unsigned short NEXT = 0;
+    const unsigned short NEXT_NO_DUPLICATE = 1;
+    const unsigned short PREV = 2;
+    const unsigned short PREV_NO_DUPLICATE = 3;
+    readonly attribute unsigned short direction;
+    readonly attribute any            key;
+             attribute any            value setraises (IDBDatabaseException);
+    boolean continue (in optional any key);
+    void    delete () raises (IDBDatabaseException);
+};
+
+interface IDBTransactionSync {
+    attribute IDBDatabaseSync db;
+    IDBObjectStoreSync objectStore (in DOMString name) raises (IDBDatabaseException);
+    void               abort () raises (IDBDatabaseException);
+};
+
+};

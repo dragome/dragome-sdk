@@ -1,0 +1,76 @@
+module dom {
+
+interface BooleanArray {
+  attribute unsigned long length;
+  boolean getElement(unsigned long index);
+  void setElement(unsigned long index, boolean value);
+};
+
+interface OctetArray {
+  attribute unsigned long length;
+  octet getElement(unsigned long index);
+  void setElement(unsigned long index, octet value);
+};
+
+interface ByteArray {
+  attribute unsigned long length;
+  byte getElement(unsigned long index);
+  void setElement(unsigned long index, byte value);
+};
+
+interface UnsignedByteArray {
+  attribute unsigned long length;
+  octet getElement(unsigned long index);
+  void setElement(unsigned long index, octet value);
+};
+
+interface ShortArray {
+  attribute unsigned long length;
+  short getElement(unsigned long index);
+  void setElement(unsigned long index, short value);
+};
+
+interface UnsignedShortArray {
+  attribute unsigned long length;
+  unsigned short getElement(unsigned long index);
+  void setElement(unsigned long index, unsigned short value);
+};
+
+interface LongArray {
+  attribute unsigned long length;
+  long getElement(unsigned long index);
+  void setElement(unsigned long index, long value);
+};
+
+interface UnsignedLongArray {
+  attribute unsigned long length;
+  unsigned long getElement(unsigned long index);
+  void setElement(unsigned long index, unsigned long value);
+};
+
+interface LongLongArray {
+  attribute unsigned long length;
+  long long getElement(unsigned long index);
+  void setElement(unsigned long index, long long value);
+};
+
+interface UnsignedLongLongArray {
+  attribute unsigned long length;
+  unsigned long long getElement(unsigned long index);
+  void setElement(unsigned long index, unsigned long long value);
+};
+
+interface FloatArray {
+  attribute unsigned long length;
+  float getElement(unsigned long index);
+  void setElement(unsigned long index, float value);
+};
+
+interface DoubleArray {
+  attribute unsigned long length;
+  double getElement(unsigned long index);
+  void setElement(unsigned long index, double value);
+};
+
+};
+

@@ -1,0 +1,132 @@
+/*
+ * webdatabase.idl
+ *
+ * Web SQL Database
+ *
+ * WARNING: This specification has reached an impasse.
+ *
+ * Original W3C Editor's Draft 4 March 2010:
+ *
+ *   http://dev.w3.org/html5/webdatabase/
+ */
+
+module webdatabase {
+
+typedef html::Window Window;
+typedef workers::WorkerUtils WorkerUtils;
+
+[Supplemental, NoInterfaceObject]
+interface WindowDatabase {
+  Database openDatabase(in DOMString name, in DOMString version, in DOMString displayName, in unsigned long estimatedSize, in optional DatabaseCallback creationCallback);
+};
+Window implements WindowDatabase;
+
+[Supplemental, NoInterfaceObject]
+interface WorkerUtilsDatabase {
+  Database openDatabase(in DOMString name, in DOMString version, in DOMString displayName, in unsigned long estimatedSize, in optional DatabaseCallback creationCallback);
+  DatabaseSync openDatabaseSync(in DOMString name, in DOMString version, in DOMString displayName, in unsigned long estimatedSize, in optional DatabaseCallback creationCallback);
+};
+WorkerUtils implements WorkerUtilsDatabase;
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface DatabaseCallback {
+  void handleEvent(in Database database);
+};
+
+interface Database {
+  void transaction(in SQLTransactionCallback callback, in optional SQLTransactionErrorCallback errorCallback, in optional SQLVoidCallback successCallback);
+  void readTransaction(in SQLTransactionCallback callback, in optional SQLTransactionErrorCallback errorCallback, in optional SQLVoidCallback successCallback);
+
+  readonly attribute DOMString version;
+  void changeVersion(in DOMString oldVersion, in DOMString newVersion, in optional SQLTransactionCallback callback, in optional SQLTransactionErrorCallback errorCallback, in optional SQLVoidCallback successCallback);
+};
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface SQLVoidCallback {
+  void handleEvent();
+};
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface SQLTransactionCallback {
+  void handleEvent(in SQLTransaction transaction);
+};
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface SQLTransactionErrorCallback {
+  void handleEvent(in SQLError error);
+};
+
+typedef sequence<any> ObjectArray;
+
+interface SQLTransaction {
+  void executeSql(in DOMString sqlStatement, in optional ObjectArray arguments, in optional SQLStatementCallback callback, in optional SQLStatementErrorCallback errorCallback);
+};
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface SQLStatementCallback {
+  void handleEvent(in SQLTransaction transaction, in SQLResultSet resultSet);
+};
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface SQLStatementErrorCallback {
+  boolean handleEvent(in SQLTransaction transaction, in SQLError error);
+};
+
+interface DatabaseSync {
+  void transaction(in SQLTransactionSyncCallback callback);
+  void readTransaction(in SQLTransactionSyncCallback callback);
+
+  readonly attribute DOMString version;
+  void changeVersion(in DOMString oldVersion, in DOMString newVersion, in optional SQLTransactionSyncCallback callback);
+};
+
+[Callback=FunctionOnly, NoInterfaceObject]
+interface SQLTransactionSyncCallback {
+  void handleEvent(in SQLTransactionSync transaction);
+};
+
+// typedef sequence<any> ObjectArray;
+
+interface SQLTransactionSync {
+  SQLResultSet executeSql(in DOMString sqlStatement, in optional ObjectArray arguments);
+};
+
+interface SQLResultSet {
+  readonly attribute long insertId;
+  readonly attribute long rowsAffected;
+  readonly attribute SQLResultSetRowList rows;
+};
+
+interface SQLResultSetRowList {
+  readonly attribute unsigned long length;
+  getter any item(in unsigned long index);
+};
+
+interface SQLError {
+  const unsigned short UNKNOWN_ERR = 0;
+  const unsigned short DATABASE_ERR = 1;
+  const unsigned short VERSION_ERR = 2;
+  const unsigned short TOO_LARGE_ERR = 3;
+  const unsigned short QUOTA_ERR = 4;
+  const unsigned short SYNTAX_ERR = 5;
+  const unsigned short CONSTRAINT_ERR = 6;
+  const unsigned short TIMEOUT_ERR = 7;
+  readonly attribute unsigned short code;
+  readonly attribute DOMString message;
+};
+
+exception SQLException {
+  const unsigned short UNKNOWN_ERR = 0;
+  const unsigned short DATABASE_ERR = 1;
+  const unsigned short VERSION_ERR = 2;
+  const unsigned short TOO_LARGE_ERR = 3;
+  const unsigned short QUOTA_ERR = 4;
+  const unsigned short SYNTAX_ERR = 5;
+  const unsigned short CONSTRAINT_ERR = 6;
+  const unsigned short TIMEOUT_ERR = 7;
+  unsigned short code;
+  DOMString message;
+};
+
+};
+

@@ -1,0 +1,39 @@
+/*
+ * postmsg.idl
+ *
+ * HTML5 Web Messaging
+ *
+ * Original W3C Editor's Draft 4 March 2011:
+ *
+ *   http://dev.w3.org/html5/postmsg/
+ */
+
+module html {
+
+interface MessageEvent : Event {
+  readonly attribute any data;
+  readonly attribute DOMString origin;
+  readonly attribute DOMString lastEventId;
+  readonly attribute WindowProxy source;
+  readonly attribute MessagePortArray ports;
+  void initMessageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg, in DOMString originArg, in DOMString lastEventIdArg, in WindowProxy sourceArg, in MessagePortArray portsArg);
+};
+
+[Constructor]
+interface MessageChannel {
+  readonly attribute MessagePort port1;
+  readonly attribute MessagePort port2;
+};
+
+typedef sequence<MessagePort> MessagePortArray;
+
+interface MessagePort : EventTarget {
+  void postMessage(in any message, in optional MessagePortArray ports);
+  void start();
+  void close();
+
+  // event handlers
+           attribute Function onmessage;
+};
+
+};
