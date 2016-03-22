@@ -25,6 +25,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.w3c.dom.html.CanvasRenderingContext2D;
+import org.w3c.dom.html.HTMLCanvasElement;
 
 import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
@@ -33,9 +35,6 @@ import com.dragome.commons.compiler.InMemoryClasspathFile;
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
-import com.dragome.web.html.dom.html5canvas.interfaces.CanvasImageSource;
-import com.dragome.web.html.dom.html5canvas.interfaces.CanvasRenderingContext2D;
-import com.dragome.web.html.dom.html5canvas.interfaces.HTMLCanvasElement;
 
 @DragomeConfiguratorImplementor
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
@@ -50,7 +49,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			createJsDelegateGenerator(classpath);
 
 			Class<?>[] classes= new Class[] { Document.class, Element.class, Attr.class, NodeList.class, Node.class, //
-					NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, CanvasImageSource.class };
+					NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class };
 
 			for (Class<?> class1 : classes)
 			{
