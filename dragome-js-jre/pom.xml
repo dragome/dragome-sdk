@@ -123,5 +123,15 @@
       <artifactId>dragome-js-commons</artifactId>
       <version>${dragome.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-w3c-standards</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-web</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
   </dependencies>
 </project>
