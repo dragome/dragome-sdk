@@ -13,6 +13,8 @@ package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
 
+import org.w3c.dom.typedarray.ArrayBufferView;
+
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
@@ -28,23 +30,35 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 
 	public String createMethodCall(Method method, String params)
 	{
+		if (params == null)
+			params= "";
+
 		String result= "";
-		if (method.getName().startsWith("set") && method.getName().length() > 3 && method.getParameterTypes().length == 1)
+		String name= method.getName();
+
+		Class<?>[] superclass= method.getDeclaringClass().getInterfaces();
+		boolean isTypedArray= superclass.length > 0 && superclass[0].equals(ArrayBufferView.class);
+
+		if (isTypedArray && name.equals("set") && method.getParameterTypes().length == 2 && method.getParameterTypes()[0].equals(int.class))
+			result= "this.node[$1] = $2";
+		else if (isTypedArray && (name.equals("get") || name.equals("getAsDouble")) && method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals(int.class))
+			result= "this.node[$1]";
+		else if (name.startsWith("set") && name.length() > 3 && method.getParameterTypes().length == 1)
 		{
 			Class<?> parameterType= method.getParameterTypes()[0];
-			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4) + "= " + JsDelegateGenerator.createVariableForEval("$1", parameterType);
+			result= "this.node." + name.toLowerCase().charAt(3) + name.substring(4) + "= " + JsDelegateGenerator.createVariableForEval("$1", parameterType);
 		}
-		else if (method.getName().startsWith("get") && method.getName().length() > 3 && method.getParameterTypes().length == 0)
+		else if (name.startsWith("get") && name.length() > 3 && method.getParameterTypes().length == 0)
 		{
-			result= "this.node." + method.getName().toLowerCase().charAt(3) + method.getName().substring(4);
+			result= "this.node." + name.toLowerCase().charAt(3) + name.substring(4);
 		}
-		else if (method.getName().equals("createInstanceOf"))
+		else if (name.equals("createInstanceOf"))
 		{
 			result= "eval('new '+ getSimpleClassname($1) + '(" + params.replace("$1, ", "") + ")')";
 		}
 		else
 		{
-			result= "this.node." + method.getName() + "(" + params + ")";
+			result= "this.node." + name + "(" + params + ")";
 		}
 
 		return result;
