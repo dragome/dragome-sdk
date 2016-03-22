@@ -12,7 +12,6 @@
 package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
 
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
@@ -61,15 +60,19 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 		return null;
 	}
 
-	public String createReturnExpression(Class<?> clazz, Method method)
+	public String createReturnExpression(Class<?> clazz, Method method, String returnTypeAsString)
 	{
 
 		if (method.getName().equals("createInstanceOf"))
 			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, $1);";
 		else
 		{
-			Class<?> rawType= TypeToken.of(clazz).resolveType(method.getGenericReturnType()).getRawType();
-			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + rawType.getName() + ".class" + ");";
+			if (returnTypeAsString == null)
+			{
+				Class<?> rawType= TypeToken.of(clazz).resolveType(method.getGenericReturnType()).getRawType();
+				returnTypeAsString= rawType.getName() + ".class";
+			}
+			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + returnTypeAsString + ");";
 		}
 	}
 }

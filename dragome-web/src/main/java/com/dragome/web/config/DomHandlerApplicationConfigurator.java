@@ -32,9 +32,7 @@ import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.InMemoryClasspathFile;
-import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
-import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
 @DragomeConfiguratorImplementor
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
@@ -63,23 +61,6 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 	}
 	private void createJsDelegateGenerator(String classpath)
 	{
-		jsDelegateGenerator= new JsDelegateGenerator(classpath.replace(";", ":"), new DefaultDelegateStrategy()
-		{
-			public String getSubTypeExtractorFor(Class<?> interface1, String methodName)
-			{
-				if (methodName.equals("item") || methodName.equals("cloneNode"))
-					return "temp.nodeType";
-
-				return null;
-			}
-
-			public Class<? extends SubTypeFactory> getSubTypeFactoryClassFor(Class<?> interface1, String methodName)
-			{
-				if (methodName.equals("item") || methodName.equals("cloneNode"))
-					return NodeSubTypeFactory.class;
-
-				return null;
-			}
-		});
+		jsDelegateGenerator= new JsDelegateGenerator(classpath.replace(";", ":"), new DomHandlerDelegateStrategy());
 	}
 }

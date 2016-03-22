@@ -240,18 +240,18 @@ public class JsDelegateGenerator
 	private String createBodyForReference(Class<?> interface1, Class<?> scriptHelperClass, CtMethod method, String body, CtClass returnType) throws Exception
 	{
 		body= body.replace("$eval$", "Object temp= " + scriptHelperClass.getName() + ".eval");
-		String jvmName= toJavaName(returnType) + ".class";
+		String returnTypeAsString= toJavaName(returnType) + ".class";
 		String subTypeExtractorExpression= delegateStrategy.getSubTypeExtractorFor(interface1, method.getName());
 		if (subTypeExtractorExpression != null)
 		{
 			String subTypeId= scriptHelperClass.getName() + ".eval(\"" + subTypeExtractorExpression + "\", this)";
 			Class<? extends SubTypeFactory> subTypeFactoryClass= delegateStrategy.getSubTypeFactoryClassFor(interface1, method.getName());
-			jvmName= "new " + subTypeFactoryClass.getName() + "().getSubTypeWith(" + subTypeId + ")";
+			returnTypeAsString= "new " + subTypeFactoryClass.getName() + "().getSubTypeWith(" + subTypeId + ")";
 			body+= scriptHelperClass.getName() + ".put (\"temp\", temp, this);";
 		}
 
 		Method javaMethod= toJavaMethod(interface1, method);
-		body= body + delegateStrategy.createReturnExpression(interface1, javaMethod);
+		body= body + delegateStrategy.createReturnExpression(interface1, javaMethod, returnTypeAsString);
 		return body;
 	}
 
