@@ -19,6 +19,9 @@ public class JsDelegateFactory
 	{
 		try
 		{
+			if (instance == null)
+				return null;
+
 			String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
 			Class<?> class2= Class.forName(delegateClassName);
 			Object newInstance= class2.newInstance();
@@ -39,6 +42,9 @@ public class JsDelegateFactory
 	{
 		try
 		{
+			if (instance == null)
+				return null;
+
 			ScriptHelper.put("instance", instance, null);
 
 			if (type.equals(Float.class))

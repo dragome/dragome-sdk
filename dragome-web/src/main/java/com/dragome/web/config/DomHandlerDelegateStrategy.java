@@ -9,7 +9,7 @@ public class DomHandlerDelegateStrategy extends DefaultDelegateStrategy
 {
 	public String getSubTypeExtractorFor(Class<?> interface1, String methodName)
 	{
-		if (interface1.equals(HTMLCanvasElement.class) && methodName.equals("getContext"))
+		if (HTMLCanvasElement.class.isAssignableFrom(interface1) && methodName.equals("getContext"))
 			return "$1";
 		else if (methodName.equals("item") || methodName.equals("cloneNode"))
 			return "temp.nodeType";
@@ -21,7 +21,7 @@ public class DomHandlerDelegateStrategy extends DefaultDelegateStrategy
 	{
 		if (methodName.equals("item") || methodName.equals("cloneNode"))
 			return NodeSubTypeFactory.class;
-		else if (interface1.equals(HTMLCanvasElement.class) && methodName.equals("getContext"))
+		else if (HTMLCanvasElement.class.isAssignableFrom(interface1) && methodName.equals("getContext"))
 			return ContextSubTypeFactory.class;
 
 		return null;
