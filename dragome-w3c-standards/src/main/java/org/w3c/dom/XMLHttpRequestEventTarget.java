@@ -3,23 +3,22 @@
 package org.w3c.dom;
 
 import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.html.Function;
 
 public interface XMLHttpRequestEventTarget extends EventTarget
 {
     // XMLHttpRequestEventTarget
-    public Function getOnloadstart();
-    public void setOnloadstart(Function onloadstart);
-    public Function getOnprogress();
-    public void setOnprogress(Function onprogress);
-    public Function getOnabort();
-    public void setOnabort(Function onabort);
-    public Function getOnerror();
-    public void setOnerror(Function onerror);
-    public Function getOnload();
-    public void setOnload(Function onload);
-    public Function getOntimeout();
-    public void setOntimeout(Function ontimeout);
-    public Function getOnloadend();
-    public void setOnloadend(Function onloadend);
+    public EventHandler getOnloadstart();
+    public void setOnloadstart(EventHandler onloadstart);
+    public EventHandler getOnprogress();
+    public void setOnprogress(EventHandler onprogress);
+    public EventHandler getOnabort();
+    public void setOnabort(EventHandler onabort);
+    public EventHandler getOnerror();
+    public void setOnerror(EventHandler onerror);
+    public EventHandler getOnload();
+    public void setOnload(EventHandler onload);
+    public EventHandler getOntimeout();
+    public void setOntimeout(EventHandler ontimeout);
+    public EventHandler getOnloadend();
+    public void setOnloadend(EventHandler onloadend);
 }
