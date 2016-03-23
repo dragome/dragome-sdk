@@ -309,13 +309,11 @@ function XHRHandler(syncCall) {
  
 
    var parse = function (req) {
-    var result;
     try {
-      result = JSON.parse(req.responseText);
+      return JSON.parse(req.responseText);
     } catch (e) {
-      result = req.responseText;
+      return req.responseText;
     }
-    return [result, req];
   };
   
   var sxhr = function (type, url, data) {
@@ -374,18 +372,18 @@ function XHRHandler(syncCall) {
 		}
 		request.send(data);
 
-		var atomXHR = {
+		var xhtMethods = {
 		  success: function (callback) {
 			methods.success = callback;
-			return atomXHR;
+			return xhtMethods;
 		  },
 		  error: function (callback) {
 			methods.error = callback;
-			return atomXHR;
+			return xhtMethods;
 		  }
 		};
 
-		return atomXHR;
+		return xhtMethods;
     } else {
     	return sxhr(type, url, data);
     }
