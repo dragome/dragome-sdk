@@ -298,7 +298,7 @@ function setupCheckCast()
 		dragomeJs.checkCast= function (obj){return obj};
 }
 
- 
+//adapted from atomic.js library, https://github.com/toddmotto/atomic
 function XHRHandler(syncCall) {
   'use strict';
 
@@ -334,12 +334,12 @@ function XHRHandler(syncCall) {
 		  success: function () {},
 		  error: function () {}
 		};
-		var XHR = new XMLHttpRequest();
+		var request = new XMLHttpRequest();
 		if(useCORS) {
-			if ('withCredentials' in XHR) {
-				xmlobja.withCredentials = corscridentials;
+			if ('withCredentials' in request) {
+				request.withCredentials = corscridentials;
 			} else {
-				xmlobja = new XDomainRequest();
+				request = new XDomainRequest();
 			}
 		}
 
