@@ -158,6 +158,39 @@ function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain,
 	}
 }
 
+function httpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
+{
+	var xhr=new XHRHandler(isAsync);
+	if(crossDomain==='true')xhr.setCORSCall(false);
+	if(isAsync) {
+		if(isGet) {
+			xhr.get(url)
+			.success(function (data, xhr) {
+			   if (data != "null")
+				   asyncCallback.$onSuccess___java_lang_Object$void(data);
+			})
+			.error(function (data, xhr) {
+				   asyncCallback.$onError$void();
+			});
+		} else {
+			xhr.post(url,parameters)
+			.success(function (data, xhr) {
+			   if (data != "null")
+				   asyncCallback.$onSuccess___java_lang_Object$void(data);
+			})
+			.error(function (data, xhr) {
+				   asyncCallback.$onError$void();
+			});
+		}
+	} else {
+		 if(isGet) {
+			return xhr.get(url);
+		 } else {
+			return xhr.post(url,parameters);
+		 }
+	}
+}
+
 function socketCreator(aUrl, successCallback, errorCallback)
 {
 	window.onSocketMessage = successCallback;
@@ -195,6 +228,11 @@ function getURL(url)
         cache: false,
         async: false
     }).responseText;
+}
+
+function getURLNew(url)
+{
+    return new XHRHandler(true).get(url);
 }
 
 
@@ -237,7 +275,7 @@ function getDocumentElementByAttributeValue(aDocument, attribName, value)
 
 function checkStyleSheet(url)
 {
-	var found = false;
+    var found = false;
 	for ( var i = 0; i < document.styleSheets.length; i++)
 	{
 		if (document.styleSheets[i].href == url)
@@ -260,3 +298,121 @@ function setupCheckCast()
 		dragomeJs.checkCast= function (obj){return obj};
 }
 
+ 
+function XHRHandler(syncCall) {
+  'use strict';
+
+  var contentType= 'application/x-www-form-urlencoded',
+    cors= false,
+    corscridentials= false,
+    async=syncCall===undefined || syncCall===true;
+ 
+
+   var parse = function (req) {
+    var result;
+    try {
+      result = JSON.parse(req.responseText);
+    } catch (e) {
+      result = req.responseText;
+    }
+    return [result, req];
+  };
+  
+  var sxhr = function (type, url, data) {
+  	 var XHR = new XMLHttpRequest();
+     request.open(type, url, false);
+     request.setRequestHeader('Content-type', contentType);
+     request.send(data);
+     if (request.status >= 200 && request.status < 300) {
+     	return parse(request);
+     } else return null;
+  };
+  
+  var xhr = function (type, url, data) {
+    if(async) {
+		var methods = {
+		  success: function () {},
+		  error: function () {}
+		};
+		var XHR = new XMLHttpRequest();
+		if(useCORS) {
+			if ('withCredentials' in XHR) {
+				xmlobja.withCredentials = corscridentials;
+			} else {
+				xmlobja = new XDomainRequest();
+			}
+		}
+
+		request.open(type, url, true);
+		if(request.overrideMimeType) request.overrideMimeType('text/html');
+		request.setRequestHeader('Content-type', contentType);
+		if(useCORS) {
+			request.onload=function() {
+				var req = parse(request);
+				if (request.status >= 200 && request.status < 300) {
+					methods.success.apply(methods, req);
+				} else {
+					methods.error.apply(methods, req);
+				}
+			};
+		
+			request.onerror=function() {
+				methods.error.apply(methods, null);
+			};
+		} else {
+		  request.onreadystatechange = function () {
+			var req;
+			if (request.readyState === 4) {
+				req = parse(request);
+				if (request.status >= 200 && request.status < 300) {
+					methods.success.apply(methods, req);
+				} else {
+					methods.error.apply(methods, req);
+				}
+			}
+		 };
+		}
+		request.send(data);
+
+		var atomXHR = {
+		  success: function (callback) {
+			methods.success = callback;
+			return atomXHR;
+		  },
+		  error: function (callback) {
+			methods.error = callback;
+			return atomXHR;
+		  }
+		};
+
+		return atomXHR;
+    } else {
+    	return sxhr(type, url, data);
+    }
+  };
+
+  this.get = function (src) {
+    return xhr('GET', src);
+  };
+
+  this.put = function (url, data) {
+    return xhr('PUT', url, data);
+  };
+
+  this.post= function (url, data) {
+    return xhr('POST', url, data);
+  };
+
+  this.delete = function (url) {
+    return xhr('DELETE', url);
+  };
+
+  this.setContentType = function(value) {
+    contentType = value;
+  };
+  
+  this.setCORSCall = function(useCridentials) {
+  	  cors=true;
+  	  corscridentials=useCridentials;
+  };
+});
