@@ -306,17 +306,6 @@ function XHRHandler(syncCall) {
     cors= false,
     corscridentials= false,
     async=syncCall===undefined || syncCall===true;
- 
-
-   var parse = function (req) {
-    var result;
-    try {
-      result = JSON.parse(req.responseText);
-    } catch (e) {
-      result = req.responseText;
-    }
-    return [result, req];
-  };
   
   var sxhr = function (type, url, data) {
   	 var XHR = new XMLHttpRequest();
@@ -324,7 +313,7 @@ function XHRHandler(syncCall) {
      request.setRequestHeader('Content-type', contentType);
      request.send(data);
      if (request.status >= 200 && request.status < 300) {
-     	return parse(request);
+     	return request.responseText;
      } else return null;
   };
   
@@ -348,11 +337,10 @@ function XHRHandler(syncCall) {
 		request.setRequestHeader('Content-type', contentType);
 		if(useCORS) {
 			request.onload=function() {
-				var req = parse(request);
 				if (request.status >= 200 && request.status < 300) {
-					methods.success.apply(methods, req);
+					methods.success.apply(methods, [request.responseText, request]);
 				} else {
-					methods.error.apply(methods, req);
+					methods.error.apply(methods, [null, request]);
 				}
 			};
 		
@@ -361,13 +349,11 @@ function XHRHandler(syncCall) {
 			};
 		} else {
 		  request.onreadystatechange = function () {
-			var req;
 			if (request.readyState === 4) {
-				req = parse(request);
 				if (request.status >= 200 && request.status < 300) {
-					methods.success.apply(methods, req);
+					methods.success.apply(methods, [request.responseText, request]);
 				} else {
-					methods.error.apply(methods, req);
+					methods.error.apply(methods, [null, request]);
 				}
 			}
 		 };
