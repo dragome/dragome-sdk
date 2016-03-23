@@ -374,18 +374,18 @@ function XHRHandler(syncCall) {
 		}
 		request.send(data);
 
-		var atomXHR = {
+		var xhrMethods = {
 		  success: function (callback) {
 			methods.success = callback;
-			return atomXHR;
+			return xhrMethods;
 		  },
 		  error: function (callback) {
 			methods.error = callback;
-			return atomXHR;
+			return xhrMethods;
 		  }
 		};
 
-		return atomXHR;
+		return xhrMethods;
     } else {
     	return sxhr(type, url, data);
     }
