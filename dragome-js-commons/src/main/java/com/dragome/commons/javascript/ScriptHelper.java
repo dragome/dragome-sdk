@@ -15,6 +15,7 @@
  */
 package com.dragome.commons.javascript;
 
+import org.w3c.dom.events.EventTarget;
 
 public final class ScriptHelper
 {
@@ -73,5 +74,10 @@ public final class ScriptHelper
 	public static void evalNoResult(String script, Object callerInstance)
 	{
 		scriptHelperInterface.evalNoResult(script, callerInstance);
+	}
+
+	public static <T> T putMethodReference(String name, Class<T> methodReference, Object callerInstance)
+	{
+		return (T) scriptHelperInterface.putMethodReference(name, methodReference, callerInstance);
 	}
 }
