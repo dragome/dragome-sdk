@@ -380,12 +380,12 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (local_alias != null)
 		{
 			print(", \n");
-//			print(local_alias + ": function(");
-			print(local_alias + ": this." + signatureReplaced);
-//			printParams(method);
-//			print(") {return this." + signatureReplaced + "(");
-//			printParams(method);
-//			print(")}");
+			print(local_alias + ": function(");
+//			print(local_alias + ": this." + signatureReplaced);
+			printParams(method);
+			print(") {return this." + signatureReplaced + "(");
+			printParams(method);
+			print(")}");
 		}
 
 		unit.setData(reset());
