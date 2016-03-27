@@ -478,3 +478,10 @@ dragomeJs.resolveNativeMethod= function(owner, signature)
 	return instance;
 	//return dragomeJs.nativeMethods[signature];
 }
+
+dragomeJs.resolveMethod= function(owner, signature)
+{
+	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(owner);
+	var method= clazz.getMethodBySignature(signature);
+	return method;
+}

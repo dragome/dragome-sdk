@@ -112,4 +112,8 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 		crossExecutionCommandProcessor.processNoResult(new JsEvalInMethod(new ReferenceHolder(caller), script, stackTraceElement.getMethodName()));
 	}
 
+	public <T> T putMethodReference(String name, T methodReference, Object callerInstance)
+	{
+		return null;
+	}
 }

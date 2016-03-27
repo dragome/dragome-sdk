@@ -281,14 +281,14 @@ public class DragomeJavaScriptGenerator extends Generator
 		ProcedureUnit unit= project.getProcedureUnit(methodBinding);
 
 		boolean isNative= Modifier.isNative(method.getAccess());
-//		if (method.getBody() == null && isNative)
-//		{
-//			if (isNative || Modifier.isAbstract(method.getAccess()) || Modifier.isInterface(typeDecl.getAccess()))
-//			{
-//				return;
-//			}
-//			throw new RuntimeException("Method " + method + " with access " + method.getAccess() + " may not have empty body");
-//		}
+		//		if (method.getBody() == null && isNative)
+		//		{
+		//			if (isNative || Modifier.isAbstract(method.getAccess()) || Modifier.isInterface(typeDecl.getAccess()))
+		//			{
+		//				return;
+		//			}
+		//			throw new RuntimeException("Method " + method + " with access " + method.getAccess() + " may not have empty body");
+		//		}
 
 		//	if (!dragomeJsCompiler.compiler.isCompression())
 		//	{
@@ -380,11 +380,12 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (local_alias != null)
 		{
 			print(", \n");
-			print(local_alias + ": function(");
-			printParams(method);
-			print(") {return this." + signatureReplaced + "(");
-			printParams(method);
-			print(")}");
+//			print(local_alias + ": function(");
+			print(local_alias + ": this." + signatureReplaced);
+//			printParams(method);
+//			print(") {return this." + signatureReplaced + "(");
+//			printParams(method);
+//			print(")}");
 		}
 
 		unit.setData(reset());
@@ -588,7 +589,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			{
 				println("");
 			}
-			else if(lastChar == ';')
+			else if (lastChar == ';')
 			{
 				getOutputStream().println("");
 			}
@@ -861,7 +862,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		else
 			firstArg= ((StringLiteral) args.get(0)).getValue();
 
-		if (name.equals("put"))
+		if (name.equals("put") || name.equals("putMethodReference"))
 		{
 			if (isVariable)
 			{
@@ -1058,9 +1059,34 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 		else
 		{
-			expression.visit(this);
-			print(".");
-			generateArguments(invocation);
+			boolean ready= false;
+			if (expression instanceof CastExpression)
+			{
+				CastExpression castExpression= (CastExpression) expression;
+
+				if (castExpression.getExpression() instanceof MethodInvocation)
+				{
+					MethodInvocation methodInvocation= (MethodInvocation) castExpression.getExpression();
+					MethodBinding methodBinding2= methodInvocation.getMethodBinding();
+
+					if (methodBinding2.toString().startsWith("com.dragome.commons.javascript.ScriptHelper#putMethodReference"))
+					{
+						Signature signature= getSignatureOfInvocation(invocation);
+						String normalizeExpression= normalizeExpression(signature);
+						String varName= ((StringLiteral) methodInvocation.getArguments().get(0)).getValue();
+						Signature ownerClass= ((ClassLiteral) methodInvocation.getArguments().get(1)).getSignature();
+						print("var " + varName + "= dragomeJs.resolveMethod (\"" + ownerClass + "\", \"" + normalizeExpression + "\")");
+						ready= true;
+					}
+				}
+			}
+
+			if (!ready)
+			{
+				expression.visit(this);
+				print(".");
+				generateArguments(invocation);
+			}
 		}
 
 	}
@@ -1143,8 +1169,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		if ("length".equals(fr.getName()))
 		{
-//			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
-//				System.out.println("sdgsdg");
+			//			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
+			//				System.out.println("sdgsdg");
 
 			prefix= "";
 		}

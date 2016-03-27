@@ -23,7 +23,9 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
+import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.enhancers.jsdelegate.JsDelegateFactory;
 
 @DragomeCompilerSettings(CompilerType.Standard)
 public final class Method
@@ -132,6 +134,24 @@ public final class Method
 
 		result= adaptResult(result, getReturnType());
 		return result;
+	}
+	
+	@MethodAlias(local_alias= "apply")
+	public Object javaCall(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	{
+		Class<?>[] parameterTypes= getParameterTypes();
+		Object[] typedArguments= new Object[parameterTypes.length];
+		
+		for (int j= 0; j < args.length; j++)
+		{
+			Object object= args[j];
+			Object typedArgument= JsDelegateFactory.createFrom(object, parameterTypes[j]);
+			typedArguments[j]=typedArgument; 
+//			ScriptHelper.put("a", object, this);
+//			ScriptHelper.eval("console.log(a)", this);
+		}
+		
+		return invoke(obj, typedArguments);
 	}
 
 	public static void boxArguments(Class<?>[] parameterTypes, Object... args)
