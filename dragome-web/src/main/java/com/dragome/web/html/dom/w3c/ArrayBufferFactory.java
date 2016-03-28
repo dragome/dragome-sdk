@@ -4,7 +4,7 @@ import org.w3c.dom.typedarray.ArrayBuffer;
 
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.web.enhancers.jsdelegate.JsDelegateFactory;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class ArrayBufferFactory
 {
@@ -13,7 +13,7 @@ public class ArrayBufferFactory
 	{
 		ScriptHelper.put("lenght", length, null);
 		Object instance= ScriptHelper.eval("new ArrayBuffer(length);", null);
-		ArrayBuffer node= JsDelegateFactory.createFrom(instance, ArrayBuffer.class);
+		ArrayBuffer node= JsCast.castTo(instance, ArrayBuffer.class);
 		return node;
 	}
 }

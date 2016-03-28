@@ -11,34 +11,16 @@
 
 package com.dragome.web.enhancers.jsdelegate;
 
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.helpers.DragomeEntityManager;
 
-public class JsDelegateFactory
+public class JsCast
 {
-	public static <T> T createFromNode(Object instance, Class<T> type)
-	{
-		try
-		{
-			if (instance == null)
-				return null;
-
-			String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
-			Class<?> class2= Class.forName(delegateClassName);
-			Object newInstance= class2.newInstance();
-			ScriptHelper.put("delegate", newInstance, null);
-			ScriptHelper.put("instance", instance, null);
-			ScriptHelper.eval("delegate.node= instance.node", null);
-
-			return (T) newInstance;
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	public static <T> T createFrom(Object instance, Class<T> type)
+	public static <T> T castTo(Object instance, Class<T> type)
 	{
 		try
 		{
@@ -66,8 +48,13 @@ public class JsDelegateFactory
 				String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
 				Class<?> class2= Class.forName(delegateClassName);
 				Object newInstance= class2.newInstance();
+
 				ScriptHelper.put("delegate", newInstance, null);
-				ScriptHelper.eval("delegate.node= instance", null);
+				if (ScriptHelper.eval("instance.node", null) == null)
+					ScriptHelper.eval("delegate.node= instance", null);
+				else
+					ScriptHelper.eval("delegate.node= instance.node", null);
+
 				return (T) newInstance;
 			}
 		}
@@ -77,4 +64,23 @@ public class JsDelegateFactory
 		}
 	}
 
+	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
+	{
+		ScriptHelper.putMethodReference("handleEventMethod", EventListener.class, null).handleEvent(null);
+		ScriptHelper.put("eventListener", eventListener, null);
+		Object listener= ScriptHelper.eval("(function(){handleEventMethod.apply(eventListener, arguments)})", null);
+		ScriptHelper.put("listener", listener, null);
+
+		ScriptHelper.put("javaRefId", DragomeEntityManager.add(eventListener), null);
+		ScriptHelper.eval("eventListener.javaRefId= javaRefId", null);
+
+		ScriptHelper.put("eventTarget", eventTarget, null);
+		ScriptHelper.put("type", type, null);
+		ScriptHelper.eval("eventTarget.node.addEventListener(type, listener)", null);
+	}
+
+	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener)
+	{
+		addEventListener(eventTarget, type, eventListener, false);
+	}
 }

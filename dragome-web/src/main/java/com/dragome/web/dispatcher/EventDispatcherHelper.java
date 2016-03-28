@@ -17,13 +17,12 @@ package com.dragome.web.dispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
-import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
+import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
@@ -59,7 +58,7 @@ public class EventDispatcherHelper
 						boolean isUnique= annotationEntries.size() == 1;
 						boolean urlContainsAlias= requestURL.contains(annotationEntry.getAnnotationValue());
 						boolean isAliasKey= annotationEntry.getAnnotationKey().equals("alias");
-						
+
 						if (isUnique || (isAliasKey && urlContainsAlias))
 							className= annotationEntry.getType().getName();
 					}
@@ -77,7 +76,7 @@ public class EventDispatcherHelper
 	private static String findDiscovererPage(String requestURL, List<AnnotationEntry> annotationEntries)
 	{
 		String className= null;
-		
+
 		for (AnnotationEntry annotationEntry : annotationEntries)
 		{
 			boolean isDiscoverPage= annotationEntry.getType().getSimpleName().equals("DiscovererPage");
@@ -120,21 +119,6 @@ public class EventDispatcherHelper
 		return configurator;
 	}
 
-	//	@MethodAlias(alias= "EventDispatcher.getComponentById")
-	//	private static void getComponentById(Object event)
-	//	{
-	//		ScriptHelper.eval("stopEvent(event)", null);
-	//		String id2= (String) ScriptHelper.eval("event.currentTarget.getAttribute('data-element-id')", null);
-	//		EventDispatcherHelper.getComponentById(id2); //TODO revisar el static
-	//	}
-
-	@MethodAlias(alias= "EventDispatcher.onEvent")
-	private static void onEvent()
-	{
-		Object event= ScriptHelper.eval("window.event || arguments.callee.caller.arguments[0]", null);
-		Executor executor= ServiceLocator.getInstance().getConfigurator().getExecutionHandler().getExecutor();
-		executor.execute(new EventExecutor(event));
-	}
 	protected static String getEventTargetId(Object event)
 	{
 		//	ScriptHelper.eval("stopEvent(event)", null);

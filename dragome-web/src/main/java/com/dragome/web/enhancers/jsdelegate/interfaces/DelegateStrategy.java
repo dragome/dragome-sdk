@@ -26,4 +26,6 @@ public interface DelegateStrategy
 	Class<? extends SubTypeFactory> getSubTypeFactoryClassFor(Class<?> interface1, String methodName);
 
 	String createReturnExpression(Class<?> clazz, Method method, String returnTypeAsString);
+
+	String createMethodBody(Method javaMethod, String params);
 }

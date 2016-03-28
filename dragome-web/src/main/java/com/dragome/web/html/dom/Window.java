@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.AsyncCallback;
 import com.dragome.web.dispatcher.EventDispatcherImpl;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.services.RequestExecutorImpl;
 
 public class Window
@@ -51,10 +53,11 @@ public class Window
 		ScriptHelper.evalNoResult("cancelAnimationFrame(requestID)", this);
 	}
 
-	public void addEventListener(EventListener aEventListener, String... aEvent)
+	public void addEventListener(EventListener aEventListener, String aEvent)
 	{
 		Element theElement= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("body");
-		EventDispatcherImpl.setEventListener(theElement, aEventListener, aEvent);
+		EventTarget eventTarget= JsCast.castTo(theElement, EventTarget.class);
+		eventTarget.addEventListener(aEvent, aEventListener, false);
 	}
 
 	public void onResize(Runnable aRunnable)
