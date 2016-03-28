@@ -13,6 +13,7 @@ package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
 
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.typedarray.ArrayBufferView;
 
 import com.dragome.commons.compiler.annotations.MethodAlias;
@@ -78,7 +79,7 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 	{
 
 		if (method.getName().equals("createInstanceOf"))
-			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, $1);";
+			return "return " + JsCast.class.getName() + ".castTo(temp, $1);";
 		else
 		{
 			if (returnTypeAsString == null)
@@ -86,7 +87,22 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 				Class<?> rawType= TypeToken.of(clazz).resolveType(method.getGenericReturnType()).getRawType();
 				returnTypeAsString= rawType.getName() + ".class";
 			}
-			return "return " + JsDelegateFactory.class.getName() + ".createFrom(temp, " + returnTypeAsString + ");";
+			return "return " + JsCast.class.getName() + ".castTo(temp, " + returnTypeAsString + ");";
 		}
+	}
+
+	public String createMethodBody(Method method, String params)
+	{
+		Class<?> declaringClass= method.getDeclaringClass();
+
+
+		String parametersDeclaration= "$1, $2";
+		if (method.getParameterTypes().length == 3)
+			parametersDeclaration+= ", $3";
+
+		if (EventTarget.class.isAssignableFrom(declaringClass) && method.getName().equals("addEventListener"))
+			return JsCast.class.getName() + ".addEventListener (this, " + parametersDeclaration + ");";
+		else
+			return null;
 	}
 }

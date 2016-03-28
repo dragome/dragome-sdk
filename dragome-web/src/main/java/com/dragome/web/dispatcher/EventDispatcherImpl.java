@@ -15,103 +15,57 @@
  */
 package com.dragome.web.dispatcher;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.events.EventListener;
 
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.web.debugging.JavascriptReference;
-import com.dragome.web.enhancers.jsdelegate.JsDelegateFactory;
-import com.dragome.web.html.dom.w3c.KeyboardEventImpl;
-import com.dragome.web.html.dom.w3c.MouseEventImpl;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class EventDispatcherImpl implements EventDispatcher
 {
-	public static final String ELEMENT_ID_ATTRIBUTE= "data-element-id";
+	private static boolean processing;
 
 	public EventDispatcherImpl()
 	{
 	}
 
-	public static void setEventListener(Element element, EventListener eventListener, String... eventTypes)
-	{
-		for (String eventType : eventTypes)
-			element.setAttribute("on" + eventType, "_ed.onEvent()");
-
-		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
-	}
-
-	public static void removeEventListener(Element element, String... eventTypes)
-	{
-		for (String eventType : eventTypes)
-			element.removeAttribute("on" + eventType);
-
-		element.removeAttribute(ELEMENT_ID_ATTRIBUTE);
-	}
-
-	public static void removeEventListener(Element element, EventListener eventListener, String... eventTypes)
-	{
-		removeEventListener(element, eventTypes);
-		DragomeEntityManager.remove(eventListener);
-	}
-
-	public void keyEventPerformedById(final String eventName, final String id, final int code)
-	{
-		EventDispatcherHelper.runOnlySynchronized(new Runnable()
-		{
-			public void run()
-			{
-				Object object= DragomeEntityManager.get(id);
-				if (object instanceof EventListener)
-					((EventListener) object).handleEvent(new KeyboardEventImpl(eventName, code));
-			}
-		});
-	}
-
-	public void mouseEventPerformedById(final String eventName, final String id, final int clientX, final int clientY, final boolean shiftKey)
-	{
-		EventDispatcherHelper.runOnlySynchronized(new Runnable()
-		{
-			public void run()
-			{
-				Object object= DragomeEntityManager.get(id);
-				if (object instanceof EventListener)
-					((EventListener) object).handleEvent(new MouseEventImpl(eventName, clientX, clientY, shiftKey));
-			}
-		});
-	}
-
 	public void callJavaMethod(ServiceInvocation serviceInvocation)
 	{
-		try
+		if (!processing)
 		{
-			ReflectionService reflectionService= ServiceLocator.getInstance().getReflectionService();
-			List<Object> effectiveParameters= new ArrayList<>();
-			for (Object object : serviceInvocation.getArgs())
+			processing= true;
+			try
 			{
-				if (object instanceof JavascriptReference)
+				ReflectionService reflectionService= ServiceLocator.getInstance().getReflectionService();
+				List<Object> effectiveParameters= new ArrayList<>();
+				for (Object object : serviceInvocation.getArgs())
 				{
-					JavascriptReference javascriptReference= (JavascriptReference) object;
-					Class<?> referenceType= reflectionService.forName(javascriptReference.getClassName());
+					if (object instanceof JavascriptReference)
+					{
+						JavascriptReference javascriptReference= (JavascriptReference) object;
+						Class<?> referenceType= reflectionService.forName(javascriptReference.getClassName());
 
-					Object createFromNode= JsDelegateFactory.createFromNode(javascriptReference, referenceType);
-					effectiveParameters.add(createFromNode);
+						Object createFromNode= JsCast.castTo(javascriptReference, referenceType);
+						effectiveParameters.add(createFromNode);
+					}
+					else
+						effectiveParameters.add(object);
 				}
-				else
-					effectiveParameters.add(object);
-			}
 
-			serviceInvocation.getMethod().invoke(DragomeEntityManager.get(serviceInvocation.getId()), effectiveParameters.toArray());
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
+				serviceInvocation.getMethod().invoke(DragomeEntityManager.get(serviceInvocation.getId()), effectiveParameters.toArray());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+			finally
+			{
+				processing= false;
+			}
 		}
 	}
 }

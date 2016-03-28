@@ -27,6 +27,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.CanvasRenderingContext2D;
 import org.w3c.dom.html.HTMLCanvasElement;
 
@@ -41,7 +44,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 {
 	protected JsDelegateGenerator jsDelegateGenerator;
 	protected List<Class<?>> classes= new ArrayList<>(Arrays.asList(Document.class, Element.class, Attr.class, NodeList.class, //
-			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class));
+			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, EventTarget.class, EventListener.class, Event.class));
 
 	public DomHandlerApplicationConfigurator()
 	{

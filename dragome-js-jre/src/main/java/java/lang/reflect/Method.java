@@ -31,7 +31,7 @@ import com.dragome.services.ServiceInvocation;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.web.debugging.JavascriptReference;
 import com.dragome.web.dispatcher.JavaRefId;
-import com.dragome.web.enhancers.jsdelegate.JsDelegateFactory;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 @DragomeCompilerSettings(CompilerType.Standard)
 public final class Method
@@ -151,7 +151,7 @@ public final class Method
 		for (int j= 0; j < args.length; j++)
 		{
 			Object object= args[j];
-			Object typedArgument= JsDelegateFactory.createFrom(object, parameterTypes[j]);
+			Object typedArgument= JsCast.castTo(object, parameterTypes[j]);
 			typedArguments[j]= typedArgument;
 			//			ScriptHelper.put("a", object, this);
 			//			ScriptHelper.eval("console.log(a)", this);

@@ -19,7 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.web.enhancers.jsdelegate.JsDelegateFactory;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.DomHandler;
 
 public class BrowserDomHandler implements DomHandler
@@ -31,7 +31,7 @@ public class BrowserDomHandler implements DomHandler
 	public Document getDocument()
 	{
 		Object documentNode= ScriptHelper.eval("document", this);
-		return JsDelegateFactory.createFrom(documentNode, Document.class);
+		return JsCast.castTo(documentNode, Document.class);
 	}
 
 	public Element getElementBySelector(String selector)
@@ -40,7 +40,7 @@ public class BrowserDomHandler implements DomHandler
 		Object object= ScriptHelper.eval("document.querySelectorAll(selector)[0]", this);
 		Element result= null;
 		if (object != null)
-			result= JsDelegateFactory.createFrom(object, Element.class);
+			result= JsCast.castTo(object, Element.class);
 
 		return result;
 	}
