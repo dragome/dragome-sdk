@@ -39,5 +39,5 @@ public interface ScriptHelperInterface
 
     public void evalNoResult(String script, Object callerInstance);
 
-    public <T> T putMethodReference(String name, T methodReference, Object callerInstance);
+    public <T> T putMethodReference(String name, Class<? extends T> declaringClass, Object callerInstance);
 }

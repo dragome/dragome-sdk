@@ -258,6 +258,11 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public void visit(MethodDeclaration method)
 	{
+		String local_alias= method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "local_alias");
+		boolean hasLocalAlias= local_alias != null;
+
+		String className= normalizeExpression(method.getMethodBinding().getDeclaringClass().getClassName());
+
 		String annotationKey= DragomeCompilerSettings.class.getName() + "#" + "value";
 		String compiler= DragomeJsCompiler.compiler.compilerType.name();
 		String methodCompilerType= method.getAnnotationsValues().get(annotationKey);
@@ -320,7 +325,6 @@ public class DragomeJavaScriptGenerator extends Generator
 		{
 			if (Modifier.isStatic(method.getAccess()))
 			{
-				String className= normalizeExpression(method.getMethodBinding().getDeclaringClass().getClassName());
 				print(ClassUnit.STATIC_MEMBER);
 				//		print(className + ".");
 			}
@@ -337,6 +341,9 @@ public class DragomeJavaScriptGenerator extends Generator
 			String alias= method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "alias");
 			if (alias != null)
 				print(alias + "= ");
+
+			if (hasLocalAlias)
+				print(className + "_$_" + local_alias + "= ");
 
 			print("function (");
 			closingString= "}";
@@ -376,16 +383,10 @@ public class DragomeJavaScriptGenerator extends Generator
 
 		print(closingString);
 
-		String local_alias= method.getAnnotationsValues().get(MethodAlias.class.getName() + "#" + "local_alias");
-		if (local_alias != null)
+		if (hasLocalAlias)
 		{
 			print(", \n");
-			print(local_alias + ": function(");
-//			print(local_alias + ": this." + signatureReplaced);
-			printParams(method);
-			print(") {return this." + signatureReplaced + "(");
-			printParams(method);
-			print(")}");
+			print(local_alias + ": " + className + "_$_" + local_alias);
 		}
 
 		unit.setData(reset());

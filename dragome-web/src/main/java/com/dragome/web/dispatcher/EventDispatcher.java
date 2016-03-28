@@ -15,8 +15,11 @@
  */
 package com.dragome.web.dispatcher;
 
+import com.dragome.services.ServiceInvocation;
+
 public interface EventDispatcher
 {
 	public void keyEventPerformedById(String eventName, String id, int code);
 	public void mouseEventPerformedById(String eventName, String id, int clientX, int clientY, boolean shiftKey);
+	public void callJavaMethod(ServiceInvocation serviceInvocation);
 }

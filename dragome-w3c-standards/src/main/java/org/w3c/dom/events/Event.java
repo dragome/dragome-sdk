@@ -19,6 +19,6 @@ public interface Event
     public void preventDefault();
     public boolean getDefaultPrevented();
     public boolean getIsTrusted();
-    public long getTimeStamp();
+    public double getTimeStamp();
     public void initEvent(String type, boolean bubbles, boolean cancelable);
 }
