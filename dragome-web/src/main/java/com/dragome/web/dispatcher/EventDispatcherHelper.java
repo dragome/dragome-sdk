@@ -33,6 +33,14 @@ import com.dragome.web.execution.DragomeApplicationLauncher;
 
 public class EventDispatcherHelper
 {
+	public static Runnable applicationRunner;
+
+	public static void alert(String message)
+	{
+		ScriptHelper.put("message", message, null);
+		ScriptHelper.eval("alert(message)", null);
+	}
+
 	@MethodAlias(alias= "EventDispatcher.executeMainClass")
 	public static void executeMainClass() throws Exception
 	{
@@ -91,6 +99,18 @@ public class EventDispatcherHelper
 		return className;
 	}
 
+	private static DragomeConfigurator getConfigurator()
+	{
+		DragomeConfigurator configurator= new DomHandlerApplicationConfigurator();
+		List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(DragomeConfiguratorImplementor.class).getEntries();
+		for (AnnotationEntry annotationEntry : annotationEntries)
+		{
+			if (!annotationEntry.getType().equals(DomHandlerApplicationConfigurator.class))
+				configurator= ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
+		}
+		return configurator;
+	}
+
 	private static void launch(String className) throws Exception
 	{
 		try
@@ -107,63 +127,6 @@ public class EventDispatcherHelper
 		}
 	}
 
-	private static DragomeConfigurator getConfigurator()
-	{
-		DragomeConfigurator configurator= new DomHandlerApplicationConfigurator();
-		List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(DragomeConfiguratorImplementor.class).getEntries();
-		for (AnnotationEntry annotationEntry : annotationEntries)
-		{
-			if (!annotationEntry.getType().equals(DomHandlerApplicationConfigurator.class))
-				configurator= ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
-		}
-		return configurator;
-	}
-
-	protected static String getEventTargetId(Object event)
-	{
-		//	ScriptHelper.eval("stopEvent(event)", null);
-		Object eventTarget= getEventTarget(event);
-		ScriptHelper.put("eventTarget", eventTarget, null);
-		String id= (String) ScriptHelper.eval("eventTarget.getAttribute('data-element-id')", null);
-		return id;
-	}
-
-	protected static Object getEventTarget(Object event)
-	{
-		ScriptHelper.put("event", event, null);
-		return ScriptHelper.eval("event.currentTarget ? event.currentTarget : event.target", null);
-	}
-
-	private static boolean processingEvent= false;
-
-	public EventDispatcherHelper()
-	{
-	}
-
-	public static void runOnlySynchronized(Runnable runnable)
-	{
-		try
-		{
-			//TODO revisar esto cuando se ejecuta en el cliente, posible freeze!
-			if (!processingEvent)
-			{
-				processingEvent= true;
-				runnable.run();
-			}
-		}
-		finally
-		{
-			processingEvent= false;
-		}
-	}
-
-	//	public static VisualComponent getComponentById(String id)
-	//	{
-	//		return ((VisualComponent) DragomeEntityManager.get(id));
-	//	}
-
-	public static Runnable applicationRunner;
-
 	@MethodAlias(alias= "EventDispatcher.runApplication")
 	public static void runApplication()
 	{
@@ -173,17 +136,15 @@ public class EventDispatcherHelper
 			alert("Cannot find any activity to execute, please add annotation @PageAlias(alias= \"page-name\") to your activity class.");
 	}
 
-	public static void alert(String message)
-	{
-		ScriptHelper.put("message", message, null);
-		ScriptHelper.eval("alert(message)", null);
-	}
-
 	public static void runApplication(Runnable runnable)
 	{
 		if (WebServiceLocator.getInstance().isRemoteDebugging())
 			applicationRunner= runnable;
 		else
 			runnable.run();
+	}
+
+	public EventDispatcherHelper()
+	{
 	}
 }
