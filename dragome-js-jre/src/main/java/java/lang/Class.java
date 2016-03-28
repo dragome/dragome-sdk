@@ -311,10 +311,17 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		}
 		return declaredMethods.toArray(new Method[0]);
 	}
-	
-	@MethodAlias(local_alias="getMethodBySignature")
+
+	@MethodAlias(local_alias= "getMethodBySignature")
 	public Method getMethod(String signature)
 	{
+		Method[] foundMethods= getMethods();
+		for (Method method : foundMethods)
+		{
+			if (method.getName().equals(signature))
+				return method;
+		}
+
 		return new Method(this, signature, Modifier.PUBLIC);
 	}
 

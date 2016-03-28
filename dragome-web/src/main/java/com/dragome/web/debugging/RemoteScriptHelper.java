@@ -1,14 +1,18 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
 package com.dragome.web.debugging;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import com.dragome.commons.javascript.ScriptHelperInterface;
 import com.dragome.services.interfaces.ServiceFactory;
@@ -98,7 +102,7 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 			if (stringResult.equals("js-ref:0"))
 				result= null;
 			else
-				result= new JavascriptReference(Integer.parseInt(stringResult.substring("js-ref".length() + 1)));
+				result= new JavascriptReference(stringResult.substring("js-ref".length() + 1));
 		else
 			result= stringResult;
 
@@ -112,8 +116,19 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 		crossExecutionCommandProcessor.processNoResult(new JsEvalInMethod(new ReferenceHolder(caller), script, stackTraceElement.getMethodName()));
 	}
 
-	public <T> T putMethodReference(String name, T methodReference, Object callerInstance)
+	@SuppressWarnings("unchecked")
+	public <T> T putMethodReference(final String name, final Class<? extends T> declaringClass, final Object callerInstance)
 	{
-		return null;
+		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
+		final StackTraceElement stackTraceElement= stackTrace[3];
+
+		return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { declaringClass }, new InvocationHandler()
+		{
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+			{
+				crossExecutionCommandProcessor.processNoResult(new JsMethodReferenceCreationInMethod(new ReferenceHolder(callerInstance), name, method.getName(), stackTraceElement.getMethodName(), declaringClass.getName()));
+				return null;
+			}
+		});
 	}
 }

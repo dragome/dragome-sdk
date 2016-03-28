@@ -15,10 +15,19 @@
  */
 package com.dragome.web.dispatcher;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.services.ServiceInvocation;
+import com.dragome.services.ServiceLocator;
+import com.dragome.services.interfaces.ReflectionService;
+import com.dragome.web.debugging.JavascriptReference;
+import com.dragome.web.enhancers.jsdelegate.JsDelegateFactory;
 import com.dragome.web.html.dom.w3c.KeyboardEventImpl;
 import com.dragome.web.html.dom.w3c.MouseEventImpl;
 
@@ -37,12 +46,12 @@ public class EventDispatcherImpl implements EventDispatcher
 
 		element.setAttribute(ELEMENT_ID_ATTRIBUTE, DragomeEntityManager.add(eventListener));
 	}
-	
+
 	public static void removeEventListener(Element element, String... eventTypes)
 	{
 		for (String eventType : eventTypes)
 			element.removeAttribute("on" + eventType);
-		
+
 		element.removeAttribute(ELEMENT_ID_ATTRIBUTE);
 	}
 
@@ -76,5 +85,33 @@ public class EventDispatcherImpl implements EventDispatcher
 					((EventListener) object).handleEvent(new MouseEventImpl(eventName, clientX, clientY, shiftKey));
 			}
 		});
+	}
+
+	public void callJavaMethod(ServiceInvocation serviceInvocation)
+	{
+		try
+		{
+			ReflectionService reflectionService= ServiceLocator.getInstance().getReflectionService();
+			List<Object> effectiveParameters= new ArrayList<>();
+			for (Object object : serviceInvocation.getArgs())
+			{
+				if (object instanceof JavascriptReference)
+				{
+					JavascriptReference javascriptReference= (JavascriptReference) object;
+					Class<?> referenceType= reflectionService.forName(javascriptReference.getClassName());
+
+					Object createFromNode= JsDelegateFactory.createFromNode(javascriptReference, referenceType);
+					effectiveParameters.add(createFromNode);
+				}
+				else
+					effectiveParameters.add(object);
+			}
+
+			serviceInvocation.getMethod().invoke(DragomeEntityManager.get(serviceInvocation.getId()), effectiveParameters.toArray());
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 }

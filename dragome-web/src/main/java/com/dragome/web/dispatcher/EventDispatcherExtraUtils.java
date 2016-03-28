@@ -23,6 +23,7 @@ import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
+import com.dragome.web.debugging.JsMethodReferenceCreationInMethod;
 import com.dragome.web.debugging.JsVariableCreationInMethod;
 import com.dragome.web.debugging.ReferenceHolder;
 import com.dragome.web.debugging.ScriptCrossExecutionCommand;
@@ -74,6 +75,12 @@ public class EventDispatcherExtraUtils
 		return new JsVariableCreationInMethod(caller, name, value, methodName);
 	}
 
+	@MethodAlias(alias= "EventDispatcher.njmrcinm")
+	private static JsMethodReferenceCreationInMethod njmrcinm(String methodName, ReferenceHolder caller, String name, String methodSignature, String declaringClassName)
+	{
+		return new JsMethodReferenceCreationInMethod(caller, name, methodSignature, methodName, declaringClassName);
+	}
+
 	@MethodAlias(alias= "EventDispatcher.nsi")
 	private static ServiceInvocation nsi(String type, String methodName, String id, List<Object> args) throws NoSuchMethodException
 	{
@@ -92,7 +99,7 @@ public class EventDispatcherExtraUtils
 		for (Method method : methods)
 			if (method.getName().equals(methodName))
 				foundMethod= method;
-		
+
 		return foundMethod;
 	}
 
