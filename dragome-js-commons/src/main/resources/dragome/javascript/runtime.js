@@ -485,3 +485,11 @@ dragomeJs.resolveMethod= function(owner, signature)
 	var method= clazz.getMethodBySignature(signature);
 	return method;
 }
+
+dragomeJs.castTo= function(instance, className)
+{
+	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(className);
+	var method= clazz.getMethodBySignature(signature);
+	return method;
+}
+

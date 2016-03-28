@@ -17,27 +17,29 @@ package com.dragome.commons.javascript;
 
 public interface ScriptHelperInterface
 {
-    public void put(String s, Object value, Object caller);
+	public void put(String s, Object value, Object caller);
 
-    public void put(String s, boolean value, Object caller);
+	public void put(String s, boolean value, Object caller);
 
-    public void put(String s, double value, Object caller);
+	public void put(String s, double value, Object caller);
 
-    public Object eval(String script, Object caller);
+	public Object eval(String script, Object caller);
 
-    public int evalInt(String jsCode, Object caller);
+	public int evalInt(String jsCode, Object caller);
 
-    public long evalLong(String jsCode, Object caller);
+	public long evalLong(String jsCode, Object caller);
 
-    public float evalFloat(String jsCode, Object caller);
+	public float evalFloat(String jsCode, Object caller);
 
-    public double evalDouble(String jsCode, Object caller);
+	public double evalDouble(String jsCode, Object caller);
 
-    public char evalChar(String jsCode, Object caller);
+	public char evalChar(String jsCode, Object caller);
 
-    public boolean evalBoolean(String jsCode, Object caller);
+	public boolean evalBoolean(String jsCode, Object caller);
 
-    public void evalNoResult(String script, Object callerInstance);
+	public void evalNoResult(String script, Object callerInstance);
 
-    public <T> T putMethodReference(String name, Class<? extends T> declaringClass, Object callerInstance);
+	public <T> T putMethodReference(String name, Class<? extends T> declaringClass, Object callerInstance);
+
+	public <T> T evalCasting(String script, Class<? extends T> castType, Object callerInstance);
 }

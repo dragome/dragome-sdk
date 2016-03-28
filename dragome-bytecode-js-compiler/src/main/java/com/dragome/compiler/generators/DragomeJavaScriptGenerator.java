@@ -884,10 +884,18 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 		else if (name.startsWith("eval"))
 		{
-			if (isVariable)
-				print("eval(" + firstArg + ")");
+			if (name.startsWith("evalCasting"))
+			{
+				Signature signature= ((ClassLiteral) invocation.getFirstChild().getNextSibling()).getSignature();
+				System.out.println("dragomeJs.castTo(" + firstArg + ", \"" + signature + "\")");
+			}
 			else
-				print(firstArg);
+			{
+				if (isVariable)
+					print("eval(" + firstArg + ")");
+				else
+					print(firstArg);
+			}
 		}
 		else
 			throw new IllegalArgumentException("Cannot handle method " + name);
