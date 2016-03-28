@@ -76,6 +76,11 @@ public final class ScriptHelper
 
 	public static <T> T putMethodReference(String name, Class<? extends T> declaringClass, Object callerInstance)
 	{
-		return (T) scriptHelperInterface.putMethodReference(name, declaringClass, callerInstance);
+		return scriptHelperInterface.putMethodReference(name, declaringClass, callerInstance);
+	}
+
+	public static <T> T evalCasting(String script, Class<? extends T> castType, Object callerInstance)
+	{
+		return scriptHelperInterface.evalCasting(script, castType, callerInstance);
 	}
 }

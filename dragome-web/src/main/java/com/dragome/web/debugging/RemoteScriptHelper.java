@@ -18,6 +18,7 @@ import com.dragome.commons.javascript.ScriptHelperInterface;
 import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor;
 import com.dragome.web.debugging.interfaces.CrossExecutionResult;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class RemoteScriptHelper implements ScriptHelperInterface
 {
@@ -130,5 +131,11 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 				return null;
 			}
 		});
+	}
+
+	public <T> T evalCasting(String script, Class<? extends T> castType, Object callerInstance)
+	{
+		Object result= eval(script, callerInstance);
+		return JsCast.castTo(result, castType);
 	}
 }
