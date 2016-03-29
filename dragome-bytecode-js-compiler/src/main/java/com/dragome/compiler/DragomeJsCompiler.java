@@ -274,7 +274,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		Collection<String> allFilesInClasspath= fileManager.getAllFilesInClasspath();
 		for (String file : allFilesInClasspath)
 		{
-			assembly.resolveNoTainting(file.replace(File.separator, "."));
+			assembly.resolveNoTainting(file.replace(File.separator, ".").replace("/", "."));
 		}
 
 		assembly.addEntryPoint(assembly.getEntryPointClassName() + "#onCreate()void");
