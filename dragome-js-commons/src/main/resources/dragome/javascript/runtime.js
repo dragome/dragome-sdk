@@ -489,7 +489,6 @@ dragomeJs.resolveMethod= function(owner, signature)
 dragomeJs.castTo= function(instance, className)
 {
 	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(className);
-	var method= clazz.getMethodBySignature(signature);
-	return method;
+	return com_dragome_web_enhancers_jsdelegate_JsCast.$castTo___java_lang_Object__java_lang_Class$java_lang_Object(instance, clazz);
 }
 

@@ -11,7 +11,7 @@ public class ArrayBufferFactory
 	public static ArrayBuffer createArrayBuffer(int length)
 	{
 		ScriptHelper.put("lenght", length, null);
-		ArrayBuffer node= ScriptHelper.evalCasting("new ArrayBuffer(length);", ArrayBuffer.class, null);
+		ArrayBuffer node= ScriptHelper.evalCasting("new ArrayBuffer(length)", ArrayBuffer.class, null);
 		return node;
 	}
 }
