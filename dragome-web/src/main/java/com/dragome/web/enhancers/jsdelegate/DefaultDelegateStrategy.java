@@ -13,6 +13,7 @@ package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
 
+import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.typedarray.ArrayBufferView;
 
@@ -95,14 +96,26 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 	{
 		Class<?> declaringClass= method.getDeclaringClass();
 
+		if (EventTarget.class.isAssignableFrom(declaringClass))
+		{
+			String methodName= method.getName();
+			if (method.getParameterTypes().length > 0 && EventListener.class.isAssignableFrom(method.getParameterTypes()[0]))
+			{
+				if (methodName.startsWith("set"))
+					methodName= methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
 
-		String parametersDeclaration= "$1, $2";
-		if (method.getParameterTypes().length == 3)
-			parametersDeclaration+= ", $3";
+				return JsCast.class.getName() + ".addOnEventListener (this, $1, \"" + methodName + "\");";
+			}
+			else if (methodName.equals("addEventListener"))
+			{
+				String parametersDeclaration= "$1, $2";
+				if (method.getParameterTypes().length == 3)
+					parametersDeclaration+= ", $3";
 
-		if (EventTarget.class.isAssignableFrom(declaringClass) && method.getName().equals("addEventListener"))
-			return JsCast.class.getName() + ".addEventListener (this, " + parametersDeclaration + ");";
-		else
-			return null;
+				return JsCast.class.getName() + ".addEventListener (this, " + parametersDeclaration + ");";
+			}
+		}
+
+		return null;
 	}
 }

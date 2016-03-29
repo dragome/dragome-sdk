@@ -79,6 +79,21 @@ public class JsCast
 		ScriptHelper.eval("eventTarget.node.addEventListener(type, listener)", null);
 	}
 
+	public static void addOnEventListener(EventTarget eventTarget, EventListener eventListener, String methodName)
+	{
+		ScriptHelper.putMethodReference("handleEventMethod", EventListener.class, null).handleEvent(null);
+		ScriptHelper.put("eventListener", eventListener, null);
+		Object listener= ScriptHelper.eval("(function(){handleEventMethod.apply(eventListener, arguments)})", null);
+		ScriptHelper.put("listener", listener, null);
+
+		ScriptHelper.put("javaRefId", DragomeEntityManager.add(eventListener), null);
+		ScriptHelper.eval("eventListener.javaRefId= javaRefId", null);
+
+		ScriptHelper.put("eventTarget", eventTarget, null);
+		String script= "eventTarget.node." + methodName + "= listener";
+		ScriptHelper.eval(script, null);
+	}
+
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener)
 	{
 		addEventListener(eventTarget, type, eventListener, false);
