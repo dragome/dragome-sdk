@@ -17,7 +17,6 @@ package com.dragome.web.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.w3c.dom.Attr;
@@ -32,6 +31,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.CanvasRenderingContext2D;
 import org.w3c.dom.html.HTMLCanvasElement;
+import org.w3c.dom.typedarray.ArrayBuffer;
 
 import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
@@ -44,7 +44,8 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 {
 	protected JsDelegateGenerator jsDelegateGenerator;
 	protected List<Class<?>> classes= new ArrayList<>(Arrays.asList(Document.class, Element.class, Attr.class, NodeList.class, //
-			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, EventTarget.class, EventListener.class, Event.class));
+			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, EventTarget.class, //
+			EventListener.class, Event.class, ArrayBuffer.class));
 
 	public DomHandlerApplicationConfigurator()
 	{
