@@ -887,7 +887,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			if (name.startsWith("evalCasting"))
 			{
 				Signature signature= ((ClassLiteral) invocation.getFirstChild().getNextSibling()).getSignature();
-				System.out.println("dragomeJs.castTo(" + firstArg + ", \"" + signature + "\")");
+				print("dragomeJs.castTo(" + firstArg + ", \"" + signature + "\")");
 			}
 			else
 			{
