@@ -2,20 +2,25 @@ package com.dragome;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -24,9 +29,24 @@ import com.dragome.services.ServiceLocator;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
 import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
+import proguard.Configuration;
+import proguard.ConfigurationParser;
+import proguard.ProGuard;
+
 @Mojo(name= "compileclient")
 public class CompileClientMojo extends AbstractMojo
 {
+	@Parameter(defaultValue= "${project.build.directory}")
+	private String projectBuildDir;
+
+	@Component
+	private MavenProject mavenProject;
+
+	@Component
+	private MavenSession mavenSession;
+
+	@Component
+	private BuildPluginManager pluginManager;
 
 	@Parameter
 	private File destinationDirectory;
@@ -79,7 +99,7 @@ public class CompileClientMojo extends AbstractMojo
 
 	private void copyResourceMinifyJS(String aResourceName, String aLocation)
 	{
-//		JSMinProcessor theMinProcessor= new JSMinProcessor();
+		//		JSMinProcessor theMinProcessor= new JSMinProcessor();
 
 		getLog().info("Copy " + aResourceName + " to minified " + aLocation);
 		InputStream theInputStream= getClass().getResourceAsStream(aResourceName);
@@ -104,8 +124,8 @@ public class CompileClientMojo extends AbstractMojo
 			try
 			{
 				Files.copy(theInputStream, theDestinatioFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-				
-//				theMinProcessor.process(new InputStreamReader(theInputStream), new FileWriter(theDestinatioFile));
+
+				//				theMinProcessor.process(new InputStreamReader(theInputStream), new FileWriter(theDestinatioFile));
 			}
 			catch (Exception e)
 			{
@@ -118,7 +138,7 @@ public class CompileClientMojo extends AbstractMojo
 		}
 	}
 
-	private void compile() throws URISyntaxException, DependencyResolutionRequiredException, IOException
+	private void compile() throws URISyntaxException, DependencyResolutionRequiredException, Exception
 	{
 
 		System.setProperty("dragome-compile-mode", "release");
@@ -132,24 +152,10 @@ public class CompileClientMojo extends AbstractMojo
 		serviceLocator.setReflectionService(new ServerReflectionServiceImpl());
 		if (serviceLocator.getConfigurator() == null)
 			serviceLocator.setConfigurator(serviceLocator.getReflectionService().getConfigurator());
-		
-		for (URL theURL : theConfiguredURLs)
-		{
-			getLog().info("Found classpath element " + theURL);
-			String theClassPathEntry= new File(theURL.toURI()).toString();
-			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
-			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
-			if (isClassesFolder || addToClasspath)
-			{
-				theClassPathForCompiler.append(theClassPathEntry + ";");
-			}
-			else
-			{
-				getLog().warn("Skipping, it is not configured as an included artifact.");
-			}
-		}
 
-		List<String> theClassPathElements= (List<String>) project.getTestClasspathElements();
+		addClassloaderURLs(theClassPathForCompiler, theConfiguredURLs, serviceLocator);
+
+		List<String> theClassPathElements= project.getTestClasspathElements();
 		for (String theSingleElement : theClassPathElements)
 		{
 			URL theURL= new File(theSingleElement).toURI().toURL();
@@ -185,7 +191,7 @@ public class CompileClientMojo extends AbstractMojo
 
 		// Ok, now we have a webapp.js file, do we need to minify it?
 		getLog().info("Minifying webapp.js to compiled.js");
-//		JSMinProcessor theProcessor= new JSMinProcessor();
+		//		JSMinProcessor theProcessor= new JSMinProcessor();
 
 		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -201,6 +207,53 @@ public class CompileClientMojo extends AbstractMojo
 				throw new RuntimeException("Cannot delete cache file" + theCacheFile);
 			}
 		}
+
+	}
+
+	private void addClassloaderURLs(final StringBuilder theClassPathForCompiler, URL[] theConfiguredURLs, ServiceLocator serviceLocator) throws Exception
+	{
+		String path= "dragome-uber.jar";
+
+		File file= new File(projectBuildDir, path);
+		file.createNewFile();
+
+		JarOutputStream jos= new JarOutputStream(new FileOutputStream(file));
+
+		for (URL theURL : theConfiguredURLs)
+		{
+			if (theURL.toString().contains(".jar") && theURL.toString().contains("dragome") && !theURL.toString().contains("dragome-bytecode-js-compiler"))
+			{
+				JarFile jarFile= new JarFile(new File(theURL.toURI()));
+				CopyZip.copyJarFile(jarFile, jos);
+				jarFile.close();
+			}
+
+			getLog().info("Found classpath element " + theURL);
+			String theClassPathEntry= new File(theURL.toURI()).toString();
+			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
+			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
+			if (isClassesFolder || addToClasspath)
+			{
+				theClassPathForCompiler.append(theClassPathEntry + ";");
+			}
+			else
+			{
+				getLog().warn("Skipping, it is not configured as an included artifact.");
+			}
+		}
+
+		jos.close();
+
+		runProguard();
+	}
+
+	private void runProguard() throws Exception
+	{
+		URI uri= getClass().getResource("/proguard.conf").toURI();
+		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), System.getProperties());
+		Configuration configuration= new Configuration();
+		parser.parse(configuration);
+		new ProGuard(configuration).execute();
 	}
 
 	@Override
