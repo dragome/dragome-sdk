@@ -13,7 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;;
 
-public class CopyZip
+public class CopyUtils
 {
 	public static void copyJarFile(JarFile jarFile, JarOutputStream jos) throws IOException
 	{
