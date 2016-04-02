@@ -289,7 +289,7 @@ function checkStyleSheet(url)
 	}
 }
 
-checkStyleSheet("dragome/dragome.css");
+//checkStyleSheet("dragome/dragome.css");
 
 function setupCheckCast()
 {

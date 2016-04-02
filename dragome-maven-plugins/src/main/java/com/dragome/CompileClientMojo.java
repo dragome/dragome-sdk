@@ -2,6 +2,8 @@ package com.dragome;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,7 +11,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
@@ -32,6 +33,7 @@ import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 import proguard.Configuration;
 import proguard.ConfigurationParser;
 import proguard.ProGuard;
+import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 
 @Mojo(name= "compileclient")
 public class CompileClientMojo extends AbstractMojo
@@ -100,11 +102,11 @@ public class CompileClientMojo extends AbstractMojo
 		}
 	}
 
-	private void copyResourceMinifyJS(String aResourceName, String aLocation)
+	private void copyResourceMinifyJS(String aResourceName)
 	{
 		//		JSMinProcessor theMinProcessor= new JSMinProcessor();
 
-		aLocation= "dragome-resources/" + aLocation;
+		String aLocation= "dragome-resources" + aResourceName;
 
 		getLog().info("Copy " + aResourceName + " to minified " + aLocation);
 		InputStream theInputStream= getClass().getResourceAsStream(aResourceName);
@@ -164,7 +166,7 @@ public class CompileClientMojo extends AbstractMojo
 			throw new RuntimeException("Cannot create directory " + theTargetDir);
 		}
 
-		File theWebAppJS= new File(theTargetDir, "webapp-1.js");
+		File theWebAppJS= new File(theTargetDir, "webapp.js");
 		if (forceRebuild && theWebAppJS.exists())
 		{
 			if (!theWebAppJS.delete())
@@ -173,21 +175,25 @@ public class CompileClientMojo extends AbstractMojo
 			}
 		}
 
+
 		// Store the dragome cache file here
 		System.setProperty("cache-dir", theTargetDir.toString());
 
 		getLog().info("Using Dragome compiler classpath : " + theClassPathForCompiler.toString());
 
 		DragomeCompilerLauncher.compileWithMainClass(theClassPathForCompiler.toString(), theTargetDir.toString());
+		File dest= new File(theTargetDir, "webapp-original.js");
+		theWebAppJS.renameTo(dest);
 
 		// Ok, now we have a webapp.js file, do we need to minify it?
 		getLog().info("Minifying webapp.js to compiled.js");
-		//		JSMinProcessor theProcessor= new JSMinProcessor();
+		JSMinProcessor theProcessor= new JSMinProcessor();
 
-		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
-		CopyZip.copyFilesOfFolder(webappDirectory, theTargetDir);
+		//		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		CopyUtils.copyFilesOfFolder(webappDirectory, theTargetDir);
 
-		//        theProcessor.process(new FileReader(theWebAppJS), new FileWriter(new File(theTargetDir, "webapp-1.js")));
+		theProcessor.process(new FileReader(dest), new FileWriter(new File(theTargetDir, "webapp.js")));
+		dest.delete();
 
 		// Finally remove the cache file
 		if (removeCache)
@@ -221,9 +227,7 @@ public class CompileClientMojo extends AbstractMojo
 			if (isClassesFolder || addToClasspath)
 			{
 				if (isClassesFolder)
-					CopyZip.copyClassToJarFile(fileClassPathEntry, jos);
-
-				//				theClassPathForCompiler.append(theClassPathEntry + ";");
+					CopyUtils.copyClassToJarFile(fileClassPathEntry, jos);
 			}
 			else
 			{
@@ -233,7 +237,7 @@ public class CompileClientMojo extends AbstractMojo
 			if (theURL.toString().contains(".jar") && (theURL.toString().contains("dragome") || theURL.toString().contains("gdx")) && !theURL.toString().contains("dragome-bytecode-js-compiler"))
 			{
 				JarFile jarFile= new JarFile(fileClassPathEntry);
-				CopyZip.copyJarFile(jarFile, jos);
+				CopyUtils.copyJarFile(jarFile, jos);
 				jarFile.close();
 			}
 		}
@@ -257,35 +261,34 @@ public class CompileClientMojo extends AbstractMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
-
-		getLog().info("Generating Dragome Client Application at " + destinationDirectory);
-
-		// Copy Resources
-		copyResourceMinifyJS("/dragome-debug.js", "dragome-debug.js");
-		copyResourceMinifyJS("/dragome-production.js", "dragome-production.js");
-		copyResourceMinifyJS("/js/jquery-1.7.2.min.js", "js/jquery-1.7.2.min.js");
-		copyResource("/css/dragome.css", "css/dragome.css");
-		copyResourceMinifyJS("/js/hashtable.js", "js/hashtable.js");
-		copyResourceMinifyJS("/js/deflate.js", "js/deflate.js");
-		copyResourceMinifyJS("/js/deflate-main.js", "js/deflate-main.js");
-		copyResourceMinifyJS("/js/console.js", "js/console.js");
-		copyResourceMinifyJS("/js/helpers.js", "js/helpers.js");
-		copyResourceMinifyJS("/js/String.js", "js/String.js");
-		copyResourceMinifyJS("/js/jquery.atmosphere.js", "js/jquery.atmosphere.js");
-		copyResourceMinifyJS("/js/application.js", "js/application.js");
-		copyResourceMinifyJS("/js/qx-oo-5.0.1.min.js", "js/qx-oo-5.0.1.min.js");
-
 		try
 		{
+			getLog().info("Generating Dragome Client Application at " + destinationDirectory);
+
+			copyResources();
 			compile();
-		}
-		catch (RuntimeException e)
-		{
-			throw e;
 		}
 		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	private void copyResources()
+	{
+		copyResource("/css/dragome.css", "dragome-resources/css/dragome.css");
+
+		copyResourceMinifyJS("/dragome-debug.js");
+		copyResourceMinifyJS("/dragome-production.js");
+		copyResourceMinifyJS("/js/jquery-1.7.2.min.js");
+		copyResourceMinifyJS("/js/hashtable.js");
+		copyResourceMinifyJS("/js/deflate.js");
+		copyResourceMinifyJS("/js/deflate-main.js");
+		copyResourceMinifyJS("/js/console.js");
+		copyResourceMinifyJS("/js/helpers.js");
+		copyResourceMinifyJS("/js/String.js");
+		copyResourceMinifyJS("/js/jquery.atmosphere.js");
+		copyResourceMinifyJS("/js/application.js");
+		copyResourceMinifyJS("/js/qx-oo-5.0.1.min.js");
 	}
 }
