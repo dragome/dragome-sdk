@@ -52,6 +52,9 @@ public class CompileClientMojo extends AbstractMojo
 	private File destinationDirectory;
 
 	@Parameter
+	private File webappDirectory;
+
+	@Parameter
 	private boolean removeCache= true;
 
 	@Parameter
@@ -101,6 +104,8 @@ public class CompileClientMojo extends AbstractMojo
 	{
 		//		JSMinProcessor theMinProcessor= new JSMinProcessor();
 
+		aLocation= "dragome-resources/" + aLocation;
+
 		getLog().info("Copy " + aResourceName + " to minified " + aLocation);
 		InputStream theInputStream= getClass().getResourceAsStream(aResourceName);
 		if (theInputStream != null)
@@ -140,10 +145,8 @@ public class CompileClientMojo extends AbstractMojo
 
 	private void compile() throws URISyntaxException, DependencyResolutionRequiredException, Exception
 	{
-
 		System.setProperty("dragome-compile-mode", "release");
 
-		// Fire the compiler
 		final StringBuilder theClassPathForCompiler= new StringBuilder();
 
 		URLClassLoader theCurrentClassLoader= (URLClassLoader) getClass().getClassLoader();
@@ -154,18 +157,6 @@ public class CompileClientMojo extends AbstractMojo
 			serviceLocator.setConfigurator(serviceLocator.getReflectionService().getConfigurator());
 
 		addClassloaderURLs(theClassPathForCompiler, theConfiguredURLs, serviceLocator);
-
-		List<String> theClassPathElements= project.getTestClasspathElements();
-		for (String theSingleElement : theClassPathElements)
-		{
-			URL theURL= new File(theSingleElement).toURI().toURL();
-			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
-			if (isClassesFolder)
-			{
-				getLog().info("Found classpath element " + theSingleElement);
-				theClassPathForCompiler.append(theSingleElement + ";");
-			}
-		}
 
 		File theTargetDir= new File(destinationDirectory, "compiled-js");
 		if (!theTargetDir.exists() && !theTargetDir.mkdirs())
@@ -194,6 +185,7 @@ public class CompileClientMojo extends AbstractMojo
 		//		JSMinProcessor theProcessor= new JSMinProcessor();
 
 		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		CopyZip.copyFilesOfFolder(webappDirectory, theTargetDir);
 
 		//        theProcessor.process(new FileReader(theWebAppJS), new FileWriter(new File(theTargetDir, "webapp-1.js")));
 
@@ -221,30 +213,36 @@ public class CompileClientMojo extends AbstractMojo
 
 		for (URL theURL : theConfiguredURLs)
 		{
-			if (theURL.toString().contains(".jar") && theURL.toString().contains("dragome") && !theURL.toString().contains("dragome-bytecode-js-compiler"))
-			{
-				JarFile jarFile= new JarFile(new File(theURL.toURI()));
-				CopyZip.copyJarFile(jarFile, jos);
-				jarFile.close();
-			}
-
 			getLog().info("Found classpath element " + theURL);
-			String theClassPathEntry= new File(theURL.toURI()).toString();
+			File fileClassPathEntry= new File(theURL.toURI());
+			String theClassPathEntry= fileClassPathEntry.toString();
 			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
 			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
 			if (isClassesFolder || addToClasspath)
 			{
-				theClassPathForCompiler.append(theClassPathEntry + ";");
+				if (isClassesFolder)
+					CopyZip.copyClassToJarFile(fileClassPathEntry, jos);
+
+				//				theClassPathForCompiler.append(theClassPathEntry + ";");
 			}
 			else
 			{
 				getLog().warn("Skipping, it is not configured as an included artifact.");
+			}
+
+			if (theURL.toString().contains(".jar") && (theURL.toString().contains("dragome") || theURL.toString().contains("gdx")) && !theURL.toString().contains("dragome-bytecode-js-compiler"))
+			{
+				JarFile jarFile= new JarFile(fileClassPathEntry);
+				CopyZip.copyJarFile(jarFile, jos);
+				jarFile.close();
 			}
 		}
 
 		jos.close();
 
 		runProguard();
+
+		theClassPathForCompiler.append("target/dragome-uber-proguard.jar" + ";");
 	}
 
 	private void runProguard() throws Exception
@@ -263,19 +261,19 @@ public class CompileClientMojo extends AbstractMojo
 		getLog().info("Generating Dragome Client Application at " + destinationDirectory);
 
 		// Copy Resources
-		copyResourceMinifyJS("/dragome-debug.js", "dragome-resources/dragome-debug.js");
-		copyResourceMinifyJS("/dragome-production.js", "dragome-resources/dragome-production.js");
-		copyResourceMinifyJS("/js/jquery.js", "dragome-resources/js/jquery.js");
-		copyResource("/css/dragome.css", "dragome-resources/css/dragome.css");
-		copyResourceMinifyJS("/js/hashtable.js", "dragome-resources/js/hashtable.js");
-		copyResourceMinifyJS("/js/deflate.js", "dragome-resources/js/deflate.js");
-		copyResourceMinifyJS("/js/deflate-main.js", "dragome-resources/js/deflate-main.js");
-		copyResourceMinifyJS("/js/console.js", "dragome-resources/js/console.js");
-		copyResourceMinifyJS("/js/helpers.js", "dragome-resources/js/helpers.js");
-		copyResourceMinifyJS("/js/String.js", "dragome-resources/js/String.js");
-		copyResourceMinifyJS("/js/jquery.atmosphere.js", "dragome-resources/js/jquery.atmosphere.js");
-		copyResourceMinifyJS("/js/application.js", "dragome-resources/js/application.js");
-		copyResourceMinifyJS("/js/q-3.0.js", "dragome-resources/js/q-3.0.js");
+		copyResourceMinifyJS("/dragome-debug.js", "dragome-debug.js");
+		copyResourceMinifyJS("/dragome-production.js", "dragome-production.js");
+		copyResourceMinifyJS("/js/jquery-1.7.2.min.js", "js/jquery-1.7.2.min.js");
+		copyResource("/css/dragome.css", "css/dragome.css");
+		copyResourceMinifyJS("/js/hashtable.js", "js/hashtable.js");
+		copyResourceMinifyJS("/js/deflate.js", "js/deflate.js");
+		copyResourceMinifyJS("/js/deflate-main.js", "js/deflate-main.js");
+		copyResourceMinifyJS("/js/console.js", "js/console.js");
+		copyResourceMinifyJS("/js/helpers.js", "js/helpers.js");
+		copyResourceMinifyJS("/js/String.js", "js/String.js");
+		copyResourceMinifyJS("/js/jquery.atmosphere.js", "js/jquery.atmosphere.js");
+		copyResourceMinifyJS("/js/application.js", "js/application.js");
+		copyResourceMinifyJS("/js/qx-oo-5.0.1.min.js", "js/qx-oo-5.0.1.min.js");
 
 		try
 		{

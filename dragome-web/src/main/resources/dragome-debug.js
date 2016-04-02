@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ function loadScript(url, callback)
 
 (function()
 {
-	loadScript("dragome-resources/js/jquery.js", function()
+	loadScript("dragome-resources/js/jquery-1.7.2.min.js", function()
 	{
 		stylesheet("dragome-resources/css/dragome.css");
 		script("dragome-resources/js/hashtable.js");
@@ -74,7 +74,7 @@ function loadScript(url, callback)
 		{
 			loadScript("dragome-resources/js/application.js", function()
 			{
-				loadScript("dragome-resources/js/q-3.0.js", function()
+				loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function()
 				{
 					script("compiled-js/webapp.js");
 				});
