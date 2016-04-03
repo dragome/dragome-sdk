@@ -21,7 +21,7 @@ import com.dragome.commons.compiler.annotations.CompilerType;
 
 public class BytecodeToJavascriptCompilerConfiguration
 {
-	private String classPath;
+	private ClassPath classPath;
 	private String targetDir;
 	private String mainClassName;
 	private CompilerType compilerType;
@@ -30,7 +30,7 @@ public class BytecodeToJavascriptCompilerConfiguration
 	private boolean checkingCast;
 	private List<ClasspathFile> extraClasspath;
 
-	public BytecodeToJavascriptCompilerConfiguration(String classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast, List<ClasspathFile> extraClasspath)
+	public BytecodeToJavascriptCompilerConfiguration(ClassPath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast, List<ClasspathFile> extraClasspath)
 	{
 		this.classPath= classPath;
 		this.targetDir= targetDir;
@@ -42,7 +42,7 @@ public class BytecodeToJavascriptCompilerConfiguration
 		this.extraClasspath= extraClasspath;
 	}
 
-	public String getClassPath()
+	public ClassPath getClassPath()
 	{
 		return classPath;
 	}

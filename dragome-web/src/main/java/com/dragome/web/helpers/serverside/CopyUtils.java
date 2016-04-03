@@ -1,4 +1,4 @@
-package com.dragome;
+package com.dragome.web.helpers.serverside;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class CopyUtils
 		}
 	}
 
-	public static void copyClassToJarFile(File fileClassPathEntry, JarOutputStream jos) throws Exception
+	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos) throws Exception
 	{
 		Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 		{
@@ -68,7 +68,7 @@ public class CopyUtils
 
 	}
 
-	public static void copyFilesOfFolder(File fileClassPathEntry, File targetFolder) throws Exception
+	public static void copyFilesOfFolder(final File fileClassPathEntry, final File targetFolder) throws Exception
 	{
 		Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 		{

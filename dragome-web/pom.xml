@@ -121,6 +121,13 @@
       <version>19.0</version>
     </dependency>
 
+
+    <dependency>
+      <groupId>net.sf.proguard</groupId>
+      <artifactId>proguard-base</artifactId>
+      <version>5.2.1</version>
+    </dependency>
+
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-core</artifactId>

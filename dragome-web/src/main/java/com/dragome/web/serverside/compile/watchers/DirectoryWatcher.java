@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,10 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
 public class DirectoryWatcher
@@ -45,7 +47,7 @@ public class DirectoryWatcher
 
 	public static long lastCompilation;
 
-	private String classPath;
+	private ClassPath classPath;
 
 	private String path;
 
@@ -102,7 +104,7 @@ public class DirectoryWatcher
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	DirectoryWatcher(Path dir, boolean recursive, String classPath, String path) throws IOException
+	DirectoryWatcher(Path dir, boolean recursive, ClassPath classPath, String path) throws IOException
 	{
 		this.classPath= classPath;
 		this.path= path;
@@ -228,7 +230,7 @@ public class DirectoryWatcher
 		System.exit(-1);
 	}
 
-	public static void main(String[] args, String classPath, String path)
+	public static void startWatching(String[] args, ClassPath classPath, String path)
 	{
 		try
 		{
@@ -254,7 +256,7 @@ public class DirectoryWatcher
 		}
 	}
 
-	private static void compile(String classPath, String path)
+	private static void compile(ClassPath classPath, String path)
 	{
 		System.out.println("");
 		System.out.println("----------------------------------------------------------------------");
