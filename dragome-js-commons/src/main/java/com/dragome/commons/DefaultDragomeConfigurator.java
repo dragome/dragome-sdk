@@ -15,6 +15,7 @@
  */
 package com.dragome.commons;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -136,5 +137,10 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 
 	public void sortClassPath(ClassPath classPath)
 	{
+	}
+
+	public URL getAdditionalCodeKeepConfigFile()
+	{
+		return null;
 	}
 }

@@ -57,7 +57,7 @@ public class DragomeCompilerLauncher
 		configurator.sortClassPath(classPath);
 
 		if (configurator.isRemoveUnusedCode())
-			classPath= optimize(classPath, serviceLocator);
+			classPath= optimize(classPath, serviceLocator, configurator);
 
 		List<ClasspathFile> extraClasspath= configurator.getExtraClasspath(classPath);
 
@@ -66,7 +66,7 @@ public class DragomeCompilerLauncher
 		bytecodeToJavascriptCompiler.compile();
 	}
 
-	private static ClassPath optimize(ClassPath classPath, ServiceLocator serviceLocator)
+	private static ClassPath optimize(ClassPath classPath, ServiceLocator serviceLocator, DragomeConfigurator configurator)
 	{
 		try
 		{
@@ -76,7 +76,7 @@ public class DragomeCompilerLauncher
 			for (int i= 0; i < entries.length; i++)
 				configuredURLs[i]= new File(entries[i]).toURI().toURL();
 
-			return addClassloaderURLs(configuredURLs, serviceLocator, "");
+			return addClassloaderURLs(configuredURLs, serviceLocator, "", configurator);
 		}
 		catch (Exception e)
 		{
@@ -84,7 +84,7 @@ public class DragomeCompilerLauncher
 		}
 	}
 
-	private static ClassPath addClassloaderURLs(URL[] theConfiguredURLs, ServiceLocator serviceLocator, String projectBuildDir) throws Exception
+	private static ClassPath addClassloaderURLs(URL[] theConfiguredURLs, ServiceLocator serviceLocator, String projectBuildDir, DragomeConfigurator configurator) throws Exception
 	{
 		File file= File.createTempFile("dragome-merged", ".jar");
 		file.deleteOnExit();
@@ -106,10 +106,10 @@ public class DragomeCompilerLauncher
 
 		jos.close();
 
-		return runProguard(file);
+		return runProguard(file, configurator);
 	}
 
-	private static ClassPath runProguard(File file) throws Exception
+	private static ClassPath runProguard(File file, DragomeConfigurator configurator) throws Exception
 	{
 		URI uri= DragomeCompilerLauncher.class.getResource("/proguard.conf").toURI();
 		Properties properties= System.getProperties();
@@ -117,8 +117,10 @@ public class DragomeCompilerLauncher
 		String outFilename= file.getAbsolutePath().replace(".jar", "-proguard.jar");
 		properties.put("out-jar-filename", outFilename);
 		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), properties);
+		ConfigurationParser parserForAdditionalKeepCodeConfigFile= new ConfigurationParser(configurator.getAdditionalCodeKeepConfigFile(), properties);
 		Configuration configuration= new Configuration();
 		parser.parse(configuration);
+		parserForAdditionalKeepCodeConfigFile.parse(configuration);
 		new ProGuard(configuration).execute();
 		return new ClassPath(outFilename);
 	}
