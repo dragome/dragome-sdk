@@ -15,6 +15,7 @@
  */
 package com.dragome.commons;
 
+import java.net.URL;
 import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
@@ -36,4 +37,5 @@ public interface DragomeConfigurator
 	List<ClasspathFile> getExtraClasspath(ClassPath classPath);
 	boolean isRemoveUnusedCode();
 	public void sortClassPath(ClassPath classPath);
+	URL getAdditionalCodeKeepConfigFile();
 }
