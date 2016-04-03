@@ -3,10 +3,12 @@ package com.dragome.web.helpers.serverside;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -54,46 +56,48 @@ public class CopyUtils
 
 	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos) throws Exception
 	{
-		Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
-		{
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+		if (fileClassPathEntry.exists())
+			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 			{
-				InputStream inputStream= Files.newInputStream(file);
-				String string= fileClassPathEntry.toPath().relativize(file).toString();
-				addEntryToJar(jos, inputStream, string);
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+				{
+					InputStream inputStream= Files.newInputStream(file);
+					String string= fileClassPathEntry.toPath().relativize(file).toString();
+					addEntryToJar(jos, inputStream, string);
 
-				return FileVisitResult.CONTINUE;
-			}
-		});
+					return FileVisitResult.CONTINUE;
+				}
+			});
 
 	}
 
 	public static void copyFilesOfFolder(final File fileClassPathEntry, final File targetFolder) throws Exception
 	{
-		Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
-		{
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+		if (fileClassPathEntry.exists())
+			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 			{
-				File file2= new File (targetFolder.getParentFile(), fileClassPathEntry.toPath().relativize(file).toString());
-				Files.copy(file, file2.toPath());
-
-				return FileVisitResult.CONTINUE;
-			}
-
-			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
-			{
-				if (dir.toString().contains("compiled-js") || dir.toString().contains("WEB-INF"))
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 				{
-					return FileVisitResult.SKIP_SUBTREE;
-				}
-				else
-				{
-					File file2= new File (targetFolder.getParentFile(), fileClassPathEntry.toPath().relativize(dir).toString());
-					file2.mkdirs();
+					File file2= new File(targetFolder.getParentFile(), fileClassPathEntry.toPath().relativize(file).toString());
+					Files.copy(file, file2.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
 					return FileVisitResult.CONTINUE;
 				}
-			}
-		});
+
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+				{
+					if (dir.toString().contains("compiled-js") || dir.toString().contains("WEB-INF"))
+					{
+						return FileVisitResult.SKIP_SUBTREE;
+					}
+					else
+					{
+						File file2= new File(targetFolder.getParentFile(), fileClassPathEntry.toPath().relativize(dir).toString());
+						file2.mkdirs();
+						return FileVisitResult.CONTINUE;
+					}
+				}
+			});
 
 	}
 }

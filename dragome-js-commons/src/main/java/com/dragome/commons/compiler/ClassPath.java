@@ -30,7 +30,7 @@ public class ClassPath
 
 	public String toString()
 	{
-		return String.join(";", entries);
+		return J7Helper.join(";", entries.toArray());
 	}
 
 	public void setEntries(String[] entries)
@@ -40,7 +40,7 @@ public class ClassPath
 
 	public void sortClassPath(Comparator<String> comparator)
 	{
-		entries.sort(comparator);
+		J7Helper.sort(entries, comparator);
 	}
 
 	public void sortByPriority(final PrioritySolver prioritySolver)
