@@ -142,7 +142,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 			Project.singleton= null;
 			//	    compiler.setBasedir(basedir);
-			String classpathElements= compilerConfiguration.getClassPath();
+			String classpathElements= compilerConfiguration.getClassPath().toString();
 			compiler.addClasspathElements(classpathElements);
 			compiler.addClasspathFilter(compilerConfiguration.getClasspathFilter());
 

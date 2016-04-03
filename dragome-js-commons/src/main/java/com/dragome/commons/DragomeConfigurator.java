@@ -18,6 +18,7 @@ package com.dragome.commons;
 import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
@@ -32,5 +33,7 @@ public interface DragomeConfigurator
 	void setDefaultCompilerType(CompilerType defaultCompilerType);
 	public ClasspathFileFilter getClasspathFilter();
 	public boolean isCheckingCast();
-	List<ClasspathFile> getExtraClasspath(String classpath);
+	List<ClasspathFile> getExtraClasspath(ClassPath classPath);
+	boolean isRemoveUnusedCode();
+	public void sortClassPath(ClassPath classPath);
 }

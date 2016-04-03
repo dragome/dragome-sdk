@@ -5,20 +5,16 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
@@ -26,13 +22,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
+import com.dragome.web.helpers.serverside.CopyUtils;
 import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
-import proguard.Configuration;
-import proguard.ConfigurationParser;
-import proguard.ProGuard;
 import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 
 @Mojo(name= "compileclient")
@@ -43,12 +38,6 @@ public class CompileClientMojo extends AbstractMojo
 
 	@Component
 	private MavenProject mavenProject;
-
-	@Component
-	private MavenSession mavenSession;
-
-	@Component
-	private BuildPluginManager pluginManager;
 
 	@Parameter
 	private File destinationDirectory;
@@ -149,7 +138,7 @@ public class CompileClientMojo extends AbstractMojo
 	{
 		System.setProperty("dragome-compile-mode", "release");
 
-		final StringBuilder theClassPathForCompiler= new StringBuilder();
+		final ClassPath classPath= new ClassPath();
 
 		URLClassLoader theCurrentClassLoader= (URLClassLoader) getClass().getClassLoader();
 		URL[] theConfiguredURLs= theCurrentClassLoader.getURLs();
@@ -158,7 +147,33 @@ public class CompileClientMojo extends AbstractMojo
 		if (serviceLocator.getConfigurator() == null)
 			serviceLocator.setConfigurator(serviceLocator.getReflectionService().getConfigurator());
 
-		addClassloaderURLs(theClassPathForCompiler, theConfiguredURLs, serviceLocator);
+		for (URL theURL : theConfiguredURLs)
+		{
+			getLog().info("Found classpath element " + theURL);
+			String theClassPathEntry= new File(theURL.toURI()).toString();
+			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
+			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
+			if (isClassesFolder || addToClasspath)
+			{
+				classPath.addEntry(theClassPathEntry);
+			}
+			else
+			{
+				getLog().warn("Skipping, it is not configured as an included artifact.");
+			}
+		}
+
+		List<String> theClassPathElements= (List<String>) project.getTestClasspathElements();
+		for (String theSingleElement : theClassPathElements)
+		{
+			URL theURL= new File(theSingleElement).toURI().toURL();
+			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
+			if (isClassesFolder)
+			{
+				getLog().info("Found classpath element " + theSingleElement);
+				classPath.addEntry(theSingleElement);
+			}
+		}
 
 		File theTargetDir= new File(destinationDirectory, "compiled-js");
 		if (!theTargetDir.exists() && !theTargetDir.mkdirs())
@@ -175,13 +190,12 @@ public class CompileClientMojo extends AbstractMojo
 			}
 		}
 
-
 		// Store the dragome cache file here
 		System.setProperty("cache-dir", theTargetDir.toString());
 
-		getLog().info("Using Dragome compiler classpath : " + theClassPathForCompiler.toString());
+		getLog().info("Using Dragome compiler classpath : " + classPath.toString());
 
-		DragomeCompilerLauncher.compileWithMainClass(theClassPathForCompiler.toString(), theTargetDir.toString());
+		DragomeCompilerLauncher.compileWithMainClass(classPath, theTargetDir.toString());
 		File dest= new File(theTargetDir, "webapp-original.js");
 		theWebAppJS.renameTo(dest);
 
@@ -206,56 +220,6 @@ public class CompileClientMojo extends AbstractMojo
 			}
 		}
 
-	}
-
-	private void addClassloaderURLs(final StringBuilder theClassPathForCompiler, URL[] theConfiguredURLs, ServiceLocator serviceLocator) throws Exception
-	{
-		String path= "dragome-uber.jar";
-
-		File file= new File(projectBuildDir, path);
-		file.createNewFile();
-
-		JarOutputStream jos= new JarOutputStream(new FileOutputStream(file));
-
-		for (URL theURL : theConfiguredURLs)
-		{
-			getLog().info("Found classpath element " + theURL);
-			File fileClassPathEntry= new File(theURL.toURI());
-			String theClassPathEntry= fileClassPathEntry.toString();
-			boolean isClassesFolder= theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes");
-			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
-			if (isClassesFolder || addToClasspath)
-			{
-				if (isClassesFolder)
-					CopyUtils.copyClassToJarFile(fileClassPathEntry, jos);
-			}
-			else
-			{
-				getLog().warn("Skipping, it is not configured as an included artifact.");
-			}
-
-			if (theURL.toString().contains(".jar") && (theURL.toString().contains("dragome") || theURL.toString().contains("gdx")) && !theURL.toString().contains("dragome-bytecode-js-compiler"))
-			{
-				JarFile jarFile= new JarFile(fileClassPathEntry);
-				CopyUtils.copyJarFile(jarFile, jos);
-				jarFile.close();
-			}
-		}
-
-		jos.close();
-
-		runProguard();
-
-		theClassPathForCompiler.append("target/dragome-uber-proguard.jar" + ";");
-	}
-
-	private void runProguard() throws Exception
-	{
-		URI uri= getClass().getResource("/proguard.conf").toURI();
-		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), System.getProperties());
-		Configuration configuration= new Configuration();
-		parser.parse(configuration);
-		new ProGuard(configuration).execute();
 	}
 
 	@Override
