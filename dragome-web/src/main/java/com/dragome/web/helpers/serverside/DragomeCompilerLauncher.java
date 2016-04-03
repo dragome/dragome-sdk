@@ -94,7 +94,7 @@ public class DragomeCompilerLauncher
 		for (URL theURL : theConfiguredURLs)
 		{
 			File fileClassPathEntry= new File(theURL.toURI());
-			if (theURL.toString().endsWith("/classes/") || theURL.toString().endsWith("/classes"))
+			if (!theURL.toString().contains(".jar"))
 				CopyUtils.copyClassToJarFile(fileClassPathEntry, jos);
 			else
 			{
