@@ -115,6 +115,7 @@ public class DragomeCompilerLauncher
 		Properties properties= System.getProperties();
 		properties.put("in-jar-filename", file.getAbsolutePath());
 		String outFilename= file.getAbsolutePath().replace(".jar", "-proguard.jar");
+		new File(outFilename).deleteOnExit();
 		properties.put("out-jar-filename", outFilename);
 		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), properties);
 		URL additionalCodeKeepConfigFile= configurator.getAdditionalCodeKeepConfigFile();
