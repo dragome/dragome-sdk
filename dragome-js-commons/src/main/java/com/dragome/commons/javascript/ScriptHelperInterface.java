@@ -38,4 +38,8 @@ public interface ScriptHelperInterface
 	public boolean evalBoolean(String jsCode, Object caller);
 
 	public void evalNoResult(String script, Object callerInstance);
+
+	public <T> T putMethodReference(String name, Class<? extends T> declaringClass, Object callerInstance);
+
+	public <T> T evalCasting(String script, Class<? extends T> castType, Object callerInstance);
 }

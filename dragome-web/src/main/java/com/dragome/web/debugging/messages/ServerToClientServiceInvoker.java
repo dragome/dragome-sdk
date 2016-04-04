@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.zip.Deflater;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.web.debugging.JsMethodReferenceCreationInMethod;
 import com.dragome.web.debugging.JsVariableCreationInMethod;
 import com.dragome.web.debugging.ReferenceHolder;
 import com.dragome.web.debugging.ScriptCrossExecutionCommand;
@@ -34,7 +35,7 @@ public class ServerToClientServiceInvoker
 		ServiceInvocation serviceInvocation= new ServiceInvocation(type, method, args != null ? Arrays.asList(args) : new ArrayList<Object>());
 		invocations.add(serviceInvocation);
 
-		if (!WebServiceLocator.getInstance().isMethodVoid(method))
+		if (true ||!WebServiceLocator.getInstance().isMethodVoid(method))
 		{
 			returnValue= serviceInvocation;
 			performInvocations();
@@ -105,6 +106,18 @@ public class ServerToClientServiceInvoker
 			message.append(",");
 			message.append("\"" + jsVariableCreationInMethod.getName() + "\"" + ",");
 			serializeReferenceHolder(message, jsVariableCreationInMethod.getValueReferenceHolder());
+			message.append(")");
+		}
+		else if (arg instanceof JsMethodReferenceCreationInMethod)
+		{
+			JsMethodReferenceCreationInMethod jsMethodReferenceCreationInMethod= (JsMethodReferenceCreationInMethod) arg;
+			message.append("_ed.njmrcinm(");
+			message.append("\"" + jsMethodReferenceCreationInMethod.getMethodName() + "\"" + ",");
+			serializeReferenceHolder(message, jsMethodReferenceCreationInMethod.getCallerReferenceHolder());
+			message.append(",");
+			message.append("\"" + jsMethodReferenceCreationInMethod.getName() + "\"" + ",");
+			message.append("\"" + jsMethodReferenceCreationInMethod.getMethodSignature() + "\"" + ",");
+			message.append("\"" + jsMethodReferenceCreationInMethod.getDeclaringClassName() + "\"");
 			message.append(")");
 		}
 		else if (arg instanceof ScriptCrossExecutionCommand)

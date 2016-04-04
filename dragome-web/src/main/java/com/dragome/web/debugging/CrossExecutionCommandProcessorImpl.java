@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -61,6 +61,8 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 
 		if (crossExecutionCommand instanceof JsVariableCreationInMethod)
 			result= processVariableCreationCommand(variableCreations, (JsVariableCreationInMethod) crossExecutionCommand);
+		else if (crossExecutionCommand instanceof JsMethodReferenceCreationInMethod)
+			result= processMethodReferenceCreationCommand(variableCreations, (JsMethodReferenceCreationInMethod) crossExecutionCommand);
 
 		for (Entry<String, Object> entry : variableCreations.entrySet())
 		{
@@ -152,6 +154,16 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 		variableCreations.put(jsVariableCreationInMethod.getName(), reference);
 		result= null;
 		return result;
+	}
+
+	private static CrossExecutionResult processMethodReferenceCreationCommand(Map<String, Object> variableCreations, JsMethodReferenceCreationInMethod jsMethodReferenceCreationInMethod)
+	{
+		ScriptHelper.put("declaringClass", jsMethodReferenceCreationInMethod.getDeclaringClassName(), null);
+		ScriptHelper.put("methodSignature", jsMethodReferenceCreationInMethod.getMethodSignature(), null);
+		Object method= ScriptHelper.eval("dragomeJs.resolveMethod(declaringClass, methodSignature)", null);
+
+		variableCreations.put(jsMethodReferenceCreationInMethod.getName(), method);
+		return null;
 	}
 
 	public static Object getOrCreateReference(ReferenceHolder referenceHolder)

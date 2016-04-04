@@ -31,6 +31,7 @@ import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
+import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.JSObject;
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -309,6 +310,19 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			addMethods(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredMethods.toArray(new Method[0]);
+	}
+
+	@MethodAlias(local_alias= "getMethodBySignature")
+	public Method getMethod(String signature)
+	{
+		Method[] foundMethods= getMethods();
+		for (Method method : foundMethods)
+		{
+			if (method.getName().equals(signature))
+				return method;
+		}
+
+		return new Method(this, signature, Modifier.PUBLIC);
 	}
 
 	private void addMethods(String[] signatures, int modifier)

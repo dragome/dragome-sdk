@@ -15,8 +15,8 @@
  */
 package com.dragome.web.config;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.w3c.dom.Attr;
@@ -26,34 +26,76 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.w3c.dom.XMLHttpRequest;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.events.ProgressEvent;
+import org.w3c.dom.html.CanvasRenderingContext2D;
+import org.w3c.dom.html.HTMLCanvasElement;
+import org.w3c.dom.typedarray.ArrayBuffer;
+import org.w3c.dom.typedarray.ArrayBufferView;
+import org.w3c.dom.typedarray.Float32Array;
+import org.w3c.dom.typedarray.Float64Array;
+import org.w3c.dom.typedarray.Int16Array;
+import org.w3c.dom.typedarray.Int32Array;
+import org.w3c.dom.typedarray.Int8Array;
+import org.w3c.dom.typedarray.Uint16Array;
+import org.w3c.dom.typedarray.Uint32Array;
+import org.w3c.dom.typedarray.Uint8Array;
+import org.w3c.dom.webgl.WebGLActiveInfo;
+import org.w3c.dom.webgl.WebGLBuffer;
+import org.w3c.dom.webgl.WebGLContextAttributes;
+import org.w3c.dom.webgl.WebGLFramebuffer;
+import org.w3c.dom.webgl.WebGLObject;
+import org.w3c.dom.webgl.WebGLProgram;
+import org.w3c.dom.webgl.WebGLRenderbuffer;
+import org.w3c.dom.webgl.WebGLRenderingContext;
+import org.w3c.dom.webgl.WebGLShader;
+import org.w3c.dom.webgl.WebGLTexture;
+import org.w3c.dom.webgl.WebGLUniformLocation;
 
 import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.InMemoryClasspathFile;
-import com.dragome.helpers.Utils;
-import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
-import com.dragome.web.enhancers.jsdelegate.InstrumentedClassPersister;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
-import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
-import com.dragome.web.html.dom.html5canvas.interfaces.CanvasImageSource;
-import com.dragome.web.html.dom.html5canvas.interfaces.CanvasRenderingContext2D;
-import com.dragome.web.html.dom.html5canvas.interfaces.HTMLCanvasElement;
+import com.dragome.web.html.dom.w3c.ArrayBufferFactory;
+import com.dragome.web.html.dom.w3c.HTMLCanvasElementExtension;
+import com.dragome.web.html.dom.w3c.HTMLImageElementExtension;
+import com.dragome.web.html.dom.w3c.TypedArraysFactory;
+import com.dragome.web.html.dom.w3c.WebGLRenderingContextExtension;
 
 @DragomeConfiguratorImplementor
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
 {
 	protected JsDelegateGenerator jsDelegateGenerator;
+	protected List<Class<?>> classes= new ArrayList<>(Arrays.asList(Document.class, Element.class, Attr.class, NodeList.class, //
+			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, EventTarget.class, //
+			EventListener.class, Event.class, ArrayBuffer.class, HTMLImageElementExtension.class, HTMLCanvasElementExtension.class, Event.class, //
+			WebGLActiveInfo.class, WebGLBuffer.class, WebGLContextAttributes.class, WebGLFramebuffer.class, //
+			WebGLObject.class, WebGLProgram.class, WebGLRenderbuffer.class, WebGLRenderingContext.class, //
+			WebGLShader.class, WebGLTexture.class, WebGLUniformLocation.class, WebGLRenderingContextExtension.class, //
+			ArrayBuffer.class, ArrayBufferView.class, Float32Array.class, Float64Array.class, Int16Array.class, //
+			Int32Array.class, Int8Array.class, Uint16Array.class, Uint32Array.class, Uint8Array.class, //
+			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class));
 
-	public List<ClasspathFile> getExtraClasspath(String classpath)
+	public DomHandlerApplicationConfigurator()
+	{
+	}
+
+	public DomHandlerApplicationConfigurator(List<? extends Class<?>> additionalDelegates)
+	{
+		classes.addAll(additionalDelegates);
+	}
+
+	public List<ClasspathFile> getExtraClasspath(ClassPath classpath)
 	{
 		List<ClasspathFile> result= new ArrayList<ClasspathFile>();
 		if (jsDelegateGenerator == null)
 		{
 			createJsDelegateGenerator(classpath);
-
-			Class<?>[] classes= new Class[] { Document.class, Element.class, Attr.class, NodeList.class, Node.class, //
-					NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, CanvasImageSource.class };
 
 			for (Class<?> class1 : classes)
 			{
@@ -65,25 +107,8 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 
 		return result;
 	}
-	private void createJsDelegateGenerator(String classpath)
+	private void createJsDelegateGenerator(ClassPath classpath)
 	{
-		jsDelegateGenerator= new JsDelegateGenerator(classpath.replace(";", ":"), new DefaultDelegateStrategy()
-		{
-			public String getSubTypeExtractorFor(Class<?> interface1, String methodName)
-			{
-				if (methodName.equals("item") || methodName.equals("cloneNode"))
-					return "temp.nodeType";
-
-				return null;
-			}
-
-			public Class<? extends SubTypeFactory> getSubTypeFactoryClassFor(Class<?> interface1, String methodName)
-			{
-				if (methodName.equals("item") || methodName.equals("cloneNode"))
-					return NodeSubTypeFactory.class;
-
-				return null;
-			}
-		});
+		jsDelegateGenerator= new JsDelegateGenerator(classpath.toString().replace(";", ":"), new DomHandlerDelegateStrategy());
 	}
 }

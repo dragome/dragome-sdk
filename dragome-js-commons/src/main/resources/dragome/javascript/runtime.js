@@ -157,7 +157,7 @@ dragomeJs.console_write = function(message)
 			dragomeJs.console_element.appendChild(document.createTextNode(message));
 		else if (console != null)
 			console.log(message);
-		
+
 	} catch (e)
 	{
 		alert("Could not print string:\n\t" + message + "\nfor reason:\n\t" + dragomeJs.inspect(e));
@@ -236,7 +236,7 @@ dragomeJs.cmp = function(value1, value2)
 		return 0;
 	else if (value1 > value2)
 		return 1;
-	else 
+	else
 		return -1;
 }
 
@@ -268,7 +268,7 @@ dragomeJs.narrow = function(n, bits)
  * returned array is new [[[T[dim[0]][dim[1]][dim[2]] If T is the boolean type,
  * then the elements are initialized to false. Otherwise, if T is not a class,
  * then the elements are initialize to numeric 0.
- * 
+ *
  * If index > 0, then the first index dimensions are ignored. For example, index =
  * 1 returns new [[T[dim[1]][dim[2]] This way, we can employ the method
  * recursively.
@@ -282,7 +282,7 @@ dragomeJs.newArray = function(classSignature, dim, index)
 
 	var array = new Array(dimensionAtIndex);
 	array.$clone$java_lang_Object= java_lang_Object.prototype.$clone$java_lang_Object;
-	
+
 
 	array.__proto__.$getClass$java_lang_Class = function()
 	{
@@ -407,7 +407,7 @@ dragomeJs.checkCast = function(obj, className)
 	if (typeof obj == "string")
 		if (className == java_lang_CharSequence || className == java_lang_Comparable)
 			return obj;
-	
+
 	// if (className == java_lang_Boolean && (obj == 1 || obj == 0))
 	// return obj;
 
@@ -448,11 +448,11 @@ function createProxyOf(types, methods, handler1, handler)
 		membersMap[methodName] = createInvoker(methods.$$$array[i]);
 	}
 
-	
+
 	var nativeTypes = new Array(types.length);
 	for ( var i in types)
 		nativeTypes[i]= types[i].$$$nativeClass;
-	
+
 	var nextNumber = objectId({});
 
 	qx.Class.define("ProxyOf_" + nextNumber, {
@@ -466,3 +466,29 @@ function createProxyOf(types, methods, handler1, handler)
 
 	return eval("new ProxyOf_" + nextNumber + "()");
 }
+
+dragomeJs.addNativeMethod= function(signature, method)
+{
+	dragomeJs.nativeMethods[signature]= method;
+}
+
+dragomeJs.resolveNativeMethod= function(owner, signature)
+{
+	var instance=	java_lang_Class.$forName___java_lang_String$java_lang_Class((owner.classname.substring(0, owner.classname.lastIndexOf("_")+1)+"Delegate"+owner.classname.substring(owner.classname.lastIndexOf("_")+1)).replaceAll("_", ".")).$newInstance$java_lang_Object()[signature];
+	return instance;
+	//return dragomeJs.nativeMethods[signature];
+}
+
+dragomeJs.resolveMethod= function(owner, signature)
+{
+	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(owner);
+	var method= clazz.getMethodBySignature(signature);
+	return method;
+}
+
+dragomeJs.castTo= function(instance, className)
+{
+	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(className);
+	return com_dragome_web_enhancers_jsdelegate_JsCast.$castTo___java_lang_Object__java_lang_Class$java_lang_Object(instance, clazz);
+}
+

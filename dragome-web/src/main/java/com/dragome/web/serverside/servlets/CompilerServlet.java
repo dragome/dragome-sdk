@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.web.serverside.compile.watchers.DirectoryWatcher;
@@ -51,9 +52,8 @@ public class CompilerServlet extends GetPostServlet
 
 	private void compile() throws URISyntaxException
 	{
-		final StringBuilder classPath= new StringBuilder();
-
 		ClassLoader c= getClass().getClassLoader();
+		final ClassPath classPath= new ClassPath();
 		if (c instanceof URLClassLoader)
 		{
 			URLClassLoader urlClassLoader= (URLClassLoader) c;
@@ -66,7 +66,7 @@ public class CompilerServlet extends GetPostServlet
 				boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(classPathEntry);
 
 				if (isClassesFolder || addToClasspath)
-					classPath.append(classPathEntry + ";");
+					classPath.addEntry(classPathEntry);
 
 				if (isClassesFolder)
 					classesFolder= classPathEntry;
@@ -84,11 +84,11 @@ public class CompilerServlet extends GetPostServlet
 			{
 				public void run()
 				{
-					DirectoryWatcher.main(new String[] { "-r", classesFolder2 }, classPath.toString(), path);
+					DirectoryWatcher.startWatching(new String[] { "-r", classesFolder2 }, classPath, path);
 				}
 			}.start();
 		}
-		else 
+		else
 			LOGGER.log(Level.SEVERE, "Cannot start compiler because there is no URLClassLoader available");
 	}
 }

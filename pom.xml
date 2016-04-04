@@ -51,6 +51,7 @@
     <module>dragome-guia</module>
     <module>dragome-guia-web</module>
     <module>dragome-maven-plugins</module>
+    <module>dragome-w3c-standards</module>
   </modules>
 
   <repositories>
@@ -143,6 +144,11 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-guia-web</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-w3c-standards</artifactId>
       <version>${dragome.version}</version>
     </dependency>
   </dependencies>

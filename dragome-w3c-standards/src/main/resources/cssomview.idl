@@ -1,0 +1,164 @@
+/*
+ * cssomview.idl
+ *
+ * CSSOM View Module IDL definitions scraped from the W3C specification, revised for esidl.
+ *
+ * Original W3C Working Draft 4 August 2011:
+ *
+ *   http://dev.w3.org/csswg/cssom-view/
+ */
+
+module html
+{
+
+partial interface Window {
+  MediaQueryList matchMedia(DOMString media_query_list);
+  readonly attribute Screen screen;
+
+  // viewport
+  readonly attribute long innerWidth;
+  readonly attribute long innerHeight;
+
+  // viewport scrolling
+  readonly attribute long scrollX;
+  readonly attribute long pageXOffset;
+  readonly attribute long scrollY;
+  readonly attribute long pageYOffset;
+  void scroll(long x, long y);
+  void scrollTo(long x, long y);
+  void scrollBy(long x, long y);
+
+  // client
+  readonly attribute long screenX;
+  readonly attribute long screenY;
+  readonly attribute long outerWidth;
+  readonly attribute long outerHeight;
+};
+
+interface MediaQueryList {
+  readonly attribute DOMString media;
+  readonly attribute boolean matches;
+  void addListener(MediaQueryListListener listener);
+  void removeListener(MediaQueryListListener listener);
+};
+
+[Callback, NoInterfaceObject]
+interface MediaQueryListListener {
+  void handleChange(MediaQueryList mql);
+};
+
+interface Screen {
+  readonly attribute unsigned long availWidth;
+  readonly attribute unsigned long availHeight;
+  readonly attribute unsigned long width;
+  readonly attribute unsigned long height;
+  readonly attribute unsigned long colorDepth;
+  readonly attribute unsigned long pixelDepth;
+};
+
+};
+
+module dom
+{
+
+typedef views::ClientRectList ClientRectList;
+typedef views::ClientRect ClientRect;
+typedef ranges::Range Range;
+
+partial interface Document {
+  Element? elementFromPoint(float x, float y);
+  CaretPosition? caretPositionFromPoint(float x, float y);
+};
+
+interface CaretPosition {
+  readonly attribute Node offsetNode;
+  readonly attribute unsigned long offset;
+};
+
+partial interface Element {
+  ClientRectList getClientRects();
+  ClientRect getBoundingClientRect();
+
+  // scrolling
+  void scrollIntoView(optional boolean top);
+           attribute long scrollTop;   // scroll on setting
+           attribute long scrollLeft;  // scroll on setting
+  readonly attribute long scrollWidth;
+  readonly attribute long scrollHeight;
+
+  readonly attribute long clientTop;
+  readonly attribute long clientLeft;
+  readonly attribute long clientWidth;
+  readonly attribute long clientHeight;
+};
+
+};
+
+module html
+{
+
+typedef dom::Element Element;
+
+partial interface HTMLElement {
+  readonly attribute Element offsetParent;
+  readonly attribute long offsetTop;
+  readonly attribute long offsetLeft;
+  readonly attribute long offsetWidth;
+  readonly attribute long offsetHeight;
+};
+
+};
+
+module ranges
+{
+
+typedef views::ClientRectList ClientRectList;
+typedef views::ClientRect ClientRect;
+
+partial interface Range {
+  ClientRectList getClientRects();
+  ClientRect getBoundingClientRect();
+};
+
+};
+
+module events
+{
+
+partial interface MouseEvent {
+  // readonly attribute long screenX;
+  // readonly attribute long screenY;
+
+  readonly attribute long pageX;
+  readonly attribute long pageY;
+
+  // readonly attribute long clientX;
+  // readonly attribute long clientY;
+  readonly attribute long x;
+  readonly attribute long y;
+
+  readonly attribute long offsetX;
+  readonly attribute long offsetY;
+};
+
+};
+
+module views
+{
+
+interface ClientRectList {
+  readonly attribute unsigned long length;
+  getter ClientRect item(unsigned long index);
+};
+
+interface ClientRect {
+  readonly attribute float top;
+  readonly attribute float right;
+  readonly attribute float bottom;
+  readonly attribute float left;
+  readonly attribute float width;
+  readonly attribute float height;
+};
+
+
+};

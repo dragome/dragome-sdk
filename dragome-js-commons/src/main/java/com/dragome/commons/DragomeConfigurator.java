@@ -15,11 +15,13 @@
  */
 package com.dragome.commons;
 
-import java.io.FileFilter;
+import java.net.URL;
 import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 
 public interface DragomeConfigurator
@@ -30,7 +32,10 @@ public interface DragomeConfigurator
 	public boolean filterClassPath(String classpathEntry);
 	public CompilerType getDefaultCompilerType();
 	void setDefaultCompilerType(CompilerType defaultCompilerType);
-	public FileFilter getClasspathFilter();
+	public ClasspathFileFilter getClasspathFilter();
 	public boolean isCheckingCast();
-	List<ClasspathFile> getExtraClasspath(String classpath);
+	List<ClasspathFile> getExtraClasspath(ClassPath classPath);
+	boolean isRemoveUnusedCode();
+	public void sortClassPath(ClassPath classPath);
+	URL getAdditionalCodeKeepConfigFile();
 }

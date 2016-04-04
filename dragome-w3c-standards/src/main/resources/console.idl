@@ -1,0 +1,36 @@
+/*
+ * console.idl
+ *
+ * Console API, rewritten in Web IDL.
+ *
+ * Original specification:
+ *
+ *   http://getfirebug.com/wiki/index.php/Console_API
+ */
+
+[Prefix=::com]
+module getfirebug
+{
+    typedef dom::Node Node;
+
+    interface Console {
+        void log(any format, any... arguments);
+        void debug(any format, any... arguments);
+        void info(any format, any... arguments);
+        void warn(any format, any... arguments);
+        void error(any format, any... arguments);
+        void assert(boolean expression, any... arguments);
+        void dir(object obj);
+        void dirxml(Node node);
+        void trace();
+        void group(any format, any... arguments);
+        void groupCollapsed(any format, any... arguments);
+        void groupEnd();
+        void time([TreatNullAs=EmptyString, TreatUndefinedAs=EmptyString] DOMString name);
+        void timeEnd([TreatNullAs=EmptyString, TreatUndefinedAs=EmptyString] DOMString name);
+        void profile([TreatNullAs=EmptyString, TreatUndefinedAs=EmptyString] optional DOMString title);
+        void profileEnd();
+        void count([TreatNullAs=EmptyString, TreatUndefinedAs=EmptyString] optional DOMString title);
+    };
+};
+

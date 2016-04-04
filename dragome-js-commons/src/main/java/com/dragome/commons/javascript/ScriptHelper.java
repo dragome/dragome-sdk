@@ -15,7 +15,6 @@
  */
 package com.dragome.commons.javascript;
 
-
 public final class ScriptHelper
 {
 	public static ScriptHelperInterface scriptHelperInterface;
@@ -73,5 +72,15 @@ public final class ScriptHelper
 	public static void evalNoResult(String script, Object callerInstance)
 	{
 		scriptHelperInterface.evalNoResult(script, callerInstance);
+	}
+
+	public static <T> T putMethodReference(String name, Class<? extends T> declaringClass, Object callerInstance)
+	{
+		return scriptHelperInterface.putMethodReference(name, declaringClass, callerInstance);
+	}
+
+	public static <T> T evalCasting(String script, Class<? extends T> castType, Object callerInstance)
+	{
+		return scriptHelperInterface.evalCasting(script, castType, callerInstance);
 	}
 }

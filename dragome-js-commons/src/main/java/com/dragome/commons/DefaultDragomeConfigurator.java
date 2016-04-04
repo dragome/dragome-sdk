@@ -15,20 +15,23 @@
  */
 package com.dragome.commons;
 
-import java.io.FileFilter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClassPath;
 import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
 {
 	private CompilerType defaultCompilerType= CompilerType.Standard;
-	private FileFilter classpathFilter;
+	private ClasspathFileFilter classpathFilter;
+	private boolean removeUnusedCode;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -83,14 +86,16 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 
 	public boolean filterClassPath(String classpathEntry)
 	{
-		boolean include= false || //
-				classpathEntry.contains("dragome-js-jre-") || //
-				classpathEntry.contains("dragome-js-commons-") || //
-				classpathEntry.contains("dragome-core-") || //
-				classpathEntry.contains("dragome-guia-") || //
-				classpathEntry.contains("dragome-form-bindings-") || //
-				classpathEntry.contains("dragome-method-logger-") || //
-				classpathEntry.contains("dragome-web-");
+		boolean include= false;
+
+		include|= classpathEntry.contains("dragome-js-commons-");
+		include|= classpathEntry.contains("dragome-w3c-standards-");
+		include|= classpathEntry.contains("dragome-js-jre-");
+		include|= classpathEntry.contains("dragome-core-");
+		include|= classpathEntry.contains("dragome-web-");
+		include|= classpathEntry.contains("dragome-guia-");
+		include|= classpathEntry.contains("dragome-form-bindings-");
+		include|= classpathEntry.contains("dragome-method-logger-");
 
 		return include;
 	}
@@ -105,12 +110,12 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		this.defaultCompilerType= defaultCompilerType;
 	}
 
-	public FileFilter getClasspathFilter()
+	public ClasspathFileFilter getClasspathFilter()
 	{
 		return classpathFilter;
 	}
 
-	public void setClasspathFilter(FileFilter classpathFilter)
+	public void setClasspathFilter(ClasspathFileFilter classpathFilter)
 	{
 		this.classpathFilter= classpathFilter;
 	}
@@ -120,8 +125,22 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return true;
 	}
 
-	public List<ClasspathFile> getExtraClasspath(String classpath)
+	public List<ClasspathFile> getExtraClasspath(ClassPath classpath)
 	{
 		return new ArrayList<ClasspathFile>();
+	}
+
+	public boolean isRemoveUnusedCode()
+	{
+		return removeUnusedCode;
+	}
+
+	public void sortClassPath(ClassPath classPath)
+	{
+	}
+
+	public URL getAdditionalCodeKeepConfigFile()
+	{
+		return null;
 	}
 }

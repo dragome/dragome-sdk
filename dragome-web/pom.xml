@@ -115,10 +115,27 @@
       <version>3.16.1-GA</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>19.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>net.sf.proguard</groupId>
+      <artifactId>proguard-base</artifactId>
+      <version>5.2.1</version>
+    </dependency>
 
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-core</artifactId>
+      <version>0.96-beta3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-w3c-standards</artifactId>
       <version>0.96-beta3-SNAPSHOT</version>
     </dependency>
   </dependencies>
@@ -248,4 +265,4 @@
   </build>
 
 </project>
-	
+

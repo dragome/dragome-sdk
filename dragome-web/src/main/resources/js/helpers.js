@@ -1,13 +1,12 @@
 
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
+ *
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the GNU Public License v3.0 which accompanies
+ * this distribution, and is available at http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
 
 EventDispatcher = {};
@@ -146,7 +145,7 @@ function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain,
 
 		var result = isGet ? $.get(url, parameters) : $.post(url, parameters);
 		return result.responseText;
-	} 
+	}
 	else
 	{
 		fileParameter = parameters.file ? "file=" + parameters.file + "&" : "";
@@ -290,7 +289,7 @@ function checkStyleSheet(url)
 	}
 }
 
-checkStyleSheet("dragome/dragome.css");
+//checkStyleSheet("dragome/dragome.css");
 
 function setupCheckCast()
 {
@@ -298,7 +297,7 @@ function setupCheckCast()
 		dragomeJs.checkCast= function (obj){return obj};
 }
 
-//adapted from atomic.js library, https://github.com/toddmotto/atomic
+// adapted from atomic.js library, https://github.com/toddmotto/atomic
 function XHRHandler(syncCall) {
   'use strict';
 
@@ -306,9 +305,9 @@ function XHRHandler(syncCall) {
     cors= false,
     corscridentials= false,
     async=syncCall===undefined || syncCall===true;
-  
+
   var sxhr = function (type, url, data) {
-  	 var XHR = new XMLHttpRequest();
+// var XHR = new XMLHttpRequest();
      request.open(type, url, false);
      request.setRequestHeader('Content-type', contentType);
      request.send(data);
@@ -316,7 +315,7 @@ function XHRHandler(syncCall) {
      	return request.responseText;
      } else return null;
   };
-  
+
   var xhr = function (type, url, data) {
     if(async) {
 		var methods = {
@@ -343,7 +342,7 @@ function XHRHandler(syncCall) {
 					methods.error.apply(methods, [null, request]);
 				}
 			};
-		
+
 			request.onerror=function() {
 				methods.error.apply(methods, null);
 			};
@@ -396,9 +395,9 @@ function XHRHandler(syncCall) {
   this.setContentType = function(value) {
     contentType = value;
   };
-  
+
   this.setCORSCall = function(useCridentials) {
   	  cors=true;
   	  corscridentials=useCridentials;
   };
-});
+};

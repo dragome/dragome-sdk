@@ -1,0 +1,143 @@
+/*
+ * file.idl
+ *
+ * File API IDL definitions scraped from the W3C specification, revised for esidl.
+ *
+ * Original W3C Editor’s Draft 18 April 2011:
+ *
+ *   http://dev.w3.org/2006/webapi/FileAPI/
+ */
+
+module file {
+
+    typedef events::EventTarget EventTarget;
+    typedef html::Function Function;
+    typedef typedarray::ArrayBuffer ArrayBuffer;
+
+    interface FileList {
+      getter File item(unsigned long index);
+      readonly attribute unsigned long length;
+    };
+
+    interface Blob {
+
+      readonly attribute unsigned long long size;
+      readonly attribute DOMString type;
+      //slice Blob into byte-ranged chunks
+
+      Blob slice(in unsigned long long start,
+                 in unsigned long long length,
+                 optional DOMString contentType);
+
+    };
+
+
+
+  interface File : Blob {
+
+      readonly attribute DOMString name;
+      readonly attribute Date lastModifiedDate;
+};
+
+
+
+
+[Constructor]
+interface FileReader : EventTarget {
+
+  // async read methods
+  void readAsArrayBuffer(in Blob blob);
+  void readAsBinaryString(in Blob blob);
+  void readAsText(in Blob blob, in optional DOMString encoding);
+  void readAsDataURL(in Blob blob);
+
+  void abort();
+
+  // states
+  const unsigned short EMPTY = 0;
+  const unsigned short LOADING = 1;
+  const unsigned short DONE = 2;
+
+
+  readonly attribute unsigned short readyState;
+
+  // File or Blob data
+  readonly attribute any result;
+
+  readonly attribute FileError error;
+
+  // event handler attributes
+  attribute Function onloadstart;
+  attribute Function onprogress;
+  attribute Function onload;
+  attribute Function onabort;
+  attribute Function onerror;
+  attribute Function onloadend;
+
+};
+
+
+
+
+[Constructor]
+interface FileReaderSync {
+
+  // Synchronously return strings
+  // All three methods raise FileException
+
+  ArrayBuffer readAsArrayBuffer(in Blob blob);
+  DOMString readAsBinaryString(in Blob blob);
+  DOMString readAsText(in Blob blob, in optional DOMString encoding);
+  DOMString readAsDataURL(in Blob blob);
+};
+
+
+
+ interface FileError {
+   // File error codes
+   // Found in DOMException
+   const unsigned short NOT_FOUND_ERR = 1;
+   const unsigned short SECURITY_ERR = 2;
+   const unsigned short ABORT_ERR = 3;
+
+   // Added by this specification
+   const unsigned short NOT_READABLE_ERR = 4;
+   const unsigned short ENCODING_ERR = 5;
+
+   readonly attribute unsigned short code;
+};
+
+
+
+ exception FileException {
+
+  const unsigned short NOT_FOUND_ERR = 1;
+  const unsigned short SECURITY_ERR = 2;
+  const unsigned short ABORT_ERR = 3;
+
+  const unsigned short NOT_READABLE_ERR = 4;
+  const unsigned short ENCODING_ERR = 5;
+
+  unsigned short code;
+};
+
+// from FILESYSTEMAPI
+[NoInterfaceObject, Callback=FunctionOnly]
+interface FileCallback {
+    void handleEvent (File file);
+};
+
+};
+
+#if XXX
+module dom {
+
+[Supplemental]
+interface URL {
+
+    static DOMString createObjectURL(in Blob blob);
+    static void revokeObjectURL(in DOMString url);
+};
+
+};
+#endif

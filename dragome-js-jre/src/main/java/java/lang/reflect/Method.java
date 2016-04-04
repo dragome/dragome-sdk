@@ -17,13 +17,21 @@ package java.lang.reflect;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
+import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.services.ServiceInvocation;
+import com.dragome.services.WebServiceLocator;
+import com.dragome.web.debugging.JavascriptReference;
+import com.dragome.web.dispatcher.JavaRefId;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 @DragomeCompilerSettings(CompilerType.Standard)
 public final class Method
@@ -132,6 +140,51 @@ public final class Method
 
 		result= adaptResult(result, getReturnType());
 		return result;
+	}
+
+	@MethodAlias(local_alias= "apply")
+	public Object javaCall(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	{
+		Class<?>[] parameterTypes= getParameterTypes();
+		Object[] typedArguments= new Object[parameterTypes.length];
+
+		for (int j= 0; j < args.length; j++)
+		{
+			Object object= args[j];
+			Object typedArgument= JsCast.castTo(object, parameterTypes[j]);
+			typedArguments[j]= typedArgument;
+			//			ScriptHelper.put("a", object, this);
+			//			ScriptHelper.eval("console.log(a)", this);
+		}
+
+		WebServiceLocator webServiceLocator= WebServiceLocator.getInstance();
+		if (webServiceLocator.isRemoteDebugging())
+		{
+			ScriptHelper.put("obj", obj, this);
+			String javaRefIdString= (String) ScriptHelper.eval("obj.javaRefId", this);
+
+			JavaRefId javaRefId= new JavaRefId(javaRefIdString);
+
+			List<Object> typedParametersRefs= new ArrayList<>();
+
+			for (int i= 0; i < typedArguments.length; i++)
+			{
+				if (parameterTypes[i].isInterface())
+				{
+					String id= DragomeEntityManager.add(typedArguments[i]);
+					typedParametersRefs.add(new JavascriptReference(parameterTypes[i].getName(), id));
+				}
+				else
+					typedParametersRefs.add(args[i]);
+			}
+
+			ServiceInvocation serviceInvocation= new ServiceInvocation(getDeclaringClass(), this, typedParametersRefs, javaRefIdString);
+
+			webServiceLocator.getEventDispatcher().callJavaMethod(serviceInvocation);
+			return null;
+		}
+		else
+			return invoke(obj, typedArguments);
 	}
 
 	public static void boxArguments(Class<?>[] parameterTypes, Object... args)

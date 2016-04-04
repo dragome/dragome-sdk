@@ -1,0 +1,12 @@
+module dom {
+
+typedef events::EventListener EventListener;
+
+interface EventHandler: EventListener {
+};
+/*
+[TreatNonCallableAsNull]
+callback EventHandlerNonNull = any (Event event);
+typedef EventHandlerNonNull? EventHandler;
+*/
+};

@@ -1,0 +1,41 @@
+/*
+ * url.idl
+ *
+ * URL API IDL definitions scraped from a working draft, revised for esidl.
+ *
+ * Original Working Draft 19 September 2010:
+ *
+ *   https://docs.google.com/document/edit?id=1r_VTFKApVOaNIkocrg0z-t7lZgzisTuGTXkdzAk4gLU&hl=en&pli=1#
+ */
+
+module dom {
+
+[Constructor(in optional DOMString url,
+             in optional DOMString baseURL)]
+interface URL {
+  attribute DOMString protocol;
+  attribute DOMString username;
+  attribute DOMString password;
+  attribute DOMString host;
+  attribute DOMString hostname;
+  attribute DOMString port;
+  attribute DOMString pathname;
+  attribute DOMString search;
+  attribute DOMString hash;
+
+  attribute DOMString filename;
+  readonly attribute DOMString origin;
+
+  readonly attribute DOMString[] parameterNames;
+  DOMString getParameter(in DOMString name);
+  DOMString[] getParameterAll(in DOMString name);
+  void appendParameter(in DOMString name,
+                       in DOMString value);
+  void appendParameter(in DOMString name,
+                       in DOMString[] values);
+  void clearParameter(in DOMString name);
+
+  stringifier attribute DOMString href;
+};
+
+};

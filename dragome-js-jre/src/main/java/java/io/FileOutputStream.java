@@ -23,14 +23,12 @@ public class FileOutputStream extends OutputStream
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
 	public void write(int b) throws IOException
 	{
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void write(String s) throws IOException
 	{
 		// TODO Auto-generated method stub
