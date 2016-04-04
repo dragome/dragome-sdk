@@ -86,6 +86,10 @@ function Uint8ToString(u8a) {
                 loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function () {
                     WebSocketInitializer();
                     //why launch like this? script method should also work here for webapp-1.js
+                    //
+                    //why not use script("compiled-js/webapp-1.js");
+                    //which is simpler and faster
+                    //
                     var ajax = new XMLHttpRequest();
                     ajax.open("GET", "compiled-js/webapp-1.js", true);
                     ajax.responseType = "arraybuffer";
