@@ -233,7 +233,7 @@ function getTemplatePart(content, id)
 
 function getURL(url)
 {
-    return new XHRHandler(true).get(url);
+    return new XHRHandler(false).get(url);
 }
 
 
@@ -302,14 +302,14 @@ function setupCheckCast()
 }
 
 // adapted from atomic.js library, https://github.com/toddmotto/atomic
-function XHRHandler(syncCall)
+function XHRHandler(asyncCall)
 {
     'use strict';
 
     var contentType = 'application/x-www-form-urlencoded',
             useCORS = false,
             corscridentials = false,
-            async = syncCall === undefined || syncCall === true;
+            async = asyncCall === undefined || asyncCall === true;
 
     var sxhr = function (type, url, data) {
         var request = new XMLHttpRequest();
@@ -410,4 +410,3 @@ function XHRHandler(syncCall)
         corscridentials = useCridentials;
     };
 }
-;
