@@ -11,59 +11,54 @@
 
 function WebSocketInitializer()
 {
-	if (getQuerystring("debug") == "true")
-	{
-		var socket = jQuery.atmosphere;
-		var request = {
-			timeout : 600000000,
-			url : 'dragome-websocket',
-			contentType : "application/json",
-			transport : 'websocket',
-			binaryType : 'arraybuffer'
-		};
+    if (getQuerystring("debug") === "true")
+    {
+        var socket = atmosphere;
+        var request = {
+            timeout: 600000000,
+            url: 'dragome-websocket',
+            contentType: "application/json",
+            transport: 'websocket',
+            binaryType: 'arraybuffer'
+        };
 
-		window.onbeforeunload = function()
-		{
-			socket.unsubscribe();
-		};
+        window.onbeforeunload = function ()
+        {
+            socket.unsubscribe();
+        };
 
-		request.onOpen = function(response)
-		{
+        request.onOpen = function (response)
+        {
 //			if (_ed.runApplication)
-				_ed.runApplication();
-		};
+            _ed.runApplication();
+        };
 
-		request.onMessage = function(response)
-		{
-			var message = response.responseBody;
+        request.onMessage = function (response)
+        {
+            var message = response.responseBody;
 
-			// if (getQuerystring("zip") == "true")
-			{
-				// var inflator = new Inflator(new Base64Reader(message));
-				// var textReader = new TextReader(new
-				// Utf8Translator(inflator));
-				// message = textReader.readToEnd();
-			}
+            // if (getQuerystring("zip") == "true")
+            {
+                // var inflator = new Inflator(new Base64Reader(message));
+                // var textReader = new TextReader(new
+                // Utf8Translator(inflator));
+                // message = textReader.readToEnd();
+            }
 
-			if (window.onSocketMessage)
-				window.onSocketMessage(message);
-		};
+            if (window.onSocketMessage)
+                window.onSocketMessage(message);
+        };
 
-		request.onClose = function(response)
-		{
-			// alert(response);
-		};
+        request.onClose = function (response)
+        {
+            // alert(response);
+        };
 
-		request.onError = function(response)
-		{
-			// alert(response);
-		};
+        request.onError = function (response)
+        {
+            // alert(response);
+        };
 
-		window.subSocket = socket.subscribe(request);
-	}
+        window.subSocket = socket.subscribe(request);
+    }
 };
-
-$(document).ready(function()
-{
-	WebSocketInitializer();
-});

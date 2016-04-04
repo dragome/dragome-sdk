@@ -114,7 +114,7 @@ performance.now = (function ()
     };
 })();
 
-function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
+/*function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
 {
     if (crossDomain !== "true")
     {
@@ -155,7 +155,7 @@ function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain,
             asyncCallback.$onSuccess___java_lang_Object$void(tranformedData);
         });
     }
-}
+}*/
 
 function httpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
 {
@@ -221,7 +221,7 @@ function getTemplatePart(content, id)
     return subElement.innerHTML;
 }
 
-function getURL(url)
+/*function getURL(url)
 {
     return $.ajax({
         type: "GET",
@@ -229,9 +229,9 @@ function getURL(url)
         cache: false,
         async: false
     }).responseText;
-}
+}*/
 
-function getURLNew(url)
+function getURL(url)
 {
     return new XHRHandler(true).get(url);
 }
@@ -329,6 +329,7 @@ function XHRHandler(syncCall)
                 error: function () {}
             };
             var request = new XMLHttpRequest();
+            
             if (useCORS) {
                 if ('withCredentials' in request) {
                     request.withCredentials = corscridentials;
@@ -341,6 +342,7 @@ function XHRHandler(syncCall)
             if (request.overrideMimeType)
                 request.overrideMimeType('text/html');
             request.setRequestHeader('Content-type', contentType);
+            
             if (useCORS) {
                 request.onload = function () {
                     if (request.status >= 200 && request.status < 300) {
