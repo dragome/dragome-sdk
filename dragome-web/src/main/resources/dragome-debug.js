@@ -65,7 +65,6 @@ function loadScript(url, callback)
         stylesheet("dragome-resources/css/dragome.css");
         script("dragome-resources/js/hashtable.js");
         script("dragome-resources/js/deflate.js");
-        script("dragome-resources/js/console.js");
         script("dragome-resources/js/helpers.js");
         script("dragome-resources/js/String.js");
 
