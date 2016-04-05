@@ -291,8 +291,7 @@ function checkStyleSheet(url)
         fileref.setAttribute("rel", "stylesheet");
         fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", url);
-        document.getElementsByTagName("head")[0].appendChild(fileref)
-        //$('head').append($('<link rel="stylesheet" type="text/css" href="' + url + '" />'));
+        document.getElementsByTagName("head")[0].appendChild(fileref);
     }
 }
 
