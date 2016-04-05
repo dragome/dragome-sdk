@@ -10,11 +10,11 @@
 
 module websocket {
 
+typedef events::EventListener EventListener;
 typedef events::EventTarget EventTarget;
-typedef html::Function Function;
 
 [Constructor(in DOMString url, in optional DOMString protocol)]
-interface WebSocket {
+interface WebSocket : EventTarget{
   readonly attribute DOMString URL;
 
   // ready state
@@ -25,9 +25,9 @@ interface WebSocket {
   readonly attribute unsigned long bufferedAmount;
 
   // networking
-           attribute Function onopen;
-           attribute Function onmessage;
-           attribute Function onclose;
+           attribute EventListener onopen;
+           attribute EventListener onmessage;
+           attribute EventListener onclose;
   boolean send(in DOMString data);
   void close();
 };

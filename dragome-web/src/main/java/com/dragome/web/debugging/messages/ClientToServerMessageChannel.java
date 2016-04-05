@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,15 @@
  ******************************************************************************/
 package com.dragome.web.debugging.messages;
 
-import com.dragome.commons.compiler.annotations.MethodAlias;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.websocket.WebSocket;
+
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.debugging.MessageEvent;
+import com.dragome.web.dispatcher.EventDispatcherHelper;
+import com.dragome.web.dispatcher.EventDispatcherImpl;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class ClientToServerMessageChannel implements MessageChannel
 {
@@ -19,31 +26,35 @@ public class ClientToServerMessageChannel implements MessageChannel
 	private static Receiver receiver;
 	private int counter= 0;
 	private Sender sender;
+	private WebSocket websocket;
 
 	public ClientToServerMessageChannel()
 	{
-		ScriptHelper.put("url", WEBSOCKET_PATH, null);
-		ScriptHelper.eval("this.socket= socketCreator(url,_ed.webSocketSuccessCallback,_ed.webSocketErrorCallback)", null);
+		websocket= createWebsocket();
+
+		//		ScriptHelper.put("url", WEBSOCKET_PATH, null);
+		//		ScriptHelper.eval("this.socket= socketCreator(url,_ed.webSocketSuccessCallback,_ed.webSocketErrorCallback)", null);
 	}
 
-	@MethodAlias(alias= "_ed.webSocketErrorCallback")
-	private static void errorCallback()
-	{
-		receiver.messageReceived("error!!!");
-	}
-
-	@MethodAlias(alias= "_ed.webSocketSuccessCallback")
-	public static void successCallback(String message)
-	{
-		if (message != null && message.trim().length() > 0)
-			receiver.messageReceived(message);
-	}
+	//	@MethodAlias(alias= "_ed.webSocketErrorCallback")
+	//	private static void errorCallback()
+	//	{
+	//		receiver.messageReceived("error!!!");
+	//	}
+	//
+	//	@MethodAlias(alias= "_ed.webSocketSuccessCallback")
+	//	public static void successCallback(String message)
+	//	{
+	//		if (message != null && message.trim().length() > 0)
+	//			receiver.messageReceived(message);
+	//	}
 
 	public void send(String aMessage)
 	{
-		ScriptHelper.put("message", aMessage, null);
-		ScriptHelper.put("counter", counter, null);
-		ScriptHelper.eval("window.subSocket.push(message+'|'+counter)", null);
+		websocket.send(aMessage + "|" + counter);
+		//		ScriptHelper.put("message", aMessage, null);
+		//		ScriptHelper.put("counter", counter, null);
+		//		ScriptHelper.eval("window.subSocket.push(message+'|'+counter)", null);
 		counter++;
 	}
 
@@ -60,5 +71,36 @@ public class ClientToServerMessageChannel implements MessageChannel
 	public void setSender(Sender sender)
 	{
 		this.sender= sender;
+	}
+
+	public WebSocket createWebsocket()
+	{
+		ScriptHelper.put("url", "ws://localhost:8080/example/dragome-debug", this);
+		WebSocket webSocket= ScriptHelper.evalCasting("new WebSocket(url)", WebSocket.class, this);
+		webSocket.setOnopen(new EventListener()
+		{
+			public void handleEvent(Event evt)
+			{
+				EventDispatcherHelper.runApplication();
+				System.out.println("open");
+			}
+		});
+		webSocket.setOnmessage(new EventListener()
+		{
+			public void handleEvent(Event evt)
+			{
+				MessageEvent messageEvent= JsCast.castTo(evt, MessageEvent.class);
+				receiver.messageReceived(messageEvent.getResponseBody());
+			}
+		});
+		webSocket.setOnclose(new EventListener()
+		{
+			public void handleEvent(Event evt)
+			{
+				System.out.println("close");
+			}
+		});
+
+		return webSocket;
 	}
 }

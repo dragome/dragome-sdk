@@ -30,7 +30,7 @@ function WebSocketInitializer()
 		request.onOpen = function(response)
 		{
 //			if (_ed.runApplication)
-				_ed.runApplication();
+				//_ed.runApplication();
 		};
 
 		request.onMessage = function(response)
