@@ -236,6 +236,11 @@ function getURL(url)
     return new XHRHandler(false).get(url);
 }
 
+function consoleMessage(message) {
+    if (window['console'] !== undefined && console['log'] !== undefined) {
+        console.log(message.toString());
+    }
+}
 
 function refreshPageSetup()
 {
