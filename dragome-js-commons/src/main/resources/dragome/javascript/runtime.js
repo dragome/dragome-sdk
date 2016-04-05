@@ -122,7 +122,7 @@ dragomeJs.console_clear = function()
 
 dragomeJs.println = function(message)
 {
-        consoleMessage(message);
+    consoleMessage(message);
 };
 
 dragomeJs.print = function(message)
