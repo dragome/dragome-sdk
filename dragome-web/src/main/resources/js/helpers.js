@@ -287,7 +287,12 @@ function checkStyleSheet(url)
     }
     if (!found)
     {
-        $('head').append($('<link rel="stylesheet" type="text/css" href="' + url + '" />'));
+        var fileref=document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", url);
+        document.getElementsByTagName("head")[0].appendChild(fileref)
+        //$('head').append($('<link rel="stylesheet" type="text/css" href="' + url + '" />'));
     }
 }
 
