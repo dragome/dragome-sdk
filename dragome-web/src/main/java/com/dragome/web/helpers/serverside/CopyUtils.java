@@ -3,7 +3,6 @@ package com.dragome.web.helpers.serverside;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,7 +55,7 @@ public class CopyUtils
 
 	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos) throws Exception
 	{
-		if (fileClassPathEntry.exists())
+		if (fileClassPathEntry != null && fileClassPathEntry.exists())
 			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 			{
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
@@ -73,7 +72,7 @@ public class CopyUtils
 
 	public static void copyFilesOfFolder(final File fileClassPathEntry, final File targetFolder) throws Exception
 	{
-		if (fileClassPathEntry.exists())
+		if (fileClassPathEntry != null && fileClassPathEntry.exists())
 			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 			{
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
