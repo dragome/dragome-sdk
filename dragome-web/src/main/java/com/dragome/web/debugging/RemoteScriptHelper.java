@@ -22,6 +22,7 @@ import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class RemoteScriptHelper implements ScriptHelperInterface
 {
+	private static final String SCRIPTHELPER_METHOD_NAME= "scripthelper-method-name";
 	protected CrossExecutionCommandProcessor crossExecutionCommandProcessor;
 
 	public RemoteScriptHelper(ServiceFactory remoteObjectsService)
@@ -31,26 +32,35 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 
 	public void put(String name, double value, Object caller)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(Math.round(value) + ""), stackTraceElement.getMethodName()));
+		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(Math.round(value) + ""), methodName));
+	}
+
+	private String getMethodName()
+	{
+		String methodName= System.getProperty(SCRIPTHELPER_METHOD_NAME);
+		if (methodName == null)
+		{
+			StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
+			StackTraceElement stackTraceElement= stackTrace[4];
+			methodName= stackTraceElement.getMethodName();
+		}
+		return methodName;
 	}
 
 	public void put(String name, boolean value, Object caller)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), stackTraceElement.getMethodName()));
+		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), methodName));
 	}
 
 	public void put(String name, Object value, Object caller)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), stackTraceElement.getMethodName()));
+		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), methodName));
 	}
 
 	public long evalLong(String jsCode, Object caller)
@@ -60,10 +70,9 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 
 	public int evalInt(String script, Object caller)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		CrossExecutionResult crossExecutionResult= crossExecutionCommandProcessor.process(new JsEvalIntegerInMethod(new ReferenceHolder(caller), script, stackTraceElement.getMethodName()));
+		CrossExecutionResult crossExecutionResult= crossExecutionCommandProcessor.process(new JsEvalIntegerInMethod(new ReferenceHolder(caller), script, methodName));
 		return Integer.parseInt(crossExecutionResult.getResult() + "");
 	}
 
@@ -84,20 +93,18 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 
 	public boolean evalBoolean(String script, Object caller)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		CrossExecutionResult crossExecutionResult= crossExecutionCommandProcessor.process(new JsEvalBooleanInMethod(new ReferenceHolder(caller), script, stackTraceElement.getMethodName()));
+		CrossExecutionResult crossExecutionResult= crossExecutionCommandProcessor.process(new JsEvalBooleanInMethod(new ReferenceHolder(caller), script, methodName));
 		return Boolean.parseBoolean(crossExecutionResult.getResult() + "");
 	}
 
 	public Object eval(String script, Object caller)
 	{
 		Object result;
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		CrossExecutionResult crossExecutionResult= crossExecutionCommandProcessor.process(new JsEvalInMethod(new ReferenceHolder(caller), script, stackTraceElement.getMethodName()));
+		CrossExecutionResult crossExecutionResult= crossExecutionCommandProcessor.process(new JsEvalInMethod(new ReferenceHolder(caller), script, methodName));
 		String stringResult= crossExecutionResult.getResult();
 		if (stringResult.startsWith("js-ref:"))
 			if (stringResult.equals("js-ref:0"))
@@ -111,23 +118,21 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 	}
 	public void evalNoResult(String script, Object caller)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		StackTraceElement stackTraceElement= stackTrace[3];
+		String methodName= getMethodName();
 
-		crossExecutionCommandProcessor.processNoResult(new JsEvalInMethod(new ReferenceHolder(caller), script, stackTraceElement.getMethodName()));
+		crossExecutionCommandProcessor.processNoResult(new JsEvalInMethod(new ReferenceHolder(caller), script, methodName));
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T putMethodReference(final String name, final Class<? extends T> declaringClass, final Object callerInstance)
 	{
-		StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-		final StackTraceElement stackTraceElement= stackTrace[3];
+		final String methodName= getMethodName();
 
 		return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { declaringClass }, new InvocationHandler()
 		{
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 			{
-				crossExecutionCommandProcessor.processNoResult(new JsMethodReferenceCreationInMethod(new ReferenceHolder(callerInstance), name, method.getName(), stackTraceElement.getMethodName(), declaringClass.getName()));
+				crossExecutionCommandProcessor.processNoResult(new JsMethodReferenceCreationInMethod(new ReferenceHolder(callerInstance), name, method.getName(), methodName, declaringClass.getName()));
 				return null;
 			}
 		});
@@ -135,7 +140,12 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 
 	public <T> T evalCasting(String script, Class<? extends T> castType, Object callerInstance)
 	{
+		System.setProperty(SCRIPTHELPER_METHOD_NAME, getMethodName());
+
 		Object result= eval(script, callerInstance);
-		return JsCast.castTo(result, castType);
+		T castTo= JsCast.castTo(result, castType, callerInstance);
+
+		System.clearProperty(SCRIPTHELPER_METHOD_NAME);
+		return castTo;
 	}
 }

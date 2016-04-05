@@ -20,40 +20,40 @@ import com.dragome.helpers.DragomeEntityManager;
 public class JsCast
 {
 	@SuppressWarnings("unchecked")
-	public static <T> T castTo(Object instance, Class<T> type)
+	public static <T> T castTo(Object instance, Class<T> type, Object callerInstance)
 	{
 		try
 		{
 			if (instance == null)
 				return null;
 
-			ScriptHelper.put("instance", instance, null);
+			ScriptHelper.put("instance", instance, callerInstance);
 
 			if (type.equals(Float.class))
-				return (T) new Float(ScriptHelper.evalFloat("instance", null));
+				return (T) new Float(ScriptHelper.evalFloat("instance", callerInstance));
 			else if (type.equals(Integer.class))
-				return (T) new Integer(ScriptHelper.evalInt("instance", null));
+				return (T) new Integer(ScriptHelper.evalInt("instance", callerInstance));
 			else if (type.equals(Double.class))
-				return (T) new Double(ScriptHelper.evalDouble("instance", null));
+				return (T) new Double(ScriptHelper.evalDouble("instance", callerInstance));
 			else if (type.equals(Long.class))
-				return (T) new Long(ScriptHelper.evalLong("instance", null));
+				return (T) new Long(ScriptHelper.evalLong("instance", callerInstance));
 			else if (type.equals(Boolean.class))
-				return (T) new Boolean(ScriptHelper.evalBoolean("instance", null));
+				return (T) new Boolean(ScriptHelper.evalBoolean("instance", callerInstance));
 			else if (type.equals(Short.class))
-				return (T) new Short((short) ScriptHelper.evalInt("instance", null));
+				return (T) new Short((short) ScriptHelper.evalInt("instance", callerInstance));
 			else if (type.equals(String.class))
-				return (T) ScriptHelper.eval("instance", null);
+				return (T) ScriptHelper.eval("instance", callerInstance);
 			else
 			{
 				String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
 				Class<?> class2= Class.forName(delegateClassName);
 				Object newInstance= class2.newInstance();
 
-				ScriptHelper.put("delegate", newInstance, null);
-				if (ScriptHelper.eval("instance.node", null) == null)
-					ScriptHelper.eval("delegate.node= instance", null);
+				ScriptHelper.put("delegate", newInstance, callerInstance);
+				if (ScriptHelper.eval("instance.node", callerInstance) == null)
+					ScriptHelper.eval("delegate.node= instance", callerInstance);
 				else
-					ScriptHelper.eval("delegate.node= instance.node", null);
+					ScriptHelper.eval("delegate.node= instance.node", callerInstance);
 
 				return (T) newInstance;
 			}
@@ -97,5 +97,10 @@ public class JsCast
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener)
 	{
 		addEventListener(eventTarget, type, eventListener, false);
+	}
+
+	public static <T> T castTo(Object instance, Class<T> type)
+	{
+		return castTo(instance, type, null);
 	}
 }
