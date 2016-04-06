@@ -312,9 +312,13 @@ function setupCheckCast()
 
 function onReady(callback) 
 {
-   window.addEventListener("load", function(event) {
-      callback();
-   });
+    if ( document.readyState === "complete" ) {
+             return setTimeout( callback, 1 );
+    }
+
+    window.addEventListener("load", function(event) {
+       callback();
+    });
 }
 
 // adapted from atomic.js library, https://github.com/toddmotto/atomic
