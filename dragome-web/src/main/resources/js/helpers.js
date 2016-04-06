@@ -310,6 +310,13 @@ function setupCheckCast()
         };
 }
 
+function onReady(callback) 
+{
+   window.addEventListener("load", function(event) {
+      callback();
+   });
+}
+
 // adapted from atomic.js library, https://github.com/toddmotto/atomic
 function XHRHandler(asyncCall)
 {
