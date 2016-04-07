@@ -62,7 +62,7 @@ public class MultipleEventListener<T> implements EventListener
 		else if (event instanceof KeyboardEvent)
 		{
 			KeyboardEvent keyboardEvent= (KeyboardEvent) event;
-			int keyId= Integer.parseInt(keyboardEvent.getKeyIdentifier());
+			int keyId= keyboardEvent.getKeyCode();
 			if (type.equals(KEYUP))
 				visualComponent.getListener(KeyUpListener.class).keyupPerformed(visualComponent, keyId);
 			else if (type.equals(KEYDOWN))
