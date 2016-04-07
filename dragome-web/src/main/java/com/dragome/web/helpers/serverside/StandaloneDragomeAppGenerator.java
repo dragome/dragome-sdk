@@ -222,7 +222,6 @@ public class StandaloneDragomeAppGenerator
 		copyResourceMinifyJS("/js/helpers.js");
 		copyResourceMinifyJS("/js/String.js");
 		copyResourceMinifyJS("/js/jquery.atmosphere.js");
-		copyResourceMinifyJS("/js/application.js");
 		copyResourceMinifyJS("/js/qx-oo-5.0.1.min.js");
 	}
 
