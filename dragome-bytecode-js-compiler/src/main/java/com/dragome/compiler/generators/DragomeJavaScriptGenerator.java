@@ -1083,8 +1083,20 @@ public class DragomeJavaScriptGenerator extends Generator
 						Signature signature= getSignatureOfInvocation(invocation);
 						String normalizeExpression= normalizeExpression(signature);
 						String varName= ((StringLiteral) methodInvocation.getArguments().get(0)).getValue();
-						Signature ownerClass= ((ClassLiteral) methodInvocation.getArguments().get(1)).getSignature();
-						print("var " + varName + "= dragomeJs.resolveMethod (\"" + ownerClass + "\", \"" + normalizeExpression + "\")");
+						Object classContainer= methodInvocation.getArguments().get(1);
+
+						String ownerClass= "";
+						if (classContainer instanceof ClassLiteral)
+						{
+							ownerClass= "\"" + ((ClassLiteral) classContainer).getSignature().toString() + "\"";
+						}
+						else if (classContainer instanceof VariableBinding)
+						{
+							VariableBinding variableBinding= (VariableBinding) classContainer;
+							ownerClass= variableBinding.getName() + ".$getName$java_lang_String()";
+
+						}
+						print("var " + varName + "= dragomeJs.resolveMethod (" + ownerClass + ", \"" + normalizeExpression + "\")");
 						ready= true;
 					}
 				}

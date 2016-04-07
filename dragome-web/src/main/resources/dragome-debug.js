@@ -70,17 +70,10 @@ function loadScript(url, callback)
 		script("dragome-resources/js/helpers.js");
 		script("dragome-resources/js/String.js");
 
-		loadScript("dragome-resources/js/jquery.atmosphere.js", function()
+		loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function()
 		{
-			loadScript("dragome-resources/js/application.js", function()
-			{
-				loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function()
-				{
-					script("compiled-js/webapp.js");
-				});
-			});
+			script("compiled-js/webapp.js");
 		});
-
 	});
 })();
 

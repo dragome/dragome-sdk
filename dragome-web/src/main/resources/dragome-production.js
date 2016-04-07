@@ -70,21 +70,17 @@ function Uint8ToString(u8a) {
 		script("dragome-resources/js/String.js");
 
 		loadScript("dragome-resources/js/deflate-main.js", function() {
-			loadScript("dragome-resources/js/jquery.atmosphere.js", function() {
-				loadScript("dragome-resources/js/application.js", function() {
-					loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function() {
-						var ajax = new XMLHttpRequest();
-						ajax.open("GET", "compiled-js/webapp-1.js", true);
-						ajax.responseType = "arraybuffer";
-						ajax.onload = function() {
-							var data = new Uint8Array(ajax.response)
-							var uncompressedData = deflate.decompress(data);
-							var s= Uint8ToString(uncompressedData);
-							eval(s);
-						};
-						ajax.send();
-					});
-				});
+			loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function() {
+				var ajax = new XMLHttpRequest();
+				ajax.open("GET", "compiled-js/webapp-1.js", true);
+				ajax.responseType = "arraybuffer";
+				ajax.onload = function() {
+					var data = new Uint8Array(ajax.response)
+					var uncompressedData = deflate.decompress(data);
+					var s= Uint8ToString(uncompressedData);
+					eval(s);
+				};
+				ajax.send();
 			});
 		});
 
