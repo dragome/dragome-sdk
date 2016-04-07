@@ -187,7 +187,7 @@ public class StandaloneDragomeAppGenerator
 			LOGGER.info("Removing cache file " + theCacheFile);
 			if (!theCacheFile.delete())
 			{
-				throw new RuntimeException("Cannot delete cache file" + theCacheFile);
+				LOGGER.severe("Cannot delete cache file" + theCacheFile);
 			}
 		}
 
