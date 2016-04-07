@@ -54,12 +54,14 @@ import org.w3c.dom.webgl.WebGLRenderingContext;
 import org.w3c.dom.webgl.WebGLShader;
 import org.w3c.dom.webgl.WebGLTexture;
 import org.w3c.dom.webgl.WebGLUniformLocation;
+import org.w3c.dom.websocket.WebSocket;
 
 import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.ClassPath;
 import com.dragome.commons.compiler.ClasspathFile;
 import com.dragome.commons.compiler.InMemoryClasspathFile;
+import com.dragome.web.debugging.MessageEvent;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 import com.dragome.web.html.dom.w3c.ArrayBufferFactory;
 import com.dragome.web.html.dom.w3c.HTMLCanvasElementExtension;
@@ -79,7 +81,8 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			WebGLShader.class, WebGLTexture.class, WebGLUniformLocation.class, WebGLRenderingContextExtension.class, //
 			ArrayBuffer.class, ArrayBufferView.class, Float32Array.class, Float64Array.class, Int16Array.class, //
 			Int32Array.class, Int8Array.class, Uint16Array.class, Uint32Array.class, Uint8Array.class, //
-			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class));
+			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class, //
+			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEvent.class));
 
 	public DomHandlerApplicationConfigurator()
 	{

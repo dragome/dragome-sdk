@@ -128,7 +128,8 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 	{
 		final String methodName= getMethodName();
 
-		return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { declaringClass }, new InvocationHandler()
+		Class[] interfaces= declaringClass.isInterface() ? new Class[] { declaringClass } : declaringClass.getInterfaces();
+		return (T) Proxy.newProxyInstance(getClass().getClassLoader(), interfaces, new InvocationHandler()
 		{
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 			{

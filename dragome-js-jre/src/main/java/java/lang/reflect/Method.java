@@ -29,6 +29,7 @@ import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.web.annotations.ClientSideMethod;
 import com.dragome.web.debugging.JavascriptReference;
 import com.dragome.web.dispatcher.JavaRefId;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
@@ -145,6 +146,9 @@ public final class Method
 	@MethodAlias(local_alias= "apply")
 	public Object javaCall(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
+		WebServiceLocator webServiceLocator= WebServiceLocator.getInstance();
+		boolean executeAtServer= webServiceLocator.isRemoteDebugging() && getAnnotation(ClientSideMethod.class) == null;
+
 		Class<?>[] parameterTypes= getParameterTypes();
 		Object[] typedArguments= new Object[parameterTypes.length];
 
@@ -157,8 +161,7 @@ public final class Method
 			//			ScriptHelper.eval("console.log(a)", this);
 		}
 
-		WebServiceLocator webServiceLocator= WebServiceLocator.getInstance();
-		if (webServiceLocator.isRemoteDebugging())
+		if (executeAtServer)
 		{
 			ScriptHelper.put("obj", obj, this);
 			String javaRefIdString= (String) ScriptHelper.eval("obj.javaRefId", this);

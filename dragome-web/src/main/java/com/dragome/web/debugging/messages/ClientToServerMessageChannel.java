@@ -15,9 +15,9 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.websocket.WebSocket;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.annotations.ClientSideMethod;
 import com.dragome.web.debugging.MessageEvent;
 import com.dragome.web.dispatcher.EventDispatcherHelper;
-import com.dragome.web.dispatcher.EventDispatcherImpl;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class ClientToServerMessageChannel implements MessageChannel
@@ -31,30 +31,11 @@ public class ClientToServerMessageChannel implements MessageChannel
 	public ClientToServerMessageChannel()
 	{
 		websocket= createWebsocket();
-
-		//		ScriptHelper.put("url", WEBSOCKET_PATH, null);
-		//		ScriptHelper.eval("this.socket= socketCreator(url,_ed.webSocketSuccessCallback,_ed.webSocketErrorCallback)", null);
 	}
-
-	//	@MethodAlias(alias= "_ed.webSocketErrorCallback")
-	//	private static void errorCallback()
-	//	{
-	//		receiver.messageReceived("error!!!");
-	//	}
-	//
-	//	@MethodAlias(alias= "_ed.webSocketSuccessCallback")
-	//	public static void successCallback(String message)
-	//	{
-	//		if (message != null && message.trim().length() > 0)
-	//			receiver.messageReceived(message);
-	//	}
 
 	public void send(String aMessage)
 	{
 		websocket.send(aMessage + "|" + counter);
-		//		ScriptHelper.put("message", aMessage, null);
-		//		ScriptHelper.put("counter", counter, null);
-		//		ScriptHelper.eval("window.subSocket.push(message+'|'+counter)", null);
 		counter++;
 	}
 
@@ -75,26 +56,39 @@ public class ClientToServerMessageChannel implements MessageChannel
 
 	public WebSocket createWebsocket()
 	{
-		ScriptHelper.put("url", "ws://localhost:8080/example/dragome-debug", this);
+		ScriptHelper.put("s", "/dragome-debug", this);
+		String url= (String) ScriptHelper.eval("((window.location.protocol === \"https:\") ? \"wss://\" : \"ws://\") + window.location.host + (location.pathname).substr(0, (location.pathname).lastIndexOf('/')) + s", this);
+		ScriptHelper.put("url", url, this);
 		WebSocket webSocket= ScriptHelper.evalCasting("new WebSocket(url)", WebSocket.class, this);
 		webSocket.setOnopen(new EventListener()
 		{
+			@ClientSideMethod
 			public void handleEvent(Event evt)
 			{
 				EventDispatcherHelper.runApplication();
 				System.out.println("open");
 			}
 		});
+
 		webSocket.setOnmessage(new EventListener()
 		{
+			@ClientSideMethod
 			public void handleEvent(Event evt)
 			{
-				MessageEvent messageEvent= JsCast.castTo(evt, MessageEvent.class);
-				receiver.messageReceived(messageEvent.getResponseBody());
+				try
+				{
+					MessageEvent messageEvent= JsCast.castTo(evt, MessageEvent.class);
+					receiver.messageReceived(messageEvent.getData());
+					evt.stopPropagation();
+				}
+				catch (Exception e)
+				{
+				}
 			}
 		});
 		webSocket.setOnclose(new EventListener()
 		{
+			@ClientSideMethod
 			public void handleEvent(Event evt)
 			{
 				System.out.println("close");

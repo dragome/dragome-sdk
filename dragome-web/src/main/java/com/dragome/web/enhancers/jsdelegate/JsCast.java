@@ -66,7 +66,8 @@ public class JsCast
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
 	{
-		ScriptHelper.putMethodReference("handleEventMethod", EventListener.class, null).handleEvent(null);
+		Class<? extends EventListener> eventListenerClass= eventListener.getClass();
+		ScriptHelper.putMethodReference("handleEventMethod", eventListenerClass, null).handleEvent(null);
 		ScriptHelper.put("eventListener", eventListener, null);
 		Object listener= ScriptHelper.eval("(function(){handleEventMethod.apply(eventListener, arguments)})", null);
 		ScriptHelper.put("listener", listener, null);
@@ -81,7 +82,8 @@ public class JsCast
 
 	public static void addOnEventListener(EventTarget eventTarget, EventListener eventListener, String methodName)
 	{
-		ScriptHelper.putMethodReference("handleEventMethod", EventListener.class, null).handleEvent(null);
+		Class<? extends EventListener> eventListenerClass= eventListener.getClass();
+		ScriptHelper.putMethodReference("handleEventMethod", eventListenerClass, null).handleEvent(null);
 		ScriptHelper.put("eventListener", eventListener, null);
 		Object listener= ScriptHelper.eval("(function(){handleEventMethod.apply(eventListener, arguments)})", null);
 		ScriptHelper.put("listener", listener, null);

@@ -20,39 +20,15 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import org.atmosphere.config.service.WebSocketHandlerService;
-import org.atmosphere.util.SimpleBroadcaster;
 import org.atmosphere.websocket.WebSocket;
-import org.atmosphere.websocket.WebSocketHandlerAdapter;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.services.ServiceLocator;
 
-@WebSocketHandlerService(path= "/dragome-websocket", broadcaster= SimpleBroadcaster.class)
 @ServerEndpoint(value= "/dragome-debug")
-public class ClassTransformerDragomeWebSocketHandler extends WebSocketHandlerAdapter
+public class ClassTransformerDragomeWebSocketHandler
 {
 	private static ClassLoader classLoader;
-
-	public void onOpen(WebSocket webSocket) throws IOException
-	{
-		executeMethod(getClassName(), "onOpen", webSocket);
-	}
-
-	public void onTextMessage(WebSocket webSocket, String message) throws IOException
-	{
-		executeMethod(getClassName(), "onTextMessage", webSocket, message);
-	}
-
-	public void onClose(WebSocket webSocket)
-	{
-		executeMethod(getClassName(), "onClose", webSocket);
-	}
-
-	private String getClassName()
-	{
-		return getClass().getPackage().getName() + ".DragomeWebSocketHandler";
-	}
 
 	private String getClassName2()
 	{
