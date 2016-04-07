@@ -112,6 +112,6 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 	}
 	private void createJsDelegateGenerator(ClassPath classpath)
 	{
-		jsDelegateGenerator= new JsDelegateGenerator(classpath.toString().replace(";", ":"), new DomHandlerDelegateStrategy());
+		jsDelegateGenerator= new JsDelegateGenerator(classpath.toString(), new DomHandlerDelegateStrategy());
 	}
 }
