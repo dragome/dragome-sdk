@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -47,6 +48,8 @@ import com.dragome.compiler.DragomeJsCompiler;
 
 public class FileManager
 {
+	private static Logger LOGGER= Logger.getLogger(FileManager.class.getName());
+
 	private List<Object> path= new ArrayList<Object>();
 	private ClasspathFileFilter classpathFilter;
 	private List<ClasspathFile> extraClasspathFiles;
@@ -122,10 +125,17 @@ public class FileManager
 		final Enumeration<JarEntry> entries= jarFile.entries();
 		while (entries.hasMoreElements())
 		{
-			final JarEntry entry= entries.nextElement();
-			final String entryName= entry.getName();
-			if (entryName.endsWith(".class"))
-				result.add(entryName.replace('/', File.separatorChar).replace(".class", ""));
+			try
+			{
+				final JarEntry entry= entries.nextElement();
+				final String entryName= entry.getName();
+				if (entryName.endsWith(".class"))
+					result.add(entryName.replace('/', File.separatorChar).replace(".class", ""));
+			}
+			catch (Exception e)
+			{
+				LOGGER.warning("There is an invalid jar entry: " + e.getMessage());
+			}
 		}
 
 		return result;

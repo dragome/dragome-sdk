@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.TypeVariable;
+import java.net.URL;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
@@ -589,6 +590,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		//TODO implementar
 		return null;
 	}
+
+    public URL getResource(String name) {
+		return null;
+    }
 
 	public boolean isPrimitive()
 	{
