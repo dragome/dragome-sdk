@@ -16,7 +16,10 @@ import org.apache.commons.io.IOUtils;
 import com.dragome.commons.compiler.ClassPath;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
+import com.dragome.web.serverside.servlets.DragomeWro4jConfigurationObjectFactory;
+import com.dragome.web.serverside.servlets.DragomeWroManagerFactory;
 
+import ro.isdc.wro.config.jmx.WroConfiguration;
 import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 
 public class StandaloneDragomeAppGenerator
@@ -201,6 +204,12 @@ public class StandaloneDragomeAppGenerator
 
 			copyResources();
 			compile();
+
+			WroConfiguration wroConfiguration= new DragomeWro4jConfigurationObjectFactory().create();
+			DragomeWroManagerFactory managerFactory= new DragomeWroManagerFactory(destinationDirectory);
+			Wro4jStandaloneRunner wro4jStandaloneRunner= new Wro4jStandaloneRunner(wroConfiguration, managerFactory, new File(destinationDirectory, "/dragome"));
+			wro4jStandaloneRunner.process();
+
 		}
 		catch (Exception e)
 		{
@@ -221,7 +230,6 @@ public class StandaloneDragomeAppGenerator
 		copyResourceMinifyJS("/js/console.js");
 		copyResourceMinifyJS("/js/helpers.js");
 		copyResourceMinifyJS("/js/String.js");
-		copyResourceMinifyJS("/js/jquery.atmosphere.js");
 		copyResourceMinifyJS("/js/qx-oo-5.0.1.min.js");
 	}
 
