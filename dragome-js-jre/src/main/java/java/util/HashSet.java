@@ -2,8 +2,8 @@ package java.util;
 
 /**
  * This class implements the Set interface, backed by a {@link java.util.HashMap}.
- * 
- * 
+ *
+ *
  */
 public class HashSet<E> extends AbstractCollection<E> implements Set<E>
 {
@@ -25,6 +25,10 @@ public class HashSet<E> extends AbstractCollection<E> implements Set<E>
 		{
 			add((E) object);
 		}
+	}
+
+	public HashSet(int n)
+	{
 	}
 
 	/**

@@ -141,4 +141,17 @@ public class Throwable
 
 	}
 
+	protected Throwable(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+	{
+		if (writableStackTrace)
+		{
+			fillInStackTrace();
+		}
+		else
+		{
+			stackTrace= null;
+		}
+		this.cause= cause;
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2003, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1994, 2008, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,35 +23,37 @@
  * questions.
  */
 
-package java.lang.ref;
-
+package java.lang;
 
 /**
- * Weak reference objects, which do not prevent their referents from being
- * made finalizable, finalized, and then reclaimed.  Weak references are most
- * often used to implement canonicalizing mappings.
+ * Thrown to indicate that a thread is not in an appropriate state
+ * for the requested operation. See, for example, the
+ * <code>suspend</code> and <code>resume</code> methods in class
+ * <code>Thread</code>.
  *
- * <p> Suppose that the garbage collector determines at a certain point in time
- * that an object is <a href="package-summary.html#reachability">weakly
- * reachable</a>.  At that time it will atomically clear all weak references to
- * that object and all weak references to any other weakly-reachable objects
- * from which that object is reachable through a chain of strong and soft
- * references.  At the same time it will declare all of the formerly
- * weakly-reachable objects to be finalizable.  At the same time or at some
- * later time it will enqueue those newly-cleared weak references that are
- * registered with reference queues.
- *
- * @author   Mark Reinhold
- * @since    1.2
+ * @author  unascribed
+ * @see     java.lang.Thread#resume()
+ * @see     java.lang.Thread#suspend()
+ * @since   JDK1.0
  */
+public class IllegalThreadStateException extends IllegalArgumentException {
+    private static final long serialVersionUID = -7626246362397460174L;
 
-public class WeakReference<T> extends Reference<T> {
+    /**
+     * Constructs an <code>IllegalThreadStateException</code> with no
+     * detail message.
+     */
+    public IllegalThreadStateException() {
+        super();
+    }
 
-	WeakReference(T referent)
-	{
-		super(referent);
-		// TODO Auto-generated constructor stub
-	}
-
-
+    /**
+     * Constructs an <code>IllegalThreadStateException</code> with the
+     * specified detail message.
+     *
+     * @param   s   the detail message.
+     */
+    public IllegalThreadStateException(String s) {
+        super(s);
+    }
 }

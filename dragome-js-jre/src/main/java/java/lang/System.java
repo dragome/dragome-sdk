@@ -141,4 +141,9 @@ public final class System
 	{
 		return properties.put(key, value);
 	}
+
+	public static SecurityManager getSecurityManager()
+	{
+		return null;
+	}
 }

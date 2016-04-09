@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2003, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,35 +23,39 @@
  * questions.
  */
 
-package java.lang.ref;
-
+package java.lang;
 
 /**
- * Weak reference objects, which do not prevent their referents from being
- * made finalizable, finalized, and then reclaimed.  Weak references are most
- * often used to implement canonicalizing mappings.
+ * Thrown when an application tries to use the Java <code>new</code>
+ * construct to instantiate an abstract class or an interface.
+ * <p>
+ * Normally, this error is caught by the compiler; this error can
+ * only occur at run time if the definition of a class has
+ * incompatibly changed.
  *
- * <p> Suppose that the garbage collector determines at a certain point in time
- * that an object is <a href="package-summary.html#reachability">weakly
- * reachable</a>.  At that time it will atomically clear all weak references to
- * that object and all weak references to any other weakly-reachable objects
- * from which that object is reachable through a chain of strong and soft
- * references.  At the same time it will declare all of the formerly
- * weakly-reachable objects to be finalizable.  At the same time or at some
- * later time it will enqueue those newly-cleared weak references that are
- * registered with reference queues.
- *
- * @author   Mark Reinhold
- * @since    1.2
+ * @author  unascribed
+ * @since   JDK1.0
  */
 
-public class WeakReference<T> extends Reference<T> {
 
-	WeakReference(T referent)
-	{
-		super(referent);
-		// TODO Auto-generated constructor stub
-	}
+public
+class InstantiationError extends IncompatibleClassChangeError {
+    private static final long serialVersionUID = -4885810657349421204L;
 
+    /**
+     * Constructs an <code>InstantiationError</code> with no detail  message.
+     */
+    public InstantiationError() {
+        super();
+    }
 
+    /**
+     * Constructs an <code>InstantiationError</code> with the specified
+     * detail message.
+     *
+     * @param   s   the detail message.
+     */
+    public InstantiationError(String s) {
+        super(s);
+    }
 }

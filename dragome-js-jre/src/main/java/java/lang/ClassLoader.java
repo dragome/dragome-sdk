@@ -20,9 +20,15 @@ import java.net.URL;
 public abstract class ClassLoader
 {
 	public abstract Class<?> loadClass(String name) throws ClassNotFoundException;
-	
+
 	public URL getResource(String name)
     {
 		return null;
     }
+
+	public static ClassLoader getSystemClassLoader()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

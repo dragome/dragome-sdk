@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997, 2003, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2000, 2007, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,37 +22,47 @@
  * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
  * or visit www.oracle.com if you need additional information or have any
  * questions.
+ *
  */
 
-package java.lang.ref;
+// -- This file was mechanically generated: Do not edit! -- //
+
+package java.nio.charset;
 
 
 /**
- * Weak reference objects, which do not prevent their referents from being
- * made finalizable, finalized, and then reclaimed.  Weak references are most
- * often used to implement canonicalizing mappings.
+ * Unchecked exception thrown when no support is available
+ * for a requested charset.
  *
- * <p> Suppose that the garbage collector determines at a certain point in time
- * that an object is <a href="package-summary.html#reachability">weakly
- * reachable</a>.  At that time it will atomically clear all weak references to
- * that object and all weak references to any other weakly-reachable objects
- * from which that object is reachable through a chain of strong and soft
- * references.  At the same time it will declare all of the formerly
- * weakly-reachable objects to be finalizable.  At the same time or at some
- * later time it will enqueue those newly-cleared weak references that are
- * registered with reference queues.
- *
- * @author   Mark Reinhold
- * @since    1.2
+ * @since 1.4
  */
 
-public class WeakReference<T> extends Reference<T> {
+public class UnsupportedCharsetException
+    extends IllegalArgumentException
+{
 
-	WeakReference(T referent)
-	{
-		super(referent);
-		// TODO Auto-generated constructor stub
-	}
+    private static final long serialVersionUID = 1490765524727386367L;
 
+    private String charsetName;
+
+    /**
+     * Constructs an instance of this class.
+     *
+     * @param  charsetName
+     *         The name of the unsupported charset
+     */
+    public UnsupportedCharsetException(String charsetName) {
+        super(String.valueOf(charsetName));
+	this.charsetName = charsetName;
+    }
+
+    /**
+     * Retrieves the name of the unsupported charset.
+     *
+     * @return  The name of the unsupported charset
+     */
+    public String getCharsetName() {
+        return charsetName;
+    }
 
 }

@@ -231,26 +231,47 @@ public class Integer extends Number implements Comparable<Integer>
 	{
 		return value > object.value ? 1 : (value < object.value ? -1 : 0);
 	}
-	
+
 	public static int hashCode(int value)
 	{
-		return (int) (value ^ (value >>> 32));
+		return value ^ (value >>> 32);
 	}
-	
+
 	public static int numberOfTrailingZeros(int i)
 	{
-		if (i == 0) 
+		if (i == 0)
 		{
 			return 32;
-		} 
+		}
 		else
 		{
-			int rtn = 0;
-			for (int r = 1; (r & i) == 0; r <<= 1)
+			int rtn= 0;
+			for (int r= 1; (r & i) == 0; r<<= 1)
 			{
 				rtn++;
 			}
 			return rtn;
 		}
 	}
+
+	public static int rotateLeft(int i, int distance)
+	{
+		return (i << distance) | (i >>> -distance);
+	}
+
+	public static int rotateRight(int i, int distance)
+	{
+		return (i >>> distance) | (i << -distance);
+	}
+
+    public static int bitCount(int i) {
+        // HD, Figure 5-2
+        i = i - ((i >>> 1) & 0x55555555);
+        i = (i & 0x33333333) + ((i >>> 2) & 0x33333333);
+        i = (i + (i >>> 4)) & 0x0f0f0f0f;
+        i = i + (i >>> 8);
+        i = i + (i >>> 16);
+        return i & 0x3f;
+    }
+
 }

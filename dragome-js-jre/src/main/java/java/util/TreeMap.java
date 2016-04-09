@@ -17,4 +17,9 @@ package java.util;
 
 public class TreeMap<K, V> extends HashMap<K, V>
 {
+
+	public TreeMap(Comparator<K> caseInsensitiveOrder)
+	{
+		// TODO Auto-generated constructor stub
+	}
 }

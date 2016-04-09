@@ -149,17 +149,17 @@ public class Collections
 
 	public static final <K, V> Map<K, V> emptyMap()
 	{
-		return (Map<K, V>) new HashMap<K, V>();
+		return new HashMap<K, V>();
 	}
 
 	public static final <T> List<T> emptyList()
 	{
-		return (List<T>) new ArrayList<T>();
+		return new ArrayList<T>();
 	}
 
 	public static final <T> Set<T> emptySet()
 	{
-		return (Set<T>) EMPTY_SET;
+		return EMPTY_SET;
 	}
 
 	public static <T> List<T> unmodifiableList(List<? extends T> list)
@@ -200,6 +200,16 @@ public class Collections
 	public static <T> List<T> synchronizedList(List<T> list)
 	{
 		return list;
+	}
+
+	public static <K, V> SortedMap<K, V> unmodifiableSortedMap(TreeMap<K, V> m)
+	{
+		return (SortedMap<K, V>) m;
+	}
+
+	public static <T> Set<T> unmodifiableSet(HashSet<T> hs)
+	{
+		return hs;
 	}
 
 }
