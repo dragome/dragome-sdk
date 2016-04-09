@@ -54,21 +54,15 @@ public class FileManager
 	private ClasspathFileFilter classpathFilter;
 	private List<ClasspathFile> extraClasspathFiles;
 
-	public FileManager(List<File> classPath, ClasspathFileFilter classpathFilter, List<ClasspathFile> extraCompilableFiles)
+	public FileManager(List<ClasspathFile> classPath, ClasspathFileFilter classpathFilter, List<ClasspathFile> extraCompilableFiles)
 	{
 		this.classpathFilter= classpathFilter;
 		this.extraClasspathFiles= extraCompilableFiles;
 
 		Log.getLogger().debug("Resolving class path " + classPath);
 
-		for (File file : classPath)
+		for (ClasspathFile file : classPath)
 		{
-			if (!file.exists())
-			{
-				DragomeJsCompiler.errorCount++;
-				Log.getLogger().error("Cannot find resource on class path: " + file.getAbsolutePath());
-				continue;
-			}
 
 			if (file.getName().endsWith(".jar"))
 			{
