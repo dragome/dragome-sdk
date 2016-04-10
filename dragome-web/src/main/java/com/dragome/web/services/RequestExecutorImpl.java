@@ -96,7 +96,7 @@ public class RequestExecutorImpl implements RequestExecutor
 				ScriptHelper.evalNoResult("parameters2[key]=value", null);
 			}
 
-		Object eval= ScriptHelper.eval("jQueryHttpRequest(asyncCall, url,parameters2,asyncCallback, crossDomain, useGetMethod)", null);
+		Object eval= ScriptHelper.eval("httpRequest(asyncCall, url,parameters2,asyncCallback, crossDomain, useGetMethod)", null);
 		return isAsync ? "" : (String) eval;
 	}
 
