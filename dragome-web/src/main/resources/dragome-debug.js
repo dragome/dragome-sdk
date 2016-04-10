@@ -62,24 +62,17 @@ function loadScript(url, callback)
 (function ()
 {
 
-        stylesheet("dragome-resources/css/dragome.css");
-        script("dragome-resources/js/hashtable.js");
-        script("dragome-resources/js/deflate.js");
-        script("dragome-resources/js/console.js");
-        script("dragome-resources/js/helpers.js");
-        script("dragome-resources/js/String.js");
+		stylesheet("dragome-resources/css/dragome.css");
+		script("dragome-resources/js/hashtable.js");
+		script("dragome-resources/js/deflate.js");
+		script("dragome-resources/js/console.js");
+		script("dragome-resources/js/helpers.js");
+		script("dragome-resources/js/String.js");
 
-        loadScript("dragome-resources/js/atmosphere.js", function ()
-        {
-            loadScript("dragome-resources/js/application.js", function ()
-            {
-                loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function ()
-                {
-                    WebSocketInitializer();
-                    script("compiled-js/webapp.js");
-                });
-            });
-        });
+		loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function()
+		{
+			script("compiled-js/webapp.js");
+		});
 
     
 })();
