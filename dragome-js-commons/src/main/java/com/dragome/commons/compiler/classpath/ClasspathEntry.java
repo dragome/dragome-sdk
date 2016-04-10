@@ -8,4 +8,5 @@ public interface ClasspathEntry
 	ClasspathFile getClasspathFileOf(String relativeName);
 	List<String> getAllFilesNamesFiltering(ClasspathFileFilter classpathFilter);
 	void copyFilesToJar(JarOutputStream jos);
+	String getName();
 }
