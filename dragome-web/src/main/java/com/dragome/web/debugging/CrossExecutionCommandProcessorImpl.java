@@ -141,7 +141,8 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			}
 			else if (jsVariableCreationInMethod.getValueReferenceHolder().getBooleanValue() != null)
 			{
-				reference= jsVariableCreationInMethod.getValueReferenceHolder().getBooleanValue().booleanValue();
+				ScriptHelper.put("booleanPrimitiveValue", jsVariableCreationInMethod.getValueReferenceHolder().getBooleanValue().booleanValue(), null);
+				reference= ScriptHelper.eval("booleanPrimitiveValue", null);
 				//		System.out.println(jsVariableCreationInMethod.getName() + "= " + reference);
 			}
 			else

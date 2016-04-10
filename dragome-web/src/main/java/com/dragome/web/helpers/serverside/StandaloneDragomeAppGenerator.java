@@ -224,13 +224,11 @@ public class StandaloneDragomeAppGenerator
 
 		copyResourceMinifyJS("/dragome-debug.js");
 		copyResourceMinifyJS("/dragome-production.js");
-		copyResourceMinifyJS("/js/jquery-1.7.2.min.js");
 		copyResourceMinifyJS("/js/hashtable.js");
 		copyResourceMinifyJS("/js/deflate.js");
 		copyResourceMinifyJS("/js/deflate-main.js");
-		copyResourceMinifyJS("/js/console.js");
 		copyResourceMinifyJS("/js/helpers.js");
-		copyResourceMinifyJS("/js/String.js");
+		copyResourceMinifyJS("/js/string.js");
 		copyResourceMinifyJS("/js/qx-oo-5.0.1.min.js");
 	}
 

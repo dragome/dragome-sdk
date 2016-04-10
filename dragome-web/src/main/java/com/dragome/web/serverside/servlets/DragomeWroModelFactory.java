@@ -11,11 +11,10 @@ public class DragomeWroModelFactory implements WroModelFactory
 	public WroModel create()
 	{
 		Group dragomeGroup= new Group("dragome");
-		dragomeGroup.addResource(Resource.create("/dragome-resources/js/jquery-1.7.2.min.js", ResourceType.JS)); //TODO extraer constantes
 		dragomeGroup.addResource(Resource.create("/dragome-resources/js/hashtable.js", ResourceType.JS));
 		dragomeGroup.addResource(Resource.create("/dragome-resources/js/deflate.js", ResourceType.JS));
 		dragomeGroup.addResource(Resource.create("/dragome-resources/js/helpers.js", ResourceType.JS));
-		dragomeGroup.addResource(Resource.create("/dragome-resources/js/String.js", ResourceType.JS));
+		dragomeGroup.addResource(Resource.create("/dragome-resources/js/string.js", ResourceType.JS));
 		dragomeGroup.addResource(Resource.create("/dragome-resources/js/qx-oo-5.0.1.min.js", ResourceType.JS));
 		dragomeGroup.addResource(Resource.create("/compiled-js/webapp.js", ResourceType.JS));
 		dragomeGroup.addResource(Resource.create("/dragome-resources/css/dragome.css", ResourceType.CSS));

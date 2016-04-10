@@ -16,10 +16,18 @@
 package com.dragome.web.services;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Proxy;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.w3c.dom.EventHandler;
+import org.w3c.dom.XMLHttpRequest;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.html.MessageEvent;
+
+import com.dragome.commons.DelegateCode;
 import com.dragome.commons.ExecutionHandler;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.services.AsyncCallbackWrapper;
@@ -29,9 +37,18 @@ import com.dragome.services.interfaces.AsyncCallback;
 import com.dragome.services.interfaces.AsyncResponseHandler;
 import com.dragome.services.interfaces.RequestExecutor;
 import com.dragome.web.debugging.messages.ClientToServerServiceInvocationHandler;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class RequestExecutorImpl implements RequestExecutor
 {
+	public interface XMLHttpRequestExtension extends XMLHttpRequest
+	{
+		@DelegateCode(eval= "this.node.send()")
+		public String sendSync();
+		@DelegateCode(eval= "this.node.send($1)")
+		public String sendSync(Object data);
+	}
+
 	private boolean useGetMethod;
 
 	public RequestExecutorImpl(boolean useGetMethod)
@@ -75,29 +92,52 @@ public class RequestExecutorImpl implements RequestExecutor
 		return executeHttpRequest(false, url, parameters, null, false, useGetMethod);
 	}
 
-	public static String executeHttpRequest(boolean isAsync, String url, Map<String, String> parameters, AsyncCallback<String> asyncCallback, boolean crossDomain, boolean useGetMethod)
+	public static String executeHttpRequest(boolean isAsync, String url, Map<String, String> parameters, final AsyncCallback<String> asyncCallback, boolean crossDomain, boolean useGetMethod)
+	{
+		try
+		{
+			return executeHttpRequestInternal(isAsync, url, parameters, asyncCallback, useGetMethod);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static String executeHttpRequestInternal(boolean isAsync, String url, Map<String, String> parameters, final AsyncCallback<String> asyncCallback, boolean useGetMethod) throws UnsupportedEncodingException
 	{
 		ScriptHelper.put("url", url, null);
-		String isAsyncAsString= isAsync ? "true" : "false";
-		String isCrossDomain= crossDomain ? "true" : "false";
+		final XMLHttpRequestExtension xmlHttpRequest= ScriptHelper.evalCasting("new XMLHttpRequest()", XMLHttpRequestExtension.class, null);
+		xmlHttpRequest.open(useGetMethod ? "GET" : "POST", url, isAsync);
+		xmlHttpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-		ScriptHelper.put("asyncCall", isAsyncAsString, null);
-		ScriptHelper.put("asyncCallback", asyncCallback, null);
-		ScriptHelper.put("crossDomain", isCrossDomain, null);
-		ScriptHelper.put("useGetMethod", useGetMethod, null);
+		String parameter= "";
 
-		ScriptHelper.put("parameters2", new Object(), null);
-		ScriptHelper.evalNoResult("parameters2={}", null);
 		if (parameters != null)
 			for (Entry<String, String> entry : parameters.entrySet())
-			{
-				ScriptHelper.put("key", entry.getKey(), null);
-				ScriptHelper.put("value", entry.getValue(), null);
-				ScriptHelper.evalNoResult("parameters2[key]=value", null);
-			}
+				parameter+= URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8") + "&";
 
-		Object eval= ScriptHelper.eval("httpRequest(asyncCall, url,parameters2,asyncCallback, crossDomain, useGetMethod)", null);
-		return isAsync ? "" : (String) eval;
+		if (isAsync)
+		{
+			xmlHttpRequest.setOnreadystatechange(new EventHandler()
+			{
+				public void handleEvent(Event evt)
+				{
+
+					if (xmlHttpRequest.getReadyState() == 4 && xmlHttpRequest.getReadyState() == 200)
+					{
+						MessageEvent messageEvent= JsCast.castTo(evt, MessageEvent.class);
+						asyncCallback.onSuccess(messageEvent.getData().toString());
+					}
+					else
+						asyncCallback.onError();
+				}
+			});
+		}
+
+		xmlHttpRequest.sendSync(parameter);
+
+		return isAsync ? "" : (String) xmlHttpRequest.getResponseText();
 	}
 
 	public String executeAsynchronousRequest(String url, Map<String, String> parameters, AsyncCallback<String> asyncCallback)

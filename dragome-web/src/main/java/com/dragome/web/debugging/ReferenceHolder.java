@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -70,6 +70,12 @@ public class ReferenceHolder
 			}
 			type= instance.getClass();
 		}
+	}
+
+	public ReferenceHolder(boolean booleanValue)
+	{
+		this.booleanValue= new Boolean(booleanValue);
+		type= boolean.class;
 	}
 
 	public String getId()
