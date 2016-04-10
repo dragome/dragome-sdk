@@ -1,6 +1,8 @@
 package com.dragome.commons.compiler;
 
+import com.dragome.commons.compiler.classpath.ClasspathEntry;
+
 public interface PrioritySolver
 {
-	int getPriorityOf(String string);
+	int getPriorityOf(ClasspathEntry string);
 }

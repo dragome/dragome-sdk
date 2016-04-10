@@ -15,22 +15,21 @@
  */
 package com.dragome.commons.compiler;
 
-import java.util.List;
-
 import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
 public class BytecodeToJavascriptCompilerConfiguration
 {
-	private ClassPath classPath;
+	private Classpath classPath;
 	private String targetDir;
 	private String mainClassName;
 	private CompilerType compilerType;
 	private BytecodeTransformer bytecodeTransformer;
 	private ClasspathFileFilter classpathFilter;
 	private boolean checkingCast;
-	private List<ClasspathFile> extraClasspath;
 
-	public BytecodeToJavascriptCompilerConfiguration(ClassPath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast, List<ClasspathFile> extraClasspath)
+	public BytecodeToJavascriptCompilerConfiguration(Classpath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast)
 	{
 		this.classPath= classPath;
 		this.targetDir= targetDir;
@@ -39,10 +38,9 @@ public class BytecodeToJavascriptCompilerConfiguration
 		this.bytecodeTransformer= bytecodeTransformer;
 		this.classpathFilter= classpathFilter;
 		this.checkingCast= isCheckingCast;
-		this.extraClasspath= extraClasspath;
 	}
 
-	public ClassPath getClassPath()
+	public Classpath getClasspath()
 	{
 		return classPath;
 	}
@@ -75,10 +73,5 @@ public class BytecodeToJavascriptCompilerConfiguration
 	public boolean isCheckingCast()
 	{
 		return checkingCast;
-	}
-
-	public List<ClasspathFile> getExtraClasspath()
-	{
-		return extraClasspath;
 	}
 }

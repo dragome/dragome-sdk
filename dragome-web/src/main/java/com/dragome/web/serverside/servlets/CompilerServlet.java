@@ -22,7 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dragome.commons.compiler.ClassPath;
+import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.web.serverside.compile.watchers.DirectoryWatcher;
@@ -53,7 +53,7 @@ public class CompilerServlet extends GetPostServlet
 	private void compile() throws URISyntaxException
 	{
 		ClassLoader c= getClass().getClassLoader();
-		final ClassPath classPath= new ClassPath();
+		final Classpath classPath= new Classpath();
 		if (c instanceof URLClassLoader)
 		{
 			URLClassLoader urlClassLoader= (URLClassLoader) c;
