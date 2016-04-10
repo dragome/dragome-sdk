@@ -3,6 +3,7 @@ package com.dragome.commons.compiler.classpath;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class JavaFileClasspathFile extends AbstractClasspathFile
 {
@@ -21,14 +22,19 @@ public class JavaFileClasspathFile extends AbstractClasspathFile
 	{
 		super(path);
 		this.file= file;
+
+		lastModified= file.lastModified();
+	}
+
+	public InputStream openInputStream()
+	{
 		try
 		{
-			inputStream= new FileInputStream(file);
+			return inputStream= new FileInputStream(file);
 		}
 		catch (FileNotFoundException e)
 		{
 			throw new RuntimeException(e);
 		}
-		lastModified= file.lastModified();
 	}
 }

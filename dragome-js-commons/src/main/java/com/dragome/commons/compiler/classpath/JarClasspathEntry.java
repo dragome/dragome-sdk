@@ -11,7 +11,6 @@ import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
 import com.dragome.commons.compiler.CopyUtils;
-import com.dragome.commons.compiler.InsideJarClasspathFile;
 
 public class JarClasspathEntry implements ClasspathEntry
 {

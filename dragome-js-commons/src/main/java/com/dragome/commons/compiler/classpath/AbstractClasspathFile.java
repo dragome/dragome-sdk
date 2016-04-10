@@ -14,11 +14,6 @@ public abstract class AbstractClasspathFile implements ClasspathFile
 		this.path= path;
 	}
 
-	public InputStream openInputStream()
-	{
-		return inputStream;
-	}
-
 	public long getLastModified()
 	{
 		return lastModified;

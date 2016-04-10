@@ -61,6 +61,8 @@ public class DragomeCompilerLauncher
 		if (configurator.isRemoveUnusedCode())
 			classPath= optimize(classPath, serviceLocator, configurator);
 
+		classPath.addEntries(extraClasspath);
+
 		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter, configurator.isCheckingCast());
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
 		bytecodeToJavascriptCompiler.compile();
