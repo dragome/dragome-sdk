@@ -1,4 +1,3 @@
-
 dragomeJs = {};
 
 function _isNull(aObject)
@@ -88,7 +87,7 @@ dragomeJs.createException = function(className, message, original)
 		dragomeJs.signalState = 0;
 	}
 	return exception;
-}
+};
 
 /**
  * Returns the specified exception. According VM Spec's athrow instruction, if
@@ -105,91 +104,30 @@ dragomeJs.nullSaveException = function(objectref)
 		objectref.message = objectref.$$$message;
 
 	return objectref;
-}
+};
 
-dragomeJs.handleNewLine = function(s)
-{
-	if (navigator.appVersion.indexOf("MSIE") != -1)
-	{
-		return s.replace(/\n/g, "\n\r");
-	}
-	return s;
-}
-
-dragomeJs.console_element = null;
-
-dragomeJs.console_init = function()
-{
-	var id = "java.lang.System.out";
-	var consoleContainer = document.getElementById(id);
-	// if (consoleContainer == null)
-	// {
-	// consoleContainer = document.createElement("div");
-	// document.body.appendChild(consoleContainer);
-	// }
-
-	if (consoleContainer != null)
-	{
-		dragomeJs.console_element = document.createElement("pre");
-		consoleContainer.appendChild(dragomeJs.console_element);
-	}
-}
 
 dragomeJs.console_write = function(message)
 {
-	message = String(message);
-	if (message != null)
-	{
-		// TODO: On what browsers do we have to issue a carriage return?
-		message = dragomeJs.handleNewLine(message);
-	} else
-	{
-		message = "null";
-	}
-	try
-	{
-		if (dragomeJs.console_element == null)
-		{
-			dragomeJs.console_init();
-		}
-
-		if (dragomeJs.console_element != null)
-			dragomeJs.console_element.appendChild(document.createTextNode(message));
-		else if (console != null)
-			console.log(message);
-
-	} catch (e)
-	{
-		alert("Could not print string:\n\t" + message + "\nfor reason:\n\t" + dragomeJs.inspect(e));
-	}
-}
+    consoleMessage(message);
+};
 
 dragomeJs.console_clear = function()
 {
-	if (dragomeJs.console_element != null)
-	{
-		var newElement = document.createElement("pre");
-		consoleContainer.replaceChild(newElement, dragomeJs.console_element);
-		dragomeJs.console_element = newElement;
-	}
-}
+    if (window['console'] != undefined && console['clear'] != undefined) {
+        console.clear();
+    }
+};
 
 dragomeJs.println = function(message)
 {
-	dragomeJs.print(message + "\n");
-}
+    consoleMessage(message);
+};
 
 dragomeJs.print = function(message)
 {
-	if (typeof (window) == "undefined")
-		console.info(message);
-	else
-		dragomeJs.console_write(message);
-
-	var elem = document.getElementById('java.lang.System.out');
-	if (elem)
-		elem.scrollTop = elem.scrollHeight;
-}
+    consoleMessage(message);
+};
 
 dragomeJs.isInstanceof = function(obj, type)
 {
@@ -228,7 +166,7 @@ function checkInterfaceExtendsOther(obj, type)
 		result |= checkInterfaceExtendsOther(interfacesList[i], type);
 
 	return result;
-}
+};
 
 dragomeJs.cmp = function(value1, value2)
 {
@@ -238,7 +176,7 @@ dragomeJs.cmp = function(value1, value2)
 		return 1;
 	else
 		return -1;
-}
+};
 
 // Truncate a number. Needed for integral types in casting and division.
 dragomeJs.trunc = function(f)
@@ -246,7 +184,7 @@ dragomeJs.trunc = function(f)
 	if (f < 0)
 		return Math.ceil(f);
 	return Math.floor(f);
-}
+};
 
 /**
  * Narrows the number n to the specified type. The type must be 0xff (byte) or
@@ -260,7 +198,7 @@ dragomeJs.narrow = function(n, bits)
 	if (n > (bits >>> 1))
 		n -= (bits + 1);
 	return n;
-}
+};
 
 /**
  * Returns a new multidimensional array of the specified array type [...[T and
@@ -315,7 +253,7 @@ dragomeJs.newArray = function(classSignature, dim, index)
 	}
 
 	return array;
-}
+};
 
 /**
  * Returns a shallow clone of the specified array. This method is used in
@@ -331,7 +269,7 @@ dragomeJs.cloneArray = function(other)
 		array[i] = other[i];
 	}
 	return array;
-}
+};
 
 // Returns all attributes of the specified object as a string.
 dragomeJs.inspect = function(object)
@@ -377,7 +315,7 @@ dragomeJs.inspect = function(object)
 	}
 
 	return s;
-}
+};
 
 dragomeJs.unquote = function(s)
 {
@@ -427,7 +365,7 @@ dragomeJs.checkCast = function(obj, className)
 	}
 
 	return obj;
-}
+};
 
 function createProxyOf(types, methods, handler1, handler)
 {
@@ -465,30 +403,30 @@ function createProxyOf(types, methods, handler1, handler)
 	});
 
 	return eval("new ProxyOf_" + nextNumber + "()");
-}
+};
 
 dragomeJs.addNativeMethod= function(signature, method)
 {
 	dragomeJs.nativeMethods[signature]= method;
-}
+};
 
 dragomeJs.resolveNativeMethod= function(owner, signature)
 {
 	var instance=	java_lang_Class.$forName___java_lang_String$java_lang_Class((owner.classname.substring(0, owner.classname.lastIndexOf("_")+1)+"Delegate"+owner.classname.substring(owner.classname.lastIndexOf("_")+1)).replaceAll("_", ".")).$newInstance$java_lang_Object()[signature];
 	return instance;
 	//return dragomeJs.nativeMethods[signature];
-}
+};
 
 dragomeJs.resolveMethod= function(owner, signature)
 {
 	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(owner);
 	var method= clazz.getMethodBySignature(signature);
 	return method;
-}
+};
 
 dragomeJs.castTo= function(instance, className)
 {
 	var clazz= java_lang_Class.$forName___java_lang_String$java_lang_Class(className);
 	return com_dragome_web_enhancers_jsdelegate_JsCast.$castTo___java_lang_Object__java_lang_Class$java_lang_Object(instance, clazz);
-}
+};
 
