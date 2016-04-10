@@ -114,83 +114,6 @@ performance.now = (function ()
     };
 })();
 
-/*function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
-{
-    if (crossDomain != "true")
-    {
-        isAsync = isAsync && isAsync != "false";
-
-        var ajaxParameters = {
-            async: isAsync,
-            contentType: 'application/x-www-form-urlencoded',
-            dataType: 'text',
-            success: null,
-            error: null
-        };
-
-        if (isAsync)
-        {
-            ajaxParameters.success = function (data)
-            {
-                if (data != "null")
-                    asyncCallback.$onSuccess___java_lang_Object$void(data);
-            };
-
-            ajaxParameters.error = function ()
-            {
-                asyncCallback.$onError$void();
-            };
-        }
-
-        $.ajaxSetup(ajaxParameters);
-
-        var result = isGet ? $.get(url, parameters) : $.post(url, parameters);
-        return result.responseText;
-    } else
-    {
-        fileParameter = parameters.file ? "file=" + parameters.file + "&" : "";
-        var a = $.getJSON(url + '?' + fileParameter + 'callback=?', function (data)
-        {
-            var tranformedData = eval(parameters.transformer);
-            asyncCallback.$onSuccess___java_lang_Object$void(tranformedData);
-        });
-    }
-}*/
-
-function httpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
-{
-    var xhr = new XHRHandler(isAsync);
-    if (crossDomain == 'true')
-        xhr.setCORSCall(false);
-    if (isAsync) {
-        if (isGet) {
-            xhr.get(url)
-                    .success(function (data, xhr) {
-                        if (data != "null")
-                            asyncCallback.$onSuccess___java_lang_Object$void(data);
-                    })
-                    .error(function (data, xhr) {
-                        asyncCallback.$onError$void();
-                    });
-        } else {
-            xhr.post(url, parameters)
-                    .success(function (data, xhr) {
-                        if (data != "null")
-                            asyncCallback.$onSuccess___java_lang_Object$void(data);
-                    })
-                    .error(function (data, xhr) {
-                        asyncCallback.$onError$void();
-                    });
-        }
-    } else {
-        if (isGet) {
-            return xhr.get(url);
-        } else {
-            return xhr.post(url, parameters);
-        }
-    }
-}
-
 function socketCreator(aUrl, successCallback, errorCallback)
 {
     window.onSocketMessage = successCallback;
@@ -220,21 +143,6 @@ function getTemplatePart(content, id)
     return subElement.innerHTML;
 }
 
-/*function getURL(url)
-{
-    return $.ajax({
-        type: "GET",
-        url: url,
-        cache: false,
-        async: false
-    }).responseText;
-}*/
-
-function getURL(url)
-{
-    return new XHRHandler(false).get(url);
-}
-
 function consoleMessage(message) {
     if (window['console'] != undefined && console['log'] != undefined) {
         console.log(message);
@@ -259,9 +167,6 @@ function refreshPageSetup()
 
 if (getQuerystring("refresh") == "true")
     refreshPageSetup();
-
-// if (getQuerystring("debug") != "true")
-// document.getElementById("console").style.display="none";
 
 function getElementByDebugId(attrib)
 {
@@ -299,7 +204,7 @@ function checkStyleSheet(url)
     }
 }
 
-//checkStyleSheet("dragome/dragome.css");
+// checkStyleSheet("dragome/dragome.css");
 
 function setupCheckCast()
 {
@@ -309,7 +214,7 @@ function setupCheckCast()
         };
 }
 
-function onReady(callback) 
+function onReady(callback)
 {
     if ( document.readyState == "complete" ) {
              return setTimeout( callback, 1 );
@@ -320,112 +225,11 @@ function onReady(callback)
     });
 }
 
-// adapted from atomic.js library, https://github.com/toddmotto/atomic
-function XHRHandler(asyncCall)
+function jsonToQueryString(params)
 {
-    'use strict';
+	var query = "";
+	for (key in params)
+	    query += encodeURIComponent(key)+"="+encodeURIComponent(params[key])+"&";
 
-    var contentType = 'application/x-www-form-urlencoded',
-            useCORS = false,
-            corscridentials = false,
-            async = asyncCall == undefined || asyncCall == true;
-
-    var sxhr = function (type, url, data) {
-        var request = new XMLHttpRequest();
-        request.open(type, url, false);
-        request.setRequestHeader('Content-type', contentType);
-        request.send(data);
-        if (request.status >= 200 && request.status < 300) {
-            return request.responseText;
-        } else
-            return null;
-    };
-
-    var xhr = function (type, url, data) {
-        if (async) {
-            var methods = {
-                success: function () {},
-                error: function () {}
-            };
-            var request = new XMLHttpRequest();
-            
-            if (useCORS) {
-                if ('withCredentials' in request) {
-                    request.withCredentials = corscridentials;
-                } else {
-                    request = new XDomainRequest();
-                }
-            }
-
-            request.open(type, url, true);
-            if (request.overrideMimeType)
-                request.overrideMimeType('text/html');
-            request.setRequestHeader('Content-type', contentType);
-            
-            if (useCORS) {
-                request.onload = function () {
-                    if (request.status >= 200 && request.status < 300) {
-                        methods.success.apply(methods, [request.responseText, request]);
-                    } else {
-                        methods.error.apply(methods, [null, request]);
-                    }
-                };
-
-                request.onerror = function () {
-                    methods.error.apply(methods, null);
-                };
-            } else {
-                request.onreadystatechange = function () {
-                    if (request.readyState == 4) {
-                        if (request.status >= 200 && request.status < 300) {
-                            methods.success.apply(methods, [request.responseText, request]);
-                        } else {
-                            methods.error.apply(methods, [null, request]);
-                        }
-                    }
-                };
-            }
-            request.send(data);
-
-            var xhrMethods = {
-                success: function (callback) {
-                    methods.success = callback;
-                    return xhrMethods;
-                },
-                error: function (callback) {
-                    methods.error = callback;
-                    return xhrMethods;
-                }
-            };
-
-            return xhrMethods;
-        } else {
-            return sxhr(type, url, data);
-        }
-    };
-
-    this.get = function (src) {
-        return xhr('GET', src);
-    };
-
-    this.put = function (url, data) {
-        return xhr('PUT', url, data);
-    };
-
-    this.post = function (url, data) {
-        return xhr('POST', url, data);
-    };
-
-    this.delete = function (url) {
-        return xhr('DELETE', url);
-    };
-
-    this.setContentType = function (value) {
-        contentType = value;
-    };
-
-    this.setCORSCall = function (useCridentials) {
-        useCORS = true;
-        corscridentials = useCridentials;
-    };
+	return query;
 }

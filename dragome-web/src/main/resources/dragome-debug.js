@@ -61,17 +61,14 @@ function loadScript(url, callback)
 
 (function ()
 {
-
 		stylesheet("dragome-resources/css/dragome.css");
 		script("dragome-resources/js/hashtable.js");
 		script("dragome-resources/js/deflate.js");
 		script("dragome-resources/js/helpers.js");
-		script("dragome-resources/js/String.js");
+		script("dragome-resources/js/string.js");
 
 		loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function()
 		{
 			script("compiled-js/webapp.js");
 		});
-
-    
 })();

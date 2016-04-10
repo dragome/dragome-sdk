@@ -70,6 +70,7 @@ import com.dragome.web.html.dom.w3c.HTMLCanvasElementExtension;
 import com.dragome.web.html.dom.w3c.HTMLImageElementExtension;
 import com.dragome.web.html.dom.w3c.TypedArraysFactory;
 import com.dragome.web.html.dom.w3c.WebGLRenderingContextExtension;
+import com.dragome.web.services.RequestExecutorImpl.XMLHttpRequestExtension;
 
 @DragomeConfiguratorImplementor
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
@@ -84,7 +85,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			ArrayBuffer.class, ArrayBufferView.class, Float32Array.class, Float64Array.class, Int16Array.class, //
 			Int32Array.class, Int8Array.class, Uint16Array.class, Uint32Array.class, Uint8Array.class, //
 			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class, //
-			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEvent.class));
+			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEvent.class, XMLHttpRequestExtension.class));
 
 	public DomHandlerApplicationConfigurator()
 	{
