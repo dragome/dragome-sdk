@@ -103,15 +103,13 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 		result.add(new VirtualFolderClasspathEntry(classpathFiles));
 
 		if (jsDelegateGenerator == null)
-		{
 			createJsDelegateGenerator(classpath);
 
-			for (Class<?> class1 : classes)
-			{
-				InMemoryClasspathFile inMemoryClasspathFile= jsDelegateGenerator.generateAsClasspathFile(class1);
-				addClassBytecode(inMemoryClasspathFile.getBytecode(), inMemoryClasspathFile.getClassname());
-				classpathFiles.add(inMemoryClasspathFile);
-			}
+		for (Class<?> class1 : classes)
+		{
+			InMemoryClasspathFile inMemoryClasspathFile= jsDelegateGenerator.generateAsClasspathFile(class1);
+			addClassBytecode(inMemoryClasspathFile.getBytecode(), inMemoryClasspathFile.getClassname());
+			classpathFiles.add(inMemoryClasspathFile);
 		}
 
 		return result;
