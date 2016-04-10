@@ -15,9 +15,9 @@ var __next_objid = 1;
 
 function objectId(obj)
 {
-    if (obj === null)
+    if (obj == null)
         return null;
-    if (obj.__obj_id === null)
+    if (obj.__obj_id == null)
         obj.__obj_id = __next_objid++;
     return obj.__obj_id;
 }
@@ -38,7 +38,7 @@ function decode_base64(s)
 function getOuterHTML(anElement)
 {
     var parent = anElement.parentNode;
-    var hasParent = parent !== null;
+    var hasParent = parent != null;
     if (!hasParent)
     {
         parent = document.createElement("div");
@@ -67,7 +67,7 @@ function stopEvent(pE)
             pE = window.event;
         else
             return;
-    if (pE.cancelBubble !== null)
+    if (pE.cancelBubble != null)
         pE.cancelBubble = true;
     if (pE.stopPropagation)
         pE.stopPropagation();
@@ -75,7 +75,7 @@ function stopEvent(pE)
         pE.preventDefault();
     if (window.event)
         pE.returnValue = false;
-    if (pE.cancel !== null)
+    if (pE.cancel != null)
         pE.cancel = true;
 }
 
@@ -87,12 +87,12 @@ function rgb2html(red, green, blue)
 
 function getQuerystring(key, default_)
 {
-    if (default_ === null)
+    if (default_ == null)
         default_ = "";
     key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + key + "=([^&#]*)");
     var qs = regex.exec(window.location.href);
-    if (qs === null)
+    if (qs == null)
         return unescape(default_);
     else
         return unescape(qs[1]);
@@ -116,9 +116,9 @@ performance.now = (function ()
 
 /*function jQueryHttpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
 {
-    if (crossDomain !== "true")
+    if (crossDomain != "true")
     {
-        isAsync = isAsync && isAsync !== "false";
+        isAsync = isAsync && isAsync != "false";
 
         var ajaxParameters = {
             async: isAsync,
@@ -132,7 +132,7 @@ performance.now = (function ()
         {
             ajaxParameters.success = function (data)
             {
-                if (data !== "null")
+                if (data != "null")
                     asyncCallback.$onSuccess___java_lang_Object$void(data);
             };
 
@@ -160,13 +160,13 @@ performance.now = (function ()
 function httpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet)
 {
     var xhr = new XHRHandler(isAsync);
-    if (crossDomain === 'true')
+    if (crossDomain == 'true')
         xhr.setCORSCall(false);
     if (isAsync) {
         if (isGet) {
             xhr.get(url)
                     .success(function (data, xhr) {
-                        if (data !== "null")
+                        if (data != "null")
                             asyncCallback.$onSuccess___java_lang_Object$void(data);
                     })
                     .error(function (data, xhr) {
@@ -175,7 +175,7 @@ function httpRequest(isAsync, url, parameters, asyncCallback, crossDomain, isGet
         } else {
             xhr.post(url, parameters)
                     .success(function (data, xhr) {
-                        if (data !== "null")
+                        if (data != "null")
                             asyncCallback.$onSuccess___java_lang_Object$void(data);
                     })
                     .error(function (data, xhr) {
@@ -195,7 +195,6 @@ function socketCreator(aUrl, successCallback, errorCallback)
 {
     window.onSocketMessage = successCallback;
 }
-;
 
 function getTemplatePart(content, id)
 {
@@ -237,8 +236,8 @@ function getURL(url)
 }
 
 function consoleMessage(message) {
-    if (window['console'] !== undefined && console['log'] !== undefined) {
-        console.log(message.toString());
+    if (window['console'] != undefined && console['log'] != undefined) {
+        console.log(message);
     }
 }
 
@@ -246,7 +245,7 @@ function refreshPageSetup()
 {
     lastCompilationTime = parseInt(getURL("compiler-service"));
 
-    if (getQuerystring("refresh") === "true")
+    if (getQuerystring("refresh") == "true")
         setInterval(function ()
         {
             var compilationTime = parseInt(getURL("compiler-service"));
@@ -258,7 +257,7 @@ function refreshPageSetup()
         }, 500);
 }
 
-if (getQuerystring("refresh") === "true")
+if (getQuerystring("refresh") == "true")
     refreshPageSetup();
 
 // if (getQuerystring("debug") != "true")
@@ -284,7 +283,7 @@ function checkStyleSheet(url)
     var found = false;
     for (var i = 0; i < document.styleSheets.length; i++)
     {
-        if (document.styleSheets[i].href === url)
+        if (document.styleSheets[i].href == url)
         {
             found = true;
             break;
@@ -304,7 +303,7 @@ function checkStyleSheet(url)
 
 function setupCheckCast()
 {
-    if (getQuerystring("check-cast-disabled") === "true")
+    if (getQuerystring("check-cast-disabled") == "true")
         dragomeJs.checkCast = function (obj) {
             return obj;
         };
@@ -312,7 +311,7 @@ function setupCheckCast()
 
 function onReady(callback) 
 {
-    if ( document.readyState === "complete" ) {
+    if ( document.readyState == "complete" ) {
              return setTimeout( callback, 1 );
     }
 
@@ -329,7 +328,7 @@ function XHRHandler(asyncCall)
     var contentType = 'application/x-www-form-urlencoded',
             useCORS = false,
             corscridentials = false,
-            async = asyncCall === undefined || asyncCall === true;
+            async = asyncCall == undefined || asyncCall == true;
 
     var sxhr = function (type, url, data) {
         var request = new XMLHttpRequest();
@@ -377,7 +376,7 @@ function XHRHandler(asyncCall)
                 };
             } else {
                 request.onreadystatechange = function () {
-                    if (request.readyState === 4) {
+                    if (request.readyState == 4) {
                         if (request.status >= 200 && request.status < 300) {
                             methods.success.apply(methods, [request.responseText, request]);
                         } else {

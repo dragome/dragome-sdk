@@ -2,12 +2,12 @@ dragomeJs = {};
 
 function _isNull(aObject)
 {
-	if (typeof aObject === 'boolean')
-		return aObject === false;
-	else if (typeof aObject === 'number')
-		return aObject === 0;
+	if (typeof aObject == 'boolean')
+		return aObject == false;
+	else if (typeof aObject == 'number')
+		return aObject == 0;
 	else
-		return aObject === null;
+		return aObject == null;
 }
 
 function addSignatureTo(aClass, aMethodSignature, aGenericSignature)
@@ -37,25 +37,25 @@ var now = (function()
 	return performance.now();
 });
 
-if (typeof String.prototype.startsWith !== 'function')
+if (typeof String.prototype.startsWith != 'function')
 {
 	String.prototype.startsWith = function(str)
 	{
-		return this.slice(0, str.length) === str;
+		return this.slice(0, str.length) == str;
 	};
 }
 
-if (typeof String.prototype.endsWith !== 'function')
+if (typeof String.prototype.endsWith != 'function')
 {
 	String.prototype.endsWith = function(str)
 	{
-		return this.slice(-str.length) === str;
+		return this.slice(-str.length) == str;
 	};
 }
 
 dragomeJs.createException = function(className, message, original)
 {
-	if (dragomeJs.signalState === 1)
+	if (dragomeJs.signalState == 1)
 		throw "Recursive exception creation";
 
 	dragomeJs.signalState = 1;
@@ -95,9 +95,9 @@ dragomeJs.createException = function(className, message, original)
  */
 dragomeJs.nullSaveException = function(objectref)
 {
-	if (objectref instanceof Error && getQuerystring("debug") === "true")
+	if (objectref instanceof Error && getQuerystring("debug") == "true")
 		objectref = dragomeJs.createException("java.lang.NullPointerException", objectref.message, objectref);
-	else if (objectref === null)
+	else if (objectref == null)
 		objectref = dragomeJs.createException("java.lang.NullPointerException", null);
 
 	if (!objectref.message)
@@ -114,7 +114,7 @@ dragomeJs.console_write = function(message)
 
 dragomeJs.console_clear = function()
 {
-    if (window['console'] !== undefined && console['clear'] !== undefined) {
+    if (window['console'] != undefined && console['clear'] != undefined) {
         console.clear();
     }
 };
@@ -131,20 +131,20 @@ dragomeJs.print = function(message)
 
 dragomeJs.isInstanceof = function(obj, type)
 {
-	if (obj === undefined)
+	if (obj == undefined)
 		return false;
 
-	if ((typeof obj === "string" || obj instanceof String) && type === java_lang_String)
+	if ((typeof obj == "string" || obj instanceof String) && type == java_lang_String)
 		return true;
 
 	var clazz = !obj.$$type ? obj.constructor : obj;
 
-	if (clazz === type)
+	if (clazz == type)
 		return true;
 
-	if (type.$$type === "Interface")
+	if (type.$$type == "Interface")
 	{
-		if (obj.$$type === "Interface")
+		if (obj.$$type == "Interface")
 		{
 			return checkInterfaceExtendsOther(obj, type);
 		} else
@@ -159,7 +159,7 @@ function checkInterfaceExtendsOther(obj, type)
 
 	var result = false;
 
-	if (obj.name === type.name)
+	if (obj.name == type.name)
 		return true;
 
 	for (i in interfacesList)
@@ -170,7 +170,7 @@ function checkInterfaceExtendsOther(obj, type)
 
 dragomeJs.cmp = function(value1, value2)
 {
-	if (value1 === value2)
+	if (value1 == value2)
 		return 0;
 	else if (value1 > value2)
 		return 1;
@@ -213,7 +213,7 @@ dragomeJs.narrow = function(n, bits)
  */
 dragomeJs.newArray = function(classSignature, dim, index)
 {
-	if (index === null)
+	if (index == null)
 		index = 0;
 	var subSignature = classSignature.substr(index);
 	var dimensionAtIndex = dim[index];
@@ -228,13 +228,13 @@ dragomeJs.newArray = function(classSignature, dim, index)
 		return clazz;
 	};
 
-	if (subSignature === "Z")
+	if (subSignature == "Z")
 	{
 		for ( var i = 0; i < dimensionAtIndex; i++)
 		{
 			array[i] = false;
 		}
-	} else if (subSignature.charAt(1) !== "[" && subSignature.charAt(1) !== "L")
+	} else if (subSignature.charAt(1) != "[" && subSignature.charAt(1) != "L")
 	{
 		for ( var i = 0; i < dimensionAtIndex; i++)
 		{
@@ -276,10 +276,10 @@ dragomeJs.inspect = function(object)
 {
 	var s = "Value " + String(object);
 
-	if (object === null || object === undefined)
+	if (object == null || object == undefined)
 		return "null";
 
-	if (typeof (object) === "string")
+	if (typeof (object) == "string")
 		return object;
 
 	var attributes = new Array();
@@ -304,7 +304,7 @@ dragomeJs.inspect = function(object)
 				value += "While fetching attribute: " + e.message;
 			}
 			var type = typeof (value);
-			if (type === "function")
+			if (type == "function")
 			{
 				s += "\t" + attribute + "[" + type + "]\n";
 			} else
@@ -328,7 +328,7 @@ dragomeJs.unquote = function(s)
 	for ( var i = 0; i < s.length; i++)
 	{
 		var c = s.charAt(i);
-		if (c === '\\' && i < s.length - 1)
+		if (c == '\\' && i < s.length - 1)
 		{
 			c = s.charAt(++i);
 		}
@@ -339,17 +339,17 @@ dragomeJs.unquote = function(s)
 
 dragomeJs.checkCast = function(obj, className)
 {
-	if (!className.basename || className === java_lang_Object || obj === null)
+	if (!className.basename || className == java_lang_Object || obj == null)
 		return obj;
 
-	if (typeof obj === "string")
-		if (className === java_lang_CharSequence || className === java_lang_Comparable)
+	if (typeof obj == "string")
+		if (className == java_lang_CharSequence || className == java_lang_Comparable)
 			return obj;
 
 	// if (className == java_lang_Boolean && (obj == 1 || obj == 0))
 	// return obj;
 
-	if (className === java_lang_Class && obj.$$type === "Class")
+	if (className == java_lang_Class && obj.$$type == "Class")
 		return obj;
 
 	if (obj.classname && obj.classname.startsWith("ProxyOf_"))
@@ -358,7 +358,7 @@ dragomeJs.checkCast = function(obj, className)
 	if (!dragomeJs.isInstanceof(obj, className))
 	{
 		var cn = obj.classname;
-		if (typeof obj === "string")
+		if (typeof obj == "string")
 			cn = "java_lang_String";
 
 		throw dragomeJs.createException("java.lang.RuntimeException", "Cannot cast " + cn + " to " + className.basename);
