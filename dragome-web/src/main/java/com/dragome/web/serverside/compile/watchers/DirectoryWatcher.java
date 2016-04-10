@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dragome.commons.compiler.ClassPath;
+import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.web.helpers.serverside.DragomeCompilerLauncher;
 
 public class DirectoryWatcher
@@ -47,7 +47,7 @@ public class DirectoryWatcher
 
 	public static long lastCompilation;
 
-	private ClassPath classPath;
+	private Classpath classPath;
 
 	private String path;
 
@@ -104,7 +104,7 @@ public class DirectoryWatcher
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	DirectoryWatcher(Path dir, boolean recursive, ClassPath classPath, String path) throws IOException
+	DirectoryWatcher(Path dir, boolean recursive, Classpath classPath, String path) throws IOException
 	{
 		this.classPath= classPath;
 		this.path= path;
@@ -230,7 +230,7 @@ public class DirectoryWatcher
 		System.exit(-1);
 	}
 
-	public static void startWatching(String[] args, ClassPath classPath, String path)
+	public static void startWatching(String[] args, Classpath classPath, String path)
 	{
 		try
 		{
@@ -256,7 +256,7 @@ public class DirectoryWatcher
 		}
 	}
 
-	private static void compile(ClassPath classPath, String path)
+	private static void compile(Classpath classPath, String path)
 	{
 		System.out.println("");
 		System.out.println("----------------------------------------------------------------------");

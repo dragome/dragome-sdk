@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
-import com.dragome.commons.compiler.ClassPath;
+import com.dragome.commons.compiler.CopyUtils;
+import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
 import com.dragome.web.serverside.servlets.DragomeWro4jConfigurationObjectFactory;
@@ -127,7 +128,7 @@ public class StandaloneDragomeAppGenerator
 	{
 		System.setProperty("dragome-compile-mode", "release");
 
-		final ClassPath classPath= new ClassPath();
+		final Classpath classPath= new Classpath();
 
 		URLClassLoader theCurrentClassLoader= (URLClassLoader) getClass().getClassLoader();
 		URL[] theConfiguredURLs= theCurrentClassLoader.getURLs();

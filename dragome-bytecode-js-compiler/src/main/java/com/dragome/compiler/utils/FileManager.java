@@ -28,173 +28,45 @@
 
 package com.dragome.compiler.utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
-
-import com.dragome.commons.compiler.ClasspathFile;
-import com.dragome.commons.compiler.ClasspathFileFilter;
-import com.dragome.compiler.DragomeJsCompiler;
+import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathEntry;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
 public class FileManager
 {
-	private static Logger LOGGER= Logger.getLogger(FileManager.class.getName());
-
-	private List<Object> path= new ArrayList<Object>();
 	private ClasspathFileFilter classpathFilter;
-	private List<ClasspathFile> extraClasspathFiles;
+	private Classpath classPath;
 
-	public FileManager(List<ClasspathFile> classPath, ClasspathFileFilter classpathFilter, List<ClasspathFile> extraCompilableFiles)
+	public FileManager(Classpath classPath, ClasspathFileFilter classpathFilter)
 	{
+		this.classPath= classPath;
 		this.classpathFilter= classpathFilter;
-		this.extraClasspathFiles= extraCompilableFiles;
-
-		Log.getLogger().debug("Resolving class path " + classPath);
-
-		for (ClasspathFile file : classPath)
-		{
-
-			if (file.getName().endsWith(".jar"))
-			{
-				try
-				{
-					path.add(new JarFile(file));
-				}
-				catch (IOException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-			else
-			{
-				path.add(file);
-			}
-		}
 	}
 
 	public ClasspathFile getFileForInput(String relativeName)
 	{
-		for (ClasspathFile compilableFile : extraClasspathFiles)
-			if (compilableFile.getPath().equals(relativeName))
-				return compilableFile;
-
-		for (Object o : path)
+		for (ClasspathEntry classpathEntry : classPath.getEntries())
 		{
-			if (o instanceof JarFile)
-			{
-				JarFile jarFile= (JarFile) o;
-				JarEntry entry= jarFile.getJarEntry(relativeName);
-				if (entry != null)
-				{
-					return new InsideJarClasspathFile(jarFile, entry, relativeName);
-				}
-			}
-			else
-			{
-				File file= new File(((File) o), relativeName);
-				if (file.exists())
-				{
-					return new JavaFileClasspathFile(file, relativeName);
-				}
-			}
+			ClasspathFile classpathFile= classpathEntry.getClasspathFileOf(relativeName);
+			if (classpathFile != null)
+				return classpathFile;
 		}
 
 		throw new RuntimeException("Could not find " + relativeName + " on class path");
 	}
 
-	private static List<String> findClassesInJar(JarFile jarFile)
-	{
-		ArrayList<String> result= new ArrayList<String>();
-
-		final Enumeration<JarEntry> entries= jarFile.entries();
-		while (entries.hasMoreElements())
-		{
-			try
-			{
-				final JarEntry entry= entries.nextElement();
-				final String entryName= entry.getName();
-				if (entryName.endsWith(".class"))
-					result.add(entryName.replace('/', File.separatorChar).replace(".class", ""));
-			}
-			catch (Exception e)
-			{
-				LOGGER.warning("There is an invalid jar entry: " + e.getMessage());
-			}
-		}
-
-		return result;
-	}
 	public Collection<String> getAllFilesInClasspath()
 	{
 		Collection<String> files= new ArrayList<String>();
 
-		for (ClasspathFile classpathFile : extraClasspathFiles)
-		{
-			File file= new File(classpathFile.getPath());
-			if (classpathFilter == null || classpathFilter.accept(file, new File(".")))
-				files.add(classpathFile.getPath().replace(".class", ""));
-		}
+		for (ClasspathEntry classpathEntry : classPath.getEntries())
+			files.addAll(classpathEntry.getAllFilesNamesFiltering(classpathFilter));
 
-		for (Object o : path)
-		{
-			if (o instanceof JarFile)
-			{
-				JarFile jarFile= (JarFile) o;
-
-				List<String> classesInJar= findClassesInJar(jarFile);
-
-				for (String file : classesInJar)
-				{
-					if (classpathFilter == null || classpathFilter.accept(new File(file), new File(jarFile.getName())))
-					{
-						files.add(file);
-					}
-				}
-			}
-			else
-			{
-				File folder= (File) o;
-				Collection<File> listFiles= FileUtils.listFiles(folder, new WildcardFileFilter("*.class"), DirectoryFileFilter.DIRECTORY);
-				for (File file : listFiles)
-				{
-					String substring= file.toString().substring(folder.toString().length() + 1);
-
-					if (classpathFilter == null || classpathFilter.accept(file, folder))
-					{
-						files.add(substring.replace(".class", ""));
-					}
-				}
-			}
-		}
 		return files;
 	}
-
-	//	public static void main(String[] args) throws Exception
-	//	{
-	//		String className= args[0];
-	//		DragomeJsCompiler.compiler= new DragomeJsCompiler(CompilerType.Standard);
-	//
-	//		Project.createSingleton(null);
-	//		ClassUnit classUnit= new ClassUnit(Project.singleton, Project.singleton.getSignature(className));
-	//		classUnit.setClassFile(new JavaFileCompilableFile(new File(args[1])));
-	//		Parser parser= new Parser(classUnit);
-	//		TypeDeclaration typeDecl= parser.parse();
-	//		DragomeJavaScriptGenerator dragomeJavaScriptGenerator= new DragomeJavaScriptGenerator(Project.singleton);
-	//		dragomeJavaScriptGenerator.setOutputStream(new PrintStream(new FileOutputStream(new File("/tmp/webapp.js"))));
-	//		dragomeJavaScriptGenerator.visit(typeDecl);
-	//
-	//		FileInputStream fis= new FileInputStream(new File("/tmp/webapp.js"));
-	//		String md5= org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
-	//		System.out.println(md5);
-	//	}
 }

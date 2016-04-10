@@ -44,7 +44,7 @@ import java.util.Set;
 
 import org.apache.commons.io.output.StringBuilderWriter;
 
-import com.dragome.commons.compiler.ClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;

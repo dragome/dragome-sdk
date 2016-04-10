@@ -1,4 +1,4 @@
-package com.dragome.commons.compiler;
+package com.dragome.commons.compiler.classpath;
 
 import java.io.File;
 

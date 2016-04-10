@@ -1,4 +1,4 @@
-package com.dragome.commons.compiler;
+package com.dragome.commons.compiler.classpath;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ public abstract class AbstractClasspathFile implements ClasspathFile
 		this.path= path;
 	}
 
-	public InputStream openInputStream() throws IOException
+	public InputStream openInputStream()
 	{
 		return inputStream;
 	}

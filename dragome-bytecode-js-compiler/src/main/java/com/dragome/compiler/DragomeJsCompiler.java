@@ -29,7 +29,6 @@
 package com.dragome.compiler;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,14 +37,14 @@ import java.util.List;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
-import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.compiler.generators.AbstractVisitor;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
 import com.dragome.compiler.units.ClassUnit;
 import com.dragome.compiler.utils.FileManager;
 import com.dragome.compiler.utils.Log;
-import com.dragome.compiler.utils.Utils;
 import com.dragome.compiler.writer.Assembly;
 
 public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
@@ -59,8 +58,6 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 	private File cacheFile;
 
 	List<com.dragome.compiler.writer.Assembly> assemblies= new ArrayList<Assembly>();
-
-	private List<File> classpath= new ArrayList<File>();
 
 	public FileManager fileManager;
 
@@ -96,35 +93,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 	private boolean initialized= false;
 
-	public static void main(String argv[]) throws Exception
-	{
-		if (argv == null || argv.length != 4)
-		{
-			StringBuffer sb= new StringBuffer();
-			sb.append("Usage: java ");
-			sb.append(DragomeJsCompiler.class.getName());
-			sb.append(" <basedir> <classpathElements> <entryPointClassName> <targetLocation>");
-			System.out.print(sb.toString());
-			return;
-		}
-
-		File basedir= new File(argv[0]);
-		String classpathElements= argv[1];
-		String entryPointClassName= argv[2];
-
-		Assembly assembly= new Assembly();
-		assembly.setEntryPointClassName(entryPointClassName);
-
-		assembly.setTargetLocation(new File(argv[3]));
-
-		DragomeJsCompiler compiler= new DragomeJsCompiler(CompilerType.Standard);
-		compiler.setBasedir(basedir);
-		compiler.addClasspathElements(classpathElements);
-		compiler.addAssembly(assembly);
-		compiler.setGenerateLineNumbers(false);
-		compiler.setCompression(false);
-		compiler.compile();
-	}
+	private Classpath classpath;
 
 	public DragomeJsCompiler(BytecodeToJavascriptCompilerConfiguration compilerConfiguration)
 	{
@@ -142,8 +111,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 			Project.singleton= null;
 			//	    compiler.setBasedir(basedir);
-			String classpathElements= compilerConfiguration.getClassPath().toString();
-			compiler.addClasspathElements(classpathElements);
+			compiler.setClasspath(compilerConfiguration.getClasspath());
 			compiler.addClasspathFilter(compilerConfiguration.getClasspathFilter());
 
 			if (compilerConfiguration.getBytecodeTransformer() != null)
@@ -157,6 +125,11 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 			compiler.setCompression(false);
 			initialized= true;
 		}
+	}
+
+	private void setClasspath(Classpath classpath)
+	{
+		this.classpath= classpath;
 	}
 
 	public DragomeJsCompiler(CompilerType compilerType)
@@ -210,11 +183,6 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 		logger.debug("Entry point is " + assembly.getEntryPointClassName() + "#main(java.lang.String[])void");
 
-		if (classpath == null)
-		{
-			throw new RuntimeException("Field classPath must be set");
-		}
-
 		if (assembly.getEntryPointClassName() == null)
 		{
 			throw new RuntimeException("Field assembly.entryPointClassName must be set");
@@ -261,7 +229,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		//		System.out.println((char) 27 + "[01;31m;This text is red." + (char) 27 + "[00;00m");
 		//		System.out.println((char) 27 + "[01;32m;This text is green." + (char) 27 + "[00;00m");
 
-		fileManager= new FileManager(classpath, classpathFilter, compilerConfiguration.getExtraClasspath());
+		fileManager= new FileManager(classpath, classpathFilter);
 		//	Project.singleton= null; //TODO revisar esto, impide cacheo!!
 		Project project= Project.createSingleton(getCacheFile());
 		assembly.setProject(project);
@@ -382,42 +350,6 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 	public String getTargetPlatform()
 	{
 		return targetPlatform;
-	}
-
-	public List<File> getClasspath()
-	{
-		return classpath;
-	}
-
-	public void addClasspathElements(List<File> classpathElements)
-	{
-		classpath.addAll(classpathElements);
-	}
-
-	public void addClasspathElement(File classpathElement)
-	{
-		classpath.add(classpathElement);
-	}
-
-	public void addClasspathElements(String classPathElements)
-	{
-		String[] array= classPathElements.split("(;|,)");
-		for (String path : array)
-		{
-			path= path.trim();
-			if (path.length() > 0)
-			{
-				addClasspathElement(Utils.resolve(basedir, path));
-			}
-		}
-	}
-
-	public void setClasspathElements(List<String> classpathElements)
-	{
-		for (Object part : classpathElements)
-		{
-			addClasspathElements((String) part);
-		}
 	}
 
 	public void setFailOnError(boolean flag)

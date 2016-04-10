@@ -1,10 +1,8 @@
-package com.dragome.compiler.utils;
+package com.dragome.commons.compiler.classpath;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
-import com.dragome.commons.compiler.AbstractClasspathFile;
 
 public class JavaFileClasspathFile extends AbstractClasspathFile
 {
