@@ -44,4 +44,9 @@ public class VirtualFolderClasspathEntry implements ClasspathEntry
 		for (ClasspathFile classpathFile : classpathFiles)
 			CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getFilename().replace(".class", ""));
 	}
+
+	public String getName()
+	{
+		return "virtual-folder-classpath-entry";
+	}
 }

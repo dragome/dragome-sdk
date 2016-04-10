@@ -8,6 +8,7 @@ import java.io.InputStream;
 public class JavaFileClasspathFile extends AbstractClasspathFile
 {
 	private File file;
+
 	public String getFilename()
 	{
 		return file != null ? file.getName() : "";
@@ -18,10 +19,10 @@ public class JavaFileClasspathFile extends AbstractClasspathFile
 		this.file= file;
 	}
 
-	public JavaFileClasspathFile(File file, String path)
+	public JavaFileClasspathFile(File folder, String path)
 	{
 		super(path);
-		this.file= file;
+		this.file= new File(folder, path);
 
 		lastModified= file.lastModified();
 	}

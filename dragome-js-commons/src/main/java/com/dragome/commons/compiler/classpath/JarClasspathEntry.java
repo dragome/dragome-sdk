@@ -95,4 +95,9 @@ public class JarClasspathEntry implements ClasspathEntry
 	{
 		return jarFile.getName();
 	}
+
+	public String getName()
+	{
+		return jarFile.getName();
+	}
 }

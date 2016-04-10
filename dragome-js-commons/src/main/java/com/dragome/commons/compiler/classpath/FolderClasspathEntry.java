@@ -69,4 +69,9 @@ public class FolderClasspathEntry implements ClasspathEntry
 	{
 		return folder.getAbsolutePath();
 	}
+
+	public String getName()
+	{
+		return folder.getAbsolutePath();
+	}
 }
