@@ -63,6 +63,7 @@ import org.apache.bcel.generic.Type;
 import org.apache.commons.io.IOUtils;
 
 import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.classpath.JavaFileClasspathFile;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.annotations.AnnotationReader;
@@ -79,7 +80,6 @@ import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
 import com.dragome.compiler.invokedynamic.InvokeDynamicBackporter;
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.units.ClassUnit;
-import com.dragome.compiler.utils.JavaFileClasspathFile;
 import com.dragome.compiler.utils.Log;
 import com.dragome.compiler.utils.Utils;
 

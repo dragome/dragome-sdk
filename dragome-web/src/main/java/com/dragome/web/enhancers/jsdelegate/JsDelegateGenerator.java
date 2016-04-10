@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.dragome.commons.DelegateCode;
-import com.dragome.commons.compiler.InMemoryClasspathFile;
+import com.dragome.commons.compiler.classpath.InMemoryClasspathFile;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;

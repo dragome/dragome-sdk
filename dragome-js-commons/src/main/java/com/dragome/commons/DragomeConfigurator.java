@@ -19,10 +19,10 @@ import java.net.URL;
 import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
-import com.dragome.commons.compiler.ClassPath;
-import com.dragome.commons.compiler.ClasspathFile;
-import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathEntry;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
 public interface DragomeConfigurator
 {
@@ -34,8 +34,8 @@ public interface DragomeConfigurator
 	void setDefaultCompilerType(CompilerType defaultCompilerType);
 	public ClasspathFileFilter getClasspathFilter();
 	public boolean isCheckingCast();
-	List<ClasspathFile> getExtraClasspath(ClassPath classPath);
+	List<ClasspathEntry> getExtraClasspath(Classpath classPath);
 	boolean isRemoveUnusedCode();
-	public void sortClassPath(ClassPath classPath);
+	public void sortClassPath(Classpath classPath);
 	URL getAdditionalCodeKeepConfigFile();
 }

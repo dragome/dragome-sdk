@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
-import com.dragome.commons.compiler.ClassPath;
-import com.dragome.commons.compiler.ClasspathFile;
-import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
+import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathEntry;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
 @DragomeConfiguratorImplementor
 public class DefaultDragomeConfigurator implements DragomeConfigurator
@@ -125,9 +126,9 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return true;
 	}
 
-	public List<ClasspathFile> getExtraClasspath(ClassPath classpath)
+	public List<ClasspathEntry> getExtraClasspath(Classpath classpath)
 	{
-		return new ArrayList<ClasspathFile>();
+		return new ArrayList<ClasspathEntry>();
 	}
 
 	public boolean isRemoveUnusedCode()
@@ -135,7 +136,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return removeUnusedCode;
 	}
 
-	public void sortClassPath(ClassPath classPath)
+	public void sortClassPath(Classpath classPath)
 	{
 	}
 
