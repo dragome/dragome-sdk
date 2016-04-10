@@ -389,7 +389,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			else
 				ScriptHelper.eval("var interfacesList= this.$$$nativeClass.$$implements", this);
 
-			ScriptHelper.eval("for (var e in interfacesList) {", this);
+			ScriptHelper.eval("for (var e=0; interfacesList && e < interfacesList.length; e++) {", this);
 
 			if (ScriptHelper.evalBoolean("interfacesList[e].$$type != 'Class'", this))
 			{
