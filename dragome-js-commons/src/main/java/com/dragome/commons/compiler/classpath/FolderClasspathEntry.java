@@ -64,4 +64,9 @@ public class FolderClasspathEntry implements ClasspathEntry
 			throw new RuntimeException(e);
 		}
 	}
+
+	public String toString()
+	{
+		return folder.getAbsolutePath();
+	}
 }

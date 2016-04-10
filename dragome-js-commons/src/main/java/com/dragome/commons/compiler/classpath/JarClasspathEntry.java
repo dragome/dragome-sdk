@@ -91,4 +91,9 @@ public class JarClasspathEntry implements ClasspathEntry
 			throw new RuntimeException(e);
 		}
 	}
+
+	public String toString()
+	{
+		return jarFile.getName();
+	}
 }
