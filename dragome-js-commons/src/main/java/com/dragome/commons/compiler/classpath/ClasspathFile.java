@@ -1,12 +1,11 @@
-package com.dragome.commons.compiler;
+package com.dragome.commons.compiler.classpath;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public interface ClasspathFile
 {
 	String getFilename();
-	InputStream openInputStream() throws IOException;
+	InputStream openInputStream();
 	long getLastModified();
 	void close();
 	String getPath();

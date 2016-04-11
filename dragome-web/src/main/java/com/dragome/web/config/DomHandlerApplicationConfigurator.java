@@ -58,9 +58,11 @@ import org.w3c.dom.websocket.WebSocket;
 
 import com.dragome.commons.ChainedInstrumentationDragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
-import com.dragome.commons.compiler.ClassPath;
-import com.dragome.commons.compiler.ClasspathFile;
-import com.dragome.commons.compiler.InMemoryClasspathFile;
+import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathEntry;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
+import com.dragome.commons.compiler.classpath.InMemoryClasspathFile;
+import com.dragome.commons.compiler.classpath.VirtualFolderClasspathEntry;
 import com.dragome.web.debugging.MessageEvent;
 import com.dragome.web.enhancers.jsdelegate.JsDelegateGenerator;
 import com.dragome.web.html.dom.w3c.ArrayBufferFactory;
@@ -68,6 +70,7 @@ import com.dragome.web.html.dom.w3c.HTMLCanvasElementExtension;
 import com.dragome.web.html.dom.w3c.HTMLImageElementExtension;
 import com.dragome.web.html.dom.w3c.TypedArraysFactory;
 import com.dragome.web.html.dom.w3c.WebGLRenderingContextExtension;
+import com.dragome.web.services.RequestExecutorImpl.XMLHttpRequestExtension;
 
 @DragomeConfiguratorImplementor
 public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDragomeConfigurator
@@ -82,7 +85,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			ArrayBuffer.class, ArrayBufferView.class, Float32Array.class, Float64Array.class, Int16Array.class, //
 			Int32Array.class, Int8Array.class, Uint16Array.class, Uint32Array.class, Uint8Array.class, //
 			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class, //
-			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEvent.class));
+			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEvent.class, XMLHttpRequestExtension.class));
 
 	public DomHandlerApplicationConfigurator()
 	{
@@ -93,25 +96,27 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 		classes.addAll(additionalDelegates);
 	}
 
-	public List<ClasspathFile> getExtraClasspath(ClassPath classpath)
+	public List<ClasspathEntry> getExtraClasspath(Classpath classpath)
 	{
-		List<ClasspathFile> result= new ArrayList<ClasspathFile>();
+		List<ClasspathEntry> result= new ArrayList<ClasspathEntry>();
+		List<ClasspathFile> classpathFiles= new ArrayList<ClasspathFile>();
+
+		result.add(new VirtualFolderClasspathEntry(classpathFiles));
+
 		if (jsDelegateGenerator == null)
-		{
 			createJsDelegateGenerator(classpath);
 
-			for (Class<?> class1 : classes)
-			{
-				InMemoryClasspathFile inMemoryClasspathFile= jsDelegateGenerator.generateAsClasspathFile(class1);
-				addClassBytecode(inMemoryClasspathFile.getBytecode(), inMemoryClasspathFile.getClassname());
-				result.add(inMemoryClasspathFile);
-			}
+		for (Class<?> class1 : classes)
+		{
+			InMemoryClasspathFile inMemoryClasspathFile= jsDelegateGenerator.generateAsClasspathFile(class1);
+			addClassBytecode(inMemoryClasspathFile.getBytecode(), inMemoryClasspathFile.getClassname());
+			classpathFiles.add(inMemoryClasspathFile);
 		}
 
 		return result;
 	}
-	private void createJsDelegateGenerator(ClassPath classpath)
+	private void createJsDelegateGenerator(Classpath classpath)
 	{
-		jsDelegateGenerator= new JsDelegateGenerator(classpath.toString().replace(";", ":"), new DomHandlerDelegateStrategy());
+		jsDelegateGenerator= new JsDelegateGenerator(classpath.toString().replace(";", System.getProperty("path.separator")), new DomHandlerDelegateStrategy());
 	}
 }

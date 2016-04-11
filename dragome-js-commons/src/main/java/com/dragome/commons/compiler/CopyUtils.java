@@ -1,4 +1,4 @@
-package com.dragome.web.helpers.serverside;
+package com.dragome.commons.compiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class CopyUtils
 		}
 	}
 
-	private static void addEntryToJar(JarOutputStream jos, InputStream is, String entryName) throws IOException
+	public static void addEntryToJar(JarOutputStream jos, InputStream is, String entryName)
 	{
 		try
 		{
@@ -47,9 +47,16 @@ public class CopyUtils
 		}
 		finally
 		{
-			is.close();
-			jos.flush();
-			jos.closeEntry();
+			try
+			{
+				is.close();
+				jos.flush();
+				jos.closeEntry();
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

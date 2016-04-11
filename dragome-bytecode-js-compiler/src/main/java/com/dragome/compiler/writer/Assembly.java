@@ -43,8 +43,8 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 
-import com.dragome.commons.compiler.ClasspathFile;
-import com.dragome.commons.compiler.ClasspathFileFilter;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
@@ -255,7 +255,7 @@ public class Assembly
 		//	writer.write("new " + mainClass + "();\n");
 		//	writer.write(mainClass + "." + mainMethod + "();\n");
 
-		writer.write("$(function(){setupCheckCast(); _ed.executeMainClass();});");
+		writer.write("onReady(function(){setupCheckCast(); _ed.executeMainClass();});");
 
 		writer.close();
 

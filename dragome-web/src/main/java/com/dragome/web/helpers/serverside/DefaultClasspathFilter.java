@@ -2,8 +2,8 @@ package com.dragome.web.helpers.serverside;
 
 import java.io.File;
 
-import com.dragome.commons.compiler.ClasspathFileFilter;
 import com.dragome.commons.compiler.CompilerMode;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
 public class DefaultClasspathFilter implements ClasspathFileFilter
 {

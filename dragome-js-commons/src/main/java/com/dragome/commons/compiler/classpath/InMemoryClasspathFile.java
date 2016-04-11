@@ -1,6 +1,7 @@
-package com.dragome.commons.compiler;
+package com.dragome.commons.compiler.classpath;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class InMemoryClasspathFile extends AbstractClasspathFile
 {
@@ -27,11 +28,15 @@ public class InMemoryClasspathFile extends AbstractClasspathFile
 		super(classnameToPath(classname));
 		this.classname= classname;
 		this.bytecode= bytecode;
-		inputStream= new ByteArrayInputStream(bytecode);
 	}
 
 	private static String classnameToPath(String classname)
 	{
 		return classname.replace(".", "/") + ".class";
+	}
+
+	public InputStream openInputStream()
+	{
+		return inputStream= new ByteArrayInputStream(bytecode);
 	}
 }
