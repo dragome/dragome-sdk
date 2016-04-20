@@ -4,6 +4,10 @@ package org.w3c.dom;
 
 import org.w3c.dom.ObjectArray;
 import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.events.Touch;
+import org.w3c.dom.events.TouchList;
+import org.w3c.dom.html.Window;
 import org.w3c.dom.stylesheets.StyleSheet;
 
 public interface Document extends Node
@@ -47,4 +51,7 @@ public interface Document extends Node
     // NodeSelector
     public Element querySelector(String selectors);
     public NodeList querySelectorAll(String selectors);
+    // Document-42
+    public Touch createTouch(Window view, EventTarget target, int identifier, int pageX, int pageY, int screenX, int screenY);
+    public TouchList createTouchList(Touch... touches);
 }
