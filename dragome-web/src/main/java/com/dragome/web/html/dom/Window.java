@@ -2,6 +2,7 @@ package com.dragome.web.html.dom;
 
 import java.io.Serializable;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
@@ -72,6 +73,11 @@ public class Window
 		Runnable runnableForDebugging= wrapRunnableForDebugging(aRunnable);
 		ScriptHelper.put("ra", runnableForDebugging, this);
 		ScriptHelper.evalNoResult("window.onhashchange= function() {ra.$run$void();}", this);
+	}
+
+	public static Document getDocument()
+	{
+		return WebServiceLocator.getInstance().getDomHandler().getDocument();
 	}
 
 	public static Runnable wrapRunnableForDebugging(final Runnable runnable)
