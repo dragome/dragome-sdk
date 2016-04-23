@@ -105,4 +105,10 @@ public class JsCast
 	{
 		return castTo(instance, type, null);
 	}
+
+	public static <T> T createInstanceOf(Class<T> type)
+	{
+		String script= "new " + type.getSimpleName() + "()";
+		return ScriptHelper.evalCasting(script, type, null);
+	}
 }

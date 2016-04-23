@@ -400,8 +400,9 @@ public class DragomeJavaScriptGenerator extends Generator
 		{
 			VariableDeclaration decl= iterator.next();
 
-			if (hasToEscapeVariable(decl.getName()))
-				print("_");
+//			if (hasToEscapeVariable(decl.getName()))
+//				print("_");
+
 			decl.visit(this);
 			print(iterator.hasNext() ? ", " : "");
 		}
@@ -884,18 +885,27 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 		else if (name.startsWith("eval"))
 		{
+			String evalScript= firstArg;
+			if (isVariable)
+				evalScript= "eval(" + firstArg + ")";
+
 			if (name.startsWith("evalCasting"))
 			{
-				Signature signature= ((ClassLiteral) invocation.getFirstChild().getNextSibling()).getSignature();
-				print("dragomeJs.castTo(" + firstArg + ", \"" + signature + "\")");
+				ASTNode nextSibling= invocation.getFirstChild().getNextSibling();
+
+				if (nextSibling instanceof ClassLiteral)
+				{
+					Signature signature= ((ClassLiteral) nextSibling).getSignature();
+					print("dragomeJs.castTo(" + evalScript + ", \"" + signature + "\")");
+				}
+				else
+				{
+					VariableBinding variableBinding= (VariableBinding) nextSibling;
+					print("dragomeJs.castTo2(" + evalScript + ", " + variableBinding.getName() + ")");
+				}
 			}
 			else
-			{
-				if (isVariable)
-					print("eval(" + firstArg + ")");
-				else
-					print(firstArg);
-			}
+				print(evalScript);
 		}
 		else
 			throw new IllegalArgumentException("Cannot handle method " + name);
@@ -1241,6 +1251,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		{
 			if (decl.getLocation() != VariableDeclaration.LOCAL)
 				throw new RuntimeException("Declaration must be local");
+
 			print(name);
 		}
 
@@ -1279,26 +1290,20 @@ public class DragomeJavaScriptGenerator extends Generator
 		// if (!reference.isField()) {
 		// print("l");
 		// }
-		if (reference.getVariableDeclaration().getLocation() == VariableDeclaration.LOCAL_PARAMETER)
-			if (hasToEscapeVariable(reference.getName()))
-				print("_");
+		//		if (reference.getVariableDeclaration().getLocation() == VariableDeclaration.LOCAL_PARAMETER)
 
 		print(escapeVariable(reference.getName()));
 	}
 
 	private boolean hasToEscapeVariable(String name)
 	{
-		return "function".equals(name) || "default".equals(name);
+		return "function".equals(name) || "default".equals(name) || "var".equals(name) || "enum".equals(name) || "this".equals(name);
 	}
 
 	private String escapeVariable(String name)
 	{
-		if ("var".equals(name))
-			return "_var";
-		else if ("enum".equals(name))
-			return "_enum";
-		else if ("this".equals(name))
-			return "_this";
+		if (hasToEscapeVariable(name))
+			return "_" + name;
 		else
 			return name;
 	}

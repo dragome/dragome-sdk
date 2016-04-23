@@ -17,10 +17,7 @@ package java.lang.reflect;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
@@ -34,8 +31,10 @@ import com.dragome.web.debugging.JavascriptReference;
 import com.dragome.web.dispatcher.JavaRefId;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+
 @DragomeCompilerSettings(CompilerType.Standard)
-public final class Method
+public final class Method extends Executable
 {
 	protected String signature;
 	protected Class<?> cls;
@@ -376,4 +375,20 @@ public final class Method
 
 		return result.toArray(new Parameter[0]);
 	}
+
+	public boolean isSynthetic()
+	{
+		return false;
+	}
+
+	public TypeVariable<?>[] getTypeParameters()
+	{
+		return new TypeVariable[0];
+	}
+
+	public Annotation[][] getParameterAnnotations()
+	{
+		return new Annotation[0][0];
+	}
+
 }

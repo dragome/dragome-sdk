@@ -18,6 +18,7 @@ package java.lang;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Objects;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -59,6 +60,11 @@ public class Throwable
 	{
 		this(cause);
 		this.message= message;
+	}
+
+	public Throwable(java.lang.String message2, java.lang.Throwable cause2, boolean enableSuppression, boolean writableStackTrace)
+	{
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getMessage()
@@ -131,14 +137,40 @@ public class Throwable
 
 	public StackTraceElement[] getStackTrace()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		StackTraceElement[] stackTraceElements= new StackTraceElement[0];
+		Object calle= ScriptHelper.eval("arguments.callee", this);
+
+		int i= 0;
+		while (calle != null)
+		{
+			String displayName= (String) ScriptHelper.eval("calle.displayName || ''", this);
+
+			String[] split= displayName.split("\\.prototype\\.");
+			if (split.length == 2)
+			{
+				StackTraceElement stackTraceElement= new StackTraceElement(split[0].replace("_", "."), split[1], "file1", 13);
+				stackTraceElements[i++]= stackTraceElement;
+			}
+			calle= ScriptHelper.eval("calle.caller", this);
+			ScriptHelper.put("calle", calle, this);
+		}
+		return stackTraceElements;
 	}
 
 	public void setStackTrace(StackTraceElement[] stackTrace2)
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	public synchronized Throwable initCause(Throwable cause)
+	{
+		if (this.cause != this)
+			throw new IllegalStateException("Can't overwrite cause with " + Objects.toString(cause, "a null"), this);
+		if (cause == this)
+			throw new IllegalArgumentException("Self-causation not permitted", this);
+		this.cause= cause;
+		return this;
 	}
 
 }

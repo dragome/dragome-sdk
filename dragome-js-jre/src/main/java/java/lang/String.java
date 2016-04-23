@@ -17,6 +17,7 @@ package java.lang;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -697,5 +698,10 @@ public final class String implements CharSequence, Comparable<String>
 	public static String copyValueOf(char data[], int offset, int count)
 	{
 		return new String(data, offset, count);
+	}
+
+	public String toUpperCase(Locale root)
+	{
+		return toUpperCase();
 	}
 }

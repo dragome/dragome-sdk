@@ -18,8 +18,8 @@ package java.util;
 import com.dragome.commons.javascript.ScriptHelper;
 
 /**
- * Resizable-array implementation of the List interface. 
- * 
+ * Resizable-array implementation of the List interface.
+ *
  * @author j2js.com
  */
 public class ArrayList<E> extends AbstractCollection<E> implements List<E>
@@ -64,7 +64,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 				throw new RuntimeException();// TODO: IllegalStateException();
 			}
 			list.remove(lastReturnedIndex);
-
+			currentIndex= lastReturnedIndex;
 		}
 
 		public boolean hasPrevious()
@@ -373,12 +373,12 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 
 	public ListIterator<E> listIterator()
 	{
-		return (ListIterator<E>) new ArrayListIterator(this);
+		return new ArrayListIterator(this);
 	}
 
 	public ListIterator<E> listIterator(int index)
 	{
-		return (ListIterator<E>) new ArrayListIterator(this, index);
+		return new ArrayListIterator(this, index);
 	}
 
 	private void rangeCheckForAdd(int index)

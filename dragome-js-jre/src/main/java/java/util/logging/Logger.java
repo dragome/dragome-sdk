@@ -2,6 +2,7 @@ package java.util.logging;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.function.Supplier;
 
 public class Logger
 {
@@ -82,4 +83,45 @@ public class Logger
 	{
 		log(Level.WARNING, msg);
 	}
+
+    public void config(String msg) {
+        log(Level.CONFIG, msg);
+    }
+
+    public void fine(String msg) {
+        log(Level.FINE, msg);
+    }
+
+    public void severe(Supplier<String> msgSupplier) {
+        log(Level.SEVERE, msgSupplier);
+    }
+
+    private void log(Level level, Supplier<String> msgSupplier)
+	{
+    	log(level, msgSupplier.get());
+	}
+
+	public void warning(Supplier<String> msgSupplier) {
+        log(Level.WARNING, msgSupplier);
+    }
+
+    public void info(Supplier<String> msgSupplier) {
+        log(Level.INFO, msgSupplier);
+    }
+
+    public void config(Supplier<String> msgSupplier) {
+        log(Level.CONFIG, msgSupplier);
+    }
+
+    public void fine(Supplier<String> msgSupplier) {
+        log(Level.FINE, msgSupplier);
+    }
+
+    public void finer(Supplier<String> msgSupplier) {
+        log(Level.FINER, msgSupplier);
+    }
+
+    public void finest(Supplier<String> msgSupplier) {
+        log(Level.FINEST, msgSupplier);
+    }
 }
