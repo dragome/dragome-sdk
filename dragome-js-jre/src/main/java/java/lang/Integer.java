@@ -231,26 +231,81 @@ public class Integer extends Number implements Comparable<Integer>
 	{
 		return value > object.value ? 1 : (value < object.value ? -1 : 0);
 	}
-	
+
 	public static int hashCode(int value)
 	{
-		return (int) (value ^ (value >>> 32));
+		return value ^ (value >>> 32);
 	}
-	
+
 	public static int numberOfTrailingZeros(int i)
 	{
-		if (i == 0) 
-		{
+		int y;
+		if (i == 0)
 			return 32;
-		} 
-		else
+		int n= 31;
+		y= i << 16;
+		if (y != 0)
 		{
-			int rtn = 0;
-			for (int r = 1; (r & i) == 0; r <<= 1)
-			{
-				rtn++;
-			}
-			return rtn;
+			n= n - 16;
+			i= y;
 		}
+		y= i << 8;
+		if (y != 0)
+		{
+			n= n - 8;
+			i= y;
+		}
+		y= i << 4;
+		if (y != 0)
+		{
+			n= n - 4;
+			i= y;
+		}
+		y= i << 2;
+		if (y != 0)
+		{
+			n= n - 2;
+			i= y;
+		}
+		return n - ((i << 1) >>> 31);
+	}
+
+	public static int numberOfLeadingZeros(int i)
+	{
+		if (i == 0)
+			return 32;
+		int n= 1;
+		if (i >>> 16 == 0)
+		{
+			n+= 16;
+			i<<= 16;
+		}
+		if (i >>> 24 == 0)
+		{
+			n+= 8;
+			i<<= 8;
+		}
+		if (i >>> 28 == 0)
+		{
+			n+= 4;
+			i<<= 4;
+		}
+		if (i >>> 30 == 0)
+		{
+			n+= 2;
+			i<<= 2;
+		}
+		n-= i >>> 31;
+		return n;
+	}
+
+	public static int highestOneBit(int i)
+	{
+		i|= (i >> 1);
+		i|= (i >> 2);
+		i|= (i >> 4);
+		i|= (i >> 8);
+		i|= (i >> 16);
+		return i - (i >>> 1);
 	}
 }

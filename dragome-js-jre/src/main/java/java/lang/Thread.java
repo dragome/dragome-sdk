@@ -450,5 +450,10 @@ public class Thread implements Runnable
 		// TODO Auto-generated method stub
 
 	}
+	public static void yield()
+	{
+		// TODO Auto-generated method stub
+
+	}
 
 }

@@ -90,7 +90,14 @@ public final class Field extends AccessibleObject implements Member
 
 	public Type getGenericType()
 	{
-		return null;
+		try
+		{
+			return Class.forName("com.dragome.example.MessageService");
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public boolean equals(Object object)
@@ -106,7 +113,7 @@ public final class Field extends AccessibleObject implements Member
 
 	public Class<?> getDeclaringClass()
 	{
-		return null;
+		return class1;
 	}
 
 	public native double getDouble(Object object) throws IllegalAccessException, IllegalArgumentException;
@@ -117,7 +124,10 @@ public final class Field extends AccessibleObject implements Member
 
 	public native long getLong(Object object) throws IllegalAccessException, IllegalArgumentException;
 
-	public native int getModifiers();
+	public int getModifiers()
+	{
+		return 0;
+	}
 
 	public native short getShort(Object object) throws IllegalAccessException, IllegalArgumentException;
 

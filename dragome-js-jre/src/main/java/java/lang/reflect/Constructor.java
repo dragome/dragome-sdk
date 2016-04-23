@@ -41,9 +41,8 @@ import junit.framework.Member;
  *
  * @j2sRequireImport java.lang.Void
  */
-public final class Constructor<T> extends AccessibleObject implements GenericDeclaration, Member
+public final class Constructor<T> extends Executable
 {
-
 	private Class<T> clazz2;
 	private Class[] parameterTypes;
 	private Class[] exceptionTypes;
@@ -64,7 +63,7 @@ public final class Constructor<T> extends AccessibleObject implements GenericDec
 
 	public TypeVariable<Constructor<T>>[] getTypeParameters()
 	{
-		return null;
+		return (TypeVariable<Constructor<T>>[]) new TypeVariable<?>[0];
 	}
 
 	/**
@@ -99,7 +98,7 @@ public final class Constructor<T> extends AccessibleObject implements GenericDec
 	 */
 	public Type[] getGenericParameterTypes()
 	{
-		return null;
+		return new Type[0];
 	}
 
 	/**
@@ -119,7 +118,7 @@ public final class Constructor<T> extends AccessibleObject implements GenericDec
 	 */
 	public Type[] getGenericExceptionTypes()
 	{
-		return null;
+		return new Type[0];
 	}
 
 	/**
@@ -135,7 +134,7 @@ public final class Constructor<T> extends AccessibleObject implements GenericDec
 	 */
 	public Annotation[][] getParameterAnnotations()
 	{
-		return null;
+		return new Annotation[0][0];
 	}
 
 	/**
@@ -313,7 +312,7 @@ public final class Constructor<T> extends AccessibleObject implements GenericDec
 	 */
 	public T newInstance(Object... args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
-		return (T) clazz2.newInstance();
+		return clazz2.newInstance();
 	}
 
 	/**

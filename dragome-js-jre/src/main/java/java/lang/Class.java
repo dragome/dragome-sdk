@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URL;
 import java.security.ProtectionDomain;
@@ -39,6 +40,10 @@ import com.dragome.commons.javascript.ScriptHelper;
 @DragomeCompilerSettings(CompilerType.Standard)
 public final class Class<T> implements java.io.Serializable, java.lang.reflect.GenericDeclaration, java.lang.reflect.Type, java.lang.reflect.AnnotatedElement
 {
+	private static final int ANNOTATION= 0x00002000;
+	private static final int ENUM= 0x00004000;
+	private static final int SYNTHETIC= 0x00001000;
+
 	public String getSimpleName()
 	{
 		String simpleName= getName();
@@ -85,6 +90,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	private Class(Object theNativeClass)
 	{
 		nativeClass= theNativeClass;
+		ScriptHelper.put("theNativeClass", theNativeClass, null);
+		ScriptHelper.put("self", this, null);
+		ScriptHelper.eval("theNativeClass.javaClass=self", null);
 	}
 
 	public String toString()
@@ -273,7 +281,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		String result;
 
-		if (isArray == false)
+		if (!isArray && !isPrimitive())
 		{
 			if (isInterface())
 				result= (String) ScriptHelper.eval("this.$$$nativeClass.name", this);
@@ -282,6 +290,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		}
 		else
 			result= (java.lang.String) ScriptHelper.eval("this.realName", null);
+
 		return result != null ? result.replace("_", ".") : "java.lang.Object"; //TODO arreglar, no se pueden usar nombre de clases con _!!
 	}
 
@@ -292,7 +301,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		else
 		{
 			Boolean eval= ScriptHelper.evalBoolean("this.$$$nativeClass.superclass != undefined", this);
-			return eval ? new Class(ScriptHelper.eval("this.$$$nativeClass.superclass", this)) : null;
+			if (eval)
+				return (Class<? super T>) ScriptHelper.eval("this.$$$nativeClass.superclass.javaClass", this);
+			else
+				return null;
 		}
 	}
 
@@ -509,12 +521,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Annotation[] getAnnotations()
 	{
-		return null;
+		return new Annotation[0];
 	}
 
-	public boolean isAnnotationPresent(Class<? extends Annotation> annotationType)
-	{
-		return false;
+	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+		return getAnnotation(annotationClass) != null;
 	}
 
 	public TypeVariable<?>[] getTypeParameters()
@@ -582,7 +593,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Constructor<?>[] getDeclaredConstructors() throws SecurityException
 	{
-		return null;
+		return new Constructor<?>[0];
 	}
 
 	public String getResourceAsStream(String resourcePath)
@@ -591,13 +602,14 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return null;
 	}
 
-    public URL getResource(String name) {
+	public URL getResource(String name)
+	{
 		return null;
-    }
+	}
 
 	public boolean isPrimitive()
 	{
-		String realName= (java.lang.String) ScriptHelper.eval("this.realName", null);
+		String realName= (java.lang.String) ScriptHelper.eval("this.realName", null); //TODO fix it: classes in default package!
 		return !realName.contains("_") && !realName.contains(".");
 	}
 
@@ -699,5 +711,19 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		}
 
 		return true;
+	}
+
+	public Type getGenericSuperclass()
+	{
+		return getSuperclass();
+	}
+
+	public boolean isEnum()
+	{
+		return (this.getModifiers() & ENUM) != 0 && this.getSuperclass() == java.lang.Enum.class;
+	}
+	public Class<?> getEnclosingClass() throws SecurityException
+	{
+		return null;
 	}
 }

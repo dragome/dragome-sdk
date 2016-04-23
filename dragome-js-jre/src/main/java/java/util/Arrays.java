@@ -1,5 +1,7 @@
 package java.util;
 
+import java.lang.reflect.Array;
+
 import com.dragome.commons.javascript.ScriptHelper;
 
 public class Arrays
@@ -64,10 +66,10 @@ public class Arrays
 		ScriptHelper.put("array", array, null);
 		ScriptHelper.put("fromIndex", fromIndex, null);
 		ScriptHelper.put("toIndex", toIndex, null);
-		
+
 		Object subarray= ScriptHelper.eval("array.slice(fromIndex, toIndex)", null);
 		ScriptHelper.put("subarray", subarray, null);
-		
+
 		ScriptHelper.eval("subarray.sort()", null);
 		ScriptHelper.eval("for (var i= fromIndex; i < toIndex; ++i)	array[i]= subarray[i - fromIndex]", null);
 	}
@@ -75,12 +77,12 @@ public class Arrays
 	public static <T> void sort(T[] a, int fromIndex, int toIndex, Comparator<? super T> comparator)
 	{
 		T[] subarray= (T[]) new Object[toIndex - fromIndex];
-		
+
 		for (int i= fromIndex; i < toIndex; ++i)
 			subarray[i - fromIndex]= a[i];
 
 		sort(subarray, comparator);
-		
+
 		for (int i= fromIndex; i < toIndex; ++i)
 			a[i]= subarray[i - fromIndex];
 	}
@@ -93,7 +95,7 @@ public class Arrays
 		ScriptHelper.put("array", array, null);
 		if (comparator == null)
 			comparator= new NaturalOrder();
-		
+
 		ScriptHelper.put("c", comparator, null);
 		ScriptHelper.eval("array.sort(function(o1, o2) {return c.$compare___java_lang_Object__java_lang_Object$int(o1, o2)})", null);
 	}
@@ -121,4 +123,14 @@ public class Arrays
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+        @SuppressWarnings("unchecked")
+        T[] copy = ((Object)newType == (Object)Object[].class)
+            ? (T[]) new Object[newLength]
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        System.arraycopy(original, 0, copy, 0,
+                         Math.min(original.length, newLength));
+        return copy;
+    }
 }
