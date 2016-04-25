@@ -29,12 +29,8 @@
 package com.dragome.compiler.parser;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,8 +58,6 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.io.IOUtils;
 
-import com.dragome.commons.compiler.annotations.CompilerType;
-import com.dragome.commons.compiler.classpath.JavaFileClasspathFile;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.annotations.AnnotationReader;
@@ -151,12 +145,12 @@ public class Parser
 		org.apache.bcel.classfile.Field[] bcelFields= jc.getFields();
 
 		ObjectType type= new ObjectType(jc.getClassName());
-		Map<String, String> annotationsValues= getAnnotationsValues(jc.getAttributes(), "");
+		Map<String, String> annotationsValues= getAnnotationsValues(jc.getAttributes(), "::::");
 
 		for (Field field : bcelFields)
 		{
 			Attribute[] attributes= field.getAttributes();
-			String name= "@" + field.getName() + "/";
+			String name= ":" + field.getName() + ":::";
 			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes, name);
 			annotationsValues.putAll(methodAnnotationsValues);
 		}
@@ -164,14 +158,14 @@ public class Parser
 		for (Method method : bcelMethods)
 		{
 			Attribute[] attributes= method.getAttributes();
-			String name= method.getName() + "/";
-			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes, name);
+			String name= "::" + method.getName() + ":";
+			Map<String, String> methodAnnotationsValues= getAnnotationsValues(attributes, name + ":");
 
 			ParameterAnnotationEntry[] parameterAnnotationEntries= method.getParameterAnnotationEntries();
 			for (int i= 0; i < parameterAnnotationEntries.length; i++)
 			{
 				AnnotationEntry[] annotationEntries= parameterAnnotationEntries[i].getAnnotationEntries();
-				putEntries(name + "arg" + i + "/", annotationsValues, annotationEntries);
+				putEntries(name + "arg" + i + ":", annotationsValues, annotationEntries);
 			}
 
 			annotationsValues.putAll(methodAnnotationsValues);
@@ -350,13 +344,15 @@ public class Parser
 	{
 		for (AnnotationEntry entry : entries)
 		{
+			String key= Type.getType(entry.getAnnotationType()) + "#" + prefix;
+
 			if (entry.getElementValuePairs().length == 0)
-				result.put(Type.getType(entry.getAnnotationType()) + "# ", " ");
+				result.put(key, " ");
 
 			for (int i= 0; i < entry.getElementValuePairs().length; i++)
 			{
 				ElementValuePair elementValuePair= entry.getElementValuePairs()[i];
-				result.put(Type.getType(entry.getAnnotationType()) + "#" + prefix + elementValuePair.getNameString(), elementValuePair.getValue().toString());
+				result.put(key + elementValuePair.getNameString(), elementValuePair.getValue().toString());
 			}
 		}
 	}
