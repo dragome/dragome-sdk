@@ -72,7 +72,7 @@ public class DragomeCompilerLauncher
 	{
 		try
 		{
-			File file= File.createTempFile("dragome-merged", ".jar");
+			File file= File.createTempFile("dragome-merged-", ".jar");
 			file.deleteOnExit();
 
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
