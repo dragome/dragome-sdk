@@ -391,4 +391,8 @@ public final class Method extends Executable
 		return new Annotation[0][0];
 	}
 
+	public boolean isBridge()
+	{
+		return (getModifiers() & Modifier.BRIDGE) != 0;
+	}
 }

@@ -7,7 +7,6 @@ import com.dragome.commons.javascript.ScriptHelper;
  */
 public abstract class Enum<E>
 {
-
 	private String desc;
 	private int ordinal;
 
@@ -54,4 +53,10 @@ public abstract class Enum<E>
 		return null;
 	}
 
+	public final Class<E> getDeclaringClass()
+	{
+		Class<?> clazz= getClass();
+		Class<?> zuper= clazz.getSuperclass();
+		return (zuper == Enum.class) ? (Class<E>) clazz : (Class<E>) zuper;
+	}
 }

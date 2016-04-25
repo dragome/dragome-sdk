@@ -37,22 +37,22 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 
 			for (AnnotationEntry annotationEntry : annotationEntries)
 			{
-				String key= method.getName();
-				if (fieldName != null)
-					key= "@" + fieldName + "/" + key;
-				else
-				{
-					if (parameterIndex != null)
-						key= "arg" + parameterIndex.toString() + "/" + key;
-					if (methodName != null)
-						key= methodName + "/" + key;
-				}
+				String key= getAnnotationKey(fieldName, parameterIndex, methodName, name);
 
-				if (annotationEntry.getType().equals(clazz) && annotationEntry.getAnnotationKey().equals(key))
+				if (annotationEntry.getType().equals(clazz) && annotationEntry.getAnnotationKey().startsWith(key))
 					return annotationEntry.getAnnotationValue();
 			}
 
 			return null;
 		}
+	}
+
+	public static String getAnnotationKey(String fieldName, Integer parameterIndex, String methodName, String name)
+	{
+		String parameterName= parameterIndex != null ? "arg" + parameterIndex.toString() : "";
+		fieldName= fieldName != null ? fieldName : "";
+		methodName= methodName != null ? methodName : "";
+		String key= ":" + fieldName + ":" + methodName + ":" + parameterName + ":" + name;
+		return key;
 	}
 }
