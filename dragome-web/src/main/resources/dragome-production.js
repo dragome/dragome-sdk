@@ -73,10 +73,7 @@ function Uint8ToString(u8a) {
 				ajax.open("GET", "compiled-js/webapp-1.js", true);
 				ajax.responseType = "arraybuffer";
 				ajax.onload = function() {
-					var data = new Uint8Array(ajax.response)
-					var uncompressedData = deflate.decompress(data);
-					var s= Uint8ToString(uncompressedData);
-					eval(s);
+					eval(Uint8ToString(deflate.decompress(new Uint8Array(ajax.response))));
 				};
 				ajax.send();
 			});

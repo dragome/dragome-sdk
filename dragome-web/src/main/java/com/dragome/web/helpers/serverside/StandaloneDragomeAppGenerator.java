@@ -140,8 +140,9 @@ public class StandaloneDragomeAppGenerator
 		for (URL theURL : theConfiguredURLs)
 		{
 			LOGGER.info("Found classpath element " + theURL);
-			String theClassPathEntry= new File(theURL.toURI()).toString();
-			boolean isClassesFolder= !theURL.toString().contains(".jar");
+			File file= new File(theURL.toURI());
+			String theClassPathEntry= file.toString();
+			boolean isClassesFolder= !theURL.toString().contains(".jar") && file.isDirectory();
 			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
 
 			if (isClassesFolder || addToClasspath)
@@ -210,7 +211,6 @@ public class StandaloneDragomeAppGenerator
 			DragomeWroManagerFactory managerFactory= new DragomeWroManagerFactory(destinationDirectory);
 			Wro4jStandaloneRunner wro4jStandaloneRunner= new Wro4jStandaloneRunner(wroConfiguration, managerFactory, new File(destinationDirectory, "/dragome"));
 			wro4jStandaloneRunner.process();
-
 		}
 		catch (Exception e)
 		{

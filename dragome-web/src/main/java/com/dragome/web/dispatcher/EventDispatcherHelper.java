@@ -65,7 +65,7 @@ public class EventDispatcherHelper
 					{
 						boolean isUnique= annotationEntries.size() == 1;
 						boolean urlContainsAlias= requestURL.contains(annotationEntry.getAnnotationValue());
-						boolean isAliasKey= annotationEntry.getAnnotationKey().equals("alias");
+						boolean isAliasKey= annotationEntry.getAnnotationKey().split(":")[4].equals("alias");
 
 						if (isUnique || (isAliasKey && urlContainsAlias))
 							className= annotationEntry.getType().getName();
