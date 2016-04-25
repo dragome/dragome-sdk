@@ -2,17 +2,20 @@ package java.security;
 
 public class AccessController
 {
+	private static AccessControlContext context= new AccessControlContext();
 
 	public static AccessControlContext getContext()
-    {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
+	{
+		return context;
+	}
 
-	public static Class doPrivileged(PrivilegedAction privilegedAction, AccessControlContext acc)
-    {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
+	public static <T> T doPrivileged(PrivilegedAction<T> action)
+	{
+		return action.run();
+	}
 
+	public static <T> T doPrivileged(PrivilegedAction<T> privilegedAction, AccessControlContext acc)
+	{
+		return privilegedAction.run();
+	}
 }

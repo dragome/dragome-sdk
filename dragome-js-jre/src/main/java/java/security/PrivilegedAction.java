@@ -1,6 +1,6 @@
 package java.security;
 
-public class PrivilegedAction
+public interface PrivilegedAction<T>
 {
-
+	T run();
 }

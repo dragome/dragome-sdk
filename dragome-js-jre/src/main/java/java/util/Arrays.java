@@ -133,4 +133,9 @@ public class Arrays
                          Math.min(original.length, newLength));
         return copy;
     }
+
+    public static void fill(Object[] a, int fromIndex, int toIndex, Object val) {
+        for (int i = fromIndex; i < toIndex; i++)
+            a[i] = val;
+    }
 }

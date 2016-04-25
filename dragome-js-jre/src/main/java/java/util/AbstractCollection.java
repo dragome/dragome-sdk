@@ -28,7 +28,7 @@ public abstract class AbstractCollection<T> implements Collection<T>, Iterable<T
 	/**
 	 * Returns an array containing all of the elements in this list in the correct order.
 	 */
-	public T[] toArray()
+	public Object[] toArray()
 	{
 		return toArray((T[]) new Object[size()]);
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractCollection<T> implements Collection<T>, Iterable<T
 	{
 		for (Object object : c)
 	        remove(object);
-		
+
 		return true;
 	}
 
@@ -95,17 +95,17 @@ public abstract class AbstractCollection<T> implements Collection<T>, Iterable<T
 	{
 		throw new RuntimeException("not implemented");
 	}
-	
+
 	public boolean remove(Object elem)
 	{
 		return false;
 	}
-	
+
 	public boolean isEmpty()
 	{
 		return true;
 	}
-	
+
 	public boolean contains(Object value)
 	{
 		return false;

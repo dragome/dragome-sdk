@@ -510,7 +510,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 		for (AnnotationEntry annotationEntry : annotationEntries)
 			if (annotationEntry.getType().equals(aClass))
-				annotationFound= true;
+			{
+				String annotationKey= AnnotationInvocationHandler.getAnnotationKey(fieldName, parameterIndex, methodName, "");
+				if (annotationEntry.getAnnotationKey().startsWith(annotationKey) || (annotationKey == null && !annotationEntry.getAnnotationKey().contains("/")))
+					annotationFound= true;
+			}
 
 		if (!annotationFound)
 			return null;
@@ -524,7 +528,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return new Annotation[0];
 	}
 
-	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass)
+	{
 		return getAnnotation(annotationClass) != null;
 	}
 

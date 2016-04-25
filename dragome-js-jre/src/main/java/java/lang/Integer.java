@@ -308,4 +308,42 @@ public class Integer extends Number implements Comparable<Integer>
 		i|= (i >> 16);
 		return i - (i >>> 1);
 	}
+
+	public static int rotateLeft(int i, int distance)
+	{
+		i= i & 0xf; //TODO fix me!
+		return (i << distance) | (i >>> -distance);
+	}
+
+	public static int rotateRight(int i, int distance)
+	{
+		i= i & 0xf; //TODO fix me!
+		return (i >>> distance) | (i << -distance);
+	}
+
+	//	public static int rotateLeft(int i, int distance)
+	//	{
+	//		while (distance-- > 0)
+	//		{
+	//			i= i << 1 | ((i < 0) ? 1 : 0);
+	//		}
+	//		return i;
+	//	}
+	//
+	//	public static int rotateRight(int i, int distance)
+	//	{
+	//		int ui= i & MAX_VALUE; // avoid sign extension
+	//		int carry= (i < 0) ? 0x40000000 : 0; // MIN_VALUE rightshifted 1
+	//		while (distance-- > 0)
+	//		{
+	//			int nextcarry= ui & 1;
+	//			ui= carry | (ui >> 1);
+	//			carry= (nextcarry == 0) ? 0 : 0x40000000;
+	//		}
+	//		if (carry != 0)
+	//		{
+	//			ui= ui | MIN_VALUE;
+	//		}
+	//		return ui;
+	//	}
 }
