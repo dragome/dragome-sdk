@@ -69,23 +69,21 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 			});
 	}
 
-	public ComponentBuilder(VisualPanel component)
+	public ComponentBuilder(VisualComponent component)
 	{
 		this.component= component;
 		if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
 		{
 			TemplateLayout templateLayout= (TemplateLayout) ((VisualPanel) component).getLayout();
 			template= templateLayout.getTemplate();
+			if (template == null)
+				throw new RuntimeException("VisualPanel has not template associated");
 		}
-		
-		if (template == null)
-			throw new RuntimeException("VisualPanel has not template associated");
-		
-		
+
 		configureMethodListener();
 	}
 
-	public ComponentBuilder(VisualPanel itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
+	public ComponentBuilder(VisualComponent itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
 	{
 		this(itemPanel);
 		this.parentBuilder= (BaseBuilder<? extends VisualComponent, ComponentBuilder>) templateComponentBindingBuilder;
