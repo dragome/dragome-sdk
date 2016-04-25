@@ -210,7 +210,7 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 
 	public ComponentBuilder childrenBuilder()
 	{
-		return new ComponentBuilder((VisualPanel) component, this);
+		return new ComponentBuilder(component, this);
 	}
 
 	public ComponentBuilder buildChildren(ChildrenBuilder childrenBuilder)

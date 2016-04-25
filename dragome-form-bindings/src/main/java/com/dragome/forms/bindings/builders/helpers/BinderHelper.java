@@ -10,8 +10,13 @@ import com.dragome.forms.bindings.builders.Supplier;
 import com.dragome.forms.bindings.builders.TemplateBindingBuilder;
 import com.dragome.forms.bindings.builders.TemplateComponentBindingBuilder;
 import com.dragome.forms.bindings.client.value.ValueSource;
+import com.dragome.guia.components.interfaces.VisualButton;
+import com.dragome.guia.components.interfaces.VisualCheckbox;
 import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualLabel;
+import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
 import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
@@ -23,6 +28,12 @@ public class BinderHelper
 	private String templateName;
 	static TemplateComponentBindingBuilder<? extends VisualComponent> templateComponentBindingBuilder;
 	private static VisualComponent component;
+	public static Class<VisualPanel> PANEL= VisualPanel.class;
+	public static Class<VisualButton> BUTTON= VisualButton.class;
+	public static Class<VisualLabel> LABEL= VisualLabel.class;
+	public static Class<VisualCheckbox> CHECKBOX= VisualCheckbox.class;
+	public static Class<VisualTextField> TEXTFIELD= VisualTextField.class;
+	public static Class<VisualLink> LINK= VisualLink.class;
 
 	public BinderHelper(String aChildTemplateName)
 	{
