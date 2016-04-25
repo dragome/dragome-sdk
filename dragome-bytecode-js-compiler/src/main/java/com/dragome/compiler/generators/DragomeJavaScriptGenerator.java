@@ -400,8 +400,8 @@ public class DragomeJavaScriptGenerator extends Generator
 		{
 			VariableDeclaration decl= iterator.next();
 
-//			if (hasToEscapeVariable(decl.getName()))
-//				print("_");
+			//			if (hasToEscapeVariable(decl.getName()))
+			//				print("_");
 
 			decl.visit(this);
 			print(iterator.hasNext() ? ", " : "");
@@ -662,7 +662,15 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 
 		bracket(left, op);
+		//		boolean leftIsObject= ObjectType.class.isAssignableFrom(left.getTypeBinding().getClass());
+		//		boolean rightIsObject= ObjectType.class.isAssignableFrom(right.getTypeBinding().getClass());
+		//		boolean isEqualOrNotEqual= op.toString().equals("==") || op.toString().equals("!=");
+		//
+		//		if ((leftIsObject && rightIsObject) && isEqualOrNotEqual)
+		//			print(" " + op + "= ");
+		//		else
 		print(" " + op + " ");
+
 		bracket(right, op);
 
 		if (isTruncate)
