@@ -16,6 +16,7 @@ import com.dragome.guia.events.listeners.interfaces.MouseDownListener;
 import com.dragome.guia.events.listeners.interfaces.MouseOutListener;
 import com.dragome.guia.events.listeners.interfaces.MouseOverListener;
 import com.dragome.guia.events.listeners.interfaces.MouseUpListener;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class MultipleEventListener<T> implements EventListener
 {
@@ -58,17 +59,15 @@ public class MultipleEventListener<T> implements EventListener
 			visualComponent.getListener(BlurListener.class).blurPerformed(visualComponent);
 		else if (type.equals(INPUT))
 			visualComponent.getListener(InputListener.class).inputPerformed(visualComponent);
-
-		else if (event instanceof KeyboardEvent)
+		else
 		{
-			KeyboardEvent keyboardEvent= (KeyboardEvent) event;
-			int keyId= keyboardEvent.getKeyCode();
+			KeyboardEvent keyboardEvent= JsCast.castTo(event, KeyboardEvent.class);
 			if (type.equals(KEYUP))
-				visualComponent.getListener(KeyUpListener.class).keyupPerformed(visualComponent, keyId);
+				visualComponent.getListener(KeyUpListener.class).keyupPerformed(visualComponent, keyboardEvent.getKeyCode());
 			else if (type.equals(KEYDOWN))
-				visualComponent.getListener(KeyDownListener.class).keydownPerformed(visualComponent, keyId);
+				visualComponent.getListener(KeyDownListener.class).keydownPerformed(visualComponent, keyboardEvent.getKeyCode());
 			else if (type.equals(KEYPRESS))
-				visualComponent.getListener(KeyPressListener.class).keypressPerformed(visualComponent, keyId);
+				visualComponent.getListener(KeyPressListener.class).keypressPerformed(visualComponent, keyboardEvent.getKeyCode());
 		}
 	}
 }
