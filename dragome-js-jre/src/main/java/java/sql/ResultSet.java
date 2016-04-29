@@ -9,7 +9,7 @@ package java.sql;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.math.BigDecimal;
+import java.math.BigAny;
 import java.util.Calendar;
 
 /**
@@ -340,7 +340,7 @@ public interface ResultSet extends Wrapper
 	 * this method
 	 * @deprecated
 	 */
-	BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException;
+	BigAny getBigDecimal(int columnIndex, int scale) throws SQLException;
 
 	/**
 	 * Retrieves the value of the designated column in the current row
@@ -623,7 +623,7 @@ public interface ResultSet extends Wrapper
 	 * this method
 	 * @deprecated
 	 */
-	BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException;
+	BigAny getBigDecimal(String columnLabel, int scale) throws SQLException;
 
 	/**
 	 * Retrieves the value of the designated column in the current row
@@ -974,7 +974,7 @@ public interface ResultSet extends Wrapper
 	 *            called on a closed result set
 	 * @since 1.2
 	 */
-	BigDecimal getBigDecimal(int columnIndex) throws SQLException;
+	BigAny getBigDecimal(int columnIndex) throws SQLException;
 
 	/**
 	 * Retrieves the value of the designated column in the current row
@@ -991,7 +991,7 @@ public interface ResultSet extends Wrapper
 	 * @since 1.2
 	 *
 	 */
-	BigDecimal getBigDecimal(String columnLabel) throws SQLException;
+	BigAny getBigDecimal(String columnLabel) throws SQLException;
 
 	//---------------------------------------------------------------------
 	// Traversal/Positioning
@@ -1631,7 +1631,7 @@ public interface ResultSet extends Wrapper
 	 * this method
 	 * @since 1.2
 	 */
-	void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException;
+	void updateBigDecimal(int columnIndex, BigAny x) throws SQLException;
 
 	/**
 	 * Updates the designated column with a <code>String</code> value.
@@ -2011,7 +2011,7 @@ public interface ResultSet extends Wrapper
 	 * this method
 	 * @since 1.2
 	 */
-	void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException;
+	void updateBigDecimal(String columnLabel, BigAny x) throws SQLException;
 
 	/**
 	 * Updates the designated column with a <code>String</code> value.
