@@ -45,7 +45,7 @@ public class BinderHelper
 		return new BinderHelper(aChildTemplateName);
 	}
 
-	public <C extends VisualComponent> void as(Class<C> componentType, final ActionExecutor actionExecutor)
+	public <C extends VisualComponent> C as(Class<C> componentType, final ActionExecutor actionExecutor)
 	{
 		TemplateBindingBuilder lastTemplateBindingBuilder= templateBindingBuilder;
 		templateBindingBuilder= componentBuilder.bindTemplate(templateName);
@@ -63,6 +63,7 @@ public class BinderHelper
 		});
 		templateComponentBindingBuilder.build();
 		templateBindingBuilder= lastTemplateBindingBuilder;
+		return (C) component;
 	}
 
 	public static <S, C extends VisualComponent> TemplateComponentBindingBuilder<C> toProperty(final Supplier<S> getter, final Consumer<S> setter)
