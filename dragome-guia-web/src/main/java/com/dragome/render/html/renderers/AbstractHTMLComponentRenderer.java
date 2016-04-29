@@ -15,9 +15,9 @@
  */
 package com.dragome.render.html.renderers;
 
-import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventTarget;
@@ -42,7 +42,7 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 {
 	public static final String COMPONENT_ID_ATTRIBUTE= "data-component-id";
 
-	private List<String> listeners= new ArrayList<String>();
+	private Set<String> listeners= new HashSet<String>();
 
 	public AbstractHTMLComponentRenderer()
 	{
