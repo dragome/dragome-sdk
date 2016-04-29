@@ -30,6 +30,7 @@ import org.w3c.dom.XMLHttpRequest;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.events.KeyboardEvent;
 import org.w3c.dom.events.ProgressEvent;
 import org.w3c.dom.html.CanvasRenderingContext2D;
 import org.w3c.dom.html.HTMLCanvasElement;
@@ -78,7 +79,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 	protected JsDelegateGenerator jsDelegateGenerator;
 	protected List<Class<?>> classes= new ArrayList<>(Arrays.asList(Document.class, Element.class, Attr.class, NodeList.class, //
 			Node.class, NamedNodeMap.class, Text.class, HTMLCanvasElement.class, CanvasRenderingContext2D.class, EventTarget.class, //
-			EventListener.class, Event.class, ArrayBuffer.class, HTMLImageElementExtension.class, HTMLCanvasElementExtension.class, Event.class, //
+			EventListener.class, Event.class, ArrayBuffer.class, HTMLImageElementExtension.class, HTMLCanvasElementExtension.class, KeyboardEvent.class, //
 			WebGLActiveInfo.class, WebGLBuffer.class, WebGLContextAttributes.class, WebGLFramebuffer.class, //
 			WebGLObject.class, WebGLProgram.class, WebGLRenderbuffer.class, WebGLRenderingContext.class, //
 			WebGLShader.class, WebGLTexture.class, WebGLUniformLocation.class, WebGLRenderingContextExtension.class, //
