@@ -2,6 +2,7 @@ package com.dragome.commons.compiler.classpath;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class InMemoryClasspathFile extends AbstractClasspathFile
 {
@@ -38,5 +39,10 @@ public class InMemoryClasspathFile extends AbstractClasspathFile
 	public InputStream openInputStream()
 	{
 		return inputStream= new ByteArrayInputStream(bytecode);
+	}
+
+	public long getCRC()
+	{
+		return Arrays.hashCode(bytecode);
 	}
 }
