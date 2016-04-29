@@ -29,7 +29,7 @@ import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
+import java.math.BigAny;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
  * An interpreter for printf-style format strings.  This class provides support
  * for layout justification and alignment, common formats for numeric, string,
  * and date/time data, and locale-specific output.  Common Java types such as
- * {@code byte}, {@link java.math.BigDecimal BigDecimal}, and {@link Calendar}
+ * {@code byte}, {@link java.math.BigAny BigDecimal}, and {@link Calendar}
  * are supported.  Limited formatting customization for arbitrary user types is
  * provided through the {@link Formattable} interface.
  *
@@ -233,7 +233,7 @@ import java.util.regex.Pattern;
  *
  * <li><b>Floating Point</b> - may be applied to Java floating-point types:
  * {@code float}, {@link Float}, {@code double}, {@link Double}, and {@link
- * java.math.BigDecimal BigDecimal}
+ * java.math.BigAny BigDecimal}
  *
  * </ol>
  *
@@ -1165,7 +1165,7 @@ import java.util.regex.Pattern;
  *     than the number of digits which would appear after the decimal point in
  *     the string returned by {@link Float#toString(float)} or {@link
  *     Double#toString(double)} respectively, then the value will be rounded
- *     using the {@linkplain java.math.BigDecimal#ROUND_HALF_UP round half up
+ *     using the {@linkplain java.math.BigAny#ROUND_HALF_UP round half up
  *     algorithm}.  Otherwise, zeros may be appended to reach the precision.
  *     For a canonical representation of the value, use {@link
  *     Float#toString(float)} or {@link Double#toString(double)} as
@@ -1234,7 +1234,7 @@ import java.util.regex.Pattern;
  *     than the number of digits which would appear after the decimal point in
  *     the string returned by {@link Float#toString(float)} or {@link
  *     Double#toString(double)} respectively, then the value will be rounded
- *     using the {@linkplain java.math.BigDecimal#ROUND_HALF_UP round half up
+ *     using the {@linkplain java.math.BigAny#ROUND_HALF_UP round half up
  *     algorithm}.  Otherwise, zeros may be appended to reach the precision.
  *     For a canonical representation of the value, use {@link
  *     Float#toString(float)} or {@link Double#toString(double)} as
@@ -1355,7 +1355,7 @@ import java.util.regex.Pattern;
  *
  * <p><a name="dnbdec"><b> BigDecimal </b></a>
  *
- * <p> The following conversions may be applied {@link java.math.BigDecimal
+ * <p> The following conversions may be applied {@link java.math.BigAny
  * BigDecimal}.
  *
  * <table cellpadding=5 summary="floatConv">
@@ -1394,10 +1394,10 @@ import java.util.regex.Pattern;
  *     specified then the default value is {@code 6}.  If the precision is
  *     less than the number of digits to the right of the decimal point then
  *     the value will be rounded using the
- *     {@linkplain java.math.BigDecimal#ROUND_HALF_UP round half up
+ *     {@linkplain java.math.BigAny#ROUND_HALF_UP round half up
  *     algorithm}.  Otherwise, zeros may be appended to reach the precision.
  *     For a canonical representation of the value, use {@link
- *     BigDecimal#toString()}.
+ *     BigAny#toString()}.
  *
  *     <p> If the {@code ','} flag is given, then an {@link
  *     FormatFlagsConversionMismatchException} will be thrown.
@@ -1457,10 +1457,10 @@ import java.util.regex.Pattern;
  *     specified then the default value is {@code 6}.  If the precision is
  *     less than the number of digits to the right of the decimal point
  *     then the value will be rounded using the
- *     {@linkplain java.math.BigDecimal#ROUND_HALF_UP round half up
+ *     {@linkplain java.math.BigAny#ROUND_HALF_UP round half up
  *     algorithm}.  Otherwise, zeros may be appended to reach the precision.
  *     For a canonical representation of the value, use {@link
- *     BigDecimal#toString()}.
+ *     BigAny#toString()}.
  *
  * </table>
  *

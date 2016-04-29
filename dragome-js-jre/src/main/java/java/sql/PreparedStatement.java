@@ -17,7 +17,7 @@ package java.sql;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.math.BigDecimal;
+import java.math.BigAny;
 import java.util.Calendar;
 
 /**
@@ -201,7 +201,7 @@ public interface PreparedStatement extends Statement
 	 * marker in the SQL statement; if a database access error occurs or
 	 * this method is called on a closed <code>PreparedStatement</code>
 	 */
-	void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException;
+	void setBigDecimal(int parameterIndex, BigAny x) throws SQLException;
 
 	/**
 	 * Sets the designated parameter to the given Java <code>String</code> value.
