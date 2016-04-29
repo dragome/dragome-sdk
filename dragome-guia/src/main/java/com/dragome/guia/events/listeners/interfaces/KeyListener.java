@@ -19,6 +19,6 @@ import java.util.EventListener;
 
 public interface KeyListener extends EventListener 
 {
-	public static final int KEY_ENTER= 13;
-	public static final int KEY_ESC= 27;
+	public static final int ENTER= 13;
+	public static final int ESC= 27;
 }
