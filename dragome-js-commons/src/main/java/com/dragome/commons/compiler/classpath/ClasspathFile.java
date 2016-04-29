@@ -9,4 +9,5 @@ public interface ClasspathFile
 	long getLastModified();
 	void close();
 	String getPath();
+	long getCRC();
 }

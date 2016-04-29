@@ -35,4 +35,9 @@ public abstract class AbstractClasspathFile implements ClasspathFile
 	{
 		return path;
 	}
+
+	public long getCRC()
+	{
+		return lastModified;
+	}
 }

@@ -36,4 +36,9 @@ public class InsideJarClasspathFile extends AbstractClasspathFile implements Cla
 			throw new RuntimeException(e);
 		}
 	}
+
+	public long getCRC()
+	{
+		return entry.getCrc();
+	}
 }

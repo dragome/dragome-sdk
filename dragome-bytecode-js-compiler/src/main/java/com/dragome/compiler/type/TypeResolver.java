@@ -98,6 +98,7 @@ public class TypeResolver implements TypeVisitor
 			}
 
 			classUnit.setLastCompiled(classUnit.getLastModified());
+			classUnit.setLastCRC(classUnit.getCRC());
 		}
 	}
 

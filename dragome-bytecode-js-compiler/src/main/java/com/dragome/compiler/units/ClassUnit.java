@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,11 @@ public class ClassUnit extends Unit
 		return getClassFile().getLastModified();
 	}
 
+	public long getCRC()
+	{
+		return getClassFile().getCRC();
+	}
+
 	private Map<String, MemberUnit> declaredMembers;
 
 	private ClassUnit superUnit;
@@ -90,6 +95,8 @@ public class ClassUnit extends Unit
 	private transient boolean written= false;
 
 	private String generatedJs;
+
+	private long lastCRC;
 
 	public static boolean oneWritten= false;
 
@@ -131,7 +138,7 @@ public class ClassUnit extends Unit
 
 	public boolean isUpToDate()
 	{
-		return lastCompiled >= getLastModified();
+		return lastCRC == getCRC();
 	}
 
 	public Collection<ClassUnit> getInterfaces()
@@ -445,7 +452,7 @@ public class ClassUnit extends Unit
 			writer.write(replace);
 		}
 	}
-	
+
 	private String createSuperStaticFieldsReferences(int depth, MemberUnit clinitMethod, List<MemberUnit> staticMethods) throws IOException
 	{
 		boolean first= true;
@@ -776,6 +783,11 @@ public class ClassUnit extends Unit
 	public void setAnnotations(Map<String, String> annotationsValues)
 	{
 		this.annotationsValues= annotationsValues;
+	}
+
+	public void setLastCRC(long crc)
+	{
+		lastCRC= crc;
 	}
 
 }
