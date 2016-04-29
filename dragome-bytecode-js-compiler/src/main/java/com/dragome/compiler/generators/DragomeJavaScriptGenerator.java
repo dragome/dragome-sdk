@@ -856,7 +856,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		MethodBinding methodBinding= invocation.getMethodBinding();
 		String name= methodBinding.getName();
 		List args= invocation.getArguments();
-		String firstArg;
+		String firstArg= null;
 		boolean isVariable= false;
 		if (!(args.get(0) instanceof StringLiteral))
 		{
@@ -865,6 +865,9 @@ public class DragomeJavaScriptGenerator extends Generator
 				VariableBinding variableBinding= (VariableBinding) args.get(0);
 				firstArg= variableBinding.getName();
 				isVariable= true;
+			}
+			else if (args.get(0) instanceof MethodInvocation)
+			{
 			}
 			else
 				throw new RuntimeException("First argument to " + methodBinding + " must be a string literal");
@@ -894,26 +897,36 @@ public class DragomeJavaScriptGenerator extends Generator
 		else if (name.startsWith("eval"))
 		{
 			String evalScript= firstArg;
-			if (isVariable)
-				evalScript= "eval(" + firstArg + ")";
-
-			if (name.startsWith("evalCasting"))
+			if (firstArg == null && args.get(0) instanceof MethodInvocation)
 			{
-				ASTNode nextSibling= invocation.getFirstChild().getNextSibling();
-
-				if (nextSibling instanceof ClassLiteral)
-				{
-					Signature signature= ((ClassLiteral) nextSibling).getSignature();
-					print("dragomeJs.castTo(" + evalScript + ", \"" + signature + "\")");
-				}
-				else
-				{
-					VariableBinding variableBinding= (VariableBinding) nextSibling;
-					print("dragomeJs.castTo2(" + evalScript + ", " + variableBinding.getName() + ")");
-				}
+				MethodInvocation methodInvocation= (MethodInvocation) args.get(0);
+				print("eval(");
+				methodInvocation.visit(this);
+				print(")");
 			}
 			else
-				print(evalScript);
+			{
+				if (isVariable)
+					evalScript= "eval(" + firstArg + ")";
+
+				if (name.startsWith("evalCasting"))
+				{
+					ASTNode nextSibling= invocation.getFirstChild().getNextSibling();
+
+					if (nextSibling instanceof ClassLiteral)
+					{
+						Signature signature= ((ClassLiteral) nextSibling).getSignature();
+						print("dragomeJs.castTo(" + evalScript + ", \"" + signature + "\")");
+					}
+					else
+					{
+						VariableBinding variableBinding= (VariableBinding) nextSibling;
+						print("dragomeJs.castTo2(" + evalScript + ", " + variableBinding.getName() + ")");
+					}
+				}
+				else
+					print(evalScript);
+			}
 		}
 		else
 			throw new IllegalArgumentException("Cannot handle method " + name);
