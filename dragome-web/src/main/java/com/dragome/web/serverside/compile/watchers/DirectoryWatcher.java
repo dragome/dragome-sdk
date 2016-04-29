@@ -161,7 +161,7 @@ public class DirectoryWatcher
 				WatchEvent.Kind kind= event.kind();
 
 				// TBD - provide example of how OVERFLOW event is handled
-				if (kind == OVERFLOW)
+				if (kind == OVERFLOW || kind == ENTRY_DELETE)
 				{
 					continue;
 				}
