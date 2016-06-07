@@ -634,7 +634,8 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	private void bracket(ASTNode node, InfixExpression.Operator op)
 	{
-		if ((node instanceof InfixExpression && ((InfixExpression) node).getOperator() == op) || node instanceof NumberLiteral || node instanceof NullLiteral || node instanceof FieldAccess || node instanceof VariableBinding)
+		boolean b= false; //node instanceof InfixExpression && ((InfixExpression) node).getOperator() == op;
+		if (b || node instanceof NumberLiteral || node instanceof NullLiteral || node instanceof FieldAccess || node instanceof VariableBinding)
 		{
 			node.visit(this);
 		}
