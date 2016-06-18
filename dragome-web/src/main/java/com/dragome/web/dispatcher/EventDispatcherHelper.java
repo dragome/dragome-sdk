@@ -101,13 +101,15 @@ public class EventDispatcherHelper
 
 	private static DragomeConfigurator getConfigurator()
 	{
-		DragomeConfigurator configurator= new DomHandlerApplicationConfigurator();
+		DragomeConfigurator configurator = null;
 		List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(DragomeConfiguratorImplementor.class).getEntries();
 		for (AnnotationEntry annotationEntry : annotationEntries)
 		{
 			if (!annotationEntry.getType().equals(DomHandlerApplicationConfigurator.class))
 				configurator= ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
 		}
+		if(configurator == null)
+			configurator = new DomHandlerApplicationConfigurator();
 		return configurator;
 	}
 
