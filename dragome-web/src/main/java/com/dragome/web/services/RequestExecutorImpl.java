@@ -123,13 +123,9 @@ public class RequestExecutorImpl implements RequestExecutor
 			{
 				public void handleEvent(Event evt)
 				{
-
-					if (xmlHttpRequest.getReadyState() == 4 && xmlHttpRequest.getReadyState() == 200)
-					{
-						MessageEvent messageEvent= JsCast.castTo(evt, MessageEvent.class);
-						asyncCallback.onSuccess(messageEvent.getData().toString());
-					}
-					else
+					if (xmlHttpRequest.getReadyState() == 4 && xmlHttpRequest.getStatus() == 200)
+						asyncCallback.onSuccess(xmlHttpRequest.getResponseText());
+					else if (xmlHttpRequest.getStatus() == 404)
 						asyncCallback.onError();
 				}
 			});
