@@ -28,6 +28,8 @@ import java.net.URL;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
@@ -36,6 +38,7 @@ import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.JSObject;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.helpers.AnnotationsAdder;
 
 @DragomeCompilerSettings(CompilerType.Standard)
 public final class Class<T> implements java.io.Serializable, java.lang.reflect.GenericDeclaration, java.lang.reflect.Type, java.lang.reflect.AnnotatedElement
@@ -296,15 +299,34 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Class<? super T> getSuperclass()
 	{
-		if (ScriptHelper.evalBoolean("this.$$$nativeClass.classname == 'java_lang_Object' ", this))
-			return null;
-		else
+		try 
 		{
-			Boolean eval= ScriptHelper.evalBoolean("this.$$$nativeClass.superclass != undefined", this);
-			if (eval)
-				return (Class<? super T>) ScriptHelper.eval("this.$$$nativeClass.superclass.javaClass", this);
-			else
+			Logger.getLogger(AnnotationsAdder.class.getName()).log(Level.FINEST, "Cannot add type annotation");
+			
+			if (ScriptHelper.evalBoolean("this.$$$nativeClass.classname == 'java_lang_Object' ", this))
 				return null;
+			else
+			{
+				Boolean eval= ScriptHelper.evalBoolean("this.$$$nativeClass.superclass != undefined", this);
+				if (eval) 
+				{
+					boolean javaClassExists= ScriptHelper.evalBoolean("this.$$$nativeClass.superclass.javaClass != undefined", this);
+					
+					if (!javaClassExists) 
+					{
+						String className = (String)ScriptHelper.eval("this.$$$nativeClass.superclass.classname", this);
+						return (Class<? super T>) forName(className.replace("_", "."));
+					} 
+					else
+						return (Class<? super T>) ScriptHelper.eval("this.$$$nativeClass.superclass.javaClass", this);
+				} else 
+				{
+					return null;
+				}
+			}
+		} 
+		catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 

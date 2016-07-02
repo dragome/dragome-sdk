@@ -12,13 +12,14 @@ package com.dragome.web.debugging.messages;
 
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
+import org.w3c.dom.html.MessageEvent;
 import org.w3c.dom.websocket.WebSocket;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.annotations.ClientSideMethod;
-import com.dragome.web.debugging.MessageEvent;
 import com.dragome.web.dispatcher.EventDispatcherHelper;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.MessageEventExtension;
 
 public class ClientToServerMessageChannel implements MessageChannel
 {
@@ -77,8 +78,8 @@ public class ClientToServerMessageChannel implements MessageChannel
 			{
 				try
 				{
-					MessageEvent messageEvent= JsCast.castTo(evt, MessageEvent.class);
-					receiver.messageReceived(messageEvent.getData());
+					MessageEventExtension messageEvent= JsCast.castTo(evt, MessageEventExtension.class);
+					receiver.messageReceived(messageEvent.getDataAsString());
 					evt.stopPropagation();
 				}
 				catch (Exception e)
