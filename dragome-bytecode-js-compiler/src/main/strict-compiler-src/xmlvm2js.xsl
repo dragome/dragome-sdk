@@ -2210,7 +2210,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:sget-*
       ==========  -->
-<xsl:template match="dex:sget|dex:sget-wide|dex:sget-boolean|dex:sget-object">
+<xsl:template match="dex:sget|dex:sget-wide|dex:sget-boolean|dex:sget-object|dex:sget-char">
   <xsl:call-template name="checkClass">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
@@ -2230,7 +2230,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:sput-*
       ==========  -->
-<xsl:template match="dex:sput|dex:sput-wide|dex:sput-boolean|dex:sput-object">
+<xsl:template match="dex:sput|dex:sput-wide|dex:sput-boolean|dex:sput-object|dex:sput-char">
   <xsl:call-template name="checkClass">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
@@ -2303,7 +2303,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:aget*
       ========  -->
-<xsl:template match="dex:aget|dex:aget-wide|dex:aget-boolean|dex:aget-byte|dex:aget-char|dex:aget-object">
+<xsl:template match="dex:aget|dex:aget-wide|dex:aget-boolean|dex:aget-byte|dex:aget-char|dex:aget-object|dex:aget-short">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vx" />
@@ -2316,7 +2316,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:aput*
       =========  -->
-<xsl:template match="dex:aput|dex:aput-wide|dex:aput-boolean|dex:aput-char|dex:aput-object">
+<xsl:template match="dex:aput|dex:aput-wide|dex:aput-boolean|dex:aput-char|dex:aput-object|dex:aput-short">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vy" />
@@ -2613,7 +2613,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:and-int*
       ===========  -->
-<xsl:template match="dex:and-int|dex:and-int-2addr">
+<xsl:template match="dex:and-int|dex:and-int-2addr|dex:and-long-2addr">
   <xsl:text>
            __r</xsl:text>
   <xsl:value-of select="@vx"/>
@@ -2797,6 +2797,28 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>);</xsl:text>
 </xsl:template>
 
+<xsl:template match="dex:shl-int-lit8|dex:shl-int-lit16">
+  <xsl:text>
+           __r</xsl:text>
+  <xsl:value-of select="@vx"/>
+  <xsl:text> = __r</xsl:text>
+  <xsl:value-of select="@vy"/>
+  <xsl:text> &lt;&lt; </xsl:text>
+  <xsl:value-of select="@value"/>
+  <xsl:text>;</xsl:text>
+</xsl:template>
+
+<xsl:template match="dex:shl-long-2addr">
+  <xsl:text>
+           __r</xsl:text>
+  <xsl:value-of select="@vx"/>
+  <xsl:text> = __r</xsl:text>
+  <xsl:value-of select="@vy"/>
+  <xsl:text> &lt;&lt; </xsl:text>
+  <xsl:value-of select="@vz"/>
+  <xsl:text>;</xsl:text>
+</xsl:template>
+
 <!--  arreglar esto!! -->
 <xsl:template match="dex:shr-int-lit8|dex:shr-int-lit16">
   <xsl:text>
@@ -2809,6 +2831,17 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>;</xsl:text>
 </xsl:template>
 
+<xsl:template match="dex:shr-long-2addr">
+  <xsl:text>
+           __r</xsl:text>
+  <xsl:value-of select="@vx"/>
+  <xsl:text> = __r</xsl:text>
+  <xsl:value-of select="@vy"/>
+  <xsl:text> &gt;&gt; </xsl:text>
+  <xsl:value-of select="@vz"/>
+  <xsl:text>;</xsl:text>
+</xsl:template>
+
 <xsl:template match="dex:ushr-int-lit8|dex:ushr-int-lit16">
   <xsl:text>
            __r</xsl:text>
@@ -2817,6 +2850,17 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vy"/>
   <xsl:text> &gt;&gt;&gt; </xsl:text>
   <xsl:value-of select="@value"/>
+  <xsl:text>;</xsl:text>
+</xsl:template>
+
+<xsl:template match="dex:ushr-long">
+  <xsl:text>
+           __r</xsl:text>
+  <xsl:value-of select="@vx"/>
+  <xsl:text> = __r</xsl:text>
+  <xsl:value-of select="@vy"/>
+  <xsl:text> &gt;&gt;&gt; </xsl:text>
+  <xsl:value-of select="@vz"/>
   <xsl:text>;</xsl:text>
 </xsl:template>
 
