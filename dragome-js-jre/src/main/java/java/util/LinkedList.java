@@ -407,8 +407,26 @@ public class LinkedList<E> extends ArrayList<E> implements List<E>, Queue<E>, Se
 
 	public E remove(int index)
 	{
+		throwEmptyException();
 		Node<E> node= getNode(index);
 		node.remove();
+		--size;
 		return node.value;
+	}
+	
+	public boolean remove(Object o)
+	{
+		throwEmptyException();
+		Node<E> node = header.next;
+		while(node != null) {
+			E value = node.value;
+			if(value.equals(o)) {
+				node.remove();
+				--size;
+				return true;
+			}
+			node = node.next;
+		}
+		return false;
 	}
 }
