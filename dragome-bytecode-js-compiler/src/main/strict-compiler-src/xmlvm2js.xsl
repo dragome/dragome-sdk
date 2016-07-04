@@ -1653,9 +1653,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
             __r</xsl:text>
   <xsl:value-of select="@vx"/>
   <xsl:text> = java_lang_Class.$forName___java_lang_String$java_lang_Class("</xsl:text>
-  <xsl:call-template name="emitScopedName">
-    <xsl:with-param name="string" select="@value"/>
-  </xsl:call-template>
+  <xsl:value-of select="@value"/>
   <xs:text>");</xs:text>
 </xsl:template>
 
