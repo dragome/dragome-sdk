@@ -202,4 +202,10 @@ public class Collections
 		return list;
 	}
 
+	public static <T> boolean addAll(Collection<? super T> c, T... elements) {
+		boolean result = false;
+		for (T element : elements)
+			result |= c.add(element);
+		return result;
+	}
 }
