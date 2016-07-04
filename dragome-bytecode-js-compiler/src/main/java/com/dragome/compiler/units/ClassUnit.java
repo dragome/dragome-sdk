@@ -630,9 +630,9 @@ public class ClassUnit extends Unit
 			Project.getSingleton().getWrittenSignatures().add(normalizedClassname + "|" + normalizedSignature);
 		}
 
-		if (member instanceof MethodUnit && notReversibleMethods.contains(((MethodUnit) member).getNameAndSignature()))
+		if (member instanceof ProcedureUnit && notReversibleMethods.contains(((ProcedureUnit) member).getNameAndSignature()))
 		{
-			MethodUnit methodUnit= (MethodUnit) member;
+			ProcedureUnit methodUnit= (ProcedureUnit) member;
 			writer.write(extractMethodDefinition(alternativeCompilation, methodUnit.getNameAndSignature()));
 		}
 		else

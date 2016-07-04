@@ -395,7 +395,7 @@ public class Project implements Serializable
 			}
 			else if (signature.isConstructor())
 			{
-				member= new ConstructorUnit(signature, clazz);
+				member= new ConstructorUnit(signature, clazz, nameAndSignature);
 			}
 			else
 			{
