@@ -15,6 +15,7 @@
  */
 package java.lang;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -76,7 +77,7 @@ public final class String implements CharSequence, Comparable<String>
 		consume(init(bytes, offset, count, enc));
 	}
 
-	public String(byte[] bytes, String enc)
+	public String(byte[] bytes, String enc) throws UnsupportedEncodingException 
 	{
 		consume(init(bytes, 0, bytes.length, enc));
 	}
@@ -129,7 +130,7 @@ public final class String implements CharSequence, Comparable<String>
 	/**
 	 * Encodes this String into a sequence of bytes using the named charset, storing the result into a new byte array.
 	 */
-	public byte[] getBytes(String enc)
+	public byte[] getBytes(String enc) throws UnsupportedEncodingException
 	{
 		return getBytes();
 	}

@@ -70,4 +70,9 @@ public class Random
 	{
 		return ScriptHelper.evalDouble("Math.random()", this);
 	}
+	 
+	public boolean nextBoolean() 
+	{
+		return nextInt(2) == 0;
+	}
 }

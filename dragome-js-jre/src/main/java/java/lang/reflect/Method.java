@@ -395,4 +395,9 @@ public final class Method extends Executable
 	{
 		return (getModifiers() & Modifier.BRIDGE) != 0;
 	}
+	
+	 public String toGenericString() 
+	 {
+	    return toString();
+	 }
 }
