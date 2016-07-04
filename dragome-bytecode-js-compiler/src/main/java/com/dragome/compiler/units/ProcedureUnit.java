@@ -11,12 +11,19 @@ import com.dragome.compiler.utils.Log;
 
 public abstract class ProcedureUnit extends MemberUnit
 {
+	private String nameAndSignature;
+
+	public String getNameAndSignature()
+	{
+		return nameAndSignature;
+	}
 
 	private Collection<Signature> targetSignatures= new LinkedHashSet<Signature>();
 
-	public ProcedureUnit(Signature theSignature, ClassUnit theDeclaringClazz)
+	public ProcedureUnit(Signature theSignature, ClassUnit theDeclaringClazz, String nameAndSignature)
 	{
 		super(theSignature, theDeclaringClazz);
+		this.nameAndSignature = nameAndSignature;
 	}
 
 	public void addTarget(Signature targetSignature)

@@ -4,18 +4,9 @@ import com.dragome.compiler.type.Signature;
 
 public class MethodUnit extends ProcedureUnit
 {
-
-	private String nameAndSignature;
-
-	public String getNameAndSignature()
-	{
-		return nameAndSignature;
-	}
-
 	public MethodUnit(Signature theSignature, ClassUnit theDeclaringClazz, String nameAndSignature)
 	{
-		super(theSignature, theDeclaringClazz);
-		this.nameAndSignature= nameAndSignature;
+		super(theSignature, theDeclaringClazz, nameAndSignature);
 	}
 
 	@Override
