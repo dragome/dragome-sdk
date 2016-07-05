@@ -2812,7 +2812,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vx"/>
   <xsl:text> = __r</xsl:text>
   <xsl:value-of select="@vy"/>
-  <xsl:text> &lt;&lt; </xsl:text>
+  <xsl:text> &lt;&lt; __r</xsl:text>
   <xsl:value-of select="@vz"/>
   <xsl:text>;</xsl:text>
 </xsl:template>
@@ -2835,7 +2835,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vx"/>
   <xsl:text> = __r</xsl:text>
   <xsl:value-of select="@vy"/>
-  <xsl:text> &gt;&gt; </xsl:text>
+  <xsl:text> &gt;&gt; __r</xsl:text>
   <xsl:value-of select="@vz"/>
   <xsl:text>;</xsl:text>
 </xsl:template>
@@ -2857,7 +2857,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vx"/>
   <xsl:text> = __r</xsl:text>
   <xsl:value-of select="@vy"/>
-  <xsl:text> &gt;&gt;&gt; </xsl:text>
+  <xsl:text> &gt;&gt;&gt; __r</xsl:text>
   <xsl:value-of select="@vz"/>
   <xsl:text>;</xsl:text>
 </xsl:template>
