@@ -122,6 +122,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 					throw new ClassNotFoundException(jsClassName);
 
 				String type= className.replaceAll("\\[", "");
+				type = type.replaceAll(";", "");
 
 				if (type.startsWith("L"))
 					type= type.replace("L", "");
