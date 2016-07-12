@@ -123,10 +123,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 				String type= className.replaceAll("\\[", "");
 				type = type.replaceAll(";", "");
-
 				if (type.startsWith("L"))
-					type= type.replace("L", "");
-				else if (type.startsWith("Z"))
+					type= type.replaceFirst("L", "");
+
+				if (type.startsWith("Z"))
 					type= "boolean";
 				else if (type.startsWith("B"))
 					type= "byte";
@@ -579,22 +579,26 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (declaredFields == null)
 		{
 			declaredFields= new ArrayList<Field>();
-			String[] signatures= new String[0];
+			Object[] signatures= new Object[0];
 			ScriptHelper.put("signatures", signatures, this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass.$$members) { if (e.startsWith('$$$')) signatures.push(e); }", this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass.prototype) { if (e.startsWith('$$$')) signatures.push(e); }", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass.$$members) { if (e.startsWith('$$$')){ var b={}; b.e = e; var type = e.replace('$$$', '$T$'); b.t = this.$$$nativeClass.$$members[type]; signatures.push(b); }}", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass.prototype) { if (e.startsWith('$$$')){ var b={}; b.e = e; var type = e.replace('$$$', '$T$'); b.t = this.$$$nativeClass.prototype[type]; signatures.push(b); }}", this);
 			addFields(signatures, Modifier.PUBLIC);
 			signatures= new String[0];
-			ScriptHelper.eval("for (var e in this.$$$nativeClass) { if (e.startsWith('$$$')) signatures.push(e); }", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass) { if (e.startsWith('$$$')){ var b={}; b.e = e; var type = e.replace('$$$', '$T$'); b.t = this.$$$nativeClass[type]; signatures.push(b); }}", this);
 			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredFields.toArray(new Field[0]);
 	}
 
-	private void addFields(String[] signatures, int modifier)
+	private void addFields(Object[] signatures, int modifier)
 	{
-		for (int i= 0; i < signatures.length; i++)
-			declaredFields.add(new Field(this, signatures[i], modifier));
+		for (int i= 0; i < signatures.length; i++) {
+			ScriptHelper.put("sig", signatures[i], this);
+			java.lang.String signature = ScriptHelper.evalCasting("sig.e", String.class, this);
+			java.lang.String type = ScriptHelper.evalCasting("sig.t", String.class, this);
+			declaredFields.add(new Field(this, signature, modifier, type));
+		}
 	}
 
 	public Field getDeclaredField(String name) throws NoSuchFieldException, SecurityException
