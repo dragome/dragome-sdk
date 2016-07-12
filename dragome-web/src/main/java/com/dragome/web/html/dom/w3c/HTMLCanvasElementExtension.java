@@ -1,6 +1,6 @@
 package com.dragome.web.html.dom.w3c;
 
-import org.w3c.dom.html.HTMLCanvasElement;
+import com.dragome.w3c.dom.html.HTMLCanvasElement;
 
 public interface HTMLCanvasElementExtension extends HTMLCanvasElement
 {

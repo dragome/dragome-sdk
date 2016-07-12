@@ -16,10 +16,9 @@
 
 package java.io;
 
-import org.w3c.dom.typedarray.Float32Array;
-import org.w3c.dom.typedarray.Int32Array;
-import org.w3c.dom.typedarray.Int8Array;
-
+import com.dragome.w3c.dom.typedarray.Float32Array;
+import com.dragome.w3c.dom.typedarray.Int32Array;
+import com.dragome.w3c.dom.typedarray.Int8Array;
 import com.dragome.web.html.dom.w3c.TypedArraysFactory;
 
 public class Numbers

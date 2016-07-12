@@ -16,7 +16,7 @@
 
 package java.nio;
 
-import org.w3c.dom.typedarray.ArrayBufferView;
+import com.dragome.w3c.dom.typedarray.ArrayBufferView;
 
 public interface HasArrayBufferView {
 

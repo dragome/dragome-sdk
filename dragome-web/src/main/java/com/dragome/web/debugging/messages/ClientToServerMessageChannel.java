@@ -10,12 +10,10 @@
  ******************************************************************************/
 package com.dragome.web.debugging.messages;
 
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.html.MessageEvent;
-import org.w3c.dom.websocket.WebSocket;
-
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.w3c.dom.events.Event;
+import com.dragome.w3c.dom.events.EventListener;
+import com.dragome.w3c.dom.websocket.WebSocket;
 import com.dragome.web.annotations.ClientSideMethod;
 import com.dragome.web.dispatcher.EventDispatcherHelper;
 import com.dragome.web.enhancers.jsdelegate.JsCast;

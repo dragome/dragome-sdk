@@ -18,9 +18,8 @@ package com.dragome.web.enhancers.jsdelegate.reflection;
 
 import java.lang.reflect.Proxy;
 
-import org.w3c.dom.Element;
-
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.w3c.dom.Element;
 
 public class ElementTransformer
 {

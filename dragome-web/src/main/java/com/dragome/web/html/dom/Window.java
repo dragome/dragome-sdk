@@ -2,15 +2,14 @@ package com.dragome.web.html.dom;
 
 import java.io.Serializable;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.AsyncCallback;
+import com.dragome.w3c.dom.Document;
+import com.dragome.w3c.dom.Element;
+import com.dragome.w3c.dom.events.EventListener;
+import com.dragome.w3c.dom.events.EventTarget;
 import com.dragome.web.dispatcher.EventDispatcherImpl;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.services.RequestExecutorImpl;

@@ -16,9 +16,8 @@
 
 package java.nio;
 
-import org.w3c.dom.typedarray.ArrayBufferView;
-import org.w3c.dom.typedarray.Int32Array;
-
+import com.dragome.w3c.dom.typedarray.ArrayBufferView;
+import com.dragome.w3c.dom.typedarray.Int32Array;
 import com.dragome.web.html.dom.w3c.TypedArraysFactory;
 
 /** This class wraps a byte buffer to be a int buffer.

@@ -19,11 +19,10 @@ package java.nio;
 
 import java.io.Numbers;
 
-import org.w3c.dom.typedarray.ArrayBuffer;
-import org.w3c.dom.typedarray.ArrayBufferView;
-import org.w3c.dom.typedarray.Int8Array;
-
 import com.dragome.utils.Endianness;
+import com.dragome.w3c.dom.typedarray.ArrayBuffer;
+import com.dragome.w3c.dom.typedarray.ArrayBufferView;
+import com.dragome.w3c.dom.typedarray.Int8Array;
 import com.dragome.web.html.dom.w3c.ArrayBufferFactory;
 import com.dragome.web.html.dom.w3c.TypedArraysFactory;
 

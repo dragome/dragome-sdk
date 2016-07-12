@@ -16,11 +16,10 @@
 
 package com.dragome.web.config;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.w3c.dom.Attr;
+import com.dragome.w3c.dom.Element;
+import com.dragome.w3c.dom.Node;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
 public class NodeSubTypeFactory implements SubTypeFactory
