@@ -113,20 +113,42 @@ public class Integer extends Number implements Comparable<Integer>
 	 */
 	public static int parseInt(String s, int radix)
 	{
-		if (s == null)
-			throw new NullPointerException();
-		s= s.trim();
-		//if (!s.matches("-?(\\d[A-Z])+")) throw new NumberFormatException("Invalid integer: " + s);
-		ScriptHelper.put("s", s, null);
-		ScriptHelper.put("radix", radix, null);
-		int i= ScriptHelper.evalInt("parseInt(s, radix)", null);
+		return __parseAndValidateInt(s, radix, MIN_VALUE, MAX_VALUE);
+	}
 
-		ScriptHelper.put("i", i, null);
-		ScriptHelper.put("radix", radix, null);
-		if (!s.equals(ScriptHelper.eval("new Number(i).toString(radix)", null)))
-			throw new NumberFormatException("Invalid integer: " + s);
+	protected static int __parseAndValidateInt(String s, int radix, int lowerBound, int upperBound)
+			throws NumberFormatException {
+		if (s == null) {
+			throw new NumberFormatException("null");
+		}
+		if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX) {
+			throw new NumberFormatException("radix " + radix + " out of range");
+		}
 
-		return i;
+		int length = s.length();
+		int startIndex = (length > 0) && (s.charAt(0) == '-' || s.charAt(0) == '+') ? 1 : 0;
+
+		for (int i = startIndex; i < length; i++) {
+			if (Character.digit(s.charAt(i), radix) == -1) {
+				throw new NumberFormatException(s);
+			}
+		}
+		int toReturn = 0;
+		ScriptHelper.put("toReturn", toReturn, null);
+		ScriptHelper.evalInt("var toReturn = parseInt(s, radix);", null);
+		// isTooLow is separated into its own variable to avoid a bug in BlackBerry OS 7. See
+		// https://code.google.com/p/google-web-toolkit/issues/detail?id=7291.
+		boolean isTooLow = false;
+		boolean isNan = false;
+		ScriptHelper.put("isTooLow", isTooLow, null);
+		ScriptHelper.evalNoResult("isTooLow = toReturn < lowerBound;", null);
+		isNan = ScriptHelper.evalBoolean("isNaN(toReturn)", null);
+		if (isNan) {
+			throw new NumberFormatException(s);
+		} else if (isTooLow || toReturn > upperBound) {
+			throw new NumberFormatException(s);
+		}
+		return toReturn;
 	}
 
 	/**

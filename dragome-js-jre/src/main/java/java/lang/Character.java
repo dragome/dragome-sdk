@@ -24,6 +24,9 @@ import com.dragome.commons.javascript.ScriptHelper;
  */
 public final class Character
 {
+	public static final int MIN_RADIX = 2;
+	public static final int MAX_RADIX = 36;
+
 	public static final char MIN_HIGH_SURROGATE= '\uD800';
 
 	public static final Class<Character> TYPE= Class.getType("char");
@@ -55,6 +58,27 @@ public final class Character
 	public static boolean isDigit(char ch)
 	{
 		return String.valueOf(ch).matches("[0-9]");
+	}
+
+	public static int digit(char c, int radix) {
+		if (radix < MIN_RADIX || radix > MAX_RADIX) {
+			return -1;
+		}
+
+		if (c >= '0' && c < '0' + Math.min(radix, 10)) {
+			return c - '0';
+		}
+
+		// The offset by 10 is to re-base the alpha values
+		if (c >= 'a' && c < (radix + 'a' - 10)) {
+			return c - 'a' + 10;
+		}
+
+		if (c >= 'A' && c < (radix + 'A' - 10)) {
+			return c - 'A' + 10;
+		}
+
+		return -1;
 	}
 
 	/**
