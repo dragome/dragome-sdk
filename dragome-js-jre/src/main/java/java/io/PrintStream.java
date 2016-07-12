@@ -165,54 +165,45 @@ public class PrintStream extends OutputStream
 	public void println(boolean x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(char x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(int x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(long x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(float x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(double x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(char[] x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(java.lang.String x)
 	{
 		print(x);
-		println();
 	}
 
 	public void println(java.lang.Object x)
 	{
 		print(x);
-		println();
 	}
 }
