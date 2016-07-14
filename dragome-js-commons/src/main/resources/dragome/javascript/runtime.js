@@ -196,10 +196,10 @@ dragomeJs.newArray = function(classSignature, dim, index) {
 
 	var array = new Array(dimensionAtIndex);
 	array.$clone$java_lang_Object = java_lang_Object.prototype.$clone$java_lang_Object;
-
+	array.classSignature = classSignature;
 	array.__proto__.$getClass$java_lang_Class = function() {
 		var clazz = java_lang_Class
-				.$forName___java_lang_String$java_lang_Class(classSignature);
+				.$forName___java_lang_String$java_lang_Class(this.classSignature);
 		return clazz;
 	};
 

@@ -21,8 +21,12 @@ public final class Array
 {
 	public static Object newInstance(Class<?> componentType, int length)
 	{
-		ScriptHelper.put("l", length, null);
-		Object eval= ScriptHelper.eval("new Array(l)", null);
+		ScriptHelper.put("componentType", componentType, null);
+		ScriptHelper.put("length", length, null);
+		String realName = ScriptHelper.evalCasting("componentType.realName", String.class, null);
+		realName = "[L" + realName + ";";
+		ScriptHelper.put("classSignature", realName, null);
+		Object eval = ScriptHelper.eval("dragomeJs.newArray(classSignature, [length]);", null);
 		return eval;
 	}
 
