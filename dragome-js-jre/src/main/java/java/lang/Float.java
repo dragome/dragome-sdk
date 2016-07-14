@@ -15,6 +15,7 @@
  */
 package java.lang;
 
+import java.io.Numbers;
 import java.util.NotImplementedMethod;
 
 import com.dragome.commons.javascript.ScriptHelper;
@@ -136,5 +137,10 @@ public final class Float extends Number
 	public static String toString(float f)
 	{
 		return f + "";
+	}
+
+	public static int floatToRawIntBits(float value) 
+	{
+		return Numbers.floatToIntBits(value);
 	}
 }
