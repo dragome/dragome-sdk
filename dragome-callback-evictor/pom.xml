@@ -10,7 +10,7 @@
   <url>http://www.dragome.com</url>
   
   <properties>
-    <dragome.version>0.96-beta3</dragome.version>
+    <dragome.version>0.96-beta4</dragome.version>
     <skip.gpg>true</skip.gpg>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
