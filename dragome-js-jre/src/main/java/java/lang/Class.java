@@ -349,7 +349,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	}
 
 	@MethodAlias(local_alias= "getMethodBySignature")
-	public Method getMethod(String signature)
+	public Method getMethodBySignature(String signature)
 	{
 		Method[] foundMethods= getMethods();
 		for (Method method : foundMethods)

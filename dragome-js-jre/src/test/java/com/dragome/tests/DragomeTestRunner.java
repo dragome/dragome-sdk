@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -22,33 +23,34 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class DragomeTestRunner extends ParentRunner<FrameworkMethod> {
 	private Class<?> clazz;
-	private HtmlPage page;
+	private static HtmlPage page;
 	protected boolean failed;
 
 	public DragomeTestRunner(Class<?> aClass) throws Exception {
 		super(aClass);
 		this.clazz = aClass;
 
-		ServiceLocator serviceLocator= ServiceLocator.getInstance();
-		serviceLocator.setReflectionService(new ServerReflectionServiceImpl());
+		if (page == null) {
+			ServiceLocator serviceLocator = ServiceLocator.getInstance();
+			serviceLocator.setReflectionService(new ServerReflectionServiceImpl());
 			serviceLocator.setConfigurator(new TestsConfigurator());
 
-		
-		File destinationDirectory = new File("./target/dragome-tests");
-		destinationDirectory.mkdirs();
-		File webappDirectory = new File("./src/test/resources");
-		new StandaloneDragomeAppGenerator(destinationDirectory, webappDirectory, true, true).execute();
+			File destinationDirectory = new File("./target/dragome-tests");
+			destinationDirectory.mkdirs();
+			File webappDirectory = new File("./src/test/resources");
+			new StandaloneDragomeAppGenerator(destinationDirectory, webappDirectory, true, true).execute();
 
-		Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
+			Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
 
-		WebClient webClient = new WebClient(BrowserVersion.CHROME);
-		page = webClient.getPage(new File(destinationDirectory, "tests.html").toURI().toURL());
+			WebClient webClient = new WebClient(BrowserVersion.CHROME);
+			page = webClient.getPage(new File(destinationDirectory, "tests.html").toURI().toURL());
+		}
 	}
 
 	protected List<FrameworkMethod> getChildren() {
 		List<FrameworkMethod> result = new ArrayList<>();
 		for (Method method : clazz.getMethods()) {
-			if (method.getName().startsWith("test")) {
+			if (method.getName().startsWith("test") || method.getAnnotation(Test.class) != null) {
 				FrameworkMethod frameworkMethod = new FrameworkMethod(method);
 				result.add(frameworkMethod);
 			}
