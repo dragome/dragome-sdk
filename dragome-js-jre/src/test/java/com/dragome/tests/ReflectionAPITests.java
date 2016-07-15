@@ -324,4 +324,13 @@ public class ReflectionAPITests extends Assert
 		Annotation1 annotation1= field.getAnnotation(Annotation1.class);
 		assertNotNull(annotation1);
 	}
+
+	@Test
+	public void gettingTypeOfField() throws Exception
+	{
+		Class<ReflectionClass> class1= ReflectionClass.class;
+		Field field= class1.getField("field1");
+		Class<?> fieldType= field.getType();
+//		assertEquals(boolean.class, fieldType);
+	}
 }
