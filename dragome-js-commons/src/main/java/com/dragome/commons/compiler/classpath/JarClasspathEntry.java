@@ -71,7 +71,7 @@ public class JarClasspathEntry implements ClasspathEntry
 	{
 		try
 		{
-			return new JarClasspathEntry(new JarFile(new File(path)));
+			return new JarClasspathEntry(new JarFile(new File(path), false));
 		}
 		catch (IOException e)
 		{

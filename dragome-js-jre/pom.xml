@@ -133,5 +133,28 @@
       <artifactId>dragome-web</artifactId>
       <version>${dragome.version}</version>
     </dependency>
+	<dependency>
+		<groupId>com.dragome</groupId>
+		<artifactId>dragome-bytecode-js-compiler</artifactId>
+	    <version>${dragome.version}</version>
+		<scope>test</scope>
+	</dependency>
+    
+    <dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+	</dependency>
+	<dependency>
+		<groupId>net.sourceforge.htmlunit</groupId>
+		<artifactId>htmlunit</artifactId>
+		<version>2.22</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>xml-apis</groupId>
+		<artifactId>xml-apis</artifactId>
+		<version>1.4.01</version>
+	</dependency>
   </dependencies>
 </project>
