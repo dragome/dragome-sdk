@@ -327,7 +327,7 @@ public class File implements Serializable, Comparable<File>
 		return 0;
 	}
 
-	public Object toURI()
+	public URI toURI()
 	{
 		// TODO Auto-generated method stub
 		return null;
