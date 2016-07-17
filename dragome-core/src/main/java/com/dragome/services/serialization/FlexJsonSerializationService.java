@@ -17,7 +17,7 @@ package com.dragome.services.serialization;
 
 import java.lang.reflect.Method;
 
-import com.dragome.w3c.dom.Element;
+import org.w3c.dom.Element;
 
 import com.dragome.services.interfaces.SerializationService;
 

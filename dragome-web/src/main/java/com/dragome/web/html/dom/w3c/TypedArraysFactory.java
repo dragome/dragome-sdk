@@ -1,8 +1,9 @@
 package com.dragome.web.html.dom.w3c;
 
+import org.w3c.dom.typedarray.ArrayBuffer;
+import org.w3c.dom.typedarray.ArrayBufferView;
+
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.w3c.dom.typedarray.ArrayBuffer;
-import com.dragome.w3c.dom.typedarray.ArrayBufferView;
 
 public class TypedArraysFactory
 {

@@ -22,6 +22,10 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.w3c.dom.EventHandler;
+import org.w3c.dom.XMLHttpRequest;
+import org.w3c.dom.events.Event;
+
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.ExecutionHandler;
 import com.dragome.commons.javascript.ScriptHelper;
@@ -31,9 +35,6 @@ import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.AsyncCallback;
 import com.dragome.services.interfaces.AsyncResponseHandler;
 import com.dragome.services.interfaces.RequestExecutor;
-import com.dragome.w3c.dom.EventHandler;
-import com.dragome.w3c.dom.XMLHttpRequest;
-import com.dragome.w3c.dom.events.Event;
 import com.dragome.web.debugging.messages.ClientToServerServiceInvocationHandler;
 
 public class RequestExecutorImpl implements RequestExecutor

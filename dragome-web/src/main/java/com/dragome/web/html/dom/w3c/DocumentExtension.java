@@ -1,16 +1,16 @@
 package com.dragome.web.html.dom.w3c;
 
-import com.dragome.w3c.dom.CaretPosition;
-import com.dragome.w3c.dom.DOMStringList;
-import com.dragome.w3c.dom.Document;
-import com.dragome.w3c.dom.Element;
-import com.dragome.w3c.dom.NodeList;
-import com.dragome.w3c.dom.ObjectArray;
-import com.dragome.w3c.dom.events.EventTarget;
-import com.dragome.w3c.dom.events.Touch;
-import com.dragome.w3c.dom.events.TouchList;
-import com.dragome.w3c.dom.html.Window;
-import com.dragome.w3c.dom.stylesheets.StyleSheet;
+import org.w3c.dom.CaretPosition;
+import org.w3c.dom.DOMStringList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ObjectArray;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.events.Touch;
+import org.w3c.dom.events.TouchList;
+import org.w3c.dom.html.Window;
+import org.w3c.dom.stylesheets.StyleSheet;
 
 public interface DocumentExtension extends Document
 {

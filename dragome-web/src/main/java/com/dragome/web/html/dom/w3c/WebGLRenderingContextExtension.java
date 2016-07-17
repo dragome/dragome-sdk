@@ -1,7 +1,7 @@
 package com.dragome.web.html.dom.w3c;
 
-import com.dragome.w3c.dom.webgl.WebGLRenderingContext;
-import com.dragome.w3c.dom.webgl.WebGLUniformLocation;
+import org.w3c.dom.webgl.WebGLRenderingContext;
+import org.w3c.dom.webgl.WebGLUniformLocation;
 
 public interface WebGLRenderingContextExtension extends WebGLRenderingContext
 {

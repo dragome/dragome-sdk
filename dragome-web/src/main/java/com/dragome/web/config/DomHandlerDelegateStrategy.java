@@ -1,6 +1,7 @@
 package com.dragome.web.config;
 
-import com.dragome.w3c.dom.html.HTMLCanvasElement;
+import org.w3c.dom.html.HTMLCanvasElement;
+
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 

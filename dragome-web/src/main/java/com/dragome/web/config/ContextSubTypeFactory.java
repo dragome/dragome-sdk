@@ -3,8 +3,9 @@ package com.dragome.web.config;
 import java.util.Arrays;
 import java.util.List;
 
+import org.w3c.dom.html.CanvasRenderingContext2D;
+
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.w3c.dom.html.CanvasRenderingContext2D;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 import com.dragome.web.html.dom.w3c.WebGLRenderingContextExtension;
 

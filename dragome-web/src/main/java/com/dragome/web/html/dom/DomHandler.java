@@ -15,8 +15,8 @@
  */
 package com.dragome.web.html.dom;
 
-import com.dragome.w3c.dom.Document;
-import com.dragome.w3c.dom.Element;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public interface DomHandler
 {

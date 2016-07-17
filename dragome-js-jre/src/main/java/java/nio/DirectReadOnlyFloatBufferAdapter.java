@@ -16,8 +16,9 @@
 
 package java.nio;
 
-import com.dragome.w3c.dom.typedarray.ArrayBufferView;
-import com.dragome.w3c.dom.typedarray.Float32Array;
+import org.w3c.dom.typedarray.ArrayBufferView;
+import org.w3c.dom.typedarray.Float32Array;
+
 import com.dragome.web.html.dom.w3c.TypedArraysFactory;
 
 /** This class wraps a byte buffer to be a float buffer.

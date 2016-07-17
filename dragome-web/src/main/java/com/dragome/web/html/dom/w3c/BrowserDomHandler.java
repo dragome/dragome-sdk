@@ -15,9 +15,10 @@
  */
 package com.dragome.web.html.dom.w3c;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.w3c.dom.Document;
-import com.dragome.w3c.dom.Element;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.DomHandler;
 

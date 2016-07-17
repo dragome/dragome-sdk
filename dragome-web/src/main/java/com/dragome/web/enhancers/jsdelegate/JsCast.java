@@ -11,10 +11,11 @@
 
 package com.dragome.web.enhancers.jsdelegate;
 
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
-import com.dragome.w3c.dom.events.EventListener;
-import com.dragome.w3c.dom.events.EventTarget;
 
 public class JsCast
 {

@@ -17,7 +17,7 @@
 
 package java.nio;
 
-import com.dragome.w3c.dom.typedarray.ArrayBuffer;
+import org.w3c.dom.typedarray.ArrayBuffer;
 
 /** HeapByteBuffer, ReadWriteHeapByteBuffer and ReadOnlyHeapByteBuffer compose the implementation of array based byte buffers.
  * <p>

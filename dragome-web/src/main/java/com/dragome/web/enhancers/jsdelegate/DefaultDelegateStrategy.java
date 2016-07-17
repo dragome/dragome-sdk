@@ -13,10 +13,11 @@ package com.dragome.web.enhancers.jsdelegate;
 
 import java.lang.reflect.Method;
 
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.typedarray.ArrayBufferView;
+
 import com.dragome.commons.compiler.annotations.MethodAlias;
-import com.dragome.w3c.dom.events.EventListener;
-import com.dragome.w3c.dom.events.EventTarget;
-import com.dragome.w3c.dom.typedarray.ArrayBufferView;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 import com.google.common.reflect.TypeToken;
