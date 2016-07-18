@@ -28,8 +28,9 @@ public class BytecodeToJavascriptCompilerConfiguration
 	private BytecodeTransformer bytecodeTransformer;
 	private ClasspathFileFilter classpathFilter;
 	private boolean checkingCast;
+	private boolean isCaching;
 
-	public BytecodeToJavascriptCompilerConfiguration(Classpath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast)
+	public BytecodeToJavascriptCompilerConfiguration(Classpath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast, boolean isCaching)
 	{
 		this.classPath= classPath;
 		this.targetDir= targetDir;
@@ -38,6 +39,7 @@ public class BytecodeToJavascriptCompilerConfiguration
 		this.bytecodeTransformer= bytecodeTransformer;
 		this.classpathFilter= classpathFilter;
 		this.checkingCast= isCheckingCast;
+		this.isCaching = isCaching;
 	}
 
 	public Classpath getClasspath()
@@ -73,5 +75,10 @@ public class BytecodeToJavascriptCompilerConfiguration
 	public boolean isCheckingCast()
 	{
 		return checkingCast;
+	}
+	
+	public boolean isCaching()
+	{
+		return isCaching;
 	}
 }

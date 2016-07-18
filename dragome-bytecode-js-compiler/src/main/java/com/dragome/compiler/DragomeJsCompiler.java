@@ -188,7 +188,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 			throw new RuntimeException("Field assembly.entryPointClassName must be set");
 		}
 
-		if (cacheFile == null)
+		if (compilerConfiguration.isCaching() && cacheFile == null)
 		{
 			String property= "target";
 
