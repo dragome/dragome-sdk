@@ -144,4 +144,9 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	{
 		return null;
 	}
+
+	@Override
+	public boolean isCaching() {
+		return true;
+	}
 }
