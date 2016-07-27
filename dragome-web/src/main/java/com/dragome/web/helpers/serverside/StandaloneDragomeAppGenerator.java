@@ -142,10 +142,9 @@ public class StandaloneDragomeAppGenerator
 			LOGGER.info("Found classpath element " + theURL);
 			File file= new File(theURL.toURI());
 			String theClassPathEntry= file.toString();
-			boolean isClassesFolder= !theURL.toString().contains(".jar") && file.isDirectory();
 			boolean addToClasspath= serviceLocator.getConfigurator().filterClassPath(theClassPathEntry);
 
-			if (isClassesFolder || addToClasspath)
+			if (addToClasspath)
 				classPath.addEntry(theClassPathEntry);
 			else
 				LOGGER.warning("Skipping, it is not configured as an included artifact.");
