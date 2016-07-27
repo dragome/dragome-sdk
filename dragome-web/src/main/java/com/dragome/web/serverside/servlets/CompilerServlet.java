@@ -65,7 +65,7 @@ public class CompilerServlet extends GetPostServlet
 				boolean isClassesFolder= i.toString().endsWith("/classes/") || i.toString().endsWith("/classes");
 				boolean addToClasspath= ServiceLocator.getInstance().getConfigurator().filterClassPath(classPathEntry);
 
-				if (isClassesFolder || addToClasspath)
+				if (addToClasspath)
 					classPath.addEntry(classPathEntry);
 
 				if (isClassesFolder)
@@ -73,8 +73,13 @@ public class CompilerServlet extends GetPostServlet
 
 				LOGGER.log(Level.INFO, "classpath entry: " + classPathEntry);
 			}
-
-			final String path= new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString() + File.separator + "compiled-js";
+			
+			String compiledDir = ServiceLocator.getInstance().getConfigurator().getCompiledPath();
+			
+			if(compiledDir == null) // if path is not set use the /classes path
+				compiledDir = new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString();
+			
+			final String path= compiledDir + File.separator + "compiled-js";
 
 			LOGGER.log(Level.INFO, "classes: " + path);
 
