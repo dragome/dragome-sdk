@@ -2584,7 +2584,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:rem-*
       ============  -->
-<xsl:template match="dex:rem-int|dex:rem-int-2addr|dex:rem-long|dex:rem-long-2addr">
+<xsl:template match="dex:rem-int|dex:rem-int-2addr|dex:rem-long|dex:rem-long-2addr|dex:rem-double">
   <xsl:text>
            __r</xsl:text>
   <xsl:value-of select="@vx"/>
