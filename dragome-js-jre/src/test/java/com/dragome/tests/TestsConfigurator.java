@@ -23,7 +23,7 @@ public class TestsConfigurator extends DomHandlerApplicationConfigurator {
 		boolean include = super.filterClassPath(classpathEntry);
 		include |= classpathEntry.contains("junit-4");
 		include |= classpathEntry.contains("hamcrest-core");
-		include |= classpathEntry.contains("classes");
+		include |= classpathEntry.contains("test-classes");
 
 		return include;
 	}
