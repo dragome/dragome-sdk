@@ -27,4 +27,9 @@ public class TestsConfigurator extends DomHandlerApplicationConfigurator {
 
 		return include;
 	}
+
+	@Override
+	public boolean isCaching() {
+		return false;
+	}
 }
