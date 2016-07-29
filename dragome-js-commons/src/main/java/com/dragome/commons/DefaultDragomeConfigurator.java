@@ -24,7 +24,6 @@ import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathEntry;
-import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
 @DragomeConfiguratorImplementor
@@ -88,16 +87,46 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	public boolean filterClassPath(String classpathEntry)
 	{
 		boolean include= false;
-
-		include|= classpathEntry.contains("dragome-js-commons-");
-		include|= classpathEntry.contains("dragome-w3c-standards-");
-		include|= classpathEntry.contains("dragome-js-jre-");
-		include|= classpathEntry.contains("dragome-core-");
-		include|= classpathEntry.contains("dragome-web-");
-		include|= classpathEntry.contains("dragome-guia-");
-		include|= classpathEntry.contains("dragome-form-bindings-");
-		include|= classpathEntry.contains("dragome-method-logger-");
-
+		if(classpathEntry.contains("dragome-js-commons")) {
+			include|= classpathEntry.contains("dragome-js-commons-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-w3c-standards")) {
+			include|= classpathEntry.contains("dragome-w3c-standards-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-js-jre")) {
+			include|= classpathEntry.contains("dragome-js-jre-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-core")) {
+			include|= classpathEntry.contains("dragome-core-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-web")) {
+			include|= classpathEntry.contains("dragome-web-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-guia")) {
+			include|= classpathEntry.contains("dragome-guia-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-form-bindings")) {
+			include|= classpathEntry.contains("dragome-form-bindings-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
+		else if(classpathEntry.contains("dragome-method-logger")) {
+			include|= classpathEntry.contains("dragome-method-logger-");
+			include|= classpathEntry.contains("\\bin");
+			include|= classpathEntry.contains("\\classes");
+		}
 		return include;
 	}
 
@@ -142,6 +171,16 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 
 	public URL getAdditionalCodeKeepConfigFile()
 	{
+		return null;
+	}
+
+	@Override
+	public boolean isCaching() {
+		return true;
+	}
+
+	@Override
+	public String getCompiledPath() {
 		return null;
 	}
 }

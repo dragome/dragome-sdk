@@ -404,4 +404,9 @@ public final class Double extends Number implements Comparable<Double>
 	{
 		return hashCode((long)value);
 	}
+
+	public static int doubleToRawLongBits(double d) 
+	{
+		return (int) doubleToLongBits(d);
+	}
 }
