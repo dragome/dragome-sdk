@@ -97,7 +97,7 @@ public class DragomeCompilerLauncher
 			String path = null;
 
 			String tempDir = System.getProperty("java.io.tmpdir");
-			File tmpDir = new File(tempDir + File.separatorChar + "draogmeTemp");
+			File tmpDir = new File(tempDir + File.separatorChar + "dragomeTemp");
 			Path tmpPath = tmpDir.toPath();
 			FileUtils.deleteDirectory(tmpDir);
 			Files.createDirectories(tmpPath);
