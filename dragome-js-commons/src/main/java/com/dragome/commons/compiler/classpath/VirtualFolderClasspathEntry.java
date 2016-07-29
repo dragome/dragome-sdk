@@ -39,7 +39,7 @@ public class VirtualFolderClasspathEntry implements ClasspathEntry
 		return files;
 	}
 
-	public void copyFilesToJar(JarOutputStream jos)
+	public void copyFilesToJar(JarOutputStream jos, ArrayList<String> keepClass)
 	{
 		for (ClasspathFile classpathFile : classpathFiles)
 			CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getFilename().replace(".class", ""));

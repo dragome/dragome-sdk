@@ -53,11 +53,11 @@ public class FolderClasspathEntry implements ClasspathEntry
 		return new FolderClasspathEntry(new File(classPathEntry));
 	}
 
-	public void copyFilesToJar(JarOutputStream jos)
+	public void copyFilesToJar(JarOutputStream jos, ArrayList<String> keepClass)
 	{
 		try
 		{
-			CopyUtils.copyClassToJarFile(folder, jos);
+			CopyUtils.copyClassToJarFile(folder, jos, keepClass);
 		}
 		catch (Exception e)
 		{

@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -16,15 +17,21 @@ import java.util.jar.JarOutputStream;;
 
 public class CopyUtils
 {
-	public static void copyJarFile(JarFile jarFile, JarOutputStream jos) throws IOException
+	public static void copyJarFile(JarFile jarFile, JarOutputStream jos, ArrayList<String> keepClass) throws IOException
 	{
 		Enumeration<JarEntry> entries= jarFile.entries();
 
 		while (entries.hasMoreElements())
 		{
 			JarEntry entry= entries.nextElement();
-			InputStream is= jarFile.getInputStream(entry);
 			String entryName= entry.getName();
+			if(keepClass != null && keepClass.contains(entryName.replace("/", "\\")) == false) {
+				if(entryName.endsWith(".class"))// if it ends with .class and is not in keepClass array dont add to jar. It allow other files to copy
+					continue;
+				if(entryName.contains("MANIFEST")) // not needed to copy. It cause duplicate zip entry
+					continue;
+			}
+			InputStream is= jarFile.getInputStream(entry);
 			addEntryToJar(jos, is, entryName);
 		}
 	}
@@ -60,15 +67,23 @@ public class CopyUtils
 		}
 	}
 
-	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos) throws Exception
+	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos, final ArrayList<String> keepClass) throws Exception
 	{
 		if (fileClassPathEntry != null && fileClassPathEntry.exists())
 			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 			{
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 				{
-					InputStream inputStream= Files.newInputStream(file);
 					String string= fileClassPathEntry.toPath().relativize(file).toString();
+					
+					if(keepClass != null && keepClass.contains(string) == false) { 
+						if(string.endsWith(".class"))// if it ends with .class and is not in keepClass array dont add to jar. It allow other files to copy
+							return FileVisitResult.CONTINUE;
+						if(string.contains("MANIFEST")) // not needed to copy. It cause duplicate zip entry
+							return FileVisitResult.CONTINUE;
+					}
+					
+					InputStream inputStream= Files.newInputStream(file);
 					addEntryToJar(jos, inputStream, string);
 
 					return FileVisitResult.CONTINUE;
