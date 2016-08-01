@@ -99,11 +99,7 @@ public class DragomeCompilerLauncher
 							{
 								keepClass.add(entryName);
 
-								if (entryName.endsWith(".js"))
-									return true;
-								if (entryName.endsWith(".class"))
-									return true;
-								if (entryName.contains("MANIFEST"))
+								if (entryName.endsWith(".js") || entryName.endsWith(".class") || entryName.contains("MANIFEST") || entryName.contains(".html") || entryName.contains(".css"))
 									return true;
 							}
 							return false;
