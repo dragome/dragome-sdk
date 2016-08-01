@@ -10,6 +10,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
+import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.CopyUtils;
 
 public class JarClasspathEntry implements ClasspathEntry
@@ -84,11 +85,11 @@ public class JarClasspathEntry implements ClasspathEntry
 		}
 	}
 
-	public void copyFilesToJar(JarOutputStream jos, ArrayList<String> keepClass)
+	public void copyFilesToJar(JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter)
 	{
 		try
 		{
-			CopyUtils.copyJarFile(jarFile, jos, keepClass);
+			CopyUtils.copyJarFile(jarFile, jos, classpathEntryFilter);
 		}
 		catch (IOException e)
 		{

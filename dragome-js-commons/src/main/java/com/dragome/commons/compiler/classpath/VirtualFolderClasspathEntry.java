@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarOutputStream;
 
+import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.CopyUtils;
 
 public class VirtualFolderClasspathEntry implements ClasspathEntry
@@ -39,10 +40,14 @@ public class VirtualFolderClasspathEntry implements ClasspathEntry
 		return files;
 	}
 
-	public void copyFilesToJar(JarOutputStream jos, ArrayList<String> keepClass)
+	public void copyFilesToJar(JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter)
 	{
 		for (ClasspathFile classpathFile : classpathFiles)
-			CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getFilename().replace(".class", ""));
+		{
+			String entryName= classpathFile.getFilename().replace(".class", "");
+			if (classpathEntryFilter.keepTheClass(entryName))
+				CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), entryName);
+		}
 	}
 
 	public String getName()

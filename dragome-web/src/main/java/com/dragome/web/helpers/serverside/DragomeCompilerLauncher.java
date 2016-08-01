@@ -17,8 +17,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarOutputStream;
@@ -30,6 +28,7 @@ import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathEntry;
@@ -38,7 +37,6 @@ import com.dragome.commons.compiler.classpath.JarClasspathEntry;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.view.VisualActivity;
-import com.dragome.web.serverside.compile.ClasspathFilteredClasses;
 
 import proguard.Configuration;
 import proguard.ConfigurationParser;
@@ -63,7 +61,7 @@ public class DragomeCompilerLauncher
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= WebServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
 
 		configurator.sortClassPath(classPath);
-		classPath = process(classPath, configurator);
+		classPath= process(classPath, configurator);
 		List<ClasspathEntry> extraClasspath= configurator.getExtraClasspath(classPath);
 		classPath.addEntries(extraClasspath);
 
@@ -74,44 +72,47 @@ public class DragomeCompilerLauncher
 
 	private static Classpath process(Classpath classPath, DragomeConfigurator configurator)
 	{
-		ClasspathFileFilter classpathFilter = configurator.getClasspathFilter();
-		HashSet<String> tmp = new HashSet<String>();
-		Collection<ClasspathFilteredClasses> files= new ArrayList<ClasspathFilteredClasses>();
-
-		for (ClasspathEntry classpathEntry : classPath.getEntries()) { // add all filtered classes 
-			List<String> allFilesNamesFiltering = classpathEntry.getAllFilesNamesFiltering(classpathFilter);
-			ClasspathFilteredClasses g = new ClasspathFilteredClasses();
-			g.classpathEntry = classpathEntry;
-			for (String clazz : allFilesNamesFiltering) {
-				clazz = clazz + ".class";
-				if(tmp.contains(clazz) == false) {
-					tmp.add(clazz);
-					g.files.add(clazz);
-				}
-			}
-			files.add(g);
-		}
-
 		try
 		{
-			String path = null;
+			String path= null;
 
-			String tempDir = System.getProperty("java.io.tmpdir");
-			File tmpDir = new File(tempDir + File.separatorChar + "dragomeTemp");
-			Path tmpPath = tmpDir.toPath();
+			String tempDir= System.getProperty("java.io.tmpdir");
+			File tmpDir= new File(tempDir + File.separatorChar + "dragomeTemp");
+			Path tmpPath= tmpDir.toPath();
 			FileUtils.deleteDirectory(tmpDir);
 			Files.createDirectories(tmpPath);
-			File file = Files.createTempFile(tmpPath, "dragome-merged-", ".jar").toFile();
+			File file= Files.createTempFile(tmpPath, "dragome-merged-", ".jar").toFile();
 			file.deleteOnExit();
-			path = file.getAbsolutePath();
+			path= file.getAbsolutePath();
 
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
 			{
-				for (ClasspathFilteredClasses group : files) {
-					group.classpathEntry.copyFilesToJar(jos, group.files);  // copy all filtered classes and resources to jar;
-				}
+				List<ClasspathEntry> entries= classPath.getEntries();
+				for (ClasspathEntry classpathEntry : entries)
+					classpathEntry.copyFilesToJar(jos, new ClasspathEntryFilter()
+					{
+						private ArrayList<String> keepClass= new ArrayList<>();
+
+						public boolean keepTheClass(String entryName)
+						{
+							if (!keepClass.contains(entryName))
+							{
+								keepClass.add(entryName);
+
+								if (entryName.endsWith(".js"))
+									return true;
+								if (entryName.endsWith(".class"))
+									return true;
+								if (entryName.contains("MANIFEST"))
+									return true;
+							}
+							return false;
+						}
+					});
 			}
-			if(configurator.isRemoveUnusedCode()) {
+
+			if (configurator.isRemoveUnusedCode())
+			{
 				return runProguard(file, configurator);
 			}
 			else

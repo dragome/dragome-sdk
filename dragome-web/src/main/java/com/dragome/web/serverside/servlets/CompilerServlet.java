@@ -73,12 +73,12 @@ public class CompilerServlet extends GetPostServlet
 
 				LOGGER.log(Level.INFO, "classpath entry: " + classPathEntry);
 			}
-			
-			String compiledDir = ServiceLocator.getInstance().getConfigurator().getCompiledPath();
-			
-			if(compiledDir == null) // if path is not set use the /classes path
-				compiledDir = new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString();
-			
+
+			String compiledDir= ServiceLocator.getInstance().getConfigurator().getCompiledPath();
+
+			if (compiledDir == null) // if path is not set use the /classes path
+				compiledDir= new File(new java.io.File(classesFolder).getParentFile().getParentFile().toURI()).toString();
+
 			final String path= compiledDir + File.separator + "compiled-js";
 
 			LOGGER.log(Level.INFO, "classes: " + path);
