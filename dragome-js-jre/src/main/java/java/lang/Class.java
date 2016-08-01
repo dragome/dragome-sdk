@@ -78,8 +78,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	}
 
 	private static JSObject<Class<?>> classesByName= new JSObject<Class<?>>();
-	private static JSObject<Method> foundMethods= new JSObject<Method>();
-	private static JSObject<Field> foundFields= new JSObject<Field>();
+	private JSObject<Method> foundMethods= new JSObject<Method>();
+	private JSObject<Field> foundFields= new JSObject<Field>();
 
 	protected Object nativeClass;
 	protected Method[] methods;

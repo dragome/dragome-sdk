@@ -1,16 +1,22 @@
 package com.dragome.compiler.ast;
 
 import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.Type;
 
 import com.dragome.compiler.Project;
 import com.dragome.compiler.generators.AbstractVisitor;
 
 public abstract class FieldAccess extends Expression
 {
-
 	private String name;
 
 	private ObjectType type;
+
+	private Type fieldType;
+
+	public Type getFieldType() {
+		return fieldType;
+	}
 
 	public FieldAccess()
 	{
@@ -79,6 +85,10 @@ public abstract class FieldAccess extends Expression
 		if (type != null)
 			throw new RuntimeException("Type is already set");
 		type= theType;
+	}
+
+	public void setFieldType(Type type) {
+		this.fieldType = type;
 	}
 
 }

@@ -23,11 +23,12 @@ import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
+import junit.framework.TestCase;
+
 @RunWith(DragomeTestRunner.class)
-public class LambdaTests extends Assert {
+public class LambdaTests extends TestCase {
 	public void test_empty_lambda() {
 		Runnable lambda = () -> {
 		};

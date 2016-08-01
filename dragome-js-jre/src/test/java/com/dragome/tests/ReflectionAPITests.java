@@ -20,12 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import junit.framework.TestCase;
+
 @RunWith(DragomeTestRunner.class)
-public class ReflectionAPITests extends Assert
+public class ReflectionAPITests extends TestCase
 {
 	public static class ReflectionClass2 { 
 		private boolean field1 = true;
@@ -320,7 +321,7 @@ public class ReflectionAPITests extends Assert
 	public void testGettingNotParametizedAnnotationFromField() throws Exception
 	{
 		Class<ReflectionClass> class1= ReflectionClass.class;
-		Field field= class1.getField("field2"); // FIXME bug  its getting field2 from ReflectionClass2. Why its getting from static 'foundFields' and not from ###declaredFields ?
+		Field field= class1.getField("field2");
 		Annotation1 annotation1= field.getAnnotation(Annotation1.class);
 		assertNotNull(annotation1);
 	}
@@ -351,8 +352,8 @@ public class ReflectionAPITests extends Assert
 		Field field = ReflectionClass.class.getField("field1");
 		ReflectionClass obj = new ReflectionClass();
 		obj.field1 = true;
-//		Object boolValue = field.get(obj);  // Error here
-//		assertEquals(true, boolValue); 
+		Object boolValue = field.get(obj);  // Error here
+		assertEquals(true, boolValue); 
 	}
 	
 	@Test

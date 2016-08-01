@@ -1236,6 +1236,7 @@ public class Pass1
 
 				FieldAccess fa= new FieldWrite();
 				fa.setName(getFieldName(fieldRef));
+				fa.setFieldType(getFieldType(fieldRef));
 				fa.setType(new ObjectType(fieldRef.getClass(constantPool)));
 				fa.initialize(methodDecl);
 
@@ -1261,6 +1262,7 @@ public class Pass1
 				FieldAccess fa= new FieldRead();
 				fa.setType(new ObjectType(fieldRef.getClass(constantPool)));
 				fa.setName(getFieldName(fieldRef));
+				fa.setFieldType(getFieldType(fieldRef));
 				fa.setExpression(ex);
 				fa.initialize(methodDecl);
 				instruction= fa;
@@ -1275,6 +1277,7 @@ public class Pass1
 
 				FieldAccess fa= new FieldRead();
 				fa.setType(new ObjectType(fieldRef.getClass(constantPool)));
+				fa.setFieldType(getFieldType(fieldRef));
 				fa.setName(getFieldName(fieldRef));
 				fa.initialize(methodDecl);
 
@@ -2254,6 +2257,12 @@ public class Pass1
 	{
 		ConstantNameAndType nameAndType= (ConstantNameAndType) constantPool.getConstant(fieldRef.getNameAndTypeIndex());
 		return nameAndType.getName(constantPool);
+	}
+
+	private Type getFieldType(ConstantFieldref fieldRef)
+	{
+		ConstantNameAndType nameAndType= (ConstantNameAndType) constantPool.getConstant(fieldRef.getNameAndTypeIndex());
+		return Type.getType(nameAndType.getSignature(constantPool));
 	}
 
 	public static String constantToString(Constant c, ConstantPool constantPool) throws ClassFormatException
