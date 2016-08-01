@@ -23,14 +23,16 @@ import com.dragome.commons.javascript.ScriptHelper;
 public final class Field extends AccessibleObject implements Member
 {
 	private String signature;
+	private String className;
 	private Class<?> class1;
 	private int modifier;
 
-	public Field(Class<?> class1, String signature, int modifier)
+	public Field(Class<?> class1, String signature, int modifier, String className)
 	{
 		this.class1= class1;
 		this.signature= signature;
 		this.modifier= modifier;
+		this.className = className;
 	}
 
 	public String getName()
@@ -51,14 +53,24 @@ public final class Field extends AccessibleObject implements Member
 		Object result= ScriptHelper.eval("obj[sig]", this);
 		return Method.adaptResult(result, result.getClass());
 	}
+	
+	Object [] tmpArray = new Object[1]; 
 
 	public void set(Object obj, Object value) throws IllegalAccessException, IllegalArgumentException
 	{
-		Method.boxArguments(new Class<?>[] { value.getClass() }, value);
+		Class<?> forName = null;
+		try 
+		{
+			forName = Class.forName(this.className);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		tmpArray[0] = value;
+		Method.boxArguments(new Class<?>[] { forName }, tmpArray); // #FIXME  passing the value will cause a bug. the value wont be updated because 2nd compiler changed its var name. Static also dont change.
 
 		ScriptHelper.put("obj", obj, this);
 		ScriptHelper.put("sig", this.signature, this);
-		ScriptHelper.put("value", value, this);
+		ScriptHelper.put("value", tmpArray[0], this);
 
 		ScriptHelper.evalNoResult("obj[sig]= value", this);
 	}
@@ -90,14 +102,10 @@ public final class Field extends AccessibleObject implements Member
 
 	public Type getGenericType()
 	{
-		try
-		{
-			return Class.forName("com.dragome.example.MessageService");
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new RuntimeException(e);
-		}
+//		if (getName() != null)
+//			return getGenericInfo().getGenericType(); // TODO needs implementation.
+//		else  
+			return getType();
 	}
 
 	public boolean equals(Object object)
@@ -135,7 +143,14 @@ public final class Field extends AccessibleObject implements Member
 
 	public Class<?> getType()
 	{
-		return null;
+		Class<?> forName = null;
+		try {
+			if (className != null)
+				forName = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return forName;
 	}
 
 	public int hashCode()

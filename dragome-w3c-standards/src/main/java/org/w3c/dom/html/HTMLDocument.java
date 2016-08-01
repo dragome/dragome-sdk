@@ -3,10 +3,11 @@
 package org.w3c.dom.html;
 
 import org.w3c.dom.DOMElementMap;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public interface HTMLDocument
+public interface HTMLDocument extends Document
 {
     // HTMLDocument
     public Location getLocation();

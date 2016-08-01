@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.bcel.Constants;
+import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
@@ -1224,8 +1225,8 @@ public class DragomeJavaScriptGenerator extends Generator
 		{
 			//			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
 			//				System.out.println("sdgsdg");
-
-			prefix= "";
+			if(fr.getType() == null) // if type is null its probabbly a javascript Array() so it cant be $$$
+				prefix= "";
 		}
 
 		String name= prefix + fr.getName();
@@ -1305,6 +1306,21 @@ public class DragomeJavaScriptGenerator extends Generator
 				print("null");
 				break;
 		}
+		if(assignmentOperator.equals(":")) { 
+			print(", $T$" + decl.getName());
+			print(" : ");
+			print("\"");
+			Type type = decl.getType();
+			if(type instanceof ArrayType) {
+				print(type.getSignature().replaceAll("/", "."));
+			}
+			else 
+				print(type.toString());
+				
+			print("\"");
+		}
+		
+		
 	}
 
 	public void visit(VariableBinding reference)
