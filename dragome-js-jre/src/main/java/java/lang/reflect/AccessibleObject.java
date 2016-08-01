@@ -52,6 +52,7 @@ import java.lang.annotation.Annotation;
  */
 public class AccessibleObject implements AnnotatedElement
 {
+	boolean accessible;
 	static final Object[] emptyArgs= new Object[0];
 
 	/**
@@ -71,7 +72,7 @@ public class AccessibleObject implements AnnotatedElement
 	 */
 	public boolean isAccessible()
 	{
-		return false;
+		return accessible;
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class AccessibleObject implements AnnotatedElement
 	 */
 	public void setAccessible(boolean flag) throws SecurityException
 	{
-		return;
+		accessible = flag;
 	}
 
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotationType)

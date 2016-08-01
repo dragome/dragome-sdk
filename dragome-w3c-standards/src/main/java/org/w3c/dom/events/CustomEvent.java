@@ -2,6 +2,7 @@
 
 package org.w3c.dom.events;
 
+
 public interface CustomEvent extends Event
 {
     // CustomEvent
