@@ -10,6 +10,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
+import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.CopyUtils;
 
 public class JarClasspathEntry implements ClasspathEntry
@@ -25,11 +26,16 @@ public class JarClasspathEntry implements ClasspathEntry
 
 	public ClasspathFile getClasspathFileOf(String relativeName)
 	{
-		JarEntry entry= jarFile.getJarEntry(relativeName);
-		if (entry != null)
-			return new InsideJarClasspathFile(jarFile, entry, relativeName);
-		else
-			return null;
+		// There is a "bug" that using getJarEntry with "/" fails and "\\" succeed and vice versa. so solution is to loop all class
+		final Enumeration<JarEntry> entries= jarFile.entries();
+		while (entries.hasMoreElements())
+		{
+				final JarEntry entry= entries.nextElement();
+				final String entryName= entry.getName().replace("\\", "/"); // force all path to "/" if its using "\\"
+				if(relativeName.equals(entryName))
+					return new InsideJarClasspathFile(jarFile, entry, relativeName);
+		}
+		return null;
 	}
 
 	private List<String> findClassesInJar(JarFile jarFile)
@@ -79,11 +85,11 @@ public class JarClasspathEntry implements ClasspathEntry
 		}
 	}
 
-	public void copyFilesToJar(JarOutputStream jos)
+	public void copyFilesToJar(JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter)
 	{
 		try
 		{
-			CopyUtils.copyJarFile(jarFile, jos);
+			CopyUtils.copyJarFile(jarFile, jos, classpathEntryFilter);
 		}
 		catch (IOException e)
 		{

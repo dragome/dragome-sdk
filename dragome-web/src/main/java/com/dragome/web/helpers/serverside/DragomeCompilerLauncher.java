@@ -14,15 +14,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
+
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
+import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathEntry;
@@ -55,12 +61,8 @@ public class DragomeCompilerLauncher
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= WebServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
 
 		configurator.sortClassPath(classPath);
+		classPath= process(classPath, configurator);
 		List<ClasspathEntry> extraClasspath= configurator.getExtraClasspath(classPath);
-		classPath.addEntries(extraClasspath);
-
-		if (configurator.isRemoveUnusedCode())
-			classPath= optimize(classPath, serviceLocator, configurator);
-
 		classPath.addEntries(extraClasspath);
 
 		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter, configurator.isCheckingCast(), configurator.isCaching());
@@ -68,21 +70,53 @@ public class DragomeCompilerLauncher
 		bytecodeToJavascriptCompiler.compile();
 	}
 
-	private static Classpath optimize(Classpath classPath, ServiceLocator serviceLocator, DragomeConfigurator configurator)
+	private static Classpath process(Classpath classPath, DragomeConfigurator configurator)
 	{
 		try
 		{
-			File file= File.createTempFile("dragome-merged-", ".jar");
+			String path= null;
+
+			String tempDir= System.getProperty("java.io.tmpdir");
+			File tmpDir= new File(tempDir + File.separatorChar + "dragomeTemp");
+			Path tmpPath= tmpDir.toPath();
+			FileUtils.deleteDirectory(tmpDir);
+			Files.createDirectories(tmpPath);
+			File file= Files.createTempFile(tmpPath, "dragome-merged-", ".jar").toFile();
 			file.deleteOnExit();
+			path= file.getAbsolutePath();
 
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
 			{
 				List<ClasspathEntry> entries= classPath.getEntries();
 				for (ClasspathEntry classpathEntry : entries)
-					classpathEntry.copyFilesToJar(jos);
+					classpathEntry.copyFilesToJar(jos, new ClasspathEntryFilter()
+					{
+						private ArrayList<String> keepClass= new ArrayList<>();
+
+						public boolean keepTheClass(String entryName)
+						{
+							if (!keepClass.contains(entryName))
+							{
+								keepClass.add(entryName);
+
+								if (entryName.endsWith(".js"))
+									return true;
+								if (entryName.endsWith(".class"))
+									return true;
+								if (entryName.contains("MANIFEST"))
+									return true;
+							}
+							return false;
+						}
+					});
 			}
 
-			return runProguard(file, configurator);
+			if (configurator.isRemoveUnusedCode())
+			{
+				return runProguard(file, configurator);
+			}
+			else
+				return new Classpath(JarClasspathEntry.createFromPath(path));
 		}
 		catch (Exception e)
 		{

@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
+import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.CopyUtils;
 
 public class FolderClasspathEntry implements ClasspathEntry
@@ -53,11 +54,11 @@ public class FolderClasspathEntry implements ClasspathEntry
 		return new FolderClasspathEntry(new File(classPathEntry));
 	}
 
-	public void copyFilesToJar(JarOutputStream jos)
+	public void copyFilesToJar(JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter)
 	{
 		try
 		{
-			CopyUtils.copyClassToJarFile(folder, jos);
+			CopyUtils.copyClassToJarFile(folder, jos, classpathEntryFilter);
 		}
 		catch (Exception e)
 		{
