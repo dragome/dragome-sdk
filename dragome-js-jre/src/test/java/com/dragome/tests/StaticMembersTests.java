@@ -1,11 +1,12 @@
 package com.dragome.tests;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import junit.framework.TestCase;
+
 @RunWith(DragomeTestRunner.class)
-public class StaticMembersTests extends Assert
+public class StaticMembersTests extends TestCase
 {
 	public static class ParentClass
 	{

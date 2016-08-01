@@ -10,11 +10,12 @@
  ******************************************************************************/
 package com.dragome.tests;
 
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
+import junit.framework.TestCase;
+
 @RunWith(DragomeTestRunner.class)
-public class DefaultMethodsTests extends Assert
+public class DefaultMethodsTests extends TestCase
 {
 	public interface A
 	{

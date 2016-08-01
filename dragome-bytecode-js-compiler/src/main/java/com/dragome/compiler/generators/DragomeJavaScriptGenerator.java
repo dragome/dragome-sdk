@@ -1220,13 +1220,8 @@ public class DragomeJavaScriptGenerator extends Generator
 			//		prefix="";
 		}
 
-		if ("length".equals(fr.getName()))
-		{
-			//			if (!fr.getTypeBinding().equals(Type.UNKNOWN))
-			//				System.out.println("sdgsdg");
-
+		if (fr.getType() == null && "length".equals(fr.getName()))
 			prefix= "";
-		}
 
 		String name= prefix + fr.getName();
 		if (!fr.getName().matches("\\w*"))
@@ -1235,7 +1230,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			// AspectJ.
 			return "[\"" + name + "\"]";
 		}
-		return "." + name;
+		return "." + name/* + "_"+ normalizeExpression(fr.getFieldType())*/;
 	}
 
 	public void visit(VariableDeclaration decl)

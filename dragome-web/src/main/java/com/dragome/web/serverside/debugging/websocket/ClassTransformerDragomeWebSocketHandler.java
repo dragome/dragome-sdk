@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.dragome.web.serverside.debugging.websocket;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 import javax.websocket.CloseReason;
@@ -19,8 +18,6 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-
-import org.atmosphere.websocket.WebSocket;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.services.ServiceLocator;
@@ -33,10 +30,6 @@ public class ClassTransformerDragomeWebSocketHandler
 	private String getClassName2()
 	{
 		return getClass().getPackage().getName() + ".DragomeDebugServerEndpoint";
-	}
-
-	public void onByteMessage(WebSocket webSocket, byte[] data, int offset, int length) throws IOException
-	{
 	}
 
 	@OnOpen
