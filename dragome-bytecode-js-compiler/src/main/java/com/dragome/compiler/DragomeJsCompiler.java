@@ -229,7 +229,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		//		System.out.println((char) 27 + "[01;31m;This text is red." + (char) 27 + "[00;00m");
 		//		System.out.println((char) 27 + "[01;32m;This text is green." + (char) 27 + "[00;00m");
 
-		fileManager= new FileManager(classpath, classpathFilter);
+		fileManager= new FileManager(classpath, classpathFilter); // Change to get classes from jar. This jar is already filtered
 		//	Project.singleton= null; //TODO revisar esto, impide cacheo!!
 		Project project= Project.createSingleton(getCacheFile());
 		assembly.setProject(project);

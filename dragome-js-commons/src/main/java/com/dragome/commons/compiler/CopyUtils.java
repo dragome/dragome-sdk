@@ -16,16 +16,19 @@ import java.util.jar.JarOutputStream;;
 
 public class CopyUtils
 {
-	public static void copyJarFile(JarFile jarFile, JarOutputStream jos) throws IOException
+	public static void copyJarFile(JarFile jarFile, JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter) throws IOException
 	{
 		Enumeration<JarEntry> entries= jarFile.entries();
 
 		while (entries.hasMoreElements())
 		{
 			JarEntry entry= entries.nextElement();
-			InputStream is= jarFile.getInputStream(entry);
 			String entryName= entry.getName();
-			addEntryToJar(jos, is, entryName);
+			if (classpathEntryFilter.keepTheClass(entryName))
+			{
+				InputStream is= jarFile.getInputStream(entry);
+				addEntryToJar(jos, is, entryName);
+			}
 		}
 	}
 
@@ -60,21 +63,25 @@ public class CopyUtils
 		}
 	}
 
-	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos) throws Exception
+	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos, final ClasspathEntryFilter classpathEntryFilter) throws Exception
 	{
 		if (fileClassPathEntry != null && fileClassPathEntry.exists())
 			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
 			{
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 				{
-					InputStream inputStream= Files.newInputStream(file);
 					String string= fileClassPathEntry.toPath().relativize(file).toString();
-					addEntryToJar(jos, inputStream, string);
+
+					if (classpathEntryFilter.keepTheClass(string))
+					{
+						InputStream inputStream= Files.newInputStream(file);
+						addEntryToJar(jos, inputStream, string);
+					}
 
 					return FileVisitResult.CONTINUE;
 				}
-			});
 
+			});
 	}
 
 	public static void copyFilesOfFolder(final File fileClassPathEntry, final File targetFolder) throws Exception
