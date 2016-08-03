@@ -256,6 +256,7 @@ public class Parser
 	private Map<String, String> checkSuperAnnotations(final Method method, JavaClass curClass, final String annotationName, int nDepth, final int maxRecursive) throws ClassNotFoundException
 	{
 		String methodName= method.getName();
+		String signature= method.getSignature();
 		nDepth++;
 		Map<String, String> curAnnotationsValues= null;
 
@@ -263,7 +264,7 @@ public class Parser
 		Method[] methods= curClass.getMethods();
 		for (int j= 0; j < methods.length; j++)
 		{ // find the method if there is one.
-			if (methods[j].getName().equals(methodName) && methods[j].getArgumentTypes().length == method.getArgumentTypes().length)
+			if (methods[j].getName().equals(methodName) && methods[j].getArgumentTypes().length == method.getArgumentTypes().length && methods[j].getSignature().equals(signature))
 			{
 				curMethod= methods[j];
 				break;
