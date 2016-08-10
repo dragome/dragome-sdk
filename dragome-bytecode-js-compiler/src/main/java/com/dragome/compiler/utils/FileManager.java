@@ -30,6 +30,7 @@ package com.dragome.compiler.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.dragome.commons.compiler.classpath.Classpath;
@@ -60,12 +61,15 @@ public class FileManager
 		throw new RuntimeException("Could not find " + relativeName + " on class path");
 	}
 
-	public Collection<String> getAllFilesInClasspath()
+	public Collection<ClasspathFile> getAllFilesInClasspath()
 	{
-		Collection<String> files= new ArrayList<String>();
+		Collection<ClasspathFile> files= new ArrayList<ClasspathFile>();
 
 		for (ClasspathEntry classpathEntry : classPath.getEntries())
-			files.addAll(classpathEntry.getAllFilesNamesFiltering(classpathFilter));
+		{
+			List<ClasspathFile> classpathFiles= classpathEntry.getClasspathFilesFiltering(classpathFilter);
+			files.addAll(classpathFiles);
+		}
 
 		return files;
 	}

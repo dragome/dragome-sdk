@@ -28,15 +28,16 @@ import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
-import com.dragome.commons.compiler.ClasspathEntryFilter;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathEntry;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
-import com.dragome.commons.compiler.classpath.JarClasspathEntry;
+import com.dragome.commons.compiler.classpath.serverside.JarClasspathEntry;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.view.VisualActivity;
+import com.dragome.web.helpers.DefaultClasspathFileFilter;
 
 import proguard.Configuration;
 import proguard.ConfigurationParser;
@@ -56,7 +57,7 @@ public class DragomeCompilerLauncher
 
 		ClasspathFileFilter classpathFilter= configurator.getClasspathFilter();
 		if (classpathFilter == null)
-			classpathFilter= new DefaultClasspathFilter();
+			classpathFilter= new DefaultClasspathFileFilter();
 
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= WebServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
 
@@ -89,20 +90,23 @@ public class DragomeCompilerLauncher
 			{
 				List<ClasspathEntry> entries= classPath.getEntries();
 				for (ClasspathEntry classpathEntry : entries)
-					classpathEntry.copyFilesToJar(jos, new ClasspathEntryFilter()
+					classpathEntry.copyFilesToJar(jos, new DefaultClasspathFileFilter()
 					{
 						private ArrayList<String> keepClass= new ArrayList<>();
 
-						public boolean keepTheClass(String entryName)
+						public boolean accept(ClasspathFile classpathFile)
 						{
+							boolean result= super.accept(classpathFile);
+
+							String entryName= classpathFile.getPath();
 							if (!keepClass.contains(entryName))
 							{
 								keepClass.add(entryName);
 
 								if (entryName.endsWith(".js") || entryName.endsWith(".class") || entryName.contains("MANIFEST") || entryName.contains(".html") || entryName.contains(".css"))
-									return true;
+									result&= true;
 							}
-							return false;
+							return result;
 						}
 					});
 			}

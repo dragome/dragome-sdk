@@ -54,6 +54,8 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 
+import com.dragome.commons.compiler.classpath.ClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.compiler.ast.ArrayCreation;
 import com.dragome.compiler.ast.FieldAccess;
 import com.dragome.compiler.ast.MethodBinding;
@@ -107,6 +109,13 @@ public class Project implements Serializable
 	public List<String> writtenSignatures= new ArrayList<String>();
 
 	private Set<String> typeDeclarationsWithAnnotations= new HashSet<String>();
+
+	transient private ClasspathFileFilter classpathFilter;
+
+	public ClasspathFileFilter getClasspathFilter()
+	{
+		return classpathFilter;
+	}
 
 	public List<String> getWrittenSignatures()
 	{
@@ -304,11 +313,17 @@ public class Project implements Serializable
 
 	public ClassUnit getClassUnit(String className)
 	{
+		if (className.startsWith("["))
+		{
+			String replace= className.replace("[", "");
+			className= replace.substring(1, replace.length()-1);
+		}
 		ClassUnit clazz= classesByName.get(className);
 		if (clazz != null)
 			return clazz;
 
-		throw new RuntimeException("No such unit: " + className);
+		return new NullClassUnit();
+//		throw new RuntimeException("No such unit: " + className);
 	}
 
 	public ClassUnit getClassUnit(ReferenceType type)
@@ -331,7 +346,7 @@ public class Project implements Serializable
 		return getClassUnit(signature);
 	}
 
-	public ClassUnit getOrCreateClassUnit(String className)
+	public ClassUnit createClassUnit(String className, ClasspathFile classpathFile)
 	{
 		ClassUnit classUnit= classesByName.get(className);
 		if (classUnit != null)
@@ -345,13 +360,15 @@ public class Project implements Serializable
 		{
 			javaLangObject= classUnit;
 		}
+		
+		classUnit.setClassFile(classpathFile);
 
 		return classUnit;
 	}
 
 	private MemberUnit getMemberUnitOrNull(String className, Signature signature)
 	{
-		ClassUnit classUnit= getOrCreateClassUnit(className);
+		ClassUnit classUnit= getClassUnit(className);
 		if (classUnit == null)
 			return null;
 		return classUnit.getDeclaredMember(signature.toString());
@@ -519,5 +536,10 @@ public class Project implements Serializable
 	public Set<String> getTypeDeclarationsWithAnnotations()
 	{
 		return typeDeclarationsWithAnnotations;
+	}
+
+	public void setClasspathFilter(ClasspathFileFilter classpathFilter)
+	{
+		this.classpathFilter= classpathFilter;
 	}
 }

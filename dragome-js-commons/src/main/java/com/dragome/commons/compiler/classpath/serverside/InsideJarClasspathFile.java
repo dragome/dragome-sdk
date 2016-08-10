@@ -1,9 +1,12 @@
-package com.dragome.commons.compiler.classpath;
+package com.dragome.commons.compiler.classpath.serverside;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import com.dragome.commons.compiler.classpath.AbstractClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
 
 public class InsideJarClasspathFile extends AbstractClasspathFile implements ClasspathFile
 {

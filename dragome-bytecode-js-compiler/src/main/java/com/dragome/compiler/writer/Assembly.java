@@ -235,7 +235,7 @@ public class Assembly
 
 		//	project.writeClinits(writer);
 
-		if (getProject().getOrCreateClassUnit("java.lang.String").isTainted())
+		if (getProject().getClassUnit("java.lang.String").isTainted())
 		{
 			writer.write("String.prototype.clazz = java_lang_String;\n");
 		}
@@ -290,7 +290,7 @@ public class Assembly
 	{
 		ClassUnit clazz= resolve(signature.className());
 		File file= new File(signature.className().replace(".", "/"));
-		if (classpathFilter.accept(file, file))
+		if (classpathFilter.accept(clazz.getClassFile()))
 		{
 			String methodPart= signature.relativeSignature();
 			boolean found= false;
@@ -310,7 +310,7 @@ public class Assembly
 
 	private ClassUnit resolve(String className)
 	{
-		ClassUnit clazz= project.getOrCreateClassUnit(className);
+		ClassUnit clazz= project.getClassUnit(className);
 
 		if (className.startsWith("["))
 		{
@@ -327,9 +327,9 @@ public class Assembly
 		return clazz;
 	}
 
-	public ClassUnit resolveNoTainting(String className)
+	public ClassUnit resolveNoTainting(String className, ClasspathFile classpathFile)
 	{
-		ClassUnit clazz= project.getOrCreateClassUnit(className);
+		ClassUnit clazz= project.getClassUnit(className);
 
 		if (className.startsWith("["))
 		{

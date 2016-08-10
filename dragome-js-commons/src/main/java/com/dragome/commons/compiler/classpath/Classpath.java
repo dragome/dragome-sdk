@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.dragome.commons.compiler.PrioritySolver;
+import com.dragome.commons.compiler.classpath.serverside.FolderClasspathEntry;
+import com.dragome.commons.compiler.classpath.serverside.JarClasspathEntry;
 
 public class Classpath
 {

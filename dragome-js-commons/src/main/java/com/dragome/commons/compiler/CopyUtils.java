@@ -9,28 +9,27 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Enumeration;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;;
 
 public class CopyUtils
 {
-	public static void copyJarFile(JarFile jarFile, JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter) throws IOException
-	{
-		Enumeration<JarEntry> entries= jarFile.entries();
-
-		while (entries.hasMoreElements())
-		{
-			JarEntry entry= entries.nextElement();
-			String entryName= entry.getName();
-			if (classpathEntryFilter.keepTheClass(entryName))
-			{
-				InputStream is= jarFile.getInputStream(entry);
-				addEntryToJar(jos, is, entryName);
-			}
-		}
-	}
+//	public static void copyJarFile(JarFile jarFile, JarOutputStream jos, ClasspathFileFilter classpathEntryFilter) throws IOException
+//	{
+//		Enumeration<JarEntry> entries= jarFile.entries();
+//
+//		while (entries.hasMoreElements())
+//		{
+//			JarEntry entry= entries.nextElement();
+//			String entryName= entry.getName();
+//			ClasspathFile classpathFile= null;
+//			if (classpathEntryFilter.accept(classpathFile))
+//			{
+//				InputStream is= jarFile.getInputStream(entry);
+//				addEntryToJar(jos, is, entryName);
+//			}
+//		}
+//	}
 
 	public static void addEntryToJar(JarOutputStream jos, InputStream is, String entryName)
 	{
@@ -63,26 +62,26 @@ public class CopyUtils
 		}
 	}
 
-	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos, final ClasspathEntryFilter classpathEntryFilter) throws Exception
-	{
-		if (fileClassPathEntry != null && fileClassPathEntry.exists())
-			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
-			{
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
-				{
-					String string= fileClassPathEntry.toPath().relativize(file).toString();
-
-					if (classpathEntryFilter.keepTheClass(string))
-					{
-						InputStream inputStream= Files.newInputStream(file);
-						addEntryToJar(jos, inputStream, string);
-					}
-
-					return FileVisitResult.CONTINUE;
-				}
-
-			});
-	}
+//	public static void copyClassToJarFile(final File fileClassPathEntry, final JarOutputStream jos, final ClasspathFileFilter classpathEntryFilter) throws Exception
+//	{
+//		if (fileClassPathEntry != null && fileClassPathEntry.exists())
+//			Files.walkFileTree(fileClassPathEntry.toPath(), new SimpleFileVisitor<Path>()
+//			{
+//				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+//				{
+//					String string= fileClassPathEntry.toPath().relativize(file).toString();
+//
+//					if (classpathEntryFilter.keepTheClass(string))
+//					{
+//						InputStream inputStream= Files.newInputStream(file);
+//						addEntryToJar(jos, inputStream, string);
+//					}
+//
+//					return FileVisitResult.CONTINUE;
+//				}
+//
+//			});
+//	}
 
 	public static void copyFilesOfFolder(final File fileClassPathEntry, final File targetFolder) throws Exception
 	{

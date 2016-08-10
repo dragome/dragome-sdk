@@ -1,4 +1,4 @@
-package com.dragome.commons.compiler.classpath;
+package com.dragome.commons.compiler.classpath.serverside;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,13 +7,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
-import com.dragome.commons.compiler.ClasspathEntryFilter;
-import com.dragome.commons.compiler.CopyUtils;
+import com.dragome.commons.compiler.classpath.ClasspathEntry;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
+import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 
-public class JarClasspathEntry implements ClasspathEntry
+public class JarClasspathEntry extends AbstractClasspathEntry implements ClasspathEntry
 {
 	private static Logger LOGGER= Logger.getLogger(JarClasspathEntry.class.getName());
 
@@ -30,10 +30,10 @@ public class JarClasspathEntry implements ClasspathEntry
 		final Enumeration<JarEntry> entries= jarFile.entries();
 		while (entries.hasMoreElements())
 		{
-				final JarEntry entry= entries.nextElement();
-				final String entryName= entry.getName().replace("\\", "/"); // force all path to "/" if its using "\\"
-				if(relativeName.equals(entryName))
-					return new InsideJarClasspathFile(jarFile, entry, relativeName);
+			final JarEntry entry= entries.nextElement();
+			final String entryName= entry.getName().replace("\\", "/"); // force all path to "/" if its using "\\"
+			if (relativeName.equals(entryName))
+				return new InsideJarClasspathFile(jarFile, entry, relativeName);
 		}
 		return null;
 	}
@@ -49,8 +49,9 @@ public class JarClasspathEntry implements ClasspathEntry
 			{
 				final JarEntry entry= entries.nextElement();
 				final String entryName= entry.getName();
-				if (entryName.endsWith(".class"))
-					result.add(entryName.replace('/', File.separatorChar).replace(".class", ""));
+				//				if (entryName.endsWith(".class"))
+				//					result.add(entryName.replace('/', File.separatorChar).replace(".class", ""));
+				result.add(entryName);
 			}
 			catch (Exception e)
 			{
@@ -61,14 +62,17 @@ public class JarClasspathEntry implements ClasspathEntry
 		return result;
 	}
 
-	public List<String> getAllFilesNamesFiltering(ClasspathFileFilter classpathFilter)
+	public List<ClasspathFile> getClasspathFilesFiltering(ClasspathFileFilter classpathFilter)
 	{
-		List<String> files= new ArrayList<String>();
+		List<ClasspathFile> files= new ArrayList<ClasspathFile>();
 		List<String> classesInJar= findClassesInJar(jarFile);
 
 		for (String file : classesInJar)
-			if (classpathFilter == null || classpathFilter.accept(new File(file), new File(jarFile.getName())))
-				files.add(file);
+		{
+			ClasspathFile classpathFile= getClasspathFileOf(file);
+			if (classpathFilter == null || classpathFilter.accept(classpathFile))
+				files.add(classpathFile);
+		}
 
 		return files;
 	}
@@ -78,18 +82,6 @@ public class JarClasspathEntry implements ClasspathEntry
 		try
 		{
 			return new JarClasspathEntry(new JarFile(new File(path), false));
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void copyFilesToJar(JarOutputStream jos, ClasspathEntryFilter classpathEntryFilter)
-	{
-		try
-		{
-			CopyUtils.copyJarFile(jarFile, jos, classpathEntryFilter);
 		}
 		catch (IOException e)
 		{

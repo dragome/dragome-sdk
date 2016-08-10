@@ -20,6 +20,7 @@ import org.w3c.dom.typedarray.ArrayBufferView;
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
+import com.dragome.web.enhancers.jsdelegate.serverside.JsDelegateGenerator;
 import com.google.common.reflect.TypeToken;
 
 public class DefaultDelegateStrategy implements DelegateStrategy

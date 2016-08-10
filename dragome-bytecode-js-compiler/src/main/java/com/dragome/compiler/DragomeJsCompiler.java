@@ -39,6 +39,7 @@ import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
 import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.classpath.Classpath;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.compiler.generators.AbstractVisitor;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
@@ -232,6 +233,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		fileManager= new FileManager(classpath, classpathFilter); // Change to get classes from jar. This jar is already filtered
 		//	Project.singleton= null; //TODO revisar esto, impide cacheo!!
 		Project project= Project.createSingleton(getCacheFile());
+		project.setClasspathFilter(classpathFilter);
 		assembly.setProject(project);
 		assembly.setClasspathFilter(classpathFilter);
 		generator= new DragomeJavaScriptGenerator(project);
@@ -239,10 +241,23 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 		errorCount= 0;
 
-		Collection<String> allFilesInClasspath= fileManager.getAllFilesInClasspath();
-		for (String file : allFilesInClasspath)
+		Collection<ClasspathFile> classpathFiles= fileManager.getAllFilesInClasspath();
+		for (ClasspathFile file : classpathFiles)
 		{
-			assembly.resolveNoTainting(file.replace(File.separator, ".").replace("/", "."));
+			if (file.getPath().contains(".class"))
+			{
+				String className= getClassname(file);
+				assembly.getProject().createClassUnit(className, file);
+			}
+		}
+
+		for (ClasspathFile file : classpathFiles)
+		{
+			if (file.getPath().contains(".class"))
+			{
+				String className= getClassname(file);
+				assembly.resolveNoTainting(className, file);
+			}
 		}
 
 		assembly.addEntryPoint(assembly.getEntryPointClassName() + "#onCreate()void");
@@ -306,6 +321,11 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		{
 			logger.error("There " + timesName("was|were", errorCount, "error|errors") + ".");
 		}
+	}
+
+	private String getClassname(ClasspathFile file)
+	{
+		return file.getPath().replaceAll("\\.class$", "").replace(File.separator, ".").replace("/", ".");
 	}
 	private String timesName(String verb, int count, String noun)
 	{

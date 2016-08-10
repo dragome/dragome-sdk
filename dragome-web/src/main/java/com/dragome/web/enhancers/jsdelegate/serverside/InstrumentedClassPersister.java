@@ -1,4 +1,4 @@
-package com.dragome.web.enhancers.jsdelegate;
+package com.dragome.web.enhancers.jsdelegate.serverside;
 
 import java.io.File;
 import java.util.HashMap;

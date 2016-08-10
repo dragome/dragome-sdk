@@ -90,4 +90,12 @@ public final class Byte extends Number
 	{
 		return parseByte(s, 10);
 	}
+	
+  public static int toUnsignedInt(byte x) {
+      return ((int) x) & 0xff;
+  }
+
+  public static long toUnsignedLong(byte x) {
+      return ((long) x) & 0xffL;
+  }
 }
