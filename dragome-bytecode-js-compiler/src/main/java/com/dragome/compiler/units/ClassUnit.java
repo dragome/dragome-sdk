@@ -655,7 +655,10 @@ public class ClassUnit extends Unit
 		if (!"java.lang.Object".equals(toString()))
 			for (String dependency : dependencies)
 			{
-				ClassUnit dependencyClassUnit= project.getOrCreateClassUnit(dependency);
+				if (dependency.replace("[", "").length() == 1)
+					continue;
+				
+				ClassUnit dependencyClassUnit= project.getClassUnit(dependency);
 				dependencyClassUnit.setTainted();
 				//		dependencyClassUnit.write(depth, writer);
 			}
@@ -789,5 +792,4 @@ public class ClassUnit extends Unit
 	{
 		lastCRC= crc;
 	}
-
 }

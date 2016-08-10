@@ -43,6 +43,7 @@ public class InMemoryClasspathFile extends AbstractClasspathFile
 
 	public long getCRC()
 	{
+		//TODO: this is not a CRC
 		return Arrays.hashCode(bytecode);
 	}
 }

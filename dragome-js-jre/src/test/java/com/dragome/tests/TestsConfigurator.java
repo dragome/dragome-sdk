@@ -1,11 +1,11 @@
 package com.dragome.tests;
 
-import java.io.File;
 import java.net.URL;
 
 import com.dragome.commons.DragomeConfiguratorImplementor;
+import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.web.config.DomHandlerApplicationConfigurator;
-import com.dragome.web.helpers.serverside.DefaultClasspathFilter;
+import com.dragome.web.helpers.DefaultClasspathFileFilter;
 
 @DragomeConfiguratorImplementor(priority= 1)
 public class TestsConfigurator extends DomHandlerApplicationConfigurator
@@ -14,14 +14,12 @@ public class TestsConfigurator extends DomHandlerApplicationConfigurator
 	{
 		super();
 
-		setClasspathFilter(new DefaultClasspathFilter()
+		setClasspathFilter(new DefaultClasspathFileFilter()
 		{
-
-			@Override
-			public boolean accept(File pathname, File folder)
+			public boolean accept(ClasspathFile classpathFile)
 			{
-				boolean flag= super.accept(pathname, folder);
-				if (pathname.getAbsolutePath().contains("TestsConfigurator"))
+				boolean flag= super.accept(classpathFile);
+				if (classpathFile.getFilename().contains("TestsConfigurator"))
 					flag= false; // ignore this class
 				return flag;
 			}

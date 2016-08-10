@@ -16,7 +16,7 @@ public class J7Helper
 		return o.toString();
 	}
 
-	static <T> void sort(List<T> list, Comparator<T> comparator)
+	public static <T> void sort(List<T> list, Comparator<T> comparator)
 	{
 		Object[] a= list.toArray();
 		Arrays.sort(a, (Comparator) comparator);

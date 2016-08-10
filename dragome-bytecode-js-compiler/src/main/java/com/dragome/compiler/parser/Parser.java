@@ -184,14 +184,14 @@ public class Parser
 
 			ObjectType superType= new ObjectType(jc.getSuperclassName());
 			typeDecl.setSuperType(superType);
-			ClassUnit superUnit= Project.getSingleton().getOrCreateClassUnit(superType.getClassName());
+			ClassUnit superUnit= Project.getSingleton().getClassUnit(superType.getClassName());
 			fileUnit.setSuperUnit(superUnit);
 
 			String[] interfaceNames= jc.getInterfaceNames();
 			for (int i= 0; i < interfaceNames.length; i++)
 			{
 				ObjectType interfaceType= new ObjectType(interfaceNames[i]);
-				ClassUnit interfaceUnit= Project.getSingleton().getOrCreateClassUnit(interfaceType.getClassName());
+				ClassUnit interfaceUnit= Project.getSingleton().getClassUnit(interfaceType.getClassName());
 				fileUnit.addInterface(interfaceUnit);
 			}
 		}

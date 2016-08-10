@@ -45,7 +45,7 @@ public class JsCast
 				return (T) ScriptHelper.eval("instance", callerInstance);
 			else
 			{
-				String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
+				String delegateClassName= JsCast.createDelegateClassName(type.getName());
 				Class<?> class2= Class.forName(delegateClassName);
 				Object newInstance= class2.newInstance();
 
@@ -110,5 +110,12 @@ public class JsCast
 	{
 		String script= "new " + type.getSimpleName() + "()";
 		return ScriptHelper.evalCasting(script, type, null);
+	}
+
+	public static String createDelegateClassName(String type)
+	{
+		int lastIndexOf= type.lastIndexOf(".");
+		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
+		return classname;
 	}
 }

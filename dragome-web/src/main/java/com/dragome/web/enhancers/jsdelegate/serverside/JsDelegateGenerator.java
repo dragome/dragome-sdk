@@ -9,7 +9,7 @@
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
 
-package com.dragome.web.enhancers.jsdelegate;
+package com.dragome.web.enhancers.jsdelegate.serverside;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -22,6 +22,8 @@ import java.util.Set;
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.compiler.classpath.InMemoryClasspathFile;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
@@ -355,7 +357,7 @@ public class JsDelegateGenerator
 		try
 		{
 			String type= interface1.getName();
-			String classname= createDelegateClassName(type);
+			String classname= JsCast.createDelegateClassName(type);
 			CtClass ctClass= ClassPool.getDefault().getOrNull(classname);
 
 			if (ctClass == null)
@@ -373,13 +375,6 @@ public class JsDelegateGenerator
 
 	public InMemoryClasspathFile generateAsClasspathFile(Class<?> class1)
 	{
-		return new InMemoryClasspathFile(createDelegateClassName(class1.getName()), generate(class1));
-	}
-
-	public static String createDelegateClassName(String type)
-	{
-		int lastIndexOf= type.lastIndexOf(".");
-		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
-		return classname;
+		return new InMemoryClasspathFile(JsCast.createDelegateClassName(class1.getName()), generate(class1));
 	}
 }
