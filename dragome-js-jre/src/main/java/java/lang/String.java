@@ -364,6 +364,7 @@ public final class String implements CharSequence, Comparable<String>
 	 */
 	public int indexOf(int strr, int position)
 	{ //FIXME dragome is making char as a int when using charAt( ) so this method is needed or it will give error by saying method dont exist.
+		ScriptHelper.put("strr", strr, this);
 		ScriptHelper.evalNoResult("var str = String.fromCharCode(strr)", this);
 		ScriptHelper.put("position", position, this);
 		return ScriptHelper.evalInt("this.indexOf(str, position)", this);
@@ -554,9 +555,12 @@ public final class String implements CharSequence, Comparable<String>
 	public String[] split(String regex, int maxMatch)
 	{ // from GWT
 		  // The compiled regular expression created from the string
+		ScriptHelper.put("regex", regex, this);
 		Object compiled= ScriptHelper.eval("new RegExp(regex, 'g');", this);
+		ScriptHelper.put("compiled", compiled, this);
 		// the Javascipt array to hold the matches prior to conversion
 		String[] out= new String[0];
+		ScriptHelper.put("out", out, this);
 		// how many matches performed so far
 		int count= 0;
 		// The current string that is being matched; trimmed as each piece matches
@@ -571,6 +575,7 @@ public final class String implements CharSequence, Comparable<String>
 			// None of the information in the match returned are useful as we have no
 			// subgroup handling
 
+			ScriptHelper.put("trail", trail, this);
 			Object matchObj= ScriptHelper.eval("compiled.exec(trail)", this);
 			if (matchObj == null || trail == "" || (count == (maxMatch - 1) && maxMatch > 0))
 			{
@@ -605,6 +610,7 @@ public final class String implements CharSequence, Comparable<String>
 			}
 			if (lastNonEmpty < out.length)
 			{
+				ScriptHelper.put("lastNonEmpty", lastNonEmpty, this);
 				ScriptHelper.evalNoResult("out.length = lastNonEmpty", this);
 			}
 		}
@@ -613,11 +619,14 @@ public final class String implements CharSequence, Comparable<String>
 
 	private static int getMatchIndex(Object matchObject)
 	{
+		ScriptHelper.put("matchObject", matchObject, null);
 		return ScriptHelper.evalInt("matchObject.index", null);
 	};
 
 	private static int getMatchLength(Object matchObject, int index)
 	{
+		ScriptHelper.put("matchObject", matchObject, null);
+		ScriptHelper.put("index", index, null);
 		return ScriptHelper.evalInt("matchObject[index].length", null);
 	};
 
