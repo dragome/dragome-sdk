@@ -27,12 +27,13 @@ public class JarClasspathEntry extends AbstractClasspathEntry implements Classpa
 	public ClasspathFile getClasspathFileOf(String relativeName)
 	{
 		// There is a "bug" that using getJarEntry with "/" fails and "\\" succeed and vice versa. so solution is to loop all class
+		String tmprelativeName = relativeName.replace("\\", "/");
 		final Enumeration<JarEntry> entries= jarFile.entries();
 		while (entries.hasMoreElements())
 		{
 			final JarEntry entry= entries.nextElement();
 			final String entryName= entry.getName().replace("\\", "/"); // force all path to "/" if its using "\\"
-			if (relativeName.equals(entryName))
+			if (tmprelativeName.equals(entryName))
 				return new InsideJarClasspathFile(jarFile, entry, relativeName);
 		}
 		return null;
