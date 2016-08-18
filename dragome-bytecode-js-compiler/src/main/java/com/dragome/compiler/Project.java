@@ -527,8 +527,10 @@ public class Project implements Serializable
 		{
 			for (Entry<String, String> entry : typeDecl.getAnnotations().entrySet())
 			{
-				getTypeDeclarationsWithAnnotations().add(typeDecl.getClassName() + "#" + entry.getKey() + "#" + entry.getValue());
-
+				String value = entry.getValue();
+				if(value.isEmpty())
+					value = " ";
+				getTypeDeclarationsWithAnnotations().add(typeDecl.getClassName() + "#" + entry.getKey() + "#" + value);
 			}
 		}
 	}
