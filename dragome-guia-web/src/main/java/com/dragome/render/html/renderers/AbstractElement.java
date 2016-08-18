@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.web.html.dom.w3c;
+package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;

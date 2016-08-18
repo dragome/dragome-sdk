@@ -16,8 +16,6 @@
 package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Element;
-
-import com.dragome.web.html.dom.w3c.AbstractElement;
 	
 public abstract class MergeableElement extends AbstractElement implements Mergeable<Element>
 {

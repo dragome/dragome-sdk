@@ -34,7 +34,6 @@ import org.w3c.dom.events.KeyboardEvent;
 import org.w3c.dom.events.ProgressEvent;
 import org.w3c.dom.html.CanvasRenderingContext2D;
 import org.w3c.dom.html.HTMLCanvasElement;
-import org.w3c.dom.html.MessageEvent;
 import org.w3c.dom.typedarray.ArrayBuffer;
 import org.w3c.dom.typedarray.ArrayBufferView;
 import org.w3c.dom.typedarray.Float32Array;
