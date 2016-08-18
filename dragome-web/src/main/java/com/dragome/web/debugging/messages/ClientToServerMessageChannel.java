@@ -12,6 +12,7 @@ package com.dragome.web.debugging.messages;
 
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
+import org.w3c.dom.html.MessageEvent;
 import org.w3c.dom.websocket.WebSocket;
 
 import com.dragome.commons.javascript.ScriptHelper;
