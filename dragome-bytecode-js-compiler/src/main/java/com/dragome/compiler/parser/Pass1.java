@@ -371,7 +371,7 @@ public class Pass1
 		methodDecl.setBody(block);
 
 		if (loopFound)
-			throw new UnhandledCompilerProblemException();
+			throwBugException();
 	}
 
 	private boolean isProcedure(ASTNode stmt)
@@ -690,7 +690,7 @@ public class Pass1
 						}
 
 					if (whileTryProblemDetected)
-						throw new UnhandledCompilerProblemException();
+						throwBugException();
 				}
 			}
 			else if (stmt instanceof Jump)
@@ -704,13 +704,13 @@ public class Pass1
 					{
 						boolean nextToTryBegining= codeException.getStartPC() - 1 == lastJump.getEndIndex();
 						if (nextToTryBegining)
-							throw new UnhandledCompilerProblemException();
+							throwBugException();
 					}
 
 				if (targetPc <= pc)
 				{
 					if (whileTryProblemDetected)
-						throw new UnhandledCompilerProblemException();
+						throwBugException();
 
 					loopFound= true;
 
@@ -746,6 +746,11 @@ public class Pass1
 			}
 		}
 
+	}
+
+	private void throwBugException()
+	{
+		throw new UnhandledCompilerProblemException();
 	}
 
 	void dump(Collection nodes)
