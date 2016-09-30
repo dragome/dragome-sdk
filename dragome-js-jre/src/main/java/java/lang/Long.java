@@ -92,7 +92,8 @@ public final class Long
 
 	public static long parseLong(String string) throws NumberFormatException
 	{
-		return Integer.parseInt(string);
+		ScriptHelper.put("l", string, null);
+		return ScriptHelper.evalLong("parseInt(l)", null);
 	}
 
 	public static String toString(long i)

@@ -23,21 +23,36 @@ import com.dragome.commons.javascript.ScriptHelper;
 public final class Field extends AccessibleObject implements Member
 {
 	private String signature;
-	private String className;
+	private Class<?> fieldType;
 	private Class<?> class1;
 	private int modifier;
 
-	public Field(Class<?> class1, String signature, int modifier, String className)
+	public Field(Class<?> class1, String signature, int modifier)
 	{
 		this.class1= class1;
 		this.signature= signature;
 		this.modifier= modifier;
-		this.className = className;
+
+		try
+		{
+			String type= signature.substring(signature.indexOf("___") + 3);
+			this.fieldType= Class.forName(type);
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public String getName()
 	{
-		return signature.replace("$", "");
+		String name= signature.substring(3);
+
+		int parametersStart= name.indexOf("___");
+		if (parametersStart != -1)
+			return name.substring(0, parametersStart);
+		else
+			return name;
 	}
 
 	public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
@@ -51,22 +66,15 @@ public final class Field extends AccessibleObject implements Member
 		ScriptHelper.put("sig", this.signature, this);
 
 		Object result= ScriptHelper.eval("obj[sig]", this);
-		return Method.adaptResult(result, result.getClass());
+		return Method.adaptResult(result, getType());
 	}
-	
-	Object [] tmpArray = new Object[1]; 
+
+	Object[] tmpArray= new Object[1];
 
 	public void set(Object obj, Object value) throws IllegalAccessException, IllegalArgumentException
 	{
-		Class<?> forName = null;
-		try 
-		{
-			forName = Class.forName(this.className);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		tmpArray[0] = value;
-		Method.boxArguments(new Class<?>[] { forName }, tmpArray); // #FIXME  passing the value will cause a bug. the value wont be updated because 2nd compiler changed its var name. Static also dont change.
+		tmpArray[0]= value;
+		Method.boxArguments(new Class<?>[] { fieldType }, tmpArray); // #FIXME  passing the value will cause a bug. the value wont be updated because 2nd compiler changed its var name. Static also dont change.
 
 		ScriptHelper.put("obj", obj, this);
 		ScriptHelper.put("sig", this.signature, this);
@@ -102,10 +110,10 @@ public final class Field extends AccessibleObject implements Member
 
 	public Type getGenericType()
 	{
-//		if (getName() != null)
-//			return getGenericInfo().getGenericType(); // TODO needs implementation.
-//		else  
-			return getType();
+		//		if (getName() != null)
+		//			return getGenericInfo().getGenericType(); // TODO needs implementation.
+		//		else  
+		return getType();
 	}
 
 	public boolean equals(Object object)
@@ -143,14 +151,7 @@ public final class Field extends AccessibleObject implements Member
 
 	public Class<?> getType()
 	{
-		Class<?> forName = null;
-		try {
-			if (className != null)
-				forName = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return forName;
+		return fieldType;
 	}
 
 	public int hashCode()

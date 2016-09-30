@@ -28,7 +28,7 @@ public abstract class Enum<E>
 	{
 		ScriptHelper.put("enumType", enumType, null);
 		ScriptHelper.put("name", name, null);
-		return (T) ScriptHelper.eval("enumType.$$$nativeClass.$$clinit_()[\"$$$\"+name]", null);
+		return (T) ScriptHelper.eval("enumType.$$$nativeClass___java_lang_Object.$$clinit_()[\"$$$\"+name]", null);
 	}
 
 	/**

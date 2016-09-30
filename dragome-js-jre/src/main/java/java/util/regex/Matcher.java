@@ -29,7 +29,7 @@ public final class Matcher
 	 */
 	public int end()
 	{
-		return ScriptHelper.evalInt("this.$$$matchResult.index + this.$$$matchResult[0].length", this);
+		return ScriptHelper.evalInt("this.$$$matchResult___java_lang_Object.index + this.$$$matchResult___java_lang_Object[0].length", this);
 	}
 
 	/**
@@ -37,10 +37,10 @@ public final class Matcher
 	 */
 	public boolean find()
 	{
-		ScriptHelper.eval("this.$$$matchResult = this.$$$nativeRegExp.exec(this.$$$input)", this);
+		ScriptHelper.eval("this.$$$matchResult = this.$$$nativeRegExp___java_lang_Object.exec(this.$$$input)", this);
 		if (matchResult == null)
 			return false;
-		ScriptHelper.eval("this.$$$nativeRegExp.lastIndex = this.$$$matchResult.index + this.$$$matchResult[0].length", this);
+		ScriptHelper.eval("this.$$$nativeRegExp___java_lang_Object.lastIndex = this.$$$matchResult___java_lang_Object.index + this.$$$matchResult___java_lang_Object[0].length", this);
 		return true;
 	}
 
@@ -54,7 +54,7 @@ public final class Matcher
 	public boolean find(int start)
 	{
 		ScriptHelper.put("start", start, this);
-		ScriptHelper.eval("this.$$$nativeRegExp.lastIndex = start", this);
+		ScriptHelper.eval("this.$$$nativeRegExp___java_lang_Object.lastIndex = start", this);
 		return find();
 	}
 
@@ -77,7 +77,7 @@ public final class Matcher
 		}
 		ScriptHelper.put("group", group, this);
 		// We have to convert from 'undefined' to null.
-		return (String) ScriptHelper.eval("!this.$$$matchResult[group]?null:this.$$$matchResult[group]", this);
+		return (String) ScriptHelper.eval("!this.$$$matchResult___java_lang_Object[group]?null:this.$$$matchResult___java_lang_Object[group]", this);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public final class Matcher
 	 */
 	public int groupCount()
 	{
-		return ScriptHelper.evalInt("this.$$$matchResult.length-1", this);
+		return ScriptHelper.evalInt("this.$$$matchResult___java_lang_Object.length-1", this);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public final class Matcher
 	 */
 	public int start()
 	{
-		return ScriptHelper.evalInt("this.$$$matchResult.index", this);
+		return ScriptHelper.evalInt("this.$$$matchResult___java_lang_Object.index", this);
 	}
 
 	public boolean matches()

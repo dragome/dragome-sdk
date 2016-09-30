@@ -41,7 +41,7 @@ public class MethodHandle
 		ScriptHelper.put("args", args, this);
 		ScriptHelper.put("proxy", x, this);
 		ScriptHelper.put("method", lookup.getMethod(), this);
-		Object o= ScriptHelper.eval("type.$$$nativeClass.$$members[method.$$$signature].apply(proxy, args)", this);
+		Object o= ScriptHelper.eval("type.$$$nativeClass___java_lang_Object.$$members[method.$$$signature___java_lang_String].apply(proxy, args)", this);
 		return o;
 	}
 }

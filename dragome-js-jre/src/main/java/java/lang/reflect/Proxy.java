@@ -74,8 +74,8 @@ public class Proxy
 				setProxy(proxy);
 				
 				ScriptHelper.put("method", method, this);
-				String methodName= (String) ScriptHelper.eval("method.$$$signature", this);
-				Class declaringClass= (Class) ScriptHelper.eval("method.$$$cls", this);
+				String methodName= (String) ScriptHelper.eval("method.$$$signature___java_lang_String", this);
+				Class declaringClass= (Class) ScriptHelper.eval("method.$$$cls___java_lang_Class", this);
 
 				method.boxParameters(args);
 
@@ -108,7 +108,7 @@ public class Proxy
 	{
 		ScriptHelper.put("class1", class1, null);
 
-		return ScriptHelper.evalBoolean("class1 && class1.$$$nativeClass && class1.$$$nativeClass.classname.startsWith(\"ProxyOf_\")", null);
+		return ScriptHelper.evalBoolean("class1 && class1.$$$nativeClass___java_lang_Object && class1.$$$nativeClass___java_lang_Object.classname.startsWith(\"ProxyOf_\")", null);
 	}
 
 	public static InvocationHandler getInvocationHandler(Object proxy) throws IllegalArgumentException

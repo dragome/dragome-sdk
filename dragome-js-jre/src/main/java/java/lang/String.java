@@ -77,7 +77,7 @@ public final class String implements CharSequence, Comparable<String>
 		consume(init(bytes, offset, count, enc));
 	}
 
-	public String(byte[] bytes, String enc) throws UnsupportedEncodingException 
+	public String(byte[] bytes, String enc)  
 	{
 		consume(init(bytes, 0, bytes.length, enc));
 	}

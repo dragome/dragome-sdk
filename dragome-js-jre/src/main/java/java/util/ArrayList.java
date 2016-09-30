@@ -151,7 +151,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 	public boolean add(E element)
 	{
 		ScriptHelper.put("element", element, this);
-		ScriptHelper.eval("this.$$$array.push(element)", this);
+		ScriptHelper.eval("this.$$$array___java_lang_Object_ARRAYTYPE.push(element)", this);
 		end++;
 		return true;
 	}
@@ -167,7 +167,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 		}
 		ScriptHelper.put("index", index, this);
 		ScriptHelper.put("element", element, this);
-		ScriptHelper.eval("this.$$$array.splice(index, 0, element)", this);
+		ScriptHelper.eval("this.$$$array___java_lang_Object_ARRAYTYPE.splice(index, 0, element)", this);
 		end++;
 		// for (int i=array.length; i>index; i--) {
 		//     array[i] = array[i-1];
@@ -323,7 +323,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 		System.arraycopy(array, srcPosition, array, start + fromIndex, array.length - srcPosition);
 
 		ScriptHelper.put("newSize", array.length - deleteCount, this);
-		ScriptHelper.eval("this.$$$array.length = newSize", this);
+		ScriptHelper.eval("this.$$$array___java_lang_Object_ARRAYTYPE.length = newSize", this);
 		incEnd(-deleteCount);
 	}
 

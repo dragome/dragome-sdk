@@ -219,7 +219,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public T newInstance() throws InstantiationException, IllegalAccessException
 	{
-		ScriptHelper.eval("var o = new this.$$$nativeClass", this);
+		ScriptHelper.eval("var o = new this.$$$nativeClass___java_lang_Object", this);
 		ScriptHelper.eval("o.$$init_$void()", this);
 		return (T) ScriptHelper.eval("o", this);
 	}
@@ -260,12 +260,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			return true;
 
 		ScriptHelper.put("otherClass", otherClass, this);
-		return ScriptHelper.evalBoolean("dragomeJs.isInstanceof(otherClass.$$$nativeClass, this.$$$nativeClass)", this);
+		return ScriptHelper.evalBoolean("dragomeJs.isInstanceof(otherClass.$$$nativeClass___java_lang_Object, this.$$$nativeClass___java_lang_Object)", this);
 	}
 
 	public boolean isInterface()
 	{
-		return ScriptHelper.evalBoolean("this.$$$nativeClass.$$type == \"Interface\"", this);
+		return ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.$$type == \"Interface\"", this);
 	}
 
 	public boolean isArray()
@@ -288,9 +288,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (!isArray && !isPrimitive())
 		{
 			if (isInterface())
-				result= (String) ScriptHelper.eval("this.$$$nativeClass.name", this);
+				result= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.name", this);
 			else
-				result= (String) ScriptHelper.eval("this.$$$nativeClass.classname", this);
+				result= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.classname", this);
 		}
 		else
 			result= (java.lang.String) ScriptHelper.eval("this.realName", null);
@@ -304,22 +304,22 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		{
 			Logger.getLogger(AnnotationsAdder.class.getName()).log(Level.FINEST, "Cannot add type annotation");
 			
-			if (ScriptHelper.evalBoolean("this.$$$nativeClass.classname == 'java_lang_Object' ", this))
+			if (ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.classname == 'java_lang_Object' ", this))
 				return null;
 			else
 			{
-				Boolean eval= ScriptHelper.evalBoolean("this.$$$nativeClass.superclass != undefined", this);
+				Boolean eval= ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.superclass != undefined", this);
 				if (eval) 
 				{
-					boolean javaClassExists= ScriptHelper.evalBoolean("this.$$$nativeClass.superclass.javaClass != undefined", this);
+					boolean javaClassExists= ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.superclass.javaClass != undefined", this);
 					
 					if (!javaClassExists) 
 					{
-						String className = (String)ScriptHelper.eval("this.$$$nativeClass.superclass.classname", this);
+						String className = (String)ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.superclass.classname", this);
 						return (Class<? super T>) forName(className.replace("_", "."));
 					} 
 					else
-						return (Class<? super T>) ScriptHelper.eval("this.$$$nativeClass.superclass.javaClass", this);
+						return (Class<? super T>) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.superclass.javaClass", this);
 				} else 
 				{
 					return null;
@@ -338,11 +338,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			declaredMethods= new ArrayList<Method>();
 			String[] signatures= new String[0];
 			ScriptHelper.put("signatures", signatures, this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass.$$members) { if (typeof this.$$$nativeClass.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass.prototype) { if (typeof this.$$$nativeClass.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
 			addMethods(signatures, Modifier.PUBLIC);
 			signatures= new String[0];
-			ScriptHelper.eval("for (var e in this.$$$nativeClass) { if (typeof this.$$$nativeClass[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (typeof this.$$$nativeClass___java_lang_Object[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
 			addMethods(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredMethods.toArray(new Method[0]);
@@ -420,15 +420,15 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			List<Class> interfacesCollection= new ArrayList<Class>();
 			ScriptHelper.put("interfacesCollection", interfacesCollection, this);
 			if (isInterface())
-				ScriptHelper.eval("var interfacesList= this.$$$nativeClass.$$extends", this);
+				ScriptHelper.eval("var interfacesList= this.$$$nativeClass___java_lang_Object.$$extends", this);
 			else
-				ScriptHelper.eval("var interfacesList= this.$$$nativeClass.$$implements", this);
+				ScriptHelper.eval("var interfacesList= this.$$$nativeClass___java_lang_Object.$$implements", this);
 
 			ScriptHelper.eval("for (var e=0; interfacesList && e < interfacesList.length; e++) {", this);
 
 			if (ScriptHelper.evalBoolean("interfacesList[e].$$type != 'Class'", this))
 			{
-				String className= (java.lang.String) ScriptHelper.eval("interfacesList[e].$$$nativeClass ? interfacesList[e].$$$nativeClass.name : interfacesList[e].name", this);
+				String className= (java.lang.String) ScriptHelper.eval("interfacesList[e].$$$nativeClass___java_lang_Object ? interfacesList[e].$$$nativeClass___java_lang_Object.name : interfacesList[e].name", this);
 				try
 				{
 					interfacesCollection.add(Class.forName(className));
@@ -452,7 +452,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	public Annotation[] getDeclaredAnnotations()
 	{
 		Annotation[] annotations= new Annotation[0];
-		Object[] maps= (Object[]) ScriptHelper.eval("this.$$$nativeClass.annotations", this);
+		Object[] maps= (Object[]) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.annotations", this);
 		if (maps == null)
 			return annotations;
 
@@ -581,12 +581,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			declaredFields= new ArrayList<Field>();
 			Object[] signatures= new Object[0];
 			ScriptHelper.put("signatures", signatures, this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass.$$members) { if (e.startsWith('$$$')){ var b={}; b.e = e; var type = e.replace('$$$', '$T$'); b.t = this.$$$nativeClass.$$members[type]; signatures.push(b); }}", this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass.prototype) { if (e.startsWith('$$$')){ var b={}; b.e = e; var type = e.replace('$$$', '$T$'); b.t = this.$$$nativeClass.prototype[type]; signatures.push(b); }}", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
 			addFields(signatures, Modifier.PUBLIC);
-			signatures= new String[0];
-			ScriptHelper.eval("for (var e in this.$$$nativeClass) { if (e.startsWith('$$$')){ var b={}; b.e = e; var type = e.replace('$$$', '$T$'); b.t = this.$$$nativeClass[type]; signatures.push(b); }}", this);
-			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
+//			signatures= new String[0];
+//			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
+//			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredFields.toArray(new Field[0]);
 	}
@@ -595,9 +595,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		for (int i= 0; i < signatures.length; i++) {
 			ScriptHelper.put("sig", signatures[i], this);
-			java.lang.String signature = ScriptHelper.evalCasting("sig.e", String.class, this);
-			java.lang.String type = ScriptHelper.evalCasting("sig.t", String.class, this);
-			declaredFields.add(new Field(this, signature, modifier, type));
+			String signature = ScriptHelper.evalCasting("sig.e", String.class, this);
+			
+			declaredFields.add(new Field(this, signature, modifier));
 		}
 	}
 
@@ -660,7 +660,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (obj == null)
 			return false;
 		ScriptHelper.put("obj", obj, this);
-		boolean result= ScriptHelper.evalBoolean("obj.$$$nativeClass == this.$$$nativeClass", this);
+		boolean result= ScriptHelper.evalBoolean("obj.$$$nativeClass___java_lang_Object == this.$$$nativeClass___java_lang_Object", this);
 		return result;
 	}
 

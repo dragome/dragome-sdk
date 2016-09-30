@@ -64,7 +64,7 @@ dragomeJs.createException = function(className, message, original) {
 	try {
 		var clazz = java_lang_Class
 				.$forName___java_lang_String$java_lang_Class(className);
-		exception = eval("new clazz.$$$nativeClass");
+		exception = eval("new clazz.$$$nativeClass___java_lang_Object");
 		exception.$$init____java_lang_String$void(message);
 		exception.original = original;
 		exception.stack = stack;
@@ -89,7 +89,7 @@ dragomeJs.nullSaveException = function(objectref) {
 				null);
 
 	if (!objectref.message)
-		objectref.message = objectref.$$$message;
+		objectref.message = objectref.$$$message___java_lang_String;
 
 	return objectref;
 };
@@ -323,7 +323,7 @@ dragomeJs.checkCast = function(obj, className) {
 
 function createProxyOf(types, methods, handler1, handler) {
 	var membersMap = {};
-	membersMap.$$$handler = handler1;
+	membersMap.$$$handler___java_lang_reflect_InvocationHandler = handler1;
 
 	var createInvoker = function(method) {
 		return function() {
@@ -333,14 +333,14 @@ function createProxyOf(types, methods, handler1, handler) {
 		};
 	}
 
-	for ( var i in methods.$$$array) {
-		var methodName = methods.$$$array[i].$$$signature;
-		membersMap[methodName] = createInvoker(methods.$$$array[i]);
+	for ( var i in methods.$$$array___java_lang_Object_ARRAYTYPE) {
+		var methodName = methods.$$$array___java_lang_Object_ARRAYTYPE[i].$$$signature___java_lang_String;
+		membersMap[methodName] = createInvoker(methods.$$$array___java_lang_Object_ARRAYTYPE[i]);
 	}
 
 	var nativeTypes = new Array(types.length);
 	for ( var i in types)
-		nativeTypes[i] = types[i].$$$nativeClass;
+		nativeTypes[i] = types[i].$$$nativeClass___java_lang_Object;
 
 	var nextNumber = objectId({});
 

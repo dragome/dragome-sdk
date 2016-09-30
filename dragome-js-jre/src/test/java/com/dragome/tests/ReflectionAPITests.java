@@ -352,7 +352,7 @@ public class ReflectionAPITests extends TestCase
 		Field field = ReflectionClass.class.getField("field1");
 		ReflectionClass obj = new ReflectionClass();
 		obj.field1 = true;
-		Object boolValue = field.get(obj);  // Error here
+		Object boolValue = field.get(obj);
 		assertEquals(true, boolValue); 
 	}
 	
@@ -362,8 +362,8 @@ public class ReflectionAPITests extends TestCase
 		Field field = ReflectionClass2.class.getDeclaredField("field1");
 		field.setAccessible(true);
 		ReflectionClass2 obj = new ReflectionClass2();
-//		Object boolValue = field.get(obj); // Error here
-//		assertEquals(true, boolValue);
+		Object boolValue = field.get(obj);
+		assertEquals(true, boolValue);
 	}
 	
 	@Test
@@ -372,8 +372,8 @@ public class ReflectionAPITests extends TestCase
 		Field field = ReflectionClass2.class.getField("field2");
 		ReflectionClass2 obj = new ReflectionClass2();
 		obj.field2 = 10;
-//		Object intValue = field.get(obj); // Error here
-//		assertEquals(10, intValue); //TODO Boxing is failing (trying Issue 127 test fix) What seems to be happing is that '10' is converting to Integer and intValue is a primitive and its failing to compare
+		Object intValue = field.get(obj);
+		assertEquals(10, intValue);
 	}
 
 	@Test
@@ -382,6 +382,6 @@ public class ReflectionAPITests extends TestCase
 		Class<ReflectionClass> class1= ReflectionClass.class;
 		Field field= class1.getField("field1");
 		Class<?> fieldType= field.getType();
-//		assertEquals(boolean.class, fieldType);
+		assertEquals(boolean.class, fieldType);
 	}
 }

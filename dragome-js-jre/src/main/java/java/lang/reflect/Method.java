@@ -124,7 +124,7 @@ public final class Method extends Executable
 		if (obj == null)
 		{
 			ScriptHelper.put("relatedClass", cls, this);
-			obj= ScriptHelper.eval("relatedClass.$$$nativeClass", this);
+			obj= ScriptHelper.eval("relatedClass.$$$nativeClass___java_lang_Object", this);
 		}
 
 		ScriptHelper.put("obj", obj, this);
@@ -321,9 +321,9 @@ public final class Method extends Executable
 	{
 		Class<?> declaringClass= getDeclaringClass();
 		ScriptHelper.put("declaringClass", declaringClass, this);
-		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass.$$$$signatures ", this))
+		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
 		{
-			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass.$$$$signatures[this.$$$signature]", this);
+			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
 			genericSignature= genericSignature.replaceAll(".*<L", "");
 			genericSignature= genericSignature.replaceAll(";>;", "");
 			genericSignature= genericSignature.replaceAll("/", "_");

@@ -73,9 +73,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   statics:
   {</xsl:text>
     <xsl:for-each select="vm:field[count(@isStatic)=1 and @isStatic='true']">
-	<xsl:text>
-    $$$</xsl:text>
-			<xsl:value-of select="@name" /><xsl:text>: </xsl:text>
+			<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@name"/><xsl:with-param name="type" select="@type"/></xsl:call-template><xsl:text>: </xsl:text>
         <xsl:if test="(@type='java.lang.String') and (@value)">
           <xsl:text>"</xsl:text>
         </xsl:if>
@@ -140,9 +138,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   members:
   {</xsl:text>
     <xsl:for-each select="vm:field[count(@isStatic)=0 or @isStatic='false']">
-      <xsl:text>
-    $$$</xsl:text>
-      <xsl:value-of select="@name" /><xsl:text>: </xsl:text>
+    <xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@name"/><xsl:with-param name="type" select="@type"/></xsl:call-template><xsl:text>: </xsl:text>
       <xsl:if test="(@type='java.lang.String') and (@value)">
           <xsl:text>"</xsl:text>
         </xsl:if>
@@ -408,8 +404,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 <xsl:template match="jvm:getfield">
     <xsl:text>
             __op1 = __stack[--__sp];
-            __stack[__sp++] = __op1.$$$</xsl:text>
-    <xsl:value-of select="@field"/>
+            __stack[__sp++] = __op1.</xsl:text>
+		<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@field"/><xsl:with-param name="type" select="@type"/></xsl:call-template>            
     <xsl:text>;</xsl:text>
 </xsl:template>
 
@@ -428,8 +424,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:call-template name="emitScopedName">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
-  <xsl:text>.$$$</xsl:text>
-  <xsl:value-of select="@field"/>
+  <xsl:text>.</xsl:text>
+	<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@field"/><xsl:with-param name="type" select="@type"/></xsl:call-template>  
   <xsl:text>;</xsl:text>
 </xsl:template>
 
@@ -1148,8 +1144,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
     <xsl:text>
             __op2 = __stack[--__sp];
             __op1 = __stack[--__sp];
-            __op1.$$$</xsl:text>
-    <xsl:value-of select="@field"/>
+            __op1.</xsl:text>
+		<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@field"/><xsl:with-param name="type" select="@type"/></xsl:call-template>
     <xsl:text> = __op2;</xsl:text>
 </xsl:template>
 
@@ -1167,8 +1163,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:call-template name="emitScopedName">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
-  <xsl:text>.$$$</xsl:text>
-  <xsl:value-of select="@field"/>
+  <xsl:text>.</xsl:text>
+	<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@field"/><xsl:with-param name="type" select="@type"/></xsl:call-template>
   <xsl:text> = __stack[--__sp];</xsl:text>
 </xsl:template>
 
@@ -1359,6 +1355,17 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
       </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+<!--
+   emitFieldName
+   ==============
+-->
+
+<xsl:template name="emitFieldName">
+  <xsl:param name="name" />
+  <xsl:param name="type" />
+  <xsl:text>$$$</xsl:text><xsl:value-of select="$name" />___<xsl:call-template name="emitScopedName"><xsl:with-param name="string" select="replace($type, '\[\]', '_ARRAYTYPE')"/></xsl:call-template>  
 </xsl:template>
 
 <!--
@@ -2220,8 +2227,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:call-template name="emitScopedName">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
-  <xsl:text>.$$clinit_().$$$</xsl:text>
-  <xsl:value-of select="@member-name" />
+  <xsl:text>.$$clinit_().</xsl:text>
+	<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@member-name"/><xsl:with-param name="type" select="@member-type"/></xsl:call-template>  
   <xsl:text>;</xsl:text>
 </xsl:template>
 
@@ -2237,8 +2244,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:call-template name="emitScopedName">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
-  <xsl:text>.$$clinit_().$$$</xsl:text>
-  <xsl:value-of select="@member-name" />
+  <xsl:text>.$$clinit_().</xsl:text>
+	<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@member-name"/><xsl:with-param name="type" select="@member-type"/></xsl:call-template>  
   <xsl:text> = __r</xsl:text>
   <xsl:value-of select="@vx" />
   <xsl:text>;</xsl:text>
@@ -2253,8 +2260,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vx" />
   <xsl:text> = __r</xsl:text>
   <xsl:value-of select="@vy" />
-  <xsl:text>.$$$</xsl:text>
-  <xsl:value-of select="@member-name" />
+  <xsl:text>.</xsl:text>
+	<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@member-name"/><xsl:with-param name="type" select="@member-type"/></xsl:call-template>  
   <xsl:text>;</xsl:text>
 </xsl:template>
 
@@ -2265,8 +2272,8 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vy" />
-  <xsl:text>.$$$</xsl:text>
-  <xsl:value-of select="@member-name" />
+  <xsl:text>.</xsl:text>
+	<xsl:call-template name="emitFieldName"><xsl:with-param name="name" select="@member-name"/><xsl:with-param name="type" select="@member-type"/></xsl:call-template>  
   <xsl:text> = __r</xsl:text>
   <xsl:value-of select="@vx" />
   <xsl:text>;</xsl:text>
@@ -2301,7 +2308,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:aget*
       ========  -->
-<xsl:template match="dex:aget|dex:aget-wide|dex:aget-boolean|dex:aget-byte|dex:aget-char|dex:aget-object|dex:aget-short">
+<xsl:template match="dex:aget|dex:aget-wide|dex:aget-boolean|dex:aget-byte|dex:aget-char|dex:aget-object|dex:aget-short|dex:aget-byte">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vx" />
@@ -2314,7 +2321,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:aput*
       =========  -->
-<xsl:template match="dex:aput|dex:aput-wide|dex:aput-boolean|dex:aput-char|dex:aput-object|dex:aput-short">
+<xsl:template match="dex:aput|dex:aput-wide|dex:aput-boolean|dex:aput-char|dex:aput-object|dex:aput-short|dex:aput-byte">
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vy" />
