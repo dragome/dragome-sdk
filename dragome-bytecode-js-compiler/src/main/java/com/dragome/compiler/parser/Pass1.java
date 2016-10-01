@@ -1562,7 +1562,7 @@ public class Pass1
 
 				Expression arrayRef= stack.pop();
 				FieldAccess access= new FieldRead();
-				access.setFieldType(Type.getType("int"));
+				access.setFieldType(Type.INT);
 				access.setExpression(arrayRef);
 				access.setName("length");
 
