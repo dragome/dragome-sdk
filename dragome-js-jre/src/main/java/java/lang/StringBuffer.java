@@ -248,4 +248,9 @@ public class StringBuffer
 		append(value.toCharArray(), start, end);
 	}
 
+	public StringBuffer append(StringBuffer sb)
+	{
+		append(sb.toString());
+		return this;
+	}
 }
