@@ -1,6 +1,7 @@
 package java.lang;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.utils.NamingUtils;
 
 /**
  * This is the common base class of all Java language enumeration types.
@@ -26,9 +27,12 @@ public abstract class Enum<E>
 	 */
 	public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name)
 	{
+		String enumDragomeName = NamingUtils.javaToDragomeNotation(enumType);
+
 		ScriptHelper.put("enumType", enumType, null);
+		ScriptHelper.put("enumDragomeName", enumDragomeName, null);
 		ScriptHelper.put("name", name, null);
-		return (T) ScriptHelper.eval("enumType.$$$nativeClass___java_lang_Object.$$clinit_()[\"$$$\"+name]", null);
+		return (T) ScriptHelper.eval("enumType.$$$nativeClass___java_lang_Object.$$clinit_()[\"$$$\"+name+\"___\"+enumDragomeName]", null);
 	}
 
 	/**

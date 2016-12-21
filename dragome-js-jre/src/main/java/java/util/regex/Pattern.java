@@ -24,6 +24,7 @@ public final class Pattern
 	 */
 	public Matcher matcher(CharSequence input)
 	{
+		regex= regex.replace("*+", "+");
 		return new Matcher(ScriptHelper.eval("new RegExp(this.$$$regex___java_lang_String, 'g')", this), input);
 	}
 

@@ -44,7 +44,7 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 		try
 		{
 			DragomeConfigurator foundConfigurator= null;
-			Reflections reflections= new Reflections("");
+			Reflections reflections= new Reflections(".*");
 			
 			Set<Class<?>> typesAnnotatedWith = null;
 			typesAnnotatedWith = reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);

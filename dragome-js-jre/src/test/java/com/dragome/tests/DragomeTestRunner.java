@@ -15,6 +15,7 @@ import org.junit.runners.model.FrameworkMethod;
 
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
+import com.dragome.utils.NamingUtils;
 import com.dragome.web.helpers.serverside.StandaloneDragomeAppGenerator;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.ScriptResult;
@@ -66,7 +67,7 @@ public class DragomeTestRunner extends ParentRunner<FrameworkMethod> {
 	protected void runChild(FrameworkMethod child, RunNotifier notifier) {
 		Description spec1 = Description.createTestDescription(clazz, child.getName());
 
-		String sourceCode = "try{new " + javaToDragomeNotation(clazz) + "()."
+		String sourceCode = "try{new " + NamingUtils.javaToDragomeNotation(clazz) + "()."
 				+ javaMethodNameToDragomeNotation(child.getName())
 				+ "(); window.failed=false}catch(e){window.failed=true}";
 		ScriptResult executeJavaScript = page.executeJavaScript(sourceCode);
@@ -98,9 +99,5 @@ public class DragomeTestRunner extends ParentRunner<FrameworkMethod> {
 
 		result = result + "$void";
 		return result;
-	}
-
-	private String javaToDragomeNotation(Class<?> aClazz) {
-		return aClazz.getName().replace(".", "_");
 	}
 }
