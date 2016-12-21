@@ -105,6 +105,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public static Class<?> forName(String className) throws ClassNotFoundException
 	{
+		className= className.replace("_", ".");
+		
 		Class<?> clazz= classesByName.get(className);
 		if (clazz == null)
 		{
