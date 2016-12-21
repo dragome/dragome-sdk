@@ -76,7 +76,11 @@
    <version>1.7.5</version>
   </dependency>
 
-
+  <dependency>
+   <groupId>org.apache.bcel</groupId>
+   <artifactId>bcel</artifactId>
+   <version>6.0</version>
+  </dependency>
 
   <dependency>
    <groupId>javax.websocket</groupId>
