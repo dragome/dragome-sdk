@@ -30,18 +30,20 @@ public class StandaloneDragomeAppGenerator
 	private File webappDirectory;
 	private boolean removeCache= true;
 	private boolean forceRebuild= true;
+	private boolean compress;
 
 	public static void main(String[] args)
 	{
-		new StandaloneDragomeAppGenerator(new File(args[0]), new File(args[1]), Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3])).execute();
+		new StandaloneDragomeAppGenerator(new File(args[0]), new File(args[1]), Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]), Boolean.parseBoolean(args[4])).execute();
 	}
 
-	public StandaloneDragomeAppGenerator(File destinationDirectory, File webappDirectory, boolean removeCache, boolean forceRebuild)
+	public StandaloneDragomeAppGenerator(File destinationDirectory, File webappDirectory, boolean removeCache, boolean forceRebuild, boolean compress)
 	{
 		this.destinationDirectory= destinationDirectory;
 		this.webappDirectory= webappDirectory;
 		this.removeCache= removeCache;
 		this.forceRebuild= forceRebuild;
+		this.compress = compress;
 	}
 
 	private void copyResource(String aResourceName, String aLocation)
@@ -156,7 +158,8 @@ public class StandaloneDragomeAppGenerator
 			throw new RuntimeException("Cannot create directory " + theTargetDir);
 		}
 
-		File theWebAppJS= new File(theTargetDir, "webapp.js");
+		File targetFile = new File(theTargetDir, "webapp.js");
+		File theWebAppJS= targetFile;
 		if (forceRebuild && theWebAppJS.exists())
 		{
 			if (!theWebAppJS.delete())
@@ -181,8 +184,13 @@ public class StandaloneDragomeAppGenerator
 		//		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		CopyUtils.copyFilesOfFolder(webappDirectory, theTargetDir);
 
-		theProcessor.process(new FileReader(dest), new FileWriter(new File(theTargetDir, "webapp.js")));
-		dest.delete();
+		if (compress) 
+		{
+			theProcessor.process(new FileReader(dest), new FileWriter(targetFile));
+			dest.delete();
+		}
+		else
+			dest.renameTo(targetFile);
 
 		// Finally remove the cache file
 		if (removeCache)
@@ -194,7 +202,6 @@ public class StandaloneDragomeAppGenerator
 				LOGGER.severe("Cannot delete cache file" + theCacheFile);
 			}
 		}
-
 	}
 
 	public void execute()

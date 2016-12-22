@@ -39,7 +39,7 @@ public class DragomeTestRunner extends ParentRunner<FrameworkMethod> {
 			File destinationDirectory = new File("./target/dragome-tests");
 			destinationDirectory.mkdirs();
 			File webappDirectory = new File("./src/test/resources");
-			new StandaloneDragomeAppGenerator(destinationDirectory, webappDirectory, true, true).execute();
+			new StandaloneDragomeAppGenerator(destinationDirectory, webappDirectory, true, true, true).execute();
 
 			Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
 

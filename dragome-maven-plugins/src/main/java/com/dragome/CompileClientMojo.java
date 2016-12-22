@@ -21,9 +21,11 @@ public class CompileClientMojo extends AbstractMojo
 	private boolean removeCache= true;
 	@Parameter
 	private boolean forceRebuild= true;
+	@Parameter
+	private boolean compress= true;
 
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
-		new StandaloneDragomeAppGenerator(destinationDirectory, webappDirectory, removeCache, forceRebuild).execute();
+		new StandaloneDragomeAppGenerator(destinationDirectory, webappDirectory, removeCache, forceRebuild, compress).execute();
 	}
 }
