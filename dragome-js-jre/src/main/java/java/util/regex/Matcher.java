@@ -37,7 +37,7 @@ public final class Matcher
 	 */
 	public boolean find()
 	{
-		ScriptHelper.eval("this.$$$matchResult = this.$$$nativeRegExp___java_lang_Object.exec(this.$$$input___java_lang_CharSequence)", this);
+		ScriptHelper.eval("this.$$$matchResult___java_lang_Object = this.$$$nativeRegExp___java_lang_Object.exec(this.$$$input___java_lang_CharSequence)", this);
 		if (matchResult == null)
 			return false;
 		ScriptHelper.eval("this.$$$nativeRegExp___java_lang_Object.lastIndex = this.$$$matchResult___java_lang_Object.index + this.$$$matchResult___java_lang_Object[0].length", this);
