@@ -2215,7 +2215,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:sget-*
       ==========  -->
-<xsl:template match="dex:sget|dex:sget-wide|dex:sget-boolean|dex:sget-object|dex:sget-char">
+<xsl:template match="dex:sget|dex:sget-wide|dex:sget-boolean|dex:sget-object|dex:sget-char|dex:sget-short">
   <xsl:call-template name="checkClass">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>

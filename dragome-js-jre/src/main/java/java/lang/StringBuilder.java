@@ -166,6 +166,11 @@ public class StringBuilder
 		return delete(index, index + 1);
 	}
 
+	public StringBuilder insert(int dstOffset, CharSequence s)
+	{
+		return insert(dstOffset, s.toString());
+	}
+
 	public StringBuilder insert(int offset, Object obj)
 	{
 		return insert(offset, String.valueOf(obj));
