@@ -87,10 +87,19 @@ dragomeJs.nullSaveException = function(objectref) {
 	else if (objectref == null)
 		objectref = dragomeJs.createException("java.lang.NullPointerException",
 				null);
-
-	if (!objectref.message)
-		objectref.message = objectref.$$$message___java_lang_String;
-
+	if (!objectref.message) {
+		var message = objectref.$$$message___java_lang_String;
+		objectref.message = message;
+		var cleanStack = "";
+		try {
+			undefined.b = 1;
+		} catch (e) {
+			var stackSplit = e.stack.split("\n");
+			for(i = 2; i < stackSplit.length;i++)
+				cleanStack = cleanStack+stackSplit[i]+"\n";
+		}
+		objectref.$$$stackTrace___java_lang_String = cleanStack;
+	}
 	return objectref;
 };
 
