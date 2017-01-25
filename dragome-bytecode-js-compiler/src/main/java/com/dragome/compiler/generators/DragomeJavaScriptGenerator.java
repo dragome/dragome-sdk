@@ -775,7 +775,7 @@ public class DragomeJavaScriptGenerator extends Generator
 			{
 				print("false");
 			}
-			if (NumberLiteral.isOne(rhs))
+			else if (NumberLiteral.isOne(rhs))
 			{
 				print("true");
 			}
