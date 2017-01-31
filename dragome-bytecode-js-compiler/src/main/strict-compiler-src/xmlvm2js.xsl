@@ -2215,7 +2215,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 
 <!--  dex:sget-*
       ==========  -->
-<xsl:template match="dex:sget|dex:sget-wide|dex:sget-boolean|dex:sget-object|dex:sget-char|dex:sget-short">
+<xsl:template match="dex:sget|dex:sget-wide|dex:sget-boolean|dex:sget-object|dex:sget-char|dex:sget-short|dex:sget-byte">
   <xsl:call-template name="checkClass">
     <xsl:with-param name="string" select="@class-type"/>
   </xsl:call-template>
@@ -2858,7 +2858,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>;</xsl:text>
 </xsl:template>
 
-<xsl:template match="dex:ushr-long">
+<xsl:template match="dex:ushr-long|dex:shr-long">
   <xsl:text>
            __r</xsl:text>
   <xsl:value-of select="@vx"/>
