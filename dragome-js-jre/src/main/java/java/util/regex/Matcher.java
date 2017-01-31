@@ -15,11 +15,20 @@ public final class Matcher
 	private Object nativeRegExp;
 	private CharSequence input;
 	private Object matchResult;
+	private Pattern pattern;
 
-	protected Matcher(Object nativeRegExp, CharSequence input)
+	protected Matcher(String nativeRegExp, CharSequence input)
 	{
 		this.nativeRegExp= nativeRegExp;
 		this.input= input;
+	}
+
+	public Matcher(Pattern pattern, CharSequence input) 
+	{
+		ScriptHelper.put("regexpPattern", pattern.pattern(), this);
+		this.nativeRegExp= ScriptHelper.eval("new RegExp(regexpPattern, 'g')", this);
+		this.pattern = pattern;
+		this.input = input;
 	}
 
 	/**
@@ -103,8 +112,24 @@ public final class Matcher
 
 	public boolean matches()
 	{
-		//TODO revisar!!!
-		return find();
+		String wholeMatchPattern = pattern.pattern();
+		
+		if(!wholeMatchPattern.startsWith("^"))
+			wholeMatchPattern= "^" + wholeMatchPattern;
+		
+		if(!wholeMatchPattern.endsWith("$"))
+			wholeMatchPattern+= "$";
+		
+		Object tempNativeRegExp = this.nativeRegExp;
+		
+		ScriptHelper.put("wholeMatchPattern", wholeMatchPattern, this);
+		this.nativeRegExp= ScriptHelper.eval("new RegExp(wholeMatchPattern, 'g')", this);
+		
+		boolean find = find();
+
+		this.nativeRegExp= tempNativeRegExp;
+		
+		return find;
 	}
 
 }

@@ -1,12 +1,10 @@
 package java.util.regex;
 
-import com.dragome.commons.javascript.ScriptHelper;
-
 public final class Pattern
 {
 
 	public static final String CASE_INSENSITIVE = null;
-	private String regex;
+	private String pattern;
 
 	/**
 	 * Compiles the given regular expression into a pattern.
@@ -15,7 +13,7 @@ public final class Pattern
 	public static Pattern compile(String regex)
 	{
 		Pattern pattern= new Pattern();
-		pattern.regex= regex;
+		pattern.pattern= regex;
 		return pattern;
 	}
 
@@ -24,8 +22,8 @@ public final class Pattern
 	 */
 	public Matcher matcher(CharSequence input)
 	{
-		regex= regex.replace("*+", "+");
-		return new Matcher(ScriptHelper.eval("new RegExp(this.$$$regex___java_lang_String, 'g')", this), input);
+		pattern= pattern.replace("*+", "+");
+		return new Matcher(this, input);
 	}
 
 	public static Pattern compile(String pattern, String caseInsensitive) {
@@ -38,4 +36,7 @@ public final class Pattern
 		return false;
 	}
 
+    public String pattern() {
+        return pattern;
+    }
 }
