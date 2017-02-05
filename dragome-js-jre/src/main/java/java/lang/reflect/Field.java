@@ -121,31 +121,56 @@ public final class Field extends AccessibleObject implements Member
 		return false;
 	}
 
-	public native boolean getBoolean(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public boolean getBoolean(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (boolean)this.get(object);
+	}
 
-	public native byte getByte(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public byte getByte(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (byte)this.get(object);
+	}
 
-	public native char getChar(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public char getChar(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (char)this.get(object);
+	}
 
 	public Class<?> getDeclaringClass()
 	{
 		return class1;
 	}
 
-	public native double getDouble(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public double getDouble(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (double)this.get(object);
+	}
 
-	public native float getFloat(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public float getFloat(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (float)this.get(object);
+	}
 
-	public native int getInt(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public int getInt(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (int)this.get(object);
+	}
 
-	public native long getLong(Object object) throws IllegalAccessException, IllegalArgumentException;
+	public long getLong(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (long)this.get(object);
+	}
+
+	public short getShort(Object object) throws IllegalAccessException, IllegalArgumentException
+	{
+		return (short)this.get(object);
+	}
 
 	public int getModifiers()
 	{
 		return 0;
 	}
 
-	public native short getShort(Object object) throws IllegalAccessException, IllegalArgumentException;
 
 	native String getSignature();
 
@@ -159,21 +184,45 @@ public final class Field extends AccessibleObject implements Member
 		return 0;
 	}
 
-	public native void setBoolean(Object object, boolean value) throws IllegalAccessException, IllegalArgumentException;
+	public void setBoolean(Object object, boolean value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setByte(Object object, byte value) throws IllegalAccessException, IllegalArgumentException;
+	public void setByte(Object object, byte value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setChar(Object object, char value) throws IllegalAccessException, IllegalArgumentException;
+	public void setChar(Object object, char value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setDouble(Object object, double value) throws IllegalAccessException, IllegalArgumentException;
+	public void setDouble(Object object, double value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setFloat(Object object, float value) throws IllegalAccessException, IllegalArgumentException;
+	public void setFloat(Object object, float value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setInt(Object object, int value) throws IllegalAccessException, IllegalArgumentException;
+	public void setInt(Object object, int value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setLong(Object object, long value) throws IllegalAccessException, IllegalArgumentException;
+	public void setLong(Object object, long value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
-	public native void setShort(Object object, short value) throws IllegalAccessException, IllegalArgumentException;
+	public void setShort(Object object, short value) throws IllegalAccessException, IllegalArgumentException
+	{
+		this.set(object, value);
+	}
 
 	public String toString()
 	{
