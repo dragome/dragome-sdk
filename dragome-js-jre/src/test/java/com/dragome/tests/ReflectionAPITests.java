@@ -28,21 +28,21 @@ import junit.framework.TestCase;
 @RunWith(DragomeTestRunner.class)
 public class ReflectionAPITests extends TestCase
 {
-	public static class ReflectionClass2 { 
+	public static class ReflectionClass2 {
 		private boolean field1 = true;
 		public int field2;
-		
+
 		public boolean getField1() {
 			return field1;
 		}
 	}
-	
-	
+
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface Annotation1
 	{
 		String value1() default "1";
 		String value2() default "1";
+		String[] value3() default {"1", "2"};
 	}
 
 	@Annotation1
@@ -67,6 +67,9 @@ public class ReflectionAPITests extends TestCase
 
 		@Annotation1
 		public boolean field2;
+
+		@Annotation1(value3 = {"3", "4"})
+		public boolean field3;
 
 		@Annotation1(value1= "methodWithNoArguments")
 		public void methodWithNoArguments()
@@ -318,6 +321,25 @@ public class ReflectionAPITests extends TestCase
 	}
 
 	@Test
+	public void testGettingAnnotationDefaultValueFromField() throws Exception
+	{
+		Class<ReflectionClass> class1= ReflectionClass.class;
+		Field field= class1.getField("field1");
+		Annotation1 annotation1= field.getAnnotation(Annotation1.class);
+		assertEquals("1", annotation1.value2());
+	}
+
+	@Test
+	public void testGettingAnnotationArrayFromField() throws Exception
+	{
+		Class<ReflectionClass> class1= ReflectionClass.class;
+		Field field3= class1.getField("field3");
+		Annotation1 annotation1= field3.getAnnotation(Annotation1.class);
+		String[] value3 = annotation1.value3();
+		assertEquals("4", value3[1]);
+	}
+
+	@Test
 	public void testGettingNotParametizedAnnotationFromField() throws Exception
 	{
 		Class<ReflectionClass> class1= ReflectionClass.class;
@@ -325,7 +347,7 @@ public class ReflectionAPITests extends TestCase
 		Annotation1 annotation1= field.getAnnotation(Annotation1.class);
 		assertNotNull(annotation1);
 	}
-	
+
 	@Test
 	public void testSetFieldWithTrue() throws Exception
 	{
@@ -334,7 +356,7 @@ public class ReflectionAPITests extends TestCase
 		field.set(obj, true);
 		assertEquals(true, obj.field1);
 	}
-	
+
 	@Test
 	public void testSetFieldPrivateWithFalse() throws Exception
 	{
@@ -353,9 +375,9 @@ public class ReflectionAPITests extends TestCase
 		ReflectionClass obj = new ReflectionClass();
 		obj.field1 = true;
 		Object boolValue = field.get(obj);
-		assertEquals(true, boolValue); 
+		assertEquals(true, boolValue);
 	}
-	
+
 	@Test
 	public void testGetFieldPrivateWithTrue() throws Exception
 	{
@@ -365,7 +387,7 @@ public class ReflectionAPITests extends TestCase
 		Object boolValue = field.get(obj);
 		assertEquals(true, boolValue);
 	}
-	
+
 	@Test
 	public void testGetFieldInteger() throws Exception
 	{

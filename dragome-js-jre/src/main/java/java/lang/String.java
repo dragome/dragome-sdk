@@ -153,9 +153,27 @@ public final class String implements CharSequence, Comparable<String>
 	 */
 	public boolean equals(Object obj)
 	{
-		ScriptHelper.put("obj", obj, this);
-		// Note that method.apply(thisArg) will passed ToObject(thisArg) as the this value.
-		return ScriptHelper.evalBoolean("String(this) == String(obj)", this);
+		if (this == obj)
+            return true;
+		if (obj instanceof String) {
+			ScriptHelper.put("obj", obj, this);
+			ScriptHelper.evalNoResult("var string1 = String(this)", this);
+			ScriptHelper.evalNoResult("var string2 = String(obj)", this);
+            int n1 = ScriptHelper.evalInt("string1.length", this);
+            int n2 = ScriptHelper.evalInt("string2.length", this);
+            if (n1 == n2) {
+                int i = 0;
+                while (n1-- != 0) {
+                	ScriptHelper.put("i", i, this);
+                	boolean flag = ScriptHelper.evalBoolean("string1.charAt(i) == string2.charAt(i)", this);
+                    if (!flag)
+                    	return false;
+                    i++;
+                }
+                return true;
+            }
+        }
+		return false;
 	}
 
 	/**
