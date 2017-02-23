@@ -399,7 +399,7 @@ public class ReflectionAPITests extends TestCase
 	}
 
 	@Test
-	public void gettingTypeOfField() throws Exception
+	public void testGettingTypeOfField() throws Exception
 	{
 		Class<ReflectionClass> class1= ReflectionClass.class;
 		Field field= class1.getField("field1");
