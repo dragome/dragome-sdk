@@ -22,6 +22,7 @@ import java.util.Set;
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.compiler.classpath.InMemoryClasspathFile;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.annotations.Keep;
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
@@ -104,6 +105,7 @@ public class JsDelegateGenerator
 		{
 			ClassPool pool= ClassPool.getDefault();
 			CtClass cc= pool.makeClass(className);
+			cc.addInterface(resolveCtClass(Keep.class));
 			CtClass resolveCtClass= resolveCtClass(interface1);
 			cc.addInterface(resolveCtClass);
 			Class<?> scriptHelperClass= ScriptHelper.class;
