@@ -265,6 +265,10 @@ public class Integer extends Number implements Comparable<Integer>
 		return value > object.value ? 1 : (value < object.value ? -1 : 0);
 	}
 
+	public static int compare(int x, int y) {
+		return (x < y) ? -1 : ((x == y) ? 0 : 1);
+	}
+
 	public static int hashCode(int value)
 	{
 		return value ^ (value >>> 32);
