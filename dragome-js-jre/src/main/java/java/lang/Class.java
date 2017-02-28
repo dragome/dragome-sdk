@@ -226,25 +226,51 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return (T) ScriptHelper.eval("o", this);
 	}
 
-	/**
-	 * Determines if the specified Object is assignment-compatible with the object represented by this Class.
-	 */
-	public boolean isInstance(Object obj)
-	{
-		Class cls= obj.getClass();
-		do
+	private static boolean isInstanceInterfaceRecursive(final String clsBaseName, final Class cls) {
+		final Class<?>[] interfaces = cls.getInterfaces();
+		for(final Class<?> interfaceClass : interfaces)
 		{
-			if (cls.getName().equals(getName()))
+			if (interfaceClass.getName().equals(clsBaseName))
 			{
 				return true;
 			}
-			if (cls.getName().equals("java.lang.Object"))
+			else if (isInstanceInterfaceRecursive(clsBaseName, interfaceClass))
 			{
-				return false;
+				return true;
 			}
-			cls= cls.getSuperclass();
 		}
-		while (true);
+		return false;
+	}
+	
+	/**
+	 * Determines if the specified Object is assignment-compatible with the object represented by this Class.
+	 * https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#isInstance-java.lang.Object-
+	 */
+	public boolean isInstance(Object obj)
+	{
+		if (obj != null)
+		{
+			Class cls = obj.getClass();
+			final String clsBaseName = getName();
+			for(;;)
+			{
+				final String clsObjName = cls.getName();
+				if (clsObjName.equals(clsBaseName))
+				{
+					return true;
+				}
+				if (isInstanceInterfaceRecursive(clsBaseName, cls))
+				{
+					return true;
+				}
+				if (clsObjName.equals("java.lang.Object"))
+				{
+					return false;
+				}
+				cls = cls.getSuperclass();
+			}
+		}
+		return false;
 	}
 
 	/**
