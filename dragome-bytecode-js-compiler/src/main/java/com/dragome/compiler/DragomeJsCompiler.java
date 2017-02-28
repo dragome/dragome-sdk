@@ -124,6 +124,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 			compiler.addAssembly(assembly);
 			compiler.setGenerateLineNumbers(false);
 			compiler.setCompression(false);
+			logger = Log.logger;
 			initialized= true;
 		}
 	}
