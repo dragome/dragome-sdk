@@ -228,23 +228,14 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	/**
 	 * Determines if the specified Object is assignment-compatible with the object represented by this Class.
+	 * https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#isInstance-java.lang.Object-
 	 */
-	public boolean isInstance(Object obj)
+	public boolean isInstance(final Object obj)
 	{
-		Class cls= obj.getClass();
-		do
-		{
-			if (cls.getName().equals(getName()))
-			{
-				return true;
-			}
-			if (cls.getName().equals("java.lang.Object"))
-			{
-				return false;
-			}
-			cls= cls.getSuperclass();
-		}
-		while (true);
+		if (obj != null)
+			return isAssignableFrom(obj.getClass());
+		else
+			return false;
 	}
 
 	/**

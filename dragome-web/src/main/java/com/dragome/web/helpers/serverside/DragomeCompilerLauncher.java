@@ -61,10 +61,10 @@ public class DragomeCompilerLauncher
 
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= WebServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
 
-		configurator.sortClassPath(classPath);
-		classPath= process(classPath, configurator);
 		List<ClasspathEntry> extraClasspath= configurator.getExtraClasspath(classPath);
 		classPath.addEntries(extraClasspath);
+		configurator.sortClassPath(classPath);
+		classPath= process(classPath, configurator);
 
 		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, new DefaultClasspathFileFilter(), configurator.isCheckingCast(), configurator.isCaching());
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
