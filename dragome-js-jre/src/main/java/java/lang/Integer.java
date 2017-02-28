@@ -137,29 +137,25 @@ public class Integer extends Number implements Comparable<Integer>
 				throw new NumberFormatException(s);
 			}
 		}
-		
-		int toReturn= 0;
-		ScriptHelper.put("toReturn", toReturn, null);
+		int toRet = 0;
 		ScriptHelper.put("s", s, null);
 		ScriptHelper.put("radix", radix, null);
 		ScriptHelper.evalInt("var toReturn = parseInt(s, radix);", null);
 		// isTooLow is separated into its own variable to avoid a bug in BlackBerry OS 7. See
 		// https://code.google.com/p/google-web-toolkit/issues/detail?id=7291.
-		boolean isTooLow= false;
-		boolean isNan= false;
-		ScriptHelper.put("isTooLow", isTooLow, null);
-		ScriptHelper.put("lowerBound", lowerBound, null);
-		ScriptHelper.evalNoResult("isTooLow = toReturn < lowerBound;", null);
-		isNan= ScriptHelper.evalBoolean("isNaN(toReturn)", null);
-		if (isNan)
+		if (ScriptHelper.evalBoolean("isNaN(toReturn)", null))
 		{
 			throw new NumberFormatException(s);
 		}
-		else if (isTooLow || toReturn > upperBound)
-		{
-			throw new NumberFormatException(s);
+		else {
+			toRet = ScriptHelper.evalInt("toReturn", null);
+			boolean isTooLow = toRet < lowerBound;
+			if (isTooLow || toRet > upperBound)
+			{
+				throw new NumberFormatException(s);
+			}
 		}
-		return ScriptHelper.evalInt("toReturn", null);
+		return toRet;
 	}
 
 	/**
