@@ -33,6 +33,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	private CompilerType defaultCompilerType= CompilerType.Standard;
 	private ClasspathFileFilter classpathFilter;
 	private boolean removeUnusedCode;
+	private boolean obfuscateCode;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -147,13 +148,21 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return removeUnusedCode;
 	}
 
+	public boolean isObfuscateCode()
+	{
+		return obfuscateCode;
+	}
+
 	public void sortClassPath(Classpath classPath)
 	{
 	}
 
-	public URL getAdditionalCodeKeepConfigFile()
+	public void getAdditionalCodeKeepConfigFile(ArrayList<URL> urls)
 	{
-		return null;
+	}
+
+	public void getAdditionalObfuscateCodeKeepConfigFile(ArrayList<URL> urls)
+	{
 	}
 
 	public boolean isCaching() {

@@ -16,6 +16,7 @@
 package com.dragome.commons;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dragome.commons.compiler.BytecodeTransformer;
@@ -36,8 +37,10 @@ public interface DragomeConfigurator
 	public boolean isCheckingCast();
 	List<ClasspathEntry> getExtraClasspath(Classpath classPath);
 	boolean isRemoveUnusedCode();
+	boolean isObfuscateCode();
 	boolean isCaching();
 	String getCompiledPath();
 	public void sortClassPath(Classpath classPath);
-	URL getAdditionalCodeKeepConfigFile();
+	void getAdditionalCodeKeepConfigFile(ArrayList<URL> urls);
+	void getAdditionalObfuscateCodeKeepConfigFile(ArrayList<URL> urls);
 }

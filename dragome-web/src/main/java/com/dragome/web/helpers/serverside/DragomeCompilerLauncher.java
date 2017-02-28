@@ -84,7 +84,6 @@ public class DragomeCompilerLauncher
 			Files.createDirectories(tmpPath);
 			File file= Files.createTempFile(tmpPath, "dragome-merged-", ".jar").toFile();
 			file.deleteOnExit();
-			path= file.getAbsolutePath();
 
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
 			{
@@ -115,13 +114,17 @@ public class DragomeCompilerLauncher
 					});
 				}
 			}
-
 			if (configurator.isRemoveUnusedCode())
 			{
-				return runProguard(file, configurator);
+				file = runProguard(file, configurator);
+				file.deleteOnExit();
 			}
-			else
-				return new Classpath(JarClasspathEntry.createFromPath(path));
+			if(configurator.isObfuscateCode()) {
+				file = runProguardObf(file, configurator);
+				file.deleteOnExit();
+			}
+			path= file.getAbsolutePath();
+			return new Classpath(JarClasspathEntry.createFromPath(path));
 		}
 		catch (Exception e)
 		{
@@ -129,49 +132,57 @@ public class DragomeCompilerLauncher
 		}
 	}
 
-	private static Classpath runProguard(File file, DragomeConfigurator configurator) throws Exception
+	private static File runProguard(File file, DragomeConfigurator configurator) throws Exception
 	{
 		URI uri= DragomeCompilerLauncher.class.getResource("/proguard.conf").toURI();
 		Properties properties= System.getProperties();
 		properties.put("in-jar-filename", file.getAbsolutePath());
 		String outFilename= file.getAbsolutePath().replace(".jar", "-proguard.jar");
 		File file2 = new File(outFilename);
-		file2.deleteOnExit();
 		properties.put("out-jar-filename", outFilename);
 		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), properties);
-		URL additionalCodeKeepConfigFile= configurator.getAdditionalCodeKeepConfigFile();
+		ArrayList<URL> urls = new ArrayList<URL>();
+		configurator.getAdditionalCodeKeepConfigFile(urls);
 		Configuration configuration= new Configuration();
 		parser.parse(configuration);
 
-		if (additionalCodeKeepConfigFile != null)
-		{
-			ConfigurationParser parserForAdditionalKeepCodeConfigFile= new ConfigurationParser(additionalCodeKeepConfigFile, properties);
+		for(int i = 0; i < urls.size();i++) {
+			URL url = urls.get(i);
+			ConfigurationParser parserForAdditionalKeepCodeConfigFile= new ConfigurationParser(url, properties);
 			parserForAdditionalKeepCodeConfigFile.parse(configuration);
 		}
 
 		new ProGuard(configuration).execute();
-		return runProguardObf(file2, configurator);
+//		return runProguardObf(file2, configurator);
 //		return new Classpath(JarClasspathEntry.createFromPath(outFilename));
+		return file2;
 	}
 	
-	private static Classpath runProguardObf(File file, DragomeConfigurator configurator) throws Exception
+	private static File runProguardObf(File file, DragomeConfigurator configurator) throws Exception
 	{
 		URI uri= DragomeCompilerLauncher.class.getResource("/proguardObf.conf").toURI();
 		Properties properties= System.getProperties();
 		properties.put("in-jar-filename", file.getAbsolutePath());
 		String outFilename= file.getAbsolutePath().replace(".jar", "-Obf.jar");
-		new File(outFilename).deleteOnExit();
+		File file2 = new File(outFilename);
 		properties.put("out-jar-filename", outFilename);
 		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), properties);
-		URL additionalCodeKeepConfigFile= configurator.getAdditionalCodeKeepConfigFile();
+		ArrayList<URL> urls = new ArrayList<URL>();
+		configurator.getAdditionalObfuscateCodeKeepConfigFile(urls);
 		Configuration configuration= new Configuration();
-		configuration.printMapping = new File("E:\\mapping.txt");
+			for(int i = 0; i < urls.size();i++) {
+				URL url = urls.get(i);
+				ConfigurationParser parserForAdditionalKeepCodeConfigFile= new ConfigurationParser(url, properties);
+				parserForAdditionalKeepCodeConfigFile.parse(configuration);
+			}
+		
 		parser.parse(configuration);
 		
 		String class_path = System.getProperty("java.class.path");
 		class_path = outFilename + ";" + class_path; 
 		System.setProperty("java.class.path", class_path);
 		new ProGuard(configuration).execute();
-		return new Classpath(JarClasspathEntry.createFromPath(outFilename));
+//		return new Classpath(JarClasspathEntry.createFromPath(outFilename));
+		return file2;
 	}
 }
