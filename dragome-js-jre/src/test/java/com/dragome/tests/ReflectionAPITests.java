@@ -99,6 +99,14 @@ public class ReflectionAPITests extends TestCase
 			return null;
 		}
 	}
+	
+	@Test
+	public void testSuperClassIsInstanceOfInterfaces() throws Exception
+	{
+		final SuperClass sc = new SuperClass();
+		assertTrue(ReflectionInterface1.class.isInstance(sc));
+		assertTrue(ReflectionInterface2.class.isInstance(sc));
+	}
 
 	@Test
 	public void testSearchingForMethodWithNoArgumentsReturnsMethodWithSameName() throws Exception

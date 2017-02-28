@@ -226,51 +226,16 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return (T) ScriptHelper.eval("o", this);
 	}
 
-	private static boolean isInstanceInterfaceRecursive(final String clsBaseName, final Class cls) {
-		final Class<?>[] interfaces = cls.getInterfaces();
-		for(final Class<?> interfaceClass : interfaces)
-		{
-			if (interfaceClass.getName().equals(clsBaseName))
-			{
-				return true;
-			}
-			else if (isInstanceInterfaceRecursive(clsBaseName, interfaceClass))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	/**
 	 * Determines if the specified Object is assignment-compatible with the object represented by this Class.
 	 * https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#isInstance-java.lang.Object-
 	 */
-	public boolean isInstance(Object obj)
+	public boolean isInstance(final Object obj)
 	{
 		if (obj != null)
-		{
-			Class cls = obj.getClass();
-			final String clsBaseName = getName();
-			for(;;)
-			{
-				final String clsObjName = cls.getName();
-				if (clsObjName.equals(clsBaseName))
-				{
-					return true;
-				}
-				if (isInstanceInterfaceRecursive(clsBaseName, cls))
-				{
-					return true;
-				}
-				if (clsObjName.equals("java.lang.Object"))
-				{
-					return false;
-				}
-				cls = cls.getSuperclass();
-			}
-		}
-		return false;
+			return isAssignableFrom(obj.getClass());
+		else
+			return false;
 	}
 
 	/**
