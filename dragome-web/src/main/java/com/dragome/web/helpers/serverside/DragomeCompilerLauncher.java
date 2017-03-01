@@ -87,28 +87,34 @@ public class DragomeCompilerLauncher
 
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
 			{
+				final ArrayList<String> keepClass= new ArrayList<>();
 				final ClasspathFileFilter classpathFilter = configurator.getClasspathFilter();
 				List<ClasspathEntry> entries= classPath.getEntries();
 				for (ClasspathEntry classpathEntry : entries) {
 					classpathEntry.copyFilesToJar(jos, new DefaultClasspathFileFilter()
 					{
-						private ArrayList<String> keepClass= new ArrayList<>();
-
 						public boolean accept(ClasspathFile classpathFile)
 						{
 							boolean result= super.accept(classpathFile);
 
 							String entryName= classpathFile.getPath();
+							entryName = entryName.replace("\\", "/");
+							
 							if (!keepClass.contains(entryName))
 							{
 								keepClass.add(entryName);
 
 								if (entryName.endsWith(".js") || entryName.endsWith(".class") || entryName.contains("MANIFEST") || entryName.contains(".html") || entryName.contains(".css"))
 									result&= true;
+								
+								if(entryName.contains("CollapsableTextWindow$1")) {
+									System.out.println("");
+								}
+								if(classpathFilter != null)
+									result&= classpathFilter.accept(classpathFile);
 							}
-							
-							if(classpathFilter != null)
-								result&= classpathFilter.accept(classpathFile);
+							else 
+								result = false;
 							return result;
 						}
 					});
