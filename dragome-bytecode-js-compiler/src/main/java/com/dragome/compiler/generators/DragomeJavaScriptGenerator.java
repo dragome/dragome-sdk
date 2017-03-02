@@ -85,7 +85,7 @@ public class DragomeJavaScriptGenerator extends Generator
 
 	public static final String DRAGOME_PACKAGE= "dragome";
 
-	private static final String FIELD_TYPE_SEPARATOR= "___";
+	public static final String FIELD_TYPE_SEPARATOR= "___";
 
 	private static int parametersSignaturesCounter;
 

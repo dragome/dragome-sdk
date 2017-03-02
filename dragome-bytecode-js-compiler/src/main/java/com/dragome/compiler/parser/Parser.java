@@ -206,6 +206,16 @@ public class Parser
 			variableDecl.setType(field.getType());
 
 			typeDecl.addField(variableDecl);
+
+			String genericSignature= field.getGenericSignature();
+			if (genericSignature != null && !genericSignature.equals(field.getSignature()))
+			{
+				Type type2= Type.getType(field.getSignature());
+				String normalizedSignature= "$$$" + field.getName() + DragomeJavaScriptGenerator.FIELD_TYPE_SEPARATOR + DragomeJavaScriptGenerator.normalizeExpression(type2.toString());
+				String normalizedClassname= DragomeJavaScriptGenerator.normalizeExpression(type.getClassName());
+				Project.getSingleton().addGenericSignature(normalizedClassname + "|" + normalizedSignature + "|" + genericSignature);
+				//		System.out.println(genericSignature);
+			}
 		}
 
 		for (int i= 0; i < bcelMethods.length; i++)

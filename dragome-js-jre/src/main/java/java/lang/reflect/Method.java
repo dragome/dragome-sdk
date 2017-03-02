@@ -324,9 +324,6 @@ public final class Method extends Executable
 		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
 		{
 			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
-			genericSignature= genericSignature.replaceAll(".*<L", "");
-			genericSignature= genericSignature.replaceAll(";>;", "");
-			genericSignature= genericSignature.replaceAll("/", "_");
 
 			return new ParameterizedTypeImpl(genericSignature);
 		}
