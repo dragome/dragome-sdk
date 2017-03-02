@@ -113,9 +113,9 @@ public class AccessibleObject implements AnnotatedElement
 		accessible = flag;
 	}
 
-	public boolean isAnnotationPresent(Class<? extends Annotation> annotationType)
+	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass)
 	{
-		return false;
+		return getAnnotation(annotationClass) != null;
 	}
 
 	public Annotation[] getDeclaredAnnotations()
