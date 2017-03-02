@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
+import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationEntryWithEntityType;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 import com.dragome.commons.compiler.annotations.MethodAlias;
@@ -537,6 +538,26 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 		A annotation= (A) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex, fieldName));
 		return annotation;
+	}
+	
+	public static List<Annotation> getAnnotationsInternal(Class<?> aClass, String methodName, Integer parameterIndex, String fieldName)
+	{
+		final List<AnnotationEntryWithEntityType> annotationEntrysWithEntityType= AnnotationsHelper.getAnnotationsByClass(aClass);
+		final List<Annotation> ret = new ArrayList<>();
+		
+		final String annotationKey= AnnotationInvocationHandler.getAnnotationKey(fieldName, parameterIndex, methodName, "");
+		for (AnnotationEntryWithEntityType annotationEntryWithEntityType : annotationEntrysWithEntityType)
+		{
+			final AnnotationEntry annotationEntry = annotationEntryWithEntityType.getAnnotationEntry();
+			if (annotationEntry.getAnnotationKey().startsWith(annotationKey) || (annotationKey == null && !annotationEntry.getAnnotationKey().contains("/")))
+			{
+				final Class<? extends Annotation> annotationClass = annotationEntryWithEntityType.getAnnotationType();
+				final Annotation annotation= (Annotation) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex, fieldName));
+				ret.add(annotation);
+			}
+		}
+
+		return ret;
 	}
 
 	public Annotation[] getAnnotations()

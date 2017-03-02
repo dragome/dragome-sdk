@@ -258,7 +258,7 @@ public final class Method extends Executable
 	}
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotation)
 	{
-		return false; //throw new UnsupportedOperationException();
+		return getAnnotation(annotation) != null;
 	}
 
 	public String toString()
