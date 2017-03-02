@@ -414,4 +414,78 @@ public class ReflectionAPITests extends TestCase
 		Class<?> fieldType= field.getType();
 		assertEquals(boolean.class, fieldType);
 	}
+	
+	////////////////////////////////////////////
+	// ParameterizedType test for artemis-odb support
+	////////////////////////////////////////////
+	
+	public static abstract class Component {
+	}
+	
+	public static abstract class BaseComponentMapper<A extends Component> {
+	}
+	
+	public static class ComponentMapper<A extends Component> extends BaseComponentMapper<A> {
+	}
+	
+	public static class CpBdxObject extends Component {
+	}
+	
+    public static class ParameterizedComponent<A> extends Component {
+        A obj;
+    }
+	
+	public static class TestService {
+		ComponentMapper<CpBdxObject> mMapGameobject;
+		ComponentMapper<ParameterizedComponent<Integer>> mMapCharacterProps;
+	}
+	
+	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L112
+	@Test
+	public void testArtemisOdbParameterizedTypeActualTypeInstanceofClass() throws Exception
+	{
+		final Class c = TestService.class;
+		final java.lang.reflect.Field[] fields = c.getDeclaredFields();
+		for(final java.lang.reflect.Field f : fields) {
+			if ( f.getName() == "mMapGameobject" ) {
+				final Type genericType = f.getGenericType();
+				assertTrue(genericType instanceof ParameterizedType);
+				final Type[] actualTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+				assertEquals(actualTypes.length, 1);
+				final Type actualType = actualTypes[0];
+				assertTrue(actualType instanceof Class);
+				assertEquals((Class)actualType, CpBdxObject.class);
+				return;
+			}
+		}
+		fail();
+	}
+	
+	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L114
+	@Test
+	public void testArtemisOdbParameterizedTypeActualTypeInstanceofParameterizedType() throws Exception
+	{
+		final Class c = TestService.class;
+		final java.lang.reflect.Field[] fields = c.getDeclaredFields();
+		for(final java.lang.reflect.Field f : fields) {
+			if ( f.getName() == "mMapCharacterProps" ) {
+				final Type genericType = f.getGenericType();
+				assertTrue(genericType instanceof ParameterizedType);
+				final Type[] actualTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+				assertEquals(actualTypes.length, 1);
+				final Type actualType = actualTypes[0];
+				assertTrue(actualType instanceof ParameterizedType);
+				final Class ret = (Class)((ParameterizedType)actualType).getRawType();
+				assertEquals(ret, ParameterizedComponent.class);
+				return;
+			}
+		}
+		fail();
+	}
+
+	// TODO need write test for case where ParameterizedType instance Of GenericArrayType 
+	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L117
+	
+	////////////////////////////////////////////
+	
 }
