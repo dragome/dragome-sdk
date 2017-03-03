@@ -2813,7 +2813,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>;</xsl:text>
 </xsl:template>
 
-<xsl:template match="dex:shl-long-2addr">
+<xsl:template match="dex:shl-int|dex:shl-int-2addr|dex:shl-long|dex:shl-long-2addr">
   <xsl:text>
            __r</xsl:text>
   <xsl:value-of select="@vx"/>
@@ -2836,7 +2836,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>;</xsl:text>
 </xsl:template>
 
-<xsl:template match="dex:shr-long-2addr">
+<xsl:template match="dex:shr-int|dex:shr-int-2addr|dex:shr-long|dex:shr-long-2addr">
   <xsl:text>
            __r</xsl:text>
   <xsl:value-of select="@vx"/>
@@ -2858,7 +2858,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>;</xsl:text>
 </xsl:template>
 
-<xsl:template match="dex:ushr-long|dex:shr-long">
+<xsl:template match="dex:ushr-int|dex:ushr-int-2addr|dex:ushr-long|dex:ushr-long-2addr">
   <xsl:text>
            __r</xsl:text>
   <xsl:value-of select="@vx"/>
@@ -2868,7 +2868,6 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:value-of select="@vz"/>
   <xsl:text>;</xsl:text>
 </xsl:template>
-
 
 
 <!--  isObjectRef
