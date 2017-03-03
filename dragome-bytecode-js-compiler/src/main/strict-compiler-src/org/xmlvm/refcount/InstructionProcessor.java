@@ -612,4 +612,7 @@ public class InstructionProcessor
 		process_filled_new_array(element, i);
 	}
 
+	static public void process_nop(Element element, InstructionUseInfo i)
+	{
+	}
 }
