@@ -269,6 +269,8 @@ public class Integer extends Number implements Comparable<Integer>
 	{
 		return value ^ (value >>> 32);
 	}
+	
+	
 
 	public static int numberOfTrailingZeros(int i)
 	{
@@ -301,6 +303,13 @@ public class Integer extends Number implements Comparable<Integer>
 			i= y;
 		}
 		return n - ((i << 1) >>> 31);
+	}
+	
+	// The java.lang.Integer.bitCount() method returns the number of one-bits in the two's complement binary representation of the specified int value i. This is sometimes referred to as the population count.
+	// https://blogs.msdn.microsoft.com/jeuge/2005/06/08/bit-fiddling-3/
+	public static int bitCount(final int i) {
+		final int uCount = i - ((i >> 1) & 033333333333) - ((i >> 2) & 011111111111);
+        return ((uCount + (uCount >> 3)) & 030707070707) % 63;
 	}
 
 	public static int numberOfLeadingZeros(int i)

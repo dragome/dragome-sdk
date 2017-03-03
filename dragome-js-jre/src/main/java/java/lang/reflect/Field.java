@@ -17,6 +17,7 @@
 package java.lang.reflect;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -92,7 +93,10 @@ public final class Field extends AccessibleObject implements Member
 
 	public Annotation[] getDeclaredAnnotations()
 	{
-		return null;
+		final List<Annotation> annotations = Class.getAnnotationsInternal(class1, null, null, getName());
+		final Annotation[] ret = new Annotation[annotations.size()];
+		annotations.toArray(ret);
+		return ret;
 	}
 
 	public boolean isSynthetic()
