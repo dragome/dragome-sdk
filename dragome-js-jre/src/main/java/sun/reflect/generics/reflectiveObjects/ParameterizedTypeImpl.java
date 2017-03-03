@@ -48,8 +48,7 @@ public class ParameterizedTypeImpl implements ParameterizedType
 
 	private String removeSpecialChars(String signature)
 	{
-		signature= signature.replace("<L", "");
-		signature= signature.replace(";>;", "");
+		signature= signature.replaceAll("^L", "");
 		signature= signature.replace("/", "_");
 		return signature;
 	}

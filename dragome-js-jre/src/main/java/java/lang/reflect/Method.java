@@ -325,7 +325,7 @@ public final class Method extends Executable
 		{
 			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
 
-			return new ParameterizedTypeImpl(genericSignature);
+			return new ParameterizedTypeImpl(genericSignature.substring(genericSignature.indexOf(")") + 1));
 		}
 		else
 			return getReturnType();
@@ -392,9 +392,9 @@ public final class Method extends Executable
 	{
 		return (getModifiers() & Modifier.BRIDGE) != 0;
 	}
-	
-	 public String toGenericString() 
-	 {
-	    return toString();
-	 }
+
+	public String toGenericString()
+	{
+		return toString();
+	}
 }
