@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.dragome.tests;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -487,5 +490,70 @@ public class ReflectionAPITests extends TestCase
 	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L117
 	
 	////////////////////////////////////////////
+	// Support default keyword in declaring an annotation type
+	// https://github.com/dragome/dragome-sdk/issues/159
+	////////////////////////////////////////////
 	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD, ElementType.TYPE})
+	@Documented
+	public static @interface Wire
+	{
+		boolean injectInherited() default false;
+		boolean failOnNull() default true;
+		String name() default "test";
+	}
+	
+	public static class Const
+	{
+	    public static final String NAME_VAL = "same.name";
+	}
+	
+	public static class SameStaticMember
+	{
+	}
+	
+	public static class SameMember
+	{
+	}
+	
+	public static class SameSystem
+	{
+	    @Wire(name = Const.NAME_VAL)
+	    static public SameStaticMember mSameStaticMember;
+	    
+	    @Wire(failOnNull=false)
+	    static public SameMember mSameMember;
+	}
+	
+	@Test
+	public void testSupportDefaultKeywordInDeclaringAnAnnotationType() throws Exception
+	{
+		final Class c = SameSystem.class;
+		
+		{
+			final java.lang.reflect.Field field = c.getDeclaredField("mSameStaticMember");
+			assertNotNull(field);
+			final Wire wire = field.getAnnotation(Wire.class);
+			assertNotNull(wire);
+			
+			assertEquals(wire.name(), Const.NAME_VAL);
+			assertTrue(wire.failOnNull());
+			assertFalse(wire.injectInherited());
+		}
+
+		{
+			final java.lang.reflect.Field field = c.getDeclaredField("mSameMember");
+			assertNotNull(field);
+			final Wire wire = field.getAnnotation(Wire.class);
+			assertNotNull(wire);
+			
+			assertEquals(wire.name(), "test");
+			assertFalse(wire.failOnNull());
+			assertFalse(wire.injectInherited());
+		}
+		
+	}
+	
+	////////////////////////////////////////////
 }
