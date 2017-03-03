@@ -21,6 +21,8 @@ import java.util.List;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+
 public final class Field extends AccessibleObject implements Member
 {
 	private String signature;
@@ -114,10 +116,15 @@ public final class Field extends AccessibleObject implements Member
 
 	public Type getGenericType()
 	{
-		//		if (getName() != null)
-		//			return getGenericInfo().getGenericType(); // TODO needs implementation.
-		//		else  
-		return getType();
+		Class<?> declaringClass= getDeclaringClass();
+		ScriptHelper.put("declaringClass", declaringClass, this);
+		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
+		{
+			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
+			return new ParameterizedTypeImpl(genericSignature);
+		}
+		else
+			return getType();
 	}
 
 	public boolean equals(Object object)
@@ -127,17 +134,17 @@ public final class Field extends AccessibleObject implements Member
 
 	public boolean getBoolean(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (boolean)this.get(object);
+		return (boolean) this.get(object);
 	}
 
 	public byte getByte(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (byte)this.get(object);
+		return (byte) this.get(object);
 	}
 
 	public char getChar(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (char)this.get(object);
+		return (char) this.get(object);
 	}
 
 	public Class<?> getDeclaringClass()
@@ -147,34 +154,33 @@ public final class Field extends AccessibleObject implements Member
 
 	public double getDouble(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (double)this.get(object);
+		return (double) this.get(object);
 	}
 
 	public float getFloat(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (float)this.get(object);
+		return (float) this.get(object);
 	}
 
 	public int getInt(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (int)this.get(object);
+		return (int) this.get(object);
 	}
 
 	public long getLong(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (long)this.get(object);
+		return (long) this.get(object);
 	}
 
 	public short getShort(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (short)this.get(object);
+		return (short) this.get(object);
 	}
 
 	public int getModifiers()
 	{
 		return 0;
 	}
-
 
 	native String getSignature();
 

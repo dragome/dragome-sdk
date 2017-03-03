@@ -324,11 +324,8 @@ public final class Method extends Executable
 		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
 		{
 			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
-			genericSignature= genericSignature.replaceAll(".*<L", "");
-			genericSignature= genericSignature.replaceAll(";>;", "");
-			genericSignature= genericSignature.replaceAll("/", "_");
 
-			return new ParameterizedTypeImpl(genericSignature);
+			return new ParameterizedTypeImpl(genericSignature.substring(genericSignature.indexOf(")") + 1));
 		}
 		else
 			return getReturnType();
@@ -395,9 +392,9 @@ public final class Method extends Executable
 	{
 		return (getModifiers() & Modifier.BRIDGE) != 0;
 	}
-	
-	 public String toGenericString() 
-	 {
-	    return toString();
-	 }
+
+	public String toGenericString()
+	{
+		return toString();
+	}
 }
