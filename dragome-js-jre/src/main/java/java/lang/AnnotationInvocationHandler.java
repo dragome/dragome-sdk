@@ -30,7 +30,13 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 	{
 		String name= method.getName();
 		if (name.equals("toString"))
+		{
 			return clazz.toString();
+		}
+		else if (name.equals("annotationType"))
+		{
+			return annotationClass;			
+		}
 		else
 		{
 			List<AnnotationEntry> annotationEntries= new ArrayList<>(AnnotationsHelper.getAnnotationsByType(annotationClass).getEntries());
