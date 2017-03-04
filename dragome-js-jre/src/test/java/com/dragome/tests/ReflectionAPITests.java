@@ -574,4 +574,14 @@ public class ReflectionAPITests extends TestCase
 		}
 
 	}
+
+	@Test
+	public void testGetMethodNoParamCall() throws Exception
+	{
+		long expected = System.currentTimeMillis();
+		Method method = System.class.getMethod("currentTimeMillis");
+		Object invoke = method.invoke(null);
+		Long toExpect = (Long)invoke;
+		assertTrue(toExpect >= expected);
+	}
 }
