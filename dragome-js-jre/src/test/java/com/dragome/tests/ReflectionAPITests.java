@@ -211,8 +211,17 @@ public class ReflectionAPITests extends TestCase
 	{
 		Class<?>[] interfaces= ReflectionClass.class.getSuperclass().getInterfaces();
 		assertEquals(2, interfaces.length);
-		assertEquals(ReflectionInterface1.class, interfaces[0]);
-		assertEquals(ReflectionInterface2.class, interfaces[1]);
+		Class interface1 = null;
+		Class interface2 = null;
+		// ReflectionInterface1 may not be first so we need to search
+		for(int i = 0; i < interfaces.length;i++) {
+			if(interface1 == null && ReflectionInterface1.class == interfaces[i])
+				interface1 = interfaces[i];
+			if(interface2 == null && ReflectionInterface2.class == interfaces[i])
+				interface2 = interfaces[i];
+		}
+		assertEquals(ReflectionInterface1.class, interface1);
+		assertEquals(ReflectionInterface2.class, interface2);
 	}
 
 	@Test
