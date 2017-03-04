@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.AnnotationDefault;
 import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.Annotations;
 import org.apache.bcel.classfile.Attribute;
@@ -48,6 +50,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.DescendingVisitor;
+import org.apache.bcel.classfile.ElementValue;
 import org.apache.bcel.classfile.ElementValuePair;
 import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.Field;
@@ -355,7 +358,9 @@ public class Parser
 	{
 		for (AnnotationEntry entry : entries)
 		{
-			String key= Type.getType(entry.getAnnotationType()) + "#" + prefix;
+			Type type= Type.getType(entry.getAnnotationType());
+			addDefaults(type);
+			String key= type + "#" + prefix;
 
 			if (entry.getElementValuePairs().length == 0)
 				result.put(key, " ");
@@ -366,6 +371,37 @@ public class Parser
 				result.put(key + elementValuePair.getNameString(), elementValuePair.getValue().toString());
 			}
 		}
+	}
+	
+	private void addDefaults(Type type)
+	{
+		try
+		{
+			ClassUnit classUnit= Project.singleton.getClassUnit(type.toString());
+			JavaClass aClass= Repository.lookupClass(type.toString());
+			for (Method method : aClass.getMethods())
+			{
+				final AnnotationDefault a= (AnnotationDefault) findAttribute("AnnotationDefault", method.getAttributes());
+				classUnit.addAnnotationDefault(method.getName(), a);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Attribute findAttribute(final String name, final Attribute[] all)
+	{
+		final List<Attribute> chosenAttrsList= new ArrayList<>();
+		for (final Attribute element : all)
+		{
+			if (element.getName().equals(name))
+			{
+				chosenAttrsList.add(element);
+			}
+		}
+		return chosenAttrsList.isEmpty() ? null : chosenAttrsList.get(0);
 	}
 
 	public void parseMethod(TypeDeclaration typeDecl, MethodDeclaration methodDecl, Method method)

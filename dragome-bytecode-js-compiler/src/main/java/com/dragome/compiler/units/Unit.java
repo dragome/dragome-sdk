@@ -6,6 +6,8 @@ import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.bcel.classfile.AnnotationDefault;
+
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.utils.Log;
 
@@ -23,7 +25,7 @@ public abstract class Unit implements Serializable
 	{
 	}
 
-	public abstract void write(int depth, Writer writer) throws IOException;
+	public abstract void write(int depth, Writer writer, AnnotationDefault... annotationDefaultFound) throws IOException;
 
 	String getIndent(int depth)
 	{

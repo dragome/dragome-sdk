@@ -1,6 +1,7 @@
 package java.lang;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
+import com.dragome.commons.javascript.ScriptHelper;
 
 public class AnnotationInvocationHandler<T> implements InvocationHandler
 {
@@ -26,7 +28,7 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 		this.fieldName= fieldName;
 	}
 
-	public Object invoke(Object proxy, Method method, Object[] args)
+	public Object invoke(Object proxy, Method method, Object[] args) throws java.lang.ClassNotFoundException
 	{
 		String name= method.getName();
 		if (name.equals("toString"))
@@ -35,7 +37,7 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 		}
 		else if (name.equals("annotationType"))
 		{
-			return annotationClass;			
+			return annotationClass;
 		}
 		else
 		{
@@ -46,11 +48,43 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 				String key= getAnnotationKey(fieldName, parameterIndex, methodName, name);
 
 				if (annotationEntry.getType().equals(clazz) && annotationEntry.getAnnotationKey().startsWith(key))
-					return annotationEntry.getAnnotationValue();
+				{
+					java.lang.String annotationValue= annotationEntry.getAnnotationValue();
+					return convertResult(method.getReturnType(), annotationValue);
+				}
 			}
 
-			return null;
+			String result= (String) ScriptHelper.eval("this.$$$annotationClass___java_lang_Class.$$$nativeClass___java_lang_Object.$$members[method.$$$signature___java_lang_String].apply()", this);
+			return convertResult(method.getReturnType(), result);
 		}
+	}
+
+	private Object convertResult(Class<?> type, String annotationValue) throws java.lang.ClassNotFoundException
+	{
+		if (type.isArray())
+		{
+			List<Object> result= new ArrayList<>();
+
+			Class<?> componentType= type.getComponentType();
+			String[] items= annotationValue.replace("{", "").replace("}", "").split(",");
+			for (String item : items)
+			{
+				Object convertResult= convertResult(componentType, item);
+				result.add(convertResult);
+			}
+
+			return result.toArray();
+		}
+		else if (type.equals(Boolean.class) || type.equals(boolean.class))
+			return Boolean.parseBoolean(annotationValue);
+		else if (type.equals(Class.class))
+			return Class.forName(annotationValue.substring(1, annotationValue.length() - 1).replace("/", "."));
+		else if (type.equals(Integer.class) || type.equals(int.class))
+			return Integer.parseInt(annotationValue);
+		else if (type.equals(Double.class) || type.equals(double.class))
+			return Double.parseDouble(annotationValue);
+		else
+			return annotationValue;
 	}
 
 	public static String getAnnotationKey(String fieldName, Integer parameterIndex, String methodName, String name)

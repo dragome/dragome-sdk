@@ -302,6 +302,9 @@ public final class Method extends Executable
 
 	private String fixArrayClassName(String methodName)
 	{
+		if (methodName.endsWith("_ARRAYTYPE"))
+			methodName= methodName.replace("_ARRAYTYPE", "[]");
+
 		if (methodName.endsWith("[]"))
 			methodName= "[L" + methodName.substring(0, methodName.length() - 2) + ";";
 		return methodName;

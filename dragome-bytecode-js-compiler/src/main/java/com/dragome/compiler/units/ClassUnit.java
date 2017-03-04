@@ -33,6 +33,7 @@ import java.io.Writer;
 import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -42,6 +43,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.bcel.classfile.AnnotationDefault;
 import org.apache.commons.io.output.StringBuilderWriter;
 
 import com.dragome.commons.compiler.classpath.ClasspathFile;
@@ -247,7 +249,7 @@ public class ClassUnit extends Unit
 		}
 	}
 
-	public void write(int depth, Writer writer2) throws IOException
+	public void write(int depth, Writer writer2, AnnotationDefault... annotationDefaultFound) throws IOException
 	{
 		if (!isTainted() || !isResolved() || isWritten())
 			return;
@@ -636,7 +638,26 @@ public class ClassUnit extends Unit
 			writer.write(extractMethodDefinition(alternativeCompilation, methodUnit.getNameAndSignature()));
 		}
 		else
+		{
+			if (member instanceof MethodUnit)
+			{
+				AnnotationDefault annotationDefaultFound= null;
+
+				if (!annotationDefaults.isEmpty())
+					for (Entry<String, AnnotationDefault> annotationDefault : annotationDefaults.entrySet())
+						if (member.getSignature() != null && member.getSignature().toString().startsWith(annotationDefault.getKey() + "("))
+							annotationDefaultFound= annotationDefault.getValue();
+
+				MethodUnit methodUnit= (MethodUnit) member;
+				if (annotationDefaultFound != null)
+				{
+					methodUnit.write(depth + 1, writer, annotationDefaultFound);
+					return;
+				}
+			}
+
 			member.write(depth + 1, writer);
+		}
 	}
 
 	private String extractMethodDefinition(String compiledCode, String nameAndSignature)
@@ -657,7 +678,7 @@ public class ClassUnit extends Unit
 			{
 				if (dependency.replace("[", "").length() == 1)
 					continue;
-				
+
 				ClassUnit dependencyClassUnit= project.getClassUnit(dependency);
 				dependencyClassUnit.setTainted();
 				//		dependencyClassUnit.write(depth, writer);
@@ -758,6 +779,8 @@ public class ClassUnit extends Unit
 
 	private Map<String, String> annotationsValues;
 
+	private Map<String, AnnotationDefault> annotationDefaults= new HashMap<>();
+
 	public List<String> getNotReversibleMethods()
 	{
 		return notReversibleMethods;
@@ -791,5 +814,10 @@ public class ClassUnit extends Unit
 	public void setLastCRC(long crc)
 	{
 		lastCRC= crc;
+	}
+
+	public void addAnnotationDefault(String name, AnnotationDefault annotationDefault)
+	{
+		annotationDefaults.put(name, annotationDefault);
 	}
 }
