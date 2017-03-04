@@ -17,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -531,10 +532,12 @@ public class ReflectionAPITests extends TestCase
 
 	public static class SameStaticMember
 	{
+		public int mVal;
 	}
 
 	public static class SameMember
 	{
+		public int mVal;
 	}
 
 	public static class SameSystem
@@ -543,11 +546,11 @@ public class ReflectionAPITests extends TestCase
 		static public SameStaticMember mSameStaticMember;
 
 		@Wire(failOnNull= false)
-		static public SameMember mSameMember;
+		public SameMember mSameMember;
 	}
 
 	@Test
-	public void testSupportDefaultKeywordInDeclaringAnAnnotationType() throws Exception
+	public void testGetDeclaredFieldsForStaticField() throws Exception
 	{
 		final Class<?> c= SameSystem.class;
 
@@ -574,4 +577,61 @@ public class ReflectionAPITests extends TestCase
 		}
 
 	}
+	
+	@Test
+	public void testSupportStaticFieldAnnotationType() throws Exception
+	{
+		final Class<?> c= SameSystem.class;
+		final Field[] fields= c.getDeclaredFields();
+		for (final Field f : fields)
+		{
+			if (f.getName() == "mSameStaticMember")
+			{
+				return;
+			}
+		}
+		fail();
+	}
+	
+	
+	@Test
+	public void testSupportSetField() throws Exception
+	{
+		final Class<?> c= SameSystem.class;
+		final SameSystem sameSystem = new SameSystem();
+		{
+			final Field field= c.getDeclaredField("mSameStaticMember");
+			assertNotNull(field);
+			assertTrue(Modifier.isStatic(field.getModifiers()));
+			
+			final SameStaticMember sameStaticMember = new SameStaticMember();
+			sameStaticMember.mVal = 123;
+			field.set(sameSystem, sameStaticMember);
+		}
+
+		{
+			final Field field= c.getDeclaredField("mSameMember");
+			assertNotNull(field);
+			assertFalse(Modifier.isStatic(field.getModifiers()));
+			
+			final SameMember sameMember = new SameMember();
+			sameMember.mVal = 234;
+			field.set(sameSystem, sameMember);
+		}
+		
+		assertNotNull(sameSystem.mSameStaticMember);
+		assertNotNull(sameSystem.mSameMember);
+		
+		assertEquals(sameSystem.mSameStaticMember.mVal, 123);
+		assertEquals(sameSystem.mSameMember.mVal, 234);
+		
+		{
+			final SameSystem sameSystemTemp = new SameSystem();
+			sameSystemTemp.mSameStaticMember = new SameStaticMember();
+			sameSystemTemp.mSameStaticMember.mVal = 543;
+			
+			assertEquals(sameSystem.mSameStaticMember.mVal, 543);
+		}
+	}
+	
 }
