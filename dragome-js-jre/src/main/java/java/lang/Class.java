@@ -597,7 +597,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			ScriptHelper.put("signatures", signatures, this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$$$signatures) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
 			addFields(signatures, Modifier.PUBLIC);
 //			signatures= new String[0];
 //			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
