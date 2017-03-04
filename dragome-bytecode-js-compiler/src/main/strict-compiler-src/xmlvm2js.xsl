@@ -2870,6 +2870,13 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 </xsl:template>
 
 
+
+<!--  dex:nop
+      ===============  -->
+<xsl:template match="dex:nop" />
+
+
+
 <!--  isObjectRef
       ===========  -->
 <xsl:function name="vm:isObjectRef" as="xs:boolean">
