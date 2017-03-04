@@ -59,7 +59,7 @@ public class CallMethodTest extends TestCase {
         for (int i = 0; i < 10; i++) {
             j++;
         }
-        assert(j == 10);
+        assertTrue(j == 10);
 	}
 	
 	@Test
