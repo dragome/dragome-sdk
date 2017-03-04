@@ -28,15 +28,17 @@ public class ParameterizedTypeImpl implements ParameterizedType
 	public ParameterizedTypeImpl(String genericSignature)
 	{
 		this.genericSignature= genericSignature;
-	}
-
-	public Type[] getActualTypeArguments()
-	{
-		Class<?> type;
 		try
 		{
-			type= Class.forName(genericSignature);
-			return new Type[] { type };
+			String actualTypeArgumentsString= genericSignature.substring(genericSignature.indexOf("<") + 2, genericSignature.lastIndexOf(">") - 1);
+			if (actualTypeArgumentsString.contains("<"))
+				actualTypeArguments= new Type[] { new ParameterizedTypeImpl(actualTypeArgumentsString) };
+			else
+				actualTypeArguments= new Type[] { Class.forName(removeSpecialChars(actualTypeArgumentsString)) };
+
+			String rawTypeString= genericSignature.substring(0, genericSignature.indexOf("<"));
+
+			rawType= Class.forName(removeSpecialChars(rawTypeString));
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -44,9 +46,21 @@ public class ParameterizedTypeImpl implements ParameterizedType
 		}
 	}
 
+	private String removeSpecialChars(String signature)
+	{
+		signature= signature.replaceAll("^L", "");
+		signature= signature.replace("/", "_");
+		return signature;
+	}
+
+	public Type[] getActualTypeArguments()
+	{
+		return actualTypeArguments;
+	}
+
 	public Type getRawType()
 	{
-		return null;
+		return rawType;
 	}
 
 	public Type getOwnerType()

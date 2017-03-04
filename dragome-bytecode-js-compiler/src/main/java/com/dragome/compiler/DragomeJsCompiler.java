@@ -30,9 +30,13 @@ package com.dragome.compiler;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompilerConfiguration;
@@ -315,7 +319,12 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		logger.infoSameLine("Compiled classes: " + compileCount);
 		logger.infoSameLine("\n");
 		//	logger.info(timesName("Compiled|Compiled", project.getBadMethods(), "method|methods") + " using compiler");
-		logger.infoSameLine("Total time: " + (System.currentTimeMillis() - startTime) + " ms");
+		{
+			final long spendTimeMs = System.currentTimeMillis() - startTime;
+			final DateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
+			df.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+			logger.infoSameLine("Total compile time: " + df.format(new Date(spendTimeMs)));
+		}
 		logger.infoSameLine("\n");
 
 		if (errorCount > 0)

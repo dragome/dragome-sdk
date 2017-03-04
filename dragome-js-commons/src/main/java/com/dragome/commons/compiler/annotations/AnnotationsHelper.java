@@ -21,11 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
+
 public class AnnotationsHelper
 {
 	public static class AnnotationContainer
 	{
-		public class AnnotationEntry
+		public static class AnnotationEntry
 		{
 			private Class<?> type;
 
@@ -54,7 +56,7 @@ public class AnnotationsHelper
 				this.annotationValue= annotationValue;
 			}
 		}
-
+		
 		private List<AnnotationEntry> entries= new ArrayList<AnnotationsHelper.AnnotationContainer.AnnotationEntry>();
 
 		public List<AnnotationEntry> getEntries()
@@ -78,5 +80,43 @@ public class AnnotationsHelper
 			annotationsByType.put(aType, annotationContainer= new AnnotationContainer());
 
 		return annotationContainer;
+	}
+	
+	public static class AnnotationEntryWithEntityType
+	{
+		private AnnotationEntry annotationEntry;
+		private Class<? extends Annotation> aType;
+		
+		public AnnotationEntry getAnnotationEntry()
+		{
+			return annotationEntry;
+		}
+		
+		public Class<? extends Annotation> getAnnotationType()
+		{
+			return aType;
+		}
+		
+		public AnnotationEntryWithEntityType(final AnnotationEntry annotationEntry, final Class<? extends Annotation> aType)
+		{
+			this.annotationEntry = annotationEntry;
+			this.aType = aType;
+		}
+	}
+	
+	public static List<AnnotationEntryWithEntityType> getAnnotationsByClass(final Class<?> aClass)
+	{
+		final List<AnnotationEntryWithEntityType> ret = new ArrayList<AnnotationEntryWithEntityType>();
+		for(final Map.Entry<Class<? extends Annotation>, AnnotationContainer> entrys : annotationsByType.entrySet())
+		{
+			for (final AnnotationEntry annotationEntry : entrys.getValue().entries)
+			{
+				if (annotationEntry.getType().equals(aClass))
+				{
+					ret.add(new AnnotationEntryWithEntityType(annotationEntry, entrys.getKey()));
+				}
+			}
+		}
+		return ret;
 	}
 }

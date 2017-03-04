@@ -189,8 +189,44 @@ public final class Character
 		return ScriptHelper.evalBoolean("null != String.fromCharCode(c).match(/[A-Z\\d]/i)", null);
 	};
 
+	// Converts the specified character (Unicode code point) to its UTF-16 representation. If the specified code point is a BMP (Basic Multilingual Plane or Plane 0) value, the same value is stored in dst[dstIndex], and 1 is returned. If the specified code point is a supplementary character, its surrogate values are stored in dst[dstIndex] (high-surrogate) and dst[dstIndex+1] (low-surrogate), and 2 is returned.
+	// https://docs.oracle.com/javase/8/docs/api/java/lang/Character.html#toChars-int-char:A-int-
 	public static int toChars(int codePoint, char[] dst, int dstIndex)
 	{
-		return 1;
+		if (0 <= codePoint && codePoint <= 0xFFFF)
+		{
+			dst[dstIndex] = (char) codePoint;
+			return 1;
+		}
+		else
+		{
+			// https://unicodebook.readthedocs.io/unicode_encodings.html
+			assert(0x10000 <= codePoint && codePoint <= 0x10FFFF);
+		    final int code = (codePoint - 0x10000);
+		    dst[dstIndex] = (char) (0x0000D800 | (code >> 10));
+		    dst[dstIndex] = (char) (0x0000DC00 | (code & 0x000003FF));
+		    return 2;
+		}
 	}
+	
+	// Converts the specified character (Unicode code point) to its UTF-16 representation stored in a char array. If the specified code point is a BMP (Basic Multilingual Plane or Plane 0) value, the resulting char array has the same value as codePoint. If the specified code point is a supplementary code point, the resulting char array has the corresponding surrogate pair.
+	// https://docs.oracle.com/javase/8/docs/api/java/lang/Character.html#toChars-int-
+	public static char[] toChars(int codePoint)
+	{
+		if (0 <= codePoint && codePoint <= 0xFFFF)
+		{
+			return new char[] {(char) codePoint};
+		}
+		else
+		{
+			// https://unicodebook.readthedocs.io/unicode_encodings.html
+			assert(0x10000 <= codePoint && codePoint <= 0x10FFFF);
+		    final int code = (codePoint - 0x10000);
+		    return new char[] {
+		    		(char) (0x0000D800 | (code >> 10)),
+		    		(char) (0x0000DC00 | (code & 0x000003FF))
+		    };
+		}
+	}
+	
 }

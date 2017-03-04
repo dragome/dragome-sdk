@@ -489,7 +489,7 @@ public class Project implements Serializable
 			for (String genericSignature : genericSignatures)
 			{
 				String[] split= genericSignature.split("\\|");
-				if (getWrittenSignatures().contains(split[0] + "|" + split[1]))
+//				if (getWrittenSignatures().contains(split[0] + "|" + split[1]))
 					writer.write("addSignatureTo(" + split[0] + ",\"" + split[1] + "\", \"" + split[2] + "\");\n");
 			}
 		}

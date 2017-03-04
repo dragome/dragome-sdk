@@ -258,7 +258,7 @@ public final class Method extends Executable
 	}
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotation)
 	{
-		return false; //throw new UnsupportedOperationException();
+		return getAnnotation(annotation) != null;
 	}
 
 	public String toString()
@@ -302,6 +302,9 @@ public final class Method extends Executable
 
 	private String fixArrayClassName(String methodName)
 	{
+		if (methodName.endsWith("_ARRAYTYPE"))
+			methodName= methodName.replace("_ARRAYTYPE", "[]");
+
 		if (methodName.endsWith("[]"))
 			methodName= "[L" + methodName.substring(0, methodName.length() - 2) + ";";
 		return methodName;
@@ -324,11 +327,8 @@ public final class Method extends Executable
 		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
 		{
 			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
-			genericSignature= genericSignature.replaceAll(".*<L", "");
-			genericSignature= genericSignature.replaceAll(";>;", "");
-			genericSignature= genericSignature.replaceAll("/", "_");
 
-			return new ParameterizedTypeImpl(genericSignature);
+			return new ParameterizedTypeImpl(genericSignature.substring(genericSignature.indexOf(")") + 1));
 		}
 		else
 			return getReturnType();
@@ -395,9 +395,9 @@ public final class Method extends Executable
 	{
 		return (getModifiers() & Modifier.BRIDGE) != 0;
 	}
-	
-	 public String toGenericString() 
-	 {
-	    return toString();
-	 }
+
+	public String toGenericString()
+	{
+		return toString();
+	}
 }
