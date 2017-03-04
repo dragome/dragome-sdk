@@ -6,6 +6,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+import org.apache.bcel.classfile.AnnotationDefault;
+import org.apache.bcel.classfile.ArrayElementValue;
+import org.apache.bcel.classfile.ClassElementValue;
+import org.apache.bcel.classfile.ElementValue;
+import org.apache.bcel.generic.Type;
+
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.utils.Log;
 
@@ -23,7 +29,7 @@ public abstract class ProcedureUnit extends MemberUnit
 	public ProcedureUnit(Signature theSignature, ClassUnit theDeclaringClazz, String nameAndSignature)
 	{
 		super(theSignature, theDeclaringClazz);
-		this.nameAndSignature = nameAndSignature;
+		this.nameAndSignature= nameAndSignature;
 	}
 
 	public void addTarget(Signature targetSignature)
@@ -46,12 +52,45 @@ public abstract class ProcedureUnit extends MemberUnit
 		}
 	}
 
-	public void write(int depth, Writer writer) throws IOException
+	public void write(int depth, Writer writer, AnnotationDefault... annotationDefaultFound) throws IOException
 	{
-		if (getData() == null)
+		String data= getData();
+		if (data == null)
 			return;
 		Log.getLogger().debug(getIndent(depth) + getSignature());
-		writer.write(getData());
+
+		if (annotationDefaultFound.length > 0)
+		{
+			String data1= data.substring(0, data.length() - 1);
+
+			ElementValue defaultValue= annotationDefaultFound[0].getDefaultValue();
+			if (defaultValue.getElementValueType() == 115)
+			{
+				data1+= "return \"" + defaultValue.toString() + "\";\n}";
+			}
+			else
+			{
+				if (defaultValue instanceof ArrayElementValue)
+				{
+					ArrayElementValue arrayElementValue= (ArrayElementValue) defaultValue;
+					data1+= "return \"" + defaultValue.toString() + "\";\n}";
+				}
+				else if (defaultValue instanceof ClassElementValue)
+				{
+					ClassElementValue classElementValue= (ClassElementValue) defaultValue;
+					String classString= classElementValue.getClassString();
+					data1+= "return \"" + classString + "\";\n}";
+				}
+				else
+				{
+					data1+= "return \"" + defaultValue.toString() + "\";\n}";
+				}
+			}
+
+			writer.write(data1);
+		}
+		else
+			writer.write(data);
 	}
 
 	public String getData()

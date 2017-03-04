@@ -31,11 +31,13 @@ import junit.framework.TestCase;
 @RunWith(DragomeTestRunner.class)
 public class ReflectionAPITests extends TestCase
 {
-	public static class ReflectionClass2 {
-		private boolean field1 = true;
+	public static class ReflectionClass2
+	{
+		private boolean field1= true;
 		public int field2;
 
-		public boolean getField1() {
+		public boolean getField1()
+		{
 			return field1;
 		}
 	}
@@ -45,7 +47,8 @@ public class ReflectionAPITests extends TestCase
 	{
 		String value1() default "1";
 		String value2() default "1";
-		String[] value3() default {"1", "2"};
+		String[] value3() default { "1", "2" };
+		Class<?> value4() default SuperClass.class;
 	}
 
 	@Annotation1
@@ -68,10 +71,10 @@ public class ReflectionAPITests extends TestCase
 		@Annotation1(value1= "value1:field1")
 		public boolean field1;
 
-		@Annotation1
+		@Annotation1(value4= Number.class)
 		public boolean field2;
 
-		@Annotation1(value3 = {"3", "4"})
+		@Annotation1(value3= { "3", "4" })
 		public boolean field3;
 
 		@Annotation1(value1= "methodWithNoArguments")
@@ -102,11 +105,11 @@ public class ReflectionAPITests extends TestCase
 			return null;
 		}
 	}
-	
+
 	@Test
 	public void testSuperClassIsInstanceOfInterfaces() throws Exception
 	{
-		final SuperClass sc = new SuperClass();
+		final SuperClass sc= new SuperClass();
 		assertTrue(ReflectionInterface1.class.isInstance(sc));
 		assertTrue(ReflectionInterface2.class.isInstance(sc));
 	}
@@ -332,6 +335,19 @@ public class ReflectionAPITests extends TestCase
 	}
 
 	@Test
+	public void testGettingAnnotationOfTypeClassFromField() throws Exception
+	{
+		Class<ReflectionClass> class1= ReflectionClass.class;
+		Field field= class1.getField("field1");
+		Annotation1 annotation1= field.getAnnotation(Annotation1.class);
+		assertEquals(SuperClass.class, annotation1.value4());
+
+		Field field2= class1.getField("field2");
+		Annotation1 annotation2= field2.getAnnotation(Annotation1.class);
+		assertEquals(Number.class, annotation2.value4());
+	}
+
+	@Test
 	public void testGettingAnnotationDefaultValueFromField() throws Exception
 	{
 		Class<ReflectionClass> class1= ReflectionClass.class;
@@ -346,7 +362,7 @@ public class ReflectionAPITests extends TestCase
 		Class<ReflectionClass> class1= ReflectionClass.class;
 		Field field3= class1.getField("field3");
 		Annotation1 annotation1= field3.getAnnotation(Annotation1.class);
-		String[] value3 = annotation1.value3();
+		String[] value3= annotation1.value3();
 		assertEquals("4", value3[1]);
 	}
 
@@ -371,41 +387,41 @@ public class ReflectionAPITests extends TestCase
 	@Test
 	public void testSetFieldPrivateWithFalse() throws Exception
 	{
-		Field field = ReflectionClass2.class.getDeclaredField("field1");
+		Field field= ReflectionClass2.class.getDeclaredField("field1");
 		field.setAccessible(true);
-		ReflectionClass2 obj = new ReflectionClass2();
+		ReflectionClass2 obj= new ReflectionClass2();
 		field.set(obj, false);
-		obj.field1 = false;
+		obj.field1= false;
 		assertEquals(false, obj.field1);
 	}
 
 	@Test
 	public void testGetFieldWithTrue() throws Exception
 	{
-		Field field = ReflectionClass.class.getField("field1");
-		ReflectionClass obj = new ReflectionClass();
-		obj.field1 = true;
-		Object boolValue = field.get(obj);
+		Field field= ReflectionClass.class.getField("field1");
+		ReflectionClass obj= new ReflectionClass();
+		obj.field1= true;
+		Object boolValue= field.get(obj);
 		assertEquals(true, boolValue);
 	}
 
 	@Test
 	public void testGetFieldPrivateWithTrue() throws Exception
 	{
-		Field field = ReflectionClass2.class.getDeclaredField("field1");
+		Field field= ReflectionClass2.class.getDeclaredField("field1");
 		field.setAccessible(true);
-		ReflectionClass2 obj = new ReflectionClass2();
-		Object boolValue = field.get(obj);
+		ReflectionClass2 obj= new ReflectionClass2();
+		Object boolValue= field.get(obj);
 		assertEquals(true, boolValue);
 	}
 
 	@Test
 	public void testGetFieldInteger() throws Exception
 	{
-		Field field = ReflectionClass2.class.getField("field2");
-		ReflectionClass2 obj = new ReflectionClass2();
-		obj.field2 = 10;
-		Object intValue = field.get(obj);
+		Field field= ReflectionClass2.class.getField("field2");
+		ReflectionClass2 obj= new ReflectionClass2();
+		obj.field2= 10;
+		Object intValue= field.get(obj);
 		assertEquals(10, intValue);
 	}
 
@@ -417,68 +433,72 @@ public class ReflectionAPITests extends TestCase
 		Class<?> fieldType= field.getType();
 		assertEquals(boolean.class, fieldType);
 	}
-	
-	////////////////////////////////////////////
-	// ParameterizedType test for artemis-odb support
-	////////////////////////////////////////////
-	
-	public static abstract class Component {
+
+	public static abstract class Component
+	{
 	}
-	
-	public static abstract class BaseComponentMapper<A extends Component> {
+
+	public static abstract class BaseComponentMapper<A extends Component>
+	{
 	}
-	
-	public static class ComponentMapper<A extends Component> extends BaseComponentMapper<A> {
+
+	public static class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
+	{
 	}
-	
-	public static class CpBdxObject extends Component {
+
+	public static class CpBdxObject extends Component
+	{
 	}
-	
-    public static class ParameterizedComponent<A> extends Component {
-        A obj;
-    }
-	
-	public static class TestService {
+
+	public static class ParameterizedComponent<A> extends Component
+	{
+		A obj;
+	}
+
+	public static class TestService
+	{
 		ComponentMapper<CpBdxObject> mMapGameobject;
 		ComponentMapper<ParameterizedComponent<Integer>> mMapCharacterProps;
 	}
-	
-	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L112
+
 	@Test
-	public void testArtemisOdbParameterizedTypeActualTypeInstanceofClass() throws Exception
+	public void testParameterizedTypeActualTypeInstanceofClass() throws Exception
 	{
-		final Class c = TestService.class;
-		final java.lang.reflect.Field[] fields = c.getDeclaredFields();
-		for(final java.lang.reflect.Field f : fields) {
-			if ( f.getName() == "mMapGameobject" ) {
-				final Type genericType = f.getGenericType();
+		final Class<?> c= TestService.class;
+		final Field[] fields= c.getDeclaredFields();
+		for (final Field f : fields)
+		{
+			if (f.getName() == "mMapGameobject")
+			{
+				final Type genericType= f.getGenericType();
 				assertTrue(genericType instanceof ParameterizedType);
-				final Type[] actualTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+				final Type[] actualTypes= ((ParameterizedType) genericType).getActualTypeArguments();
 				assertEquals(actualTypes.length, 1);
-				final Type actualType = actualTypes[0];
+				final Type actualType= actualTypes[0];
 				assertTrue(actualType instanceof Class);
-				assertEquals((Class)actualType, CpBdxObject.class);
+				assertEquals((Class<?>) actualType, CpBdxObject.class);
 				return;
 			}
 		}
 		fail();
 	}
-	
-	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L114
+
 	@Test
-	public void testArtemisOdbParameterizedTypeActualTypeInstanceofParameterizedType() throws Exception
+	public void testParameterizedTypeActualTypeInstanceofParameterizedType() throws Exception
 	{
-		final Class c = TestService.class;
-		final java.lang.reflect.Field[] fields = c.getDeclaredFields();
-		for(final java.lang.reflect.Field f : fields) {
-			if ( f.getName() == "mMapCharacterProps" ) {
-				final Type genericType = f.getGenericType();
+		final Class<?> c= TestService.class;
+		final Field[] fields= c.getDeclaredFields();
+		for (final Field f : fields)
+		{
+			if (f.getName() == "mMapCharacterProps")
+			{
+				final Type genericType= f.getGenericType();
 				assertTrue(genericType instanceof ParameterizedType);
-				final Type[] actualTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+				final Type[] actualTypes= ((ParameterizedType) genericType).getActualTypeArguments();
 				assertEquals(actualTypes.length, 1);
-				final Type actualType = actualTypes[0];
+				final Type actualType= actualTypes[0];
 				assertTrue(actualType instanceof ParameterizedType);
-				final Class ret = (Class)((ParameterizedType)actualType).getRawType();
+				final Class<?> ret= (Class<?>) ((ParameterizedType) actualType).getRawType();
 				assertEquals(ret, ParameterizedComponent.class);
 				return;
 			}
@@ -488,14 +508,14 @@ public class ReflectionAPITests extends TestCase
 
 	// TODO need write test for case where ParameterizedType instance Of GenericArrayType 
 	// https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/reflect/Field.java#L117
-	
+
 	////////////////////////////////////////////
 	// Support default keyword in declaring an annotation type
 	// https://github.com/dragome/dragome-sdk/issues/159
 	////////////////////////////////////////////
-	
+
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD, ElementType.TYPE})
+	@Target({ ElementType.FIELD, ElementType.TYPE })
 	@Documented
 	public static @interface Wire
 	{
@@ -503,57 +523,55 @@ public class ReflectionAPITests extends TestCase
 		boolean failOnNull() default true;
 		String name() default "test";
 	}
-	
+
 	public static class Const
 	{
-	    public static final String NAME_VAL = "same.name";
+		public static final String NAME_VAL= "same.name";
 	}
-	
+
 	public static class SameStaticMember
 	{
 	}
-	
+
 	public static class SameMember
 	{
 	}
-	
+
 	public static class SameSystem
 	{
-	    @Wire(name = Const.NAME_VAL)
-	    static public SameStaticMember mSameStaticMember;
-	    
-	    @Wire(failOnNull=false)
-	    static public SameMember mSameMember;
+		@Wire(name= Const.NAME_VAL)
+		static public SameStaticMember mSameStaticMember;
+
+		@Wire(failOnNull= false)
+		static public SameMember mSameMember;
 	}
-	
+
 	@Test
 	public void testSupportDefaultKeywordInDeclaringAnAnnotationType() throws Exception
 	{
-		final Class c = SameSystem.class;
-		
+		final Class<?> c= SameSystem.class;
+
 		{
-			final java.lang.reflect.Field field = c.getDeclaredField("mSameStaticMember");
+			final Field field= c.getDeclaredField("mSameStaticMember");
 			assertNotNull(field);
-			final Wire wire = field.getAnnotation(Wire.class);
+			final Wire wire= field.getAnnotation(Wire.class);
 			assertNotNull(wire);
-			
+
 			assertEquals(wire.name(), Const.NAME_VAL);
 			assertTrue(wire.failOnNull());
 			assertFalse(wire.injectInherited());
 		}
 
 		{
-			final java.lang.reflect.Field field = c.getDeclaredField("mSameMember");
+			final Field field= c.getDeclaredField("mSameMember");
 			assertNotNull(field);
-			final Wire wire = field.getAnnotation(Wire.class);
+			final Wire wire= field.getAnnotation(Wire.class);
 			assertNotNull(wire);
-			
+
 			assertEquals(wire.name(), "test");
 			assertFalse(wire.failOnNull());
 			assertFalse(wire.injectInherited());
 		}
-		
+
 	}
-	
-	////////////////////////////////////////////
 }
