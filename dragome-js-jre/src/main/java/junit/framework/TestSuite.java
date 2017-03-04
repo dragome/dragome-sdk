@@ -379,6 +379,7 @@ public class TestSuite implements Test
 
 	private boolean isTestMethod(Method m)
 	{
-		return m.getParameterTypes().length == 0 && m.getName().startsWith("test") && m.getReturnType().equals(Void.TYPE);
+		org.junit.Test annotation = m.getAnnotation(org.junit.Test.class);
+		return m.getParameterTypes().length == 0 && annotation != null && m.getReturnType().equals(Void.TYPE);
 	}
 }

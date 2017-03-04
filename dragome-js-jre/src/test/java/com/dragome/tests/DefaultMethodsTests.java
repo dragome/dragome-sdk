@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.dragome.tests;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junit.framework.TestCase;
@@ -46,6 +47,7 @@ public class DefaultMethodsTests extends TestCase
 		}
 	}
 
+	@Test
 	public void testSuperDefaultMethodIsCalledCorrectly()
 	{
 		String foo= new AB().foo(1);
