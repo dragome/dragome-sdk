@@ -47,7 +47,7 @@ public class TestsConfigurator extends DomHandlerApplicationConfigurator
 	@Override
 	public void getAdditionalObfuscateCodeKeepConfigFile(ArrayList<URL> urls)
 	{
-//		urls.add(getClass().getResource("/proguard-extra.conf"));
+		urls.add(getClass().getResource("/proguard-extra.conf"));
 	}
 
 	public boolean filterClassPath(String classpathEntry)
