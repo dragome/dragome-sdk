@@ -547,7 +547,7 @@ public class ReflectionAPITests extends TestCase
 	}
 
 	@Test
-	public void testSupportDefaultKeywordInDeclaringAnAnnotationType() throws Exception
+	public void testGetDeclaredFieldsForStaticField() throws Exception
 	{
 		final Class<?> c= SameSystem.class;
 
@@ -574,4 +574,20 @@ public class ReflectionAPITests extends TestCase
 		}
 
 	}
+	
+	@Test
+	public void testSupportStaticFieldAnnotationType() throws Exception
+	{
+		final Class<?> c= SameSystem.class;
+		final Field[] fields= c.getDeclaredFields();
+		for (final Field f : fields)
+		{
+			if (f.getName() == "mSameStaticMember")
+			{
+				return;
+			}
+		}
+		fail();
+	}
+	
 }
