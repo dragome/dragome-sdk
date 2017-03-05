@@ -1,6 +1,7 @@
 package com.dragome.tests;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.classpath.ClasspathFile;
@@ -31,9 +32,22 @@ public class TestsConfigurator extends DomHandlerApplicationConfigurator
 		return true;
 	}
 
-	public URL getAdditionalCodeKeepConfigFile()
+	@Override
+	public boolean isObfuscateCode()
 	{
-		return getClass().getResource("/proguard-extra.conf");
+		return false;
+	}
+
+	@Override
+	public void getAdditionalCodeKeepConfigFile(ArrayList<URL> urls)
+	{
+		urls.add(getClass().getResource("/proguard-extra.conf"));
+	}
+
+	@Override
+	public void getAdditionalObfuscateCodeKeepConfigFile(ArrayList<URL> urls)
+	{
+		urls.add(getClass().getResource("/proguard-extra.conf"));
 	}
 
 	public boolean filterClassPath(String classpathEntry)

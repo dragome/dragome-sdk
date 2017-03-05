@@ -334,9 +334,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			ScriptHelper.put("signatures", signatures, this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+			signatures = (String[])ScriptHelper.eval("signatures", this);
 			addMethods(signatures, Modifier.PUBLIC);
 			signatures= new String[0];
+			ScriptHelper.put("signatures", signatures, this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (typeof this.$$$nativeClass___java_lang_Object[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+			signatures = (String[])ScriptHelper.eval("signatures", this);
 			addMethods(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredMethods.toArray(new Method[0]);

@@ -30,6 +30,7 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws java.lang.ClassNotFoundException
 	{
+		ScriptHelper.put("method", method, this);
 		String name= method.getName();
 		if (name.equals("toString"))
 		{
