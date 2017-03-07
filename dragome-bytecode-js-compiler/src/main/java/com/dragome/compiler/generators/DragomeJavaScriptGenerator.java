@@ -307,7 +307,8 @@ public class DragomeJavaScriptGenerator extends Generator
 		Signature signature= Project.getSingleton().getSignature(methodBinding.toString()).relative();
 		String signatureReplaced= normalizeExpression(signature);
 
-		if (typeDecl.getClassName().equals("java.lang.String") && method.isInstanceConstructor())
+		boolean isString= typeDecl.getClassName().equals("java.lang.String");
+		if (isString && method.isInstanceConstructor())
 		{
 
 			Block body= method.getBody();
@@ -381,7 +382,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		else if (isNative)
 			println("return dragomeJs.resolveNativeMethod(this, \"" + signatureReplaced + "\").apply(this, arguments);");
 
-		if (method.isInstanceConstructor())
+		if (method.isInstanceConstructor() && !isString)
 			print("return this;\n");
 
 		print(closingString);
