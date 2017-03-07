@@ -33,6 +33,11 @@ public final class ScriptHelper
 	{
 		scriptHelperInterface.put(s, value, callerInstance);
 	}
+	
+	public static boolean isInit()
+	{
+		return scriptHelperInterface != null;
+	}
 
 	public static Object eval(String script, Object callerInstance)
 	{
