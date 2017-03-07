@@ -32,6 +32,38 @@ import junit.framework.TestCase;
 @RunWith(DragomeTestRunner.class)
 public class ReflectionAPITests extends TestCase
 {
+	@Test
+	public void testInstanceOfIntArray() throws Exception
+	{
+		int[] object= new int[10];
+		boolean a= object instanceof int[];
+		assertEquals(true, a);
+	}
+
+	@Test
+	public void testInstanceOfDoubleArray() throws Exception
+	{
+		double[] object= new double[10];
+		boolean a= object instanceof double[];
+		assertEquals(true, a);
+	}
+
+	@Test
+	public void testInstanceOfStringArray() throws Exception
+	{
+		String[] object= new String[10];
+		boolean a= object instanceof String[];
+		assertEquals(true, a);
+	}
+
+	@Test
+	public void testNullInstanceOfIntIsNotAnArray() throws Exception
+	{
+		int[] object= null;
+		boolean a= object instanceof int[];
+		assertEquals(false, a);
+	}
+
 	public static class ReflectionClass2
 	{
 		private boolean field1= true;
@@ -211,14 +243,15 @@ public class ReflectionAPITests extends TestCase
 	{
 		Class<?>[] interfaces= ReflectionClass.class.getSuperclass().getInterfaces();
 		assertEquals(2, interfaces.length);
-		Class interface1 = null;
-		Class interface2 = null;
+		Class interface1= null;
+		Class interface2= null;
 		// ReflectionInterface1 may not be first so we need to search
-		for(int i = 0; i < interfaces.length;i++) {
-			if(interface1 == null && ReflectionInterface1.class == interfaces[i])
-				interface1 = interfaces[i];
-			if(interface2 == null && ReflectionInterface2.class == interfaces[i])
-				interface2 = interfaces[i];
+		for (int i= 0; i < interfaces.length; i++)
+		{
+			if (interface1 == null && ReflectionInterface1.class == interfaces[i])
+				interface1= interfaces[i];
+			if (interface2 == null && ReflectionInterface2.class == interfaces[i])
+				interface2= interfaces[i];
 		}
 		assertEquals(ReflectionInterface1.class, interface1);
 		assertEquals(ReflectionInterface2.class, interface2);
@@ -590,13 +623,13 @@ public class ReflectionAPITests extends TestCase
 	@Test
 	public void testGetMethodNoParamCall() throws Exception
 	{
-		long expected = System.currentTimeMillis();
-		Method method = System.class.getMethod("currentTimeMillis");
-		Object invoke = method.invoke(null);
-		Long toExpect = (Long)invoke;
+		long expected= System.currentTimeMillis();
+		Method method= System.class.getMethod("currentTimeMillis");
+		Object invoke= method.invoke(null);
+		Long toExpect= (Long) invoke;
 		assertTrue(toExpect >= expected);
 	}
-	
+
 	@Test
 	public void testSupportStaticFieldAnnotationType() throws Exception
 	{
@@ -611,20 +644,19 @@ public class ReflectionAPITests extends TestCase
 		}
 		fail();
 	}
-	
-	
+
 	@Test
 	public void testSupportSetField() throws Exception
 	{
 		final Class<?> c= SameSystem.class;
-		final SameSystem sameSystem = new SameSystem();
+		final SameSystem sameSystem= new SameSystem();
 		{
 			final Field field= c.getDeclaredField("mSameStaticMember");
 			assertNotNull(field);
 			assertTrue(Modifier.isStatic(field.getModifiers()));
-			
-			final SameStaticMember sameStaticMember = new SameStaticMember();
-			sameStaticMember.mVal = 123;
+
+			final SameStaticMember sameStaticMember= new SameStaticMember();
+			sameStaticMember.mVal= 123;
 			field.set(sameSystem, sameStaticMember);
 		}
 
@@ -632,25 +664,25 @@ public class ReflectionAPITests extends TestCase
 			final Field field= c.getDeclaredField("mSameMember");
 			assertNotNull(field);
 			assertFalse(Modifier.isStatic(field.getModifiers()));
-			
-			final SameMember sameMember = new SameMember();
-			sameMember.mVal = 234;
+
+			final SameMember sameMember= new SameMember();
+			sameMember.mVal= 234;
 			field.set(sameSystem, sameMember);
 		}
-		
+
 		assertNotNull(sameSystem.mSameStaticMember);
 		assertNotNull(sameSystem.mSameMember);
-		
+
 		assertEquals(sameSystem.mSameStaticMember.mVal, 123);
 		assertEquals(sameSystem.mSameMember.mVal, 234);
-		
+
 		{
-			final SameSystem sameSystemTemp = new SameSystem();
-			sameSystemTemp.mSameStaticMember = new SameStaticMember();
-			sameSystemTemp.mSameStaticMember.mVal = 543;
-			
+			final SameSystem sameSystemTemp= new SameSystem();
+			sameSystemTemp.mSameStaticMember= new SameStaticMember();
+			sameSystemTemp.mSameStaticMember.mVal= 543;
+
 			assertEquals(sameSystem.mSameStaticMember.mVal, 543);
 		}
 	}
-	
+
 }
