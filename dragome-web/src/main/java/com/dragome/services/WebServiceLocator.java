@@ -55,7 +55,10 @@ public class WebServiceLocator
 		Object document= null;
 		try
 		{
-			document= ScriptHelper.eval("window.document", this);
+			if ( ScriptHelper.isInit() )
+			{
+				document= ScriptHelper.eval("window.document", this);
+			}
 		}
 		catch (Exception e)
 		{
