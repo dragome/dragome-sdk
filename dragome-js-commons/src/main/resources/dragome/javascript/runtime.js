@@ -157,6 +157,10 @@ function checkInterfaceExtendsOther(obj, type) {
 	return result;
 };
 
+dragomeJs.isInstanceofArray = function(obj, arrayType) {
+	return obj == undefined || obj == null ? false : obj.classSignature.replace(/\[/g, '_').replace(/;/g, '$').replace(/\./g, '_') == arrayType;
+}
+
 dragomeJs.cmp = function(value1, value2) {
 	if (value1 == value2)
 		return 0;
