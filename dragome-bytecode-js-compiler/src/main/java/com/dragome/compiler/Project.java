@@ -112,6 +112,8 @@ public class Project implements Serializable
 
 	transient private ClasspathFileFilter classpathFilter;
 
+	private boolean stopOnMissingClass;
+
 	public ClasspathFileFilter getClasspathFilter()
 	{
 		return classpathFilter;
@@ -316,14 +318,17 @@ public class Project implements Serializable
 		if (className.startsWith("["))
 		{
 			String replace= className.replace("[", "");
-			className= replace.substring(1, replace.length()-1);
+			className= replace.substring(1, replace.length() - 1);
 		}
 		ClassUnit clazz= classesByName.get(className);
 		if (clazz != null)
 			return clazz;
 
-		return new NullClassUnit();
-//		throw new RuntimeException("No such unit: " + className);
+		if (stopOnMissingClass)
+			throw new RuntimeException("Class is missing: " + className);
+
+		return new NullClassUnit(className);
+		//		throw new RuntimeException("No such unit: " + className);
 	}
 
 	public ClassUnit getClassUnit(ReferenceType type)
@@ -360,7 +365,7 @@ public class Project implements Serializable
 		{
 			javaLangObject= classUnit;
 		}
-		
+
 		classUnit.setClassFile(classpathFile);
 
 		return classUnit;
@@ -489,7 +494,7 @@ public class Project implements Serializable
 			for (String genericSignature : genericSignatures)
 			{
 				String[] split= genericSignature.split("\\|");
-//				if (getWrittenSignatures().contains(split[0] + "|" + split[1]))
+				if (getWrittenSignatures().contains(split[0] /*+ "|" + split[1]*/))
 					writer.write("addSignatureTo(" + split[0] + ",\"" + split[1] + "\", \"" + split[2] + "\");\n");
 			}
 		}
@@ -527,9 +532,9 @@ public class Project implements Serializable
 		{
 			for (Entry<String, String> entry : typeDecl.getAnnotations().entrySet())
 			{
-				String value = entry.getValue();
-				if(value.isEmpty())
-					value = " ";
+				String value= entry.getValue();
+				if (value.isEmpty())
+					value= " ";
 				getTypeDeclarationsWithAnnotations().add(typeDecl.getClassName() + "#" + entry.getKey() + "#" + value);
 			}
 		}
@@ -543,5 +548,10 @@ public class Project implements Serializable
 	public void setClasspathFilter(ClasspathFileFilter classpathFilter)
 	{
 		this.classpathFilter= classpathFilter;
+	}
+
+	public void setStopOnMissingClass(boolean stopOnMissingClass)
+	{
+		this.stopOnMissingClass= stopOnMissingClass;
 	}
 }

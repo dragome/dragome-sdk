@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.bcel.classfile.AnnotationDefault;
 import org.apache.commons.io.output.StringBuilderWriter;
 
 import com.dragome.commons.compiler.classpath.ClasspathFile;
@@ -249,7 +248,7 @@ public class ClassUnit extends Unit
 		}
 	}
 
-	public void write(int depth, Writer writer2, AnnotationDefault... annotationDefaultFound) throws IOException
+	public void write(int depth, Writer writer2, String... annotationDefaultFound) throws IOException
 	{
 		if (!isTainted() || !isResolved() || isWritten())
 			return;
@@ -523,7 +522,7 @@ public class ClassUnit extends Unit
 		return interfacesMembers;
 	}
 
-	private boolean isImplementing(Class<InvocationHandler> class1)
+	protected boolean isImplementing(Class<InvocationHandler> class1)
 	{
 		if (getSuperUnit() != null && getSuperUnit().isImplementing(class1))
 			return true;
@@ -628,9 +627,9 @@ public class ClassUnit extends Unit
 		{
 			MethodUnit methodUnit= (MethodUnit) member;
 			String normalizedSignature= DragomeJavaScriptGenerator.normalizeExpression(methodUnit.getSignature());
-			String normalizedClassname= DragomeJavaScriptGenerator.normalizeExpression(methodUnit.getDeclaringClass().getName());
-			Project.getSingleton().getWrittenSignatures().add(normalizedClassname + "|" + normalizedSignature);
 		}
+		String normalizedClassname= DragomeJavaScriptGenerator.normalizeExpression(member.getDeclaringClass().getName());
+		Project.getSingleton().getWrittenSignatures().add(normalizedClassname/* + "|" + normalizedSignature*/);
 
 		if (member instanceof ProcedureUnit && notReversibleMethods.contains(((ProcedureUnit) member).getNameAndSignature()))
 		{
@@ -641,10 +640,10 @@ public class ClassUnit extends Unit
 		{
 			if (member instanceof MethodUnit)
 			{
-				AnnotationDefault annotationDefaultFound= null;
+				String annotationDefaultFound= null;
 
 				if (!annotationDefaults.isEmpty())
-					for (Entry<String, AnnotationDefault> annotationDefault : annotationDefaults.entrySet())
+					for (Entry<String, String> annotationDefault : annotationDefaults.entrySet())
 						if (member.getSignature() != null && member.getSignature().toString().startsWith(annotationDefault.getKey() + "("))
 							annotationDefaultFound= annotationDefault.getValue();
 
@@ -779,7 +778,7 @@ public class ClassUnit extends Unit
 
 	private Map<String, String> annotationsValues;
 
-	private Map<String, AnnotationDefault> annotationDefaults= new HashMap<>();
+	private Map<String, String> annotationDefaults= new HashMap<>();
 
 	public List<String> getNotReversibleMethods()
 	{
@@ -816,7 +815,7 @@ public class ClassUnit extends Unit
 		lastCRC= crc;
 	}
 
-	public void addAnnotationDefault(String name, AnnotationDefault annotationDefault)
+	public void addAnnotationDefault(String name, String annotationDefault)
 	{
 		annotationDefaults.put(name, annotationDefault);
 	}

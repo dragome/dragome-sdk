@@ -66,7 +66,7 @@ public class DragomeCompilerLauncher
 		configurator.sortClassPath(classPath);
 		classPath= process(classPath, configurator);
 
-		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, new DefaultClasspathFileFilter(), configurator.isCheckingCast(), configurator.isCaching());
+		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, new DefaultClasspathFileFilter(), configurator.isCheckingCast(), configurator.isCaching(), configurator.isStopOnMissingClass());
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
 		bytecodeToJavascriptCompiler.compile();
 	}

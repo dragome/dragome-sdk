@@ -46,11 +46,11 @@ import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.Annotations;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.AttributeReader;
+import org.apache.bcel.classfile.ClassElementValue;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.DescendingVisitor;
-import org.apache.bcel.classfile.ElementValue;
 import org.apache.bcel.classfile.ElementValuePair;
 import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.Field;
@@ -372,7 +372,7 @@ public class Parser
 			}
 		}
 	}
-	
+
 	private void addDefaults(Type type)
 	{
 		try
@@ -382,7 +382,14 @@ public class Parser
 			for (Method method : aClass.getMethods())
 			{
 				final AnnotationDefault a= (AnnotationDefault) findAttribute("AnnotationDefault", method.getAttributes());
-				classUnit.addAnnotationDefault(method.getName(), a);
+				if (a != null)
+					if (a.getDefaultValue() instanceof ClassElementValue)
+					{
+						ClassElementValue aClass1= (ClassElementValue) a.getDefaultValue();
+						classUnit.addAnnotationDefault(method.getName(), aClass1.getClassString());
+					}
+					else
+						classUnit.addAnnotationDefault(method.getName(), a.getDefaultValue().toString());
 			}
 		}
 		catch (Exception e)

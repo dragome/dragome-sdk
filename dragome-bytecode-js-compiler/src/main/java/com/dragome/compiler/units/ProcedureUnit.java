@@ -6,12 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-import org.apache.bcel.classfile.AnnotationDefault;
-import org.apache.bcel.classfile.ArrayElementValue;
-import org.apache.bcel.classfile.ClassElementValue;
-import org.apache.bcel.classfile.ElementValue;
-import org.apache.bcel.generic.Type;
-
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.utils.Log;
 
@@ -52,7 +46,7 @@ public abstract class ProcedureUnit extends MemberUnit
 		}
 	}
 
-	public void write(int depth, Writer writer, AnnotationDefault... annotationDefaultFound) throws IOException
+	public void write(int depth, Writer writer, String... annotationDefaultFound) throws IOException
 	{
 		String data= getData();
 		if (data == null)
@@ -62,31 +56,8 @@ public abstract class ProcedureUnit extends MemberUnit
 		if (annotationDefaultFound.length > 0)
 		{
 			String data1= data.substring(0, data.length() - 1);
-
-			ElementValue defaultValue= annotationDefaultFound[0].getDefaultValue();
-			if (defaultValue.getElementValueType() == 115)
-			{
-				data1+= "return \"" + defaultValue.toString() + "\";\n}";
-			}
-			else
-			{
-				if (defaultValue instanceof ArrayElementValue)
-				{
-					ArrayElementValue arrayElementValue= (ArrayElementValue) defaultValue;
-					data1+= "return \"" + defaultValue.toString() + "\";\n}";
-				}
-				else if (defaultValue instanceof ClassElementValue)
-				{
-					ClassElementValue classElementValue= (ClassElementValue) defaultValue;
-					String classString= classElementValue.getClassString();
-					data1+= "return \"" + classString + "\";\n}";
-				}
-				else
-				{
-					data1+= "return \"" + defaultValue.toString() + "\";\n}";
-				}
-			}
-
+			String defaultValue= annotationDefaultFound[0];
+			data1+= "return \"" + defaultValue + "\";\n}";
 			writer.write(data1);
 		}
 		else
