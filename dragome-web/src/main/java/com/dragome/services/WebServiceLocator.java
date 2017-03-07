@@ -55,16 +55,14 @@ public class WebServiceLocator
 		Object document= null;
 		try
 		{
-			if ( ScriptHelper.isInit() )
-			{
+			if (ScriptHelper.isInitialized())
 				document= ScriptHelper.eval("window.document", this);
-			}
 		}
 		catch (Exception e)
 		{
 		}
 		clientSideEnabled= document != null;
-		
+
 		ServiceLocator.getInstance().setParametersHandler(new BrowserParametersHandler());
 
 		init();

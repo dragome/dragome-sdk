@@ -34,7 +34,7 @@ public final class ScriptHelper
 		scriptHelperInterface.put(s, value, callerInstance);
 	}
 	
-	public static boolean isInit()
+	public static boolean isInitialized()
 	{
 		return scriptHelperInterface != null;
 	}
