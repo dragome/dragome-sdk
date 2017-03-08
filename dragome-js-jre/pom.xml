@@ -11,6 +11,7 @@
   <properties>
     <dragome.version>0.96-beta4</dragome.version>
     <skip.gpg>true</skip.gpg>
+	<maven.javadoc.skip>true</maven.javadoc.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
