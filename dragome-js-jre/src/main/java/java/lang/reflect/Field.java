@@ -67,8 +67,13 @@ public final class Field extends AccessibleObject implements Member
 	{
 		ScriptHelper.put("obj", obj, this);
 		ScriptHelper.put("sig", this.signature, this);
+		Object result;
 
-		Object result= ScriptHelper.eval("obj[sig]", this);
+		if ((getModifiers() & Modifier.STATIC) != 0)
+			result= ScriptHelper.eval("obj.constructor[sig]", this);
+		else
+			result= ScriptHelper.eval("obj[sig]", this);
+		
 		return Method.adaptResult(result, getType());
 	}
 
@@ -83,7 +88,10 @@ public final class Field extends AccessibleObject implements Member
 		ScriptHelper.put("sig", this.signature, this);
 		ScriptHelper.put("value", tmpArray[0], this);
 
-		ScriptHelper.evalNoResult("obj[sig]= value", this);
+		if ((getModifiers() & Modifier.STATIC) != 0)
+			ScriptHelper.evalNoResult("obj.constructor[sig]= value", this);
+		else
+			ScriptHelper.evalNoResult("obj[sig]= value", this);
 	}
 
 	public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass)
@@ -93,8 +101,8 @@ public final class Field extends AccessibleObject implements Member
 
 	public Annotation[] getDeclaredAnnotations()
 	{
-		final List<Annotation> annotations = Class.getAnnotationsInternal(class1, null, null, getName());
-		final Annotation[] ret = new Annotation[annotations.size()];
+		final List<Annotation> annotations= Class.getAnnotationsInternal(class1, null, null, getName());
+		final Annotation[] ret= new Annotation[annotations.size()];
 		annotations.toArray(ret);
 		return ret;
 	}
@@ -179,7 +187,7 @@ public final class Field extends AccessibleObject implements Member
 
 	public int getModifiers()
 	{
-		return 0;
+		return modifier;
 	}
 
 	native String getSignature();

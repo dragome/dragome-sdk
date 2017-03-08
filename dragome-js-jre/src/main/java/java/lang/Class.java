@@ -107,7 +107,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	public static Class<?> forName(String className) throws ClassNotFoundException
 	{
 		className= className.replace("_", ".");
-		
+
 		Class<?> clazz= classesByName.get(className);
 		if (clazz == null)
 		{
@@ -125,7 +125,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 					throw new ClassNotFoundException(jsClassName);
 
 				String type= className.replaceAll("\\[", "");
-				type = type.replaceAll(";", "");
+				type= type.replaceAll(";", "");
 				if (type.startsWith("L"))
 					type= type.replaceFirst("L", "");
 
@@ -294,33 +294,35 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Class<? super T> getSuperclass()
 	{
-		try 
+		try
 		{
 			Logger.getLogger(AnnotationsAdder.class.getName()).log(Level.FINEST, "Cannot add type annotation");
-			
+
 			if (ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.classname == 'java_lang_Object' ", this))
 				return null;
 			else
 			{
 				Boolean eval= ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.superclass != undefined", this);
-				if (eval) 
+				if (eval)
 				{
 					boolean javaClassExists= ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.superclass.javaClass != undefined", this);
-					
-					if (!javaClassExists) 
+
+					if (!javaClassExists)
 					{
-						String className = (String)ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.superclass.classname", this);
+						String className= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.superclass.classname", this);
 						return (Class<? super T>) forName(className.replace("_", "."));
-					} 
+					}
 					else
 						return (Class<? super T>) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.superclass.javaClass", this);
-				} else 
+				}
+				else
 				{
 					return null;
 				}
 			}
-		} 
-		catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
@@ -334,12 +336,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			ScriptHelper.put("signatures", signatures, this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-			signatures = (String[])ScriptHelper.eval("signatures", this);
+			signatures= (String[]) ScriptHelper.eval("signatures", this);
 			addMethods(signatures, Modifier.PUBLIC);
 			signatures= new String[0];
 			ScriptHelper.put("signatures", signatures, this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (typeof this.$$$nativeClass___java_lang_Object[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-			signatures = (String[])ScriptHelper.eval("signatures", this);
+			signatures= (String[]) ScriptHelper.eval("signatures", this);
 			addMethods(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredMethods.toArray(new Method[0]);
@@ -542,19 +544,19 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		A annotation= (A) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex, fieldName));
 		return annotation;
 	}
-	
+
 	public static List<Annotation> getAnnotationsInternal(Class<?> aClass, String methodName, Integer parameterIndex, String fieldName)
 	{
 		final List<AnnotationEntryWithEntityType> annotationEntrysWithEntityType= AnnotationsHelper.getAnnotationsByClass(aClass);
-		final List<Annotation> ret = new ArrayList<>();
-		
+		final List<Annotation> ret= new ArrayList<>();
+
 		final String annotationKey= AnnotationInvocationHandler.getAnnotationKey(fieldName, parameterIndex, methodName, "");
 		for (AnnotationEntryWithEntityType annotationEntryWithEntityType : annotationEntrysWithEntityType)
 		{
-			final AnnotationEntry annotationEntry = annotationEntryWithEntityType.getAnnotationEntry();
+			final AnnotationEntry annotationEntry= annotationEntryWithEntityType.getAnnotationEntry();
 			if (annotationEntry.getAnnotationKey().startsWith(annotationKey) || (annotationKey == null && !annotationEntry.getAnnotationKey().contains("/")))
 			{
-				final Class<? extends Annotation> annotationClass = annotationEntryWithEntityType.getAnnotationType();
+				final Class<? extends Annotation> annotationClass= annotationEntryWithEntityType.getAnnotationType();
 				final Annotation annotation= (Annotation) Proxy.newProxyInstance(null, new Class[] { annotationClass }, new AnnotationInvocationHandler(aClass, annotationClass, methodName, parameterIndex, fieldName));
 				ret.add(annotation);
 			}
@@ -600,21 +602,27 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			ScriptHelper.put("signatures", signatures, this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (e.startsWith('$$$') && e != '$$$$signatures'){ var b={}; b.e = e; signatures.push(b); }}", this);
 			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (e.startsWith('$$$') && e != '$$$$signatures'){ var b={}; b.e = e; signatures.push(b); }}", this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$') && e != '$$$$signatures'){ var b={}; b.e = e; signatures.push(b); }}", this);
 			addFields(signatures, Modifier.PUBLIC);
-//			signatures= new String[0];
-//			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
-//			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
+
+			signatures= new Object[0];
+			ScriptHelper.put("signatures", signatures, this);
+			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$') && e != '$$$$signatures'){ var b={}; b.e = e; signatures.push(b); }}", this);
+			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
+
+			//			signatures= new String[0];
+			//			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (e.startsWith('$$$')){ var b={}; b.e = e; signatures.push(b); }}", this);
+			//			addFields(signatures, Modifier.PUBLIC | Modifier.STATIC);
 		}
 		return declaredFields.toArray(new Field[0]);
 	}
 
 	private void addFields(Object[] signatures, int modifier)
 	{
-		for (int i= 0; i < signatures.length; i++) {
+		for (int i= 0; i < signatures.length; i++)
+		{
 			ScriptHelper.put("sig", signatures[i], this);
-			String signature = ScriptHelper.evalCasting("sig.e", String.class, this);
-			
+			String signature= ScriptHelper.evalCasting("sig.e", String.class, this);
+
 			declaredFields.add(new Field(this, signature, modifier));
 		}
 	}
