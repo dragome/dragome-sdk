@@ -33,15 +33,13 @@ public final class ScriptHelper
 	{
 		scriptHelperInterface.put(s, value, callerInstance);
 	}
-	
-	public static boolean isInitialized()
-	{
-		return scriptHelperInterface != null;
-	}
 
 	public static Object eval(String script, Object callerInstance)
 	{
-		return scriptHelperInterface.eval(script, callerInstance);
+		if (scriptHelperInterface == null)
+			return null;
+		else
+			return scriptHelperInterface.eval(script, callerInstance);
 	}
 
 	public static int evalInt(String jsCode, Object callerInstance)
