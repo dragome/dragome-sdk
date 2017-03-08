@@ -703,7 +703,8 @@ public class Pass1
 					for (CodeException codeException : code.getExceptionTable())
 					{
 						boolean nextToTryBegining= codeException.getStartPC() - 1 == lastJump.getEndIndex();
-						if (nextToTryBegining)
+						boolean nextToTryHandlerBegining= codeException.getCatchType() == 0 && codeException.getEndPC() - 1 == lastJump.getEndIndex();
+						if (nextToTryBegining || nextToTryHandlerBegining)
 							throwBugException();
 					}
 
