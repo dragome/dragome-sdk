@@ -29,9 +29,9 @@ public class BytecodeToJavascriptCompilerConfiguration
 	private ClasspathFileFilter classpathFilter;
 	private boolean checkingCast;
 	private boolean isCaching;
-	private boolean stopOnMissingClass;
+	private boolean failOnError;
 
-	public BytecodeToJavascriptCompilerConfiguration(Classpath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast, boolean isCaching, boolean stopOnMissingClass)
+	public BytecodeToJavascriptCompilerConfiguration(Classpath classPath, String targetDir, String mainClassName, CompilerType compilerType, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFilter, boolean isCheckingCast, boolean isCaching, boolean failOnError)
 	{
 		this.classPath= classPath;
 		this.targetDir= targetDir;
@@ -41,7 +41,7 @@ public class BytecodeToJavascriptCompilerConfiguration
 		this.classpathFilter= classpathFilter;
 		this.checkingCast= isCheckingCast;
 		this.isCaching = isCaching;
-		this.stopOnMissingClass= stopOnMissingClass;
+		this.failOnError= failOnError;
 	}
 
 	public Classpath getClasspath()
@@ -84,8 +84,8 @@ public class BytecodeToJavascriptCompilerConfiguration
 		return isCaching;
 	}
 
-	public boolean isStopOnMissingClass()
+	public boolean isFailOnError()
 	{
-		return stopOnMissingClass;
+		return failOnError;
 	}
 }

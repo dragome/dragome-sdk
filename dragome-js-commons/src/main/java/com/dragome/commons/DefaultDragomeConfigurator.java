@@ -174,7 +174,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return null;
 	}
 
-	public boolean isStopOnMissingClass()
+	public boolean isFailOnError()
 	{
 		return false;
 	}

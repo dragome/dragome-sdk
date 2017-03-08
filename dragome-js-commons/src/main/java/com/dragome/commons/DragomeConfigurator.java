@@ -43,5 +43,5 @@ public interface DragomeConfigurator
 	public void sortClassPath(Classpath classPath);
 	void getAdditionalCodeKeepConfigFile(ArrayList<URL> urls);
 	void getAdditionalObfuscateCodeKeepConfigFile(ArrayList<URL> urls);
-	public boolean isStopOnMissingClass();
+	public boolean isFailOnError();
 }

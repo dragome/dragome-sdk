@@ -239,7 +239,8 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		//	Project.singleton= null; //TODO revisar esto, impide cacheo!!
 		Project project= Project.createSingleton(getCacheFile());
 		project.setClasspathFilter(classpathFilter);
-		project.setStopOnMissingClass(compilerConfiguration.isStopOnMissingClass());
+		project.setStopOnMissingClass(compilerConfiguration.isFailOnError());
+		setFailOnError(compilerConfiguration.isFailOnError());
 		assembly.setProject(project);
 		assembly.setClasspathFilter(classpathFilter);
 		generator= new DragomeJavaScriptGenerator(project);
