@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -124,12 +123,12 @@ public class DragomeCompilerLauncher
 			}
 			if (configurator.isRemoveUnusedCode())
 			{
-				file= runProguard(file, configurator);
+				file= executeProguard(file, "/proguard.conf", "-proguard.jar", configurator.getAdditionalCodeKeepConfigFile(), false);
 				file.deleteOnExit();
 			}
 			if (configurator.isObfuscateCode())
 			{
-				file= runProguardObf(file, configurator);
+				file= executeProguard(file, "/proguardObf.conf", "-Obf.jar", configurator.getAdditionalObfuscateCodeKeepConfigFile(), true);
 				file.deleteOnExit();
 			}
 			path= file.getAbsolutePath();
@@ -139,16 +138,6 @@ public class DragomeCompilerLauncher
 		{
 			throw new RuntimeException(e);
 		}
-	}
-
-	private static File runProguard(File file, DragomeConfigurator configurator) throws Exception
-	{
-		return executeProguard(file, "/proguard.conf", "-proguard.jar", configurator.getAdditionalCodeKeepConfigFile(), false);
-	}
-
-	private static File runProguardObf(File file, DragomeConfigurator configurator) throws Exception
-	{
-		return executeProguard(file, "/proguardObf.conf", "-Obf.jar", configurator.getAdditionalObfuscateCodeKeepConfigFile(), true);
 	}
 
 	private static File executeProguard(File inputFile, String name, String replacement, List<URL> additionalUrls, boolean addToClasspath) throws MalformedURLException, URISyntaxException, IOException, ParseException
