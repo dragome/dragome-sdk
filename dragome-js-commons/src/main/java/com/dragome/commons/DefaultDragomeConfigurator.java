@@ -18,6 +18,7 @@ package com.dragome.commons;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -157,12 +158,14 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	{
 	}
 
-	public void getAdditionalCodeKeepConfigFile(ArrayList<URL> urls)
+	public List<URL> getAdditionalCodeKeepConfigFile()
 	{
+		return new ArrayList<URL>();
 	}
 
-	public void getAdditionalObfuscateCodeKeepConfigFile(ArrayList<URL> urls)
+	public List<URL> getAdditionalObfuscateCodeKeepConfigFile()
 	{
+		return new ArrayList<URL>();
 	}
 
 	public boolean isCaching() {
