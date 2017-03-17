@@ -95,7 +95,7 @@ public class DragomeCompilerLauncher
 				List<ClasspathEntry> entries= classPath.getEntries();
 				for (ClasspathEntry classpathEntry : entries)
 				{
-					classpathEntry.copyFilesToJar(jos, new DefaultClasspathFileFilter()
+					classpathEntry.copyFilesToJar(jos, configurator.getBytecodeTransformer(), new DefaultClasspathFileFilter()
 					{
 						public boolean accept(ClasspathFile classpathFile)
 						{

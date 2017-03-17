@@ -2,6 +2,7 @@ package com.dragome.commons.compiler.classpath.serverside;
 
 import java.util.jar.JarOutputStream;
 
+import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.CopyUtils;
 import com.dragome.commons.compiler.classpath.ClasspathEntry;
 import com.dragome.commons.compiler.classpath.ClasspathFile;
@@ -13,9 +14,15 @@ public abstract class AbstractClasspathEntry implements ClasspathEntry
 	{
 	}
 
-	public void copyFilesToJar(JarOutputStream jos, ClasspathFileFilter classpathFileFilter)
+	public void copyFilesToJar(JarOutputStream jos, BytecodeTransformer bytecodeTransformer, ClasspathFileFilter classpathFileFilter)
 	{
 		for (ClasspathFile classpathFile : this.getClasspathFilesFiltering(classpathFileFilter))
-			CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getPath());
+		{
+			ClasspathFile classpathFile2=classpathFile;;
+			if (classpathFile.getFilename().endsWith(".class"))
+				classpathFile2= new ClasspathInstrumentedFile(classpathFile, bytecodeTransformer);
+
+			CopyUtils.addEntryToJar(jos, classpathFile2.openInputStream(), classpathFile2.getPath());
+		}
 	}
 }
