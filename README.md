@@ -1,4 +1,4 @@
-#What is Dragome?
+# What is Dragome?
 Dragome is an open source tool for creating client side web applications in pure Java (JVM) language.  
 Based on bytecode to javascript compilation, you can execute applications written in Java directly on browsers.  
 You may use your favorite IDE, your favorite Java frameworks and tools because Dragome is totally transparent.  
@@ -12,7 +12,7 @@ Also take a look at these [example applications](https://github.com/dragome/drag
 
 ----------
 
-##Why Dragome
+## Why Dragome
 * Full Java stack web applications, code everything in Java (server side and client side). It will be transformed to javascript automatically.
 * Fast GUI development using components, builders and two-way databinding, using similar AngularJs concepts.
 * Debug mode for debugging in your favorite Java IDE.
