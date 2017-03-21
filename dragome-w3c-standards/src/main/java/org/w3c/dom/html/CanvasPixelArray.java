@@ -6,6 +6,6 @@ public interface CanvasPixelArray
 {
     // CanvasPixelArray
     public int getLength();
-    public byte getElement(int index);
-    public void setElement(int index, byte value);
+    public int getElement(int index);
+    public void setElement(int index, int value);
 }
