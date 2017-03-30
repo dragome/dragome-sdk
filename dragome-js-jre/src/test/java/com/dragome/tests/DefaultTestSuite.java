@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ StaticMembersTests.class, ReflectionAPITests.class, LambdaTests.class,
-		DefaultMethodsTests.class })
+@Suite.SuiteClasses({ StaticMembersTests.class, ReflectionAPITests.class, LambdaTests.class, ClosureTests.class,
+		CallMethodTests.class, DefaultMethodsTests.class })
 public class DefaultTestSuite extends TestSuite {
 }
