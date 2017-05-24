@@ -1,3 +1,5 @@
+[![Join the chat at https://gitter.im/dragome-sdk/](https://badges.gitter.im/dragome-sdk.svg)](https://gitter.im/dragome-sdk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # What is Dragome?
 Dragome is an open source tool for creating client side web applications in pure Java (JVM) language.  
 Based on bytecode to javascript compilation, you can execute applications written in Java directly on browsers.  
