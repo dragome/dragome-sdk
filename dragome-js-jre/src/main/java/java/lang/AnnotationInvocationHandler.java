@@ -1,7 +1,6 @@
 package java.lang;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -76,6 +75,8 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 
 			return result.toArray();
 		}
+		else if (type.equals(String.class))
+			return annotationValue;
 		else if (type.equals(Boolean.class) || type.equals(boolean.class))
 			return Boolean.parseBoolean(annotationValue);
 		else if (type.equals(Class.class))
@@ -84,8 +85,14 @@ public class AnnotationInvocationHandler<T> implements InvocationHandler
 			return Integer.parseInt(annotationValue);
 		else if (type.equals(Double.class) || type.equals(double.class))
 			return Double.parseDouble(annotationValue);
-		else
-			return annotationValue;
+
+		// check enum
+		final Object e = Enum.valueOfInternal(type, annotationValue);
+		if (e != null) {
+			return e;
+		}
+
+		throw new ClassNotFoundException("Cann't convert: '" + annotationValue + "' to '" + type.getName() + "'");
 	}
 
 	public static String getAnnotationKey(String fieldName, Integer parameterIndex, String methodName, String name)
