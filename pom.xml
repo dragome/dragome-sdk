@@ -59,7 +59,7 @@
     <repository>
       <id>dragome</id>
       <name>dragome</name>
-      <url>https://raw.github.com/dragome/dragome/master/maven</url>
+      <url>https://repo.enonic.com/public</url>
     </repository>
   </repositories>
 

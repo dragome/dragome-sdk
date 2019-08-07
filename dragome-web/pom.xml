@@ -46,7 +46,7 @@
   <repository>
    <id>dragome</id>
    <name>dragome</name>
-   <url>https://raw.github.com/dragome/dragome/master/maven</url>
+   <url>https://repo.enonic.com/public</url>
   </repository>
  </repositories>
 
@@ -130,13 +130,13 @@
   <dependency>
    <groupId>net.sf.saxon</groupId>
    <artifactId>saxon</artifactId>
-   <version>9</version>
+   <version>9.1.0.8</version>
   </dependency>
 
   <dependency>
    <groupId>net.sf.saxon</groupId>
    <artifactId>saxon-jdom</artifactId>
-   <version>9</version>
+   <version>9.1.0.8</version>
   </dependency>
 
   <dependency>
