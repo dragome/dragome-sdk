@@ -52,7 +52,7 @@
   <repositories>
     <repository>
       <id>gradle</id>
-      <url>http://repo.gradle.org/gradle/libs-releases-local/</url>
+      <url>https://repo.gradle.org/gradle/libs-releases-local/</url>
     </repository>
   </repositories>
 
@@ -101,7 +101,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.1.1</version>
         <configuration>
           <charset>UTF-8</charset>
           <docencoding>UTF-8</docencoding>
@@ -219,12 +219,12 @@
     <dependency>
       <groupId>org.gradle</groupId>
       <artifactId>gradle-core</artifactId>
-      <version>2.6</version>
+      <version>5.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.gradle</groupId>
       <artifactId>gradle-tooling-api</artifactId>
-      <version>2.6</version>
+      <version>5.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>

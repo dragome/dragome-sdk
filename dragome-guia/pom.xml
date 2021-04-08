@@ -152,7 +152,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.1.1</version>
         <configuration>
           <charset>UTF-8</charset>
           <docencoding>UTF-8</docencoding>
