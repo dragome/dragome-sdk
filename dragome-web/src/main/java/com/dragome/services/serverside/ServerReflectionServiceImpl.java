@@ -26,15 +26,15 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
-//		return null;
+		//		return null;
 		Reflections reflections= new Reflections("^");
 		Set<Class<? extends T>> implementations= reflections.getSubTypesOf(type);
 		return implementations;
 	}
-	
+
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
 	{
-//		return null;
+		//		return null;
 		Reflections reflections= new Reflections("^");
 		return reflections.getTypesAnnotatedWith((Class<? extends Annotation>) class1);
 	}
@@ -45,32 +45,38 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 		{
 			DragomeConfigurator foundConfigurator= null;
 			Reflections reflections= new Reflections(".*");
-			
-			Set<Class<?>> typesAnnotatedWith = null;
-			typesAnnotatedWith = reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
-			int priorityMax = -1;
-			Class<?> nextClass = null;
-			Iterator<Class<?>> iterator = typesAnnotatedWith.iterator();
-			while(iterator.hasNext()) {
-				Class<?> next = iterator.next();
-				DragomeConfiguratorImplementor annotation = next.getAnnotation(DragomeConfiguratorImplementor.class);
-				int priorityAnno = annotation.priority();
-				if(priorityAnno > priorityMax) {
-					priorityMax = priorityAnno;
-					nextClass = next;
+
+			Set<Class<?>> typesAnnotatedWith= null;
+			typesAnnotatedWith= reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
+			int priorityMax= -1;
+			Class<?> nextClass= null;
+			Iterator<Class<?>> iterator= typesAnnotatedWith.iterator();
+			while (iterator.hasNext())
+			{
+				Class<?> next= iterator.next();
+				DragomeConfiguratorImplementor annotation= next.getAnnotation(DragomeConfiguratorImplementor.class);
+				if (annotation != null)
+				{
+					int priorityAnno= annotation.priority();
+					if (priorityAnno > priorityMax)
+					{
+						priorityMax= priorityAnno;
+						nextClass= next;
+					}
 				}
 			}
-			if(nextClass != null)
-				foundConfigurator = (DragomeConfigurator)nextClass.newInstance();
-			
-			if (foundConfigurator == null) {
+			if (nextClass != null)
+				foundConfigurator= (DragomeConfigurator) nextClass.newInstance();
+
+			if (foundConfigurator == null)
+			{
 				Set<Class<? extends DragomeConfigurator>> configurators= reflections.getSubTypesOf(DragomeConfigurator.class);
 				for (Class<? extends DragomeConfigurator> class1 : configurators)
 				{
 					if (!class1.equals(DomHandlerApplicationConfigurator.class))
 						foundConfigurator= class1.newInstance();
 				}
-				if(foundConfigurator == null)
+				if (foundConfigurator == null)
 					foundConfigurator= new DomHandlerApplicationConfigurator();
 			}
 
