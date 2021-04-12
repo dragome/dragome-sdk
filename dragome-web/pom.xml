@@ -110,10 +110,10 @@
 
 
   <dependency>
-   <groupId>org.ow2.asm</groupId>
-   <artifactId>asm-all</artifactId>
-   <version>5.0.2</version>
-  </dependency>
+	    <groupId>org.glassfish.external</groupId>
+    	<artifactId>asm-all</artifactId>
+    	<version>6.1_ALPHA</version>
+	</dependency>
 
   <dependency>
    <groupId>org.jdom</groupId>
@@ -154,13 +154,13 @@
   <dependency>
    <groupId>org.reflections</groupId>
    <artifactId>reflections</artifactId>
-   <version>0.9.9-RC1</version>
+   <version>0.9.12</version>
   </dependency>
 
   <dependency>
    <groupId>org.javassist</groupId>
    <artifactId>javassist</artifactId>
-   <version>3.16.1-GA</version>
+   <version>3.27.0-GA</version>
   </dependency>
 
   <dependency>
@@ -207,8 +207,8 @@
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.1</version>
     <configuration>
-     <source>1.7</source>
-     <target>1.7</target>
+     <source>1.8</source>
+     <target>1.8</target>
     </configuration>
    </plugin>
 

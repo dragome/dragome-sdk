@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <name>dragome-bytecode-js-compiler</name>
   <groupId>com.dragome</groupId>
@@ -11,7 +13,7 @@
   <properties>
     <dragome.version>0.96-beta4</dragome.version>
     <skip.gpg>true</skip.gpg>
-	<maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -43,6 +45,14 @@
       <id>dragome</id>
       <name>dragome</name>
       <url>https://repo.enonic.com/public</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>asm</id>
+      <name>adm</name>
+      <url>https://repository.ow2.org/nexus/content/repositories</url>
     </repository>
   </repositories>
 
@@ -77,9 +87,16 @@
     </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-all</artifactId>
-      <version>5.0.2</version>
+      <artifactId>asm</artifactId>
+      <version>6.2.1</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm-commons -->
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-commons</artifactId>
+      <version>6.2.1</version>
+    </dependency>
+
     <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
@@ -96,9 +113,9 @@
       <version>9.1.0.8</version>
     </dependency>
     <dependency>
- 			<groupId>org.apache.bcel</groupId>
+      <groupId>org.apache.bcel</groupId>
       <artifactId>bcel</artifactId>
-      <version>6.0</version>    
+      <version>6.0</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>

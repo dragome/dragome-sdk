@@ -69,10 +69,10 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-all</artifactId>
-      <version>5.0.2</version>
-    </dependency>
+	    <groupId>org.glassfish.external</groupId>
+    	<artifactId>asm-all</artifactId>
+    	<version>6.1_ALPHA</version>
+	</dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
