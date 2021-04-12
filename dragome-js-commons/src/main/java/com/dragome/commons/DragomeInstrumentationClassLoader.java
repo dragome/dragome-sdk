@@ -378,7 +378,7 @@ public final class DragomeInstrumentationClassLoader extends URLClassLoader
 				return true;
 		}
 
-		return classname.startsWith("javassist.") || classname.startsWith("junit.") || classname.startsWith("sun.") || classname.startsWith("java.") || classname.startsWith("javax.") || classname.startsWith("org.w3c") || classname.startsWith("org.xml") || loadFromParent.contains(classname) || classname.startsWith("org.apache") /* && isParentFirst(classname) */;
+		return classname.startsWith("com.sun.") ||classname.startsWith("jdk.") || classname.startsWith("javassist.") || classname.startsWith("junit.") || classname.startsWith("sun.") || classname.startsWith("java.") || classname.startsWith("javax.") || classname.startsWith("org.w3c") || classname.startsWith("org.xml") || loadFromParent.contains(classname) || classname.startsWith("org.apache") /* && isParentFirst(classname) */;
 	}
 //
 //	private boolean classNeedsTransformation(String classname)
