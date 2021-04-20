@@ -16,12 +16,6 @@
  */
 package com.dragome.callbackevictor.serverside;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.dragome.callbackevictor.serverside.bytecode.transformation.ResourceTransformer;
-import com.dragome.callbackevictor.serverside.bytecode.transformation.asm.AsmClassTransformer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +27,13 @@ import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.dragome.callbackevictor.serverside.javaflow.providers.asmx.AsmxResourceTransformationFactory;
+import com.dragome.callbackevictor.serverside.javaflow.spi.ClasspathResourceLoader;
+import com.dragome.callbackevictor.serverside.javaflow.spi.ResourceTransformer;
 
 /**
  * {@link URLClassLoader} with bytecode instrumentation for javaflow.
@@ -107,7 +108,7 @@ public final class ContinuationClassLoader extends URLClassLoader {
     }
 
     public ContinuationClassLoader(URL[] urls, ClassLoader parent) {
-        this(urls,parent,new AsmClassTransformer());
+        this(urls,parent,new AsmxResourceTransformationFactory().createTransformer(new ClasspathResourceLoader(parent)));
     }
 
     private static ClassLoader fixNullParent(ClassLoader classLoader) {

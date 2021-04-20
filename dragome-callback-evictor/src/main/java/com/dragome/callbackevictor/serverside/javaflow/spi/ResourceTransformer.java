@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,25 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.callbackevictor.serverside.utils;
+package com.dragome.callbackevictor.serverside.javaflow.spi;
 
-import com.dragome.callbackevictor.serverside.bytecode.transformation.ResourceTransformer;
+import java.util.Collection;
 
 /**
- * {@link ResourceTransformer} whose transformation
- * is defined in terms of multiple {@link ResourceTransformer}s.
+ * Byte-code transformer that enhances the class files for javaflow.
+ *
+ * <p>
+ * When Continuation.suspend is called, all the methods in the stack frame needs
+ * to be enhanced.
+ *
+ * @author tcurdt
  */
-public class CompositeTransformer implements ResourceTransformer {
-    private final ResourceTransformer[] transformers;
-
-    public CompositeTransformer(ResourceTransformer[] transformers) {
-        this.transformers = transformers;
-    }
-
-    public byte[] transform(byte[] image) {
-        for (int i = 0; i < transformers.length; i++) {
-            image = transformers[i].transform(image);
-        }
-        return image;
-    }
+public interface ResourceTransformer {
+    byte[] transform(byte[] original);
+    byte[] transform(byte[] original, String retransformClass);
+    byte[] transform(byte[] original, String... retransformClasses);
+    byte[] transform(byte[] original, Collection<String> retransformClasses);
+    
+    void release();
 }

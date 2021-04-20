@@ -69,15 +69,33 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-	    <groupId>org.glassfish.external</groupId>
-    	<artifactId>asm-all</artifactId>
-    	<version>6.1_ALPHA</version>
-	</dependency>
+      <groupId>net.tascalate</groupId>
+      <artifactId>net.tascalate.asmx.analysis</artifactId>
+      <version>7.1.0</version>
+    </dependency>
+     <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>6.2.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm-commons -->
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-commons</artifactId>
+      <version>6.2.1</version>
+    </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>1.4</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm-util -->
+<dependency>
+    <groupId>org.ow2.asm</groupId>
+    <artifactId>asm-util</artifactId>
+    <version>6.2.1</version>
+</dependency>
+    
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>

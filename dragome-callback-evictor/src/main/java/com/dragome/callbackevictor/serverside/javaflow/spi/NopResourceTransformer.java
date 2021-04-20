@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,13 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.callbackevictor.serverside.bytecode;
+package com.dragome.callbackevictor.serverside.javaflow.spi;
 
-public final class EmptyStackException extends RuntimeException {
+import java.util.Collection;
 
-    private static final long serialVersionUID = 1L;
+public final class NopResourceTransformer extends AbstractResourceTransformer {
 
-    public EmptyStackException(String message) {
-        super(message);
+    public static final NopResourceTransformer INSTANCE = new NopResourceTransformer();
+
+    public byte[] transform(byte[] original, Collection<String> retransformClasses) {
+        return original;
+    }
+
+    public void release() {
+        
     }
 }

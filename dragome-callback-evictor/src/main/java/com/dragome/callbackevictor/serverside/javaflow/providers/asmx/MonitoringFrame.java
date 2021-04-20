@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,34 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.callbackevictor.serverside.bytecode.transformation.asm;
-
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.analysis.AnalyzerException;
-import org.objectweb.asm.tree.analysis.Frame;
-import org.objectweb.asm.tree.analysis.Interpreter;
-import org.objectweb.asm.tree.analysis.Value;
+package com.dragome.callbackevictor.serverside.javaflow.providers.asmx;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public final class MonitoringFrame extends Frame {
+import net.tascalate.asmx.Opcodes;
+import net.tascalate.asmx.tree.AbstractInsnNode;
+import net.tascalate.asmx.tree.analysis.AnalyzerException;
+import net.tascalate.asmx.tree.analysis.Frame;
+import net.tascalate.asmx.tree.analysis.Interpreter;
+import net.tascalate.asmx.tree.analysis.Value;
+
+class MonitoringFrame<V extends Value> extends Frame<V> {
 
     // keeps track of monitored locals
     private List<Integer> monitored;
 
-    public MonitoringFrame(Frame arg0) {
-        super(arg0);
+    MonitoringFrame(Frame<? extends V> frame) {
+        super(frame);
     }
 
-    public MonitoringFrame(int arg0, int arg1) {
-        super(arg0, arg1);
+    MonitoringFrame(int nLocals, int nStack) {
+        super(nLocals, nStack);
         monitored = new LinkedList<Integer>();
     }
 
-    public void execute(AbstractInsnNode insn, Interpreter interpreter)
-            throws AnalyzerException {
+    @Override
+    public void execute(AbstractInsnNode insn, Interpreter<V> interpreter) throws AnalyzerException {
 
         boolean never = false;
         if (never) {
@@ -52,7 +52,7 @@ public final class MonitoringFrame extends Frame {
         int insnOpcode = insn.getOpcode();
 
         if (insnOpcode == Opcodes.MONITORENTER || insnOpcode == Opcodes.MONITOREXIT) {
-            Value pop = pop();
+            V pop = pop();
             interpreter.unaryOperation(insn, pop);
 
             int local = -1;
@@ -73,17 +73,19 @@ public final class MonitoringFrame extends Frame {
         }
     }
 
-    public Frame init(Frame frame) {
+    @Override
+    public Frame<V> init(Frame<? extends V> frame) {
         super.init(frame);
         if (frame instanceof MonitoringFrame) {
-            monitored = new LinkedList<Integer>(MonitoringFrame.class.cast(frame).monitored);
+            MonitoringFrame<?> mframe = (MonitoringFrame<?>)frame;
+            monitored = new LinkedList<Integer>( mframe.monitored );
         } else {
             monitored = new LinkedList<Integer>();
         }
         return this;
     }
 
-    public int[] getMonitored() {
+    int[] getMonitored() {
         int[] res = new int[monitored.size()];
         for (int i = 0; i < monitored.size(); i++) {
             res[i] = monitored.get(i);
@@ -91,11 +93,11 @@ public final class MonitoringFrame extends Frame {
         return res;
     }
 
-    public void monitorEnter(int local) {
-        monitored.add(new Integer(local));
+    private void monitorEnter(int local) {
+        monitored.add(Integer.valueOf(local));
     }
 
-    public void monitorExit(int local) {
+    private void monitorExit(int local) {
         int index = monitored.lastIndexOf(local);
         if (index == -1) {
             // throw new IllegalStateException("Monitor Exit never entered");

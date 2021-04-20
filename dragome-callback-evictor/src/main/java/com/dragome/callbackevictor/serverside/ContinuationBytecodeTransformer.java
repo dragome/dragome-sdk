@@ -17,7 +17,9 @@ package com.dragome.callbackevictor.serverside;
 
 import java.util.Set;
 
-import com.dragome.callbackevictor.serverside.bytecode.transformation.asm.AsmClassTransformer;
+import com.dragome.callbackevictor.serverside.javaflow.providers.asmx.AsmxResourceTransformationFactory;
+import com.dragome.callbackevictor.serverside.javaflow.spi.ClasspathResourceLoader;
+import com.dragome.callbackevictor.serverside.javaflow.spi.ResourceTransformer;
 import com.dragome.commons.compiler.BytecodeTransformer;
 
 public class ContinuationBytecodeTransformer implements BytecodeTransformer
@@ -37,7 +39,7 @@ public class ContinuationBytecodeTransformer implements BytecodeTransformer
 
 		if (requiresTransformation(className))
 		{
-			AsmClassTransformer asmClassTransformer= new AsmClassTransformer();
+			ResourceTransformer asmClassTransformer= new AsmxResourceTransformationFactory().createTransformer(new ClasspathResourceLoader(getClass().getClassLoader()));
 			transformedArray= asmClassTransformer.transform(originalByteArray);
 		}
 		else

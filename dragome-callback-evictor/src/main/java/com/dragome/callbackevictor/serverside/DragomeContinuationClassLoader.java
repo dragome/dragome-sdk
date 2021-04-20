@@ -52,8 +52,10 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dragome.callbackevictor.serverside.bytecode.transformation.ResourceTransformer;
-import com.dragome.callbackevictor.serverside.bytecode.transformation.asm.AsmClassTransformer;
+import com.dragome.callbackevictor.serverside.javaflow.providers.asmx.AsmxResourceTransformationFactory;
+import com.dragome.callbackevictor.serverside.javaflow.providers.asmx.ContinuableClassTransformer;
+import com.dragome.callbackevictor.serverside.javaflow.spi.ClasspathResourceLoader;
+import com.dragome.callbackevictor.serverside.javaflow.spi.ResourceTransformer;
 import com.dragome.commons.compiler.BytecodeTransformer;
 
 /**
@@ -141,7 +143,7 @@ public final class DragomeContinuationClassLoader extends URLClassLoader
 
 	public DragomeContinuationClassLoader(URL[] urls, ClassLoader parent, ClassLoader last, BytecodeTransformer bytecodeTransformer, Set<String> loadFromParentList)
 	{
-		this(urls, parent, new AsmClassTransformer());
+		this(urls, parent, new AsmxResourceTransformationFactory().createTransformer(new ClasspathResourceLoader(parent)));
 		this.loadFromParent= loadFromParentList;
 		this.last= last;
 		this.bytecodeTransformer= bytecodeTransformer;
@@ -390,7 +392,7 @@ public final class DragomeContinuationClassLoader extends URLClassLoader
 				return true;
 		}
 
-		return classname.startsWith("javassist.") || classname.startsWith("junit.") || classname.startsWith("sun.") || classname.startsWith("java.") || classname.startsWith("javax.") || classname.startsWith("org.w3c") || classname.startsWith("org.xml") || loadFromParent.contains(classname) || classname.startsWith("org.apache") /* && isParentFirst(classname) */;
+		return  classname.startsWith("jdk.") || classname.startsWith("javassist.") || classname.startsWith("junit.") || classname.startsWith("sun.") || classname.startsWith("java.") || classname.startsWith("javax.") || classname.startsWith("org.w3c") || classname.startsWith("org.xml") || loadFromParent.contains(classname) || classname.startsWith("org.apache") /* && isParentFirst(classname) */;
 	}
 //
 //	private boolean classNeedsTransformation(String classname)
