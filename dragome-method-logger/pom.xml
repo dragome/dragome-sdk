@@ -79,11 +79,16 @@
       <artifactId>commons-jci-core</artifactId>
       <version>1.0</version>
     </dependency>
+     <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>6.2.1</version>
+    </dependency>
     <dependency>
-	    <groupId>org.glassfish.external</groupId>
-    	<artifactId>asm-all</artifactId>
-    	<version>6.1_ALPHA</version>
-	</dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-commons</artifactId>
+      <version>6.2.1</version>
+    </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
