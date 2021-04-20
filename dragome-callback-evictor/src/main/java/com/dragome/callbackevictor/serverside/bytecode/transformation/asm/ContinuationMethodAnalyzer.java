@@ -17,6 +17,7 @@
 package com.dragome.callbackevictor.serverside.bytecode.transformation.asm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class ContinuationMethodAnalyzer extends MethodNode implements Opcodes
 	{
 		MyVerifier()
 		{
+			super(Opcodes.ASM6, null, null, Collections.EMPTY_LIST, false);
 			if (_useLoader != null)
 			{
 				setClassLoader(_useLoader);
