@@ -115,16 +115,16 @@ public class ClassUnit extends Unit
 
 	public ClassUnit()
 	{
-	}
-
-	public ClassUnit(Project theProject, Signature theSignature)
-	{
-		project= theProject;
-
 		interfaces= new LinkedHashSet<ClassUnit>();
 		declaredMembers= new LinkedHashMap<String, MemberUnit>();
 		subUnits= new LinkedHashSet<ClassUnit>();
 		lastCompiled= -1;
+	}
+
+	public ClassUnit(Project theProject, Signature theSignature)
+	{
+		this();
+		project= theProject;
 		setSignature(theSignature);
 	}
 
@@ -180,7 +180,9 @@ public class ClassUnit extends Unit
 	{
 		if (subUnit == null)
 			throw new NullPointerException();
-		subUnits.remove(subUnit);
+
+		if (subUnits != null)
+			subUnits.remove(subUnit);
 	}
 
 	public Collection<ClassUnit> getSubUnits()
