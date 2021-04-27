@@ -34,7 +34,8 @@ import java.io.Serializable;
  * 
  */
 public class Continuation implements Serializable {
-
+	
+	private String id;
     private static final long serialVersionUID = 2L;
 
     public static Continuation current;
@@ -44,7 +45,7 @@ public class Continuation implements Serializable {
     /**
      * Create a new continuation, which continue a previous continuation.
      */
-    private Continuation( final StackRecorder pStackRecorder ) {
+    public Continuation( final StackRecorder pStackRecorder ) {
         stackRecorder = pStackRecorder;
     }
 
@@ -174,7 +175,7 @@ public class Continuation implements Serializable {
         while(true) {
             try {
                 StackRecorder pStackRecorder =
-                    new StackRecorder(pOldContinuation.stackRecorder).execute(pContext);
+                    new StackRecorder(pOldContinuation.getStackRecorder()).execute(pContext);
                 if(pStackRecorder == null) {
                     return null;
                 } else {
@@ -193,7 +194,7 @@ public class Continuation implements Serializable {
     }
 
     public boolean isSerializable() {
-        return stackRecorder.isSerializable();
+        return getStackRecorder().isSerializable();
     }
     
     /**
@@ -204,7 +205,7 @@ public class Continuation implements Serializable {
      *      The value is passed from the continuation to the client code via {@link #suspend(Object)}
      */
     public Object value() {
-        return stackRecorder.value;
+        return getStackRecorder().value;
     }
     
     /**
@@ -336,4 +337,22 @@ public class Continuation implements Serializable {
     public String toString() {
         return "Continuation@" + hashCode() + "/" /*+ ReflectionUtils.getClassLoaderName(this)*/;
     }
+
+
+	public StackRecorder getStackRecorder()
+	{
+		return stackRecorder;
+	}
+
+
+	public String getId()
+	{
+		return id;
+	}
+
+
+	public void setId(String id)
+	{
+		this.id = id;
+	}
 }

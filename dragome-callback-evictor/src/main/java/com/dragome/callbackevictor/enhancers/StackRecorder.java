@@ -90,14 +90,14 @@ public final class StackRecorder extends Stack {
             if (isRestoring) {
             }
             
-            runnable.run();
+            getRunnable().run();
 
             if (isCapturing) {
                 if(isEmpty()) {
                     // if we were really capturing the stack, at least we should have
                     // one object in the reference stack. Otherwise, it usually means
                     // that the application wasn't instrumented correctly.
-                    throw new IllegalStateException("stack corruption. Is "+runnable.getClass()+" instrumented for javaflow?");
+                    throw new IllegalStateException("stack corruption. Is "+getRunnable().getClass()+" instrumented for javaflow?");
                 }
                 // top of the reference stack is the object that we'll call into
                 // when resuming this continuation. we have a separate Runnable

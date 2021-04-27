@@ -17,15 +17,17 @@
 package com.dragome.callbackevictor.enhancers;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
 
 import com.dragome.commons.ProxyRelatedInvocationHandler;
+import com.dragome.commons.javascript.ScriptHelper;
 
 /**
  * Stack to store the frame information along the invocation trace.
  */
 public class Stack implements Serializable
 {
-
+	private String id;
 	private static final long serialVersionUID= 2L;
 
 	private int[] istack;
@@ -35,7 +37,7 @@ public class Stack implements Serializable
 	private Object[] ostack;
 	private Object[] rstack;
 	private int iTop, fTop, dTop, lTop, oTop, rTop;
-	protected Runnable runnable;
+	private Runnable runnable;
 
 	public Stack(Runnable pRunnable)
 	{
@@ -45,7 +47,7 @@ public class Stack implements Serializable
 		fstack= new float[5];
 		ostack= new Object[10];
 		rstack= new Object[5];
-		runnable= pRunnable;
+		setRunnable(pRunnable);
 	}
 
 	public Stack(final Stack pParent)
@@ -68,7 +70,7 @@ public class Stack implements Serializable
 		System.arraycopy(pParent.lstack, 0, lstack, 0, lTop);
 		System.arraycopy(pParent.ostack, 0, ostack, 0, oTop);
 		System.arraycopy(pParent.rstack, 0, rstack, 0, rTop);
-		runnable= pParent.runnable;
+		setRunnable(pParent.getRunnable());
 	}
 
 	public boolean hasDouble()
@@ -175,7 +177,7 @@ public class Stack implements Serializable
 
 			if (!proxyRelatedInvocationHandler.isInvoked())
 				o= proxyRelatedInvocationHandler.getProxy();
-			
+
 			proxyRelatedInvocationHandler.setInvoked(existsIn(rstack, proxyRelatedInvocationHandler));
 		}
 
@@ -264,11 +266,11 @@ public class Stack implements Serializable
 
 	public void pushReference(Object o)
 	{
-		//		if (o instanceof ProxyRelatedInvocationHandler)
-		//		{
-		//			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler= (ProxyRelatedInvocationHandler) o;
-		//			o= proxyRelatedInvocationHandler.getProxy();
-		//		}
+		if (o instanceof InvocationHandler)
+		{
+			ScriptHelper.put("handler", o, this);
+			o= ScriptHelper.eval("handler.proxy", this);
+		}
 
 		if (rTop == rstack.length)
 		{
@@ -315,6 +317,145 @@ public class Stack implements Serializable
 		sb.append("o[").append(oTop).append("],");
 		sb.append("r[").append(rTop).append("]");
 		return sb.toString();
+	}
+
+	public Runnable getRunnable()
+	{
+		return runnable;
+	}
+
+	public void setRunnable(Runnable runnable)
+	{
+		this.runnable= runnable;
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public void setId(String id)
+	{
+		this.id= id;
+	}
+	public int[] getIstack()
+	{
+		return istack;
+	}
+
+	public void setIstack(int[] istack)
+	{
+		this.istack= istack;
+	}
+
+	public float[] getFstack()
+	{
+		return fstack;
+	}
+
+	public void setFstack(float[] fstack)
+	{
+		this.fstack= fstack;
+	}
+
+	public double[] getDstack()
+	{
+		return dstack;
+	}
+
+	public void setDstack(double[] dstack)
+	{
+		this.dstack= dstack;
+	}
+
+	public long[] getLstack()
+	{
+		return lstack;
+	}
+
+	public void setLstack(long[] lstack)
+	{
+		this.lstack= lstack;
+	}
+
+	public Object[] getOstack()
+	{
+		return ostack;
+	}
+
+	public void setOstack(Object[] ostack)
+	{
+		this.ostack= ostack;
+	}
+
+	public Object[] getRstack()
+	{
+		return rstack;
+	}
+
+	public void setRstack(Object[] rstack)
+	{
+		this.rstack= rstack;
+	}
+
+	public int getITop()
+	{
+		return iTop;
+	}
+
+	public void setITop(int top)
+	{
+		iTop= top;
+	}
+
+	public int getFTop()
+	{
+		return fTop;
+	}
+
+	public void setFTop(int top)
+	{
+		fTop= top;
+	}
+
+	public int getDTop()
+	{
+		return dTop;
+	}
+
+	public void setDTop(int top)
+	{
+		dTop= top;
+	}
+
+	public int getLTop()
+	{
+		return lTop;
+	}
+
+	public void setLTop(int top)
+	{
+		lTop= top;
+	}
+
+	public int getOTop()
+	{
+		return oTop;
+	}
+
+	public void setOTop(int top)
+	{
+		oTop= top;
+	}
+
+	public int getRTop()
+	{
+		return rTop;
+	}
+
+	public void setRTop(int top)
+	{
+		rTop= top;
 	}
 
 	//    private String getContent() {
