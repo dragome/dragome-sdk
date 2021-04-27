@@ -85,7 +85,7 @@ public class Proxy
 
 				Object result= handler.invoke(proxy, method2, args);
 
-				if (isPrimitive)
+				if (isPrimitive && !returnType.equals(Void.class) && !returnType.equals(void.class))
 					result= BoxingHelper.convertObjectToPrimitive(result);
 
 				return result;

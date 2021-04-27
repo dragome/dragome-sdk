@@ -337,7 +337,7 @@ dragomeJs.checkCast = function(obj, className) {
 function createProxyOf(types, methods, handler1, handler) {
 	var membersMap = {};
 	membersMap.$$$handler___java_lang_reflect_InvocationHandler = handler1;
-
+	
 	var createInvoker = function(method) {
 		return function() {
 			return handler
@@ -364,8 +364,12 @@ function createProxyOf(types, methods, handler1, handler) {
 		},
 		members : membersMap
 	});
+	
+	var result=  eval("new ProxyOf_" + nextNumber + "()");
 
-	return eval("new ProxyOf_" + nextNumber + "()");
+	handler1.proxy= result;
+
+	return result;
 };
 
 dragomeJs.addNativeMethod = function(signature, method) {
