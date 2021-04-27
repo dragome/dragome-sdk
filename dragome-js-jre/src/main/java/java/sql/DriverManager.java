@@ -230,4 +230,9 @@ public class DriverManager
 		}
 	}
 
+	public static Connection getConnection(String url, String userName, String password) throws SQLException
+	{
+		return getConnection(url);
+	}
+
 }

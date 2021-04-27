@@ -35,7 +35,7 @@ public class Object
 	{
 	}
 
-	public Object clone() throws CloneNotSupportedException
+	protected Object clone() throws CloneNotSupportedException
 	{
 		if (ScriptHelper.evalBoolean("this instanceof Array", this))
 			return ScriptHelper.eval("dragomeJs.cloneArray(this)", this);

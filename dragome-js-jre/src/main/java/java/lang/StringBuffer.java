@@ -45,6 +45,11 @@ public class StringBuffer
 		this();
 	}
 
+	public StringBuffer(StringBuffer result)
+	{
+		this(result.toString());
+	}
+
 	public int length()
 	{
 		consolidate();

@@ -15,7 +15,15 @@
  */
 package java.sql;
 
+import java.io.InputStream;
+
 public class Clob
 {
+
+	public InputStream getAsciiStream()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

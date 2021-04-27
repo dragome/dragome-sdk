@@ -15,7 +15,15 @@
  */
 package java.sql;
 
+import java.io.InputStream;
+
 public class Blob
 {
+
+	public InputStream getBinaryStream()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

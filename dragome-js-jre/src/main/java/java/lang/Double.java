@@ -121,17 +121,17 @@ public final class Double extends Number implements Comparable<Double>
 	 */
 	public int compareTo(Double o)
 	{
-//		if (!(o instanceof Double))
-//			throw new ClassCastException();
-//		Double d= (Double) o;
-//		if (isNaN() || d.isNaN())
-//		{
-//			if (isNaN() && d.isNaN())
-//				return 0;
-//			if (isNaN())
-//				return 1;
-//			return -1;
-//		}
+		//		if (!(o instanceof Double))
+		//			throw new ClassCastException();
+		//		Double d= (Double) o;
+		//		if (isNaN() || d.isNaN())
+		//		{
+		//			if (isNaN() && d.isNaN())
+		//				return 0;
+		//			if (isNaN())
+		//				return 1;
+		//			return -1;
+		//		}
 		return Utils.cmp(value, o.doubleValue(), 0);
 	}
 
@@ -183,8 +183,8 @@ public final class Double extends Number implements Comparable<Double>
 		if (s.matches("(\\+|\\-)?NaN"))
 			return NaN;
 
-//		if (!s.matches("(\\+|\\-)?\\d+(\\.\\d+)?"))
-//			throw new NumberFormatException("Invalid double: " + s);
+		//		if (!s.matches("(\\+|\\-)?\\d+(\\.\\d+)?"))
+		//			throw new NumberFormatException("Invalid double: " + s);
 
 		ScriptHelper.put("s", s, null);
 		double d= ScriptHelper.evalDouble("parseFloat(s)", null);
@@ -396,17 +396,23 @@ public final class Double extends Number implements Comparable<Double>
 		long anotherBits= Double.doubleToLongBits(d2);
 
 		return (thisBits == anotherBits ? 0 : // Values are equal
-		        (thisBits < anotherBits ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
-		                1)); // (0.0, -0.0) or (NaN, !NaN)
-	}
-	
-	public static int hashCode(double value)
-	{
-		return hashCode((long)value);
+				(thisBits < anotherBits ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
+						1)); // (0.0, -0.0) or (NaN, !NaN)
 	}
 
-	public static int doubleToRawLongBits(double d) 
+	public static int hashCode(double value)
+	{
+		return hashCode((long) value);
+	}
+
+	public static int doubleToRawLongBits(double d)
 	{
 		return (int) doubleToLongBits(d);
 	}
+
+	public boolean isInfinite()
+	{
+		return isInfinite(value);
+	}
+
 }

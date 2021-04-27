@@ -84,11 +84,6 @@ public final class Float extends Number
 		return new Float(parseFloat(aFloat));
 	}
 
-	static public boolean isNaN(float v)
-	{
-		return (v != v);
-	}
-
 	public static int floatToIntBits(float value)
 	{
 		throw new NotImplementedMethod("Float.floatToIntBits");
@@ -133,14 +128,41 @@ public final class Float extends Number
 		ScriptHelper.put("value", value, this);
 		return (String) ScriptHelper.eval("String(value)", this);
 	}
-	
+
 	public static String toString(float f)
 	{
 		return f + "";
 	}
 
-	public static int floatToRawIntBits(float value) 
+	public static int floatToRawIntBits(float value)
 	{
 		return Numbers.floatToIntBits(value);
+	}
+
+	public static boolean isInfinite(float v)
+	{
+		return (v == POSITIVE_INFINITY) || (v == NEGATIVE_INFINITY);
+	}
+
+	public boolean isInfinite()
+	{
+		return isInfinite(value);
+	}
+
+	/**
+	 * Returns true if this Double value is a Not-a-Number (NaN), false otherwise.
+	 */
+	public boolean isNaN()
+	{
+		return isNaN(value);
+	}
+
+	/**
+	 * Returns true if the specified number is a Not-a-Number (NaN) value, false otherwise.
+	 */
+	public static boolean isNaN(float v)
+	{
+		ScriptHelper.put("value", v, null);
+		return ScriptHelper.evalBoolean("isNaN(value)", null);
 	}
 }

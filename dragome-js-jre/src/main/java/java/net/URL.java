@@ -98,4 +98,16 @@ public class URL
 		return null;
 	}
 
+	public String getPath()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getFile()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -18,6 +18,7 @@ package java.lang;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Properties;
 
 import javax.script.ScriptEngine;
 
@@ -140,5 +141,10 @@ public final class System
 	public static String setProperty(String key, String value)
 	{
 		return properties.put(key, value);
+	}
+
+	public static Properties getProperties()
+	{
+		return new Properties();
 	}
 }

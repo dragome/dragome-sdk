@@ -15,6 +15,7 @@
  */
 package java.lang;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +32,7 @@ import com.dragome.commons.javascript.ScriptHelper;
  *
  * [1] http://www.j2js.com/license.txt
  */
-public final class String implements CharSequence, Comparable<String>
+public final class String implements CharSequence, Comparable<String>, Serializable
 {
 
 	private static void consume(String me)

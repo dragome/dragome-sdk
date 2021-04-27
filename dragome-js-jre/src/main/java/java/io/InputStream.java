@@ -43,4 +43,22 @@ public abstract class InputStream implements Closeable {
 	public int available () {
 		return 0;
 	}
+
+	public void mark(int snippetsize)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void reset() throws IOException
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean markSupported()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

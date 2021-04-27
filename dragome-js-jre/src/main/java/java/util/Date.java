@@ -2,9 +2,8 @@ package java.util;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
-public class Date
+public class Date implements Comparable<Date>
 {
-
 	private Object nativeDate;
 
 	public Date()
@@ -44,5 +43,12 @@ public class Date
 	public String toString()
 	{
 		return (String) ScriptHelper.eval("this.nativeDate.toGMTString()", this);
+	}
+
+	public int compareTo(Date anotherDate)
+	{
+		long thisTime= getTime();
+		long anotherTime= anotherDate.getTime();
+		return (thisTime < anotherTime ? -1 : (thisTime == anotherTime ? 0 : 1));
 	}
 }

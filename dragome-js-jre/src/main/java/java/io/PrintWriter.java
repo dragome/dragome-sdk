@@ -15,11 +15,15 @@
  */
 package java.io;
 
-public class PrintWriter
+public class PrintWriter extends Writer
 {
 	protected Writer out;
 	private boolean errorState= false;
 
+	public PrintWriter(OutputStream out) {
+        this(new BufferedWriter(new OutputStreamWriter(out)));
+    }
+	
 	public PrintWriter(Writer theOut)
 	{
 		out= theOut;
@@ -55,5 +59,15 @@ public class PrintWriter
 
 	public void flush()
 	{
+	}
+
+	public void close() throws IOException
+	{
+		out.close();
+	}
+
+	public void write(char[] buf, int offset, int count) throws IOException
+	{
+		out.write(buf, offset, count);
 	}
 }

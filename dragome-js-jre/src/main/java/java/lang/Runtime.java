@@ -46,4 +46,10 @@ public class Runtime
 		ScriptHelper.eval("dragomeJs.tracing = tracing", this);
 	}
 
+	public Process exec(java.lang.String cmdline)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
