@@ -43,11 +43,13 @@ public class SimpleDateFormat extends DateFormat
 {
 	public SimpleDateFormat()
 	{
+		super("");
 		// TODO Auto-generated constructor stub
 	}
 
 	public SimpleDateFormat(String string)
 	{
+		super(string);
 		// TODO Auto-generated constructor stub
 	}
 

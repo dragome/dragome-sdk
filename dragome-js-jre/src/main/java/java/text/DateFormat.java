@@ -40,6 +40,8 @@ package java.text;
 
 import java.util.Date;
 
+import com.dragome.commons.javascript.ScriptHelper;
+
 /**
  * {@code DateFormat} is an abstract class for date/time formatting subclasses which
  * formats and parses dates or time in a language-independent manner.
@@ -134,7 +136,20 @@ public abstract class DateFormat extends Format
 	public static final String LONG= null;
 	public static final String MEDIUM= null;
 	public static final String SHORT= null;
+	private String pattern;
 
+	public DateFormat(String pattern)
+	{
+		this.pattern= pattern;
+	}
+
+
+	@Override
+	public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public static DateFormat getDateTimeInstance(String l, String m)
 	{
 		// TODO Auto-generated method stub
@@ -147,11 +162,19 @@ public abstract class DateFormat extends Format
 	}
 	public Date parse(String source) throws ParseException
 	{
-		return null;
+		ScriptHelper.put("customPattern", pattern, this);
+		ScriptHelper.put("aDate", source, this);
+		
+
+		long eval= ScriptHelper.evalLong("JSJoda.convert(JSJoda.DateTimeFormatter.ofPattern(customPattern).parse(aDate).date).toDate().getTime()", this);
+		return new Date(eval);
 	}
 
-	public final String format(Date date)
+	public String format(Date date)
 	{
-		return "";
+		ScriptHelper.put("aDate", date, this);
+		ScriptHelper.put("customPattern", pattern, this);
+		Object eval= ScriptHelper.eval("JSJoda.LocalDateTime.from(JSJoda.nativeJs(aDate.nativeDate)).format(JSJoda.DateTimeFormatter.ofPattern(customPattern))", this);
+		return eval.toString();
 	}
 }
