@@ -222,6 +222,10 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public T newInstance() throws InstantiationException, IllegalAccessException
 	{
+		java.lang.Object constructor= ScriptHelper.eval("this.$$$nativeClass___java_lang_Object", this);
+		if (constructor == null)
+			throw new NullPointerException();
+
 		ScriptHelper.eval("var o = new this.$$$nativeClass___java_lang_Object", this);
 		ScriptHelper.eval("o.$$init_$void()", this);
 		return (T) ScriptHelper.eval("o", this);
