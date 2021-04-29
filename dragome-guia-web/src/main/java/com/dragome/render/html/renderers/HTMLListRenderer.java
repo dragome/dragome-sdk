@@ -20,17 +20,20 @@ import java.util.Collection;
 import java.util.List;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualListBox;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
-import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBox<Object>>
 {
@@ -46,7 +49,6 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		{
 			public void mergeWith(final Element selectElement)
 			{
-				final String id= DragomeEntityManager.add(visualList);
 
 				//	visualList.addValueChangeHandler(new ValueChangeHandler<Object>()
 				//	{
@@ -90,27 +92,9 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				{
 					public void clickPerformed(VisualComponent aVisualComponent)
 					{
-						ScriptHelper.put("e", selectElement, this);
-						if (ScriptHelper.evalBoolean("e.node.multiple", this))
-						{
-							String values= (String) ScriptHelper.eval("(function (){for (var options = e.node.options, values= [], i = 0, len = options.length; i < len;i++)  if (options[i].selected) values.push(options[i].value); return values.join(',')})()", this);
-							visualList.setSelectedValues((List) Arrays.asList(values.split(",")));
-						}
-						else
-						{
-							String value= (String) ScriptHelper.eval("e.node.options[e.node.selectedIndex].value", this);
-
-							Renderer<Object> renderer= visualList.getRenderer();
-
-							Collection<Object> acceptableValues= visualList.getAcceptableValues();
-							for (Object object : acceptableValues)
-							{
-								String render= renderer.render(object);
-								if (render.equals(value))
-									visualList.setValue(object);
-							}
-						}
+						updateSelected(visualList, selectElement);
 					}
+
 				});
 
 				selectElement.setAttribute("size", getSelectElementSize() + "");
@@ -140,6 +124,16 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				
 				setElementInnerHTML(selectElement, options);
 				
+				
+				EventTarget eventTarget= JsCast.castTo(selectElement, EventTarget.class);
+				eventTarget.addEventListener("change", new EventListener()
+				{
+					public void handleEvent(Event evt)
+					{
+						updateSelected(visualList, selectElement);
+					}
+				}, false);
+				
 				addListeners(visualList, selectElement);
 			}
 		});
@@ -150,5 +144,28 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 	protected int getSelectElementSize()
 	{
 		return 5;
+	}
+	private void updateSelected(final VisualListBox<Object> visualList, final Element selectElement)
+	{
+		ScriptHelper.put("e", selectElement, this);
+		if (ScriptHelper.evalBoolean("e.node.multiple", this))
+		{
+			String values= (String) ScriptHelper.eval("(function (){for (var options = e.node.options, values= [], i = 0, len = options.length; i < len;i++)  if (options[i].selected) values.push(options[i].value); return values.join(',')})()", this);
+			visualList.setSelectedValues((List) Arrays.asList(values.split(",")));
+		}
+		else
+		{
+			String value= (String) ScriptHelper.eval("e.node.options[e.node.selectedIndex].value", this);
+			
+			Renderer<Object> renderer= visualList.getRenderer();
+			
+			Collection<Object> acceptableValues= visualList.getAcceptableValues();
+			for (Object object : acceptableValues)
+			{
+				String render= renderer.render(object);
+				if (render.equals(value))
+					visualList.setValue(object);
+			}
+		}
 	}
 }

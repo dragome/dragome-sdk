@@ -16,6 +16,9 @@
 package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
@@ -27,6 +30,7 @@ import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualTextField<Object>>
 {
@@ -63,10 +67,9 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				{
 					public void inputPerformed(VisualComponent visualComponent)
 					{
-						ScriptHelper.put("textFieldElement", textFieldElement, this);
-						String value= (String) ScriptHelper.eval("textFieldElement.node.value", this);
-						visualTextField.setValue(value);
+						updateComponentValue(visualTextField, textFieldElement);
 					}
+
 				});
 
 				visualTextField.addListener(FocusListener.class, new FocusListener()
@@ -90,6 +93,16 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				ScriptHelper.put("textFieldElement", textFieldElement, this);
 				ScriptHelper.evalNoResult("textFieldElement.node.value=value", this);
 
+				
+				EventTarget eventTarget= JsCast.castTo(textFieldElement, EventTarget.class);
+				eventTarget.addEventListener("change", new EventListener()
+				{
+					public void handleEvent(Event evt)
+					{
+						updateComponentValue(visualTextField, textFieldElement);					
+					}
+				}, false);
+				
 				addListeners(visualTextField, textFieldElement);
 			}
 		});
@@ -97,4 +110,10 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 		return canvas;
 	}
 
+	private void updateComponentValue(final VisualTextField<Object> visualTextField, final Element textFieldElement)
+	{
+		ScriptHelper.put("textFieldElement", textFieldElement, this);
+		String value= (String) ScriptHelper.eval("textFieldElement.node.value", this);
+		visualTextField.setValue(value);
+	}
 }
