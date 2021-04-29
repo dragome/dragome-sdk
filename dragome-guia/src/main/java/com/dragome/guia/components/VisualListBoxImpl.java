@@ -100,19 +100,24 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 	}
 
 	public void setValue(T value, boolean fireEvents)
-	{
+	{   int lastSelectedIndex= selectedIndex;
+	
 		for (int i= 0; i < acceptableValues.size(); i++)
 		{
 			if (acceptableValues.get(i).equals(value))
 				selectedIndex= i;
 		}
 
-		if (this.listModel != null)
-			this.listModel.setElements(Arrays.asList(value));
-
-		if (fireEvents)
+		if (lastSelectedIndex != selectedIndex)
 		{
-			fireValueChange(value);
+    		if (this.listModel != null)
+    			this.listModel.setElements(Arrays.asList(value));
+    
+    		
+    		if (fireEvents)
+    		{
+    			fireValueChange(value);
+    		}
 		}
 	}
 
