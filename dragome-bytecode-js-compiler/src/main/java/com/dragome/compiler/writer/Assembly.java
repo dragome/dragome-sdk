@@ -107,26 +107,29 @@ public class Assembly
 		final String numericPostfixPattern= "-[0-9]*$";
 		final String prefix= assembly.getName().replaceAll(numericPostfixPattern, "");
 
-		File[] oldAssemblies= assembly.getParentFile().listFiles(new FilenameFilter()
+		if (assembly.getParentFile() != null)
 		{
-			public boolean accept(File dir1, String name)
+			File[] oldAssemblies= assembly.getParentFile().listFiles(new FilenameFilter()
 			{
-				return name.matches(prefix + numericPostfixPattern);
-			}
-		});
+				public boolean accept(File dir1, String name)
+				{
+					return name.matches(prefix + numericPostfixPattern);
+				}
+			});
 
-		if (oldAssemblies == null)
-		{
-			return;
-		}
-
-		for (File oldAssemblyDir : oldAssemblies)
-		{
-			for (File file : oldAssemblyDir.listFiles())
+			if (oldAssemblies == null)
 			{
-				file.delete();
+				return;
 			}
-			oldAssemblyDir.delete();
+
+			for (File oldAssemblyDir : oldAssemblies)
+			{
+				for (File file : oldAssemblyDir.listFiles())
+				{
+					file.delete();
+				}
+				oldAssemblyDir.delete();
+			}
 		}
 	}
 

@@ -29,6 +29,9 @@
 package com.dragome.compiler.parser;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
@@ -120,6 +123,14 @@ public class Parser
 				if (DragomeJsCompiler.compiler.bytecodeTransformer.requiresTransformation(filename))
 					transformedArray= DragomeJsCompiler.compiler.bytecodeTransformer.transform(filename, transformedArray);
 
+			
+			File file= new File("/Users/fpetrola/detodo/m/decompiler/t1/"+fileUnit.getClassFile().getFilename());
+			file.getParentFile().mkdirs();
+			
+			FileOutputStream fileOutputStream= new FileOutputStream(file);
+			fileOutputStream.write(transformedArray);
+			fileOutputStream.close();
+			new ByteArrayOutputStream().write(transformedArray);
 			fileUnit.setBytecodeArrayI(transformedArray);
 
 			ClassParser cp= new ClassParser(new ByteArrayInputStream(transformedArray), filename);
