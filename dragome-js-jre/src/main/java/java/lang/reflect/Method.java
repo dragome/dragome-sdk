@@ -324,12 +324,12 @@ public final class Method extends Executable
 	{
 		Class<?> declaringClass= getDeclaringClass();
 		ScriptHelper.put("declaringClass", declaringClass, this);
-		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
-		{
-			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
 
-			return new ParameterizedTypeImpl(genericSignature.substring(genericSignature.indexOf(")") + 1));
-		}
+		String signature= (String) ScriptHelper.eval("this.$$$signature___java_lang_String", this);
+
+		String foundSignature= declaringClass.getSignatureFor(signature);
+		if (foundSignature != null)
+			return new ParameterizedTypeImpl(foundSignature.substring(foundSignature.indexOf(")") + 1));
 		else
 			return getReturnType();
 	}

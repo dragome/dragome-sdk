@@ -788,4 +788,24 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		return null;
 	}
+
+	public String getSignatureFor(String signature)
+	{
+		String genericSignature= null;
+		if (ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
+		{
+			ScriptHelper.put("signature", signature, this);
+			genericSignature= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.$$$$signatures[signature]", this);
+		}
+		
+		if (genericSignature == null)
+		{
+			if (getSuperclass() != null)
+				return getSuperclass().getSignatureFor(signature);
+			else
+				return null;
+		}
+
+		return genericSignature;
+	}
 }
