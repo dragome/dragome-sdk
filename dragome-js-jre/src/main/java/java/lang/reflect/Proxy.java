@@ -63,7 +63,7 @@ public class Proxy
 		Method[] objectClassMethods= Object.class.getMethods();
 		for (Method method : objectClassMethods)
 		{
-			if (method.getName().equals("equals") || method.getName().equals("hashCode"))
+			if (method.getName().equals("equals") || method.getName().equals("hashCode")|| method.getName().equals("toString"))
 				methods.add(method);
 		}
 
