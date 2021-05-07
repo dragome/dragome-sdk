@@ -22,7 +22,7 @@ public class ScriptCrossExecutionCommand extends CrossExecutionCommandImpl
 	public ScriptCrossExecutionCommand(ReferenceHolder callerHolder, String methodName, String script)
 	{
 		super(callerHolder, methodName);
-		this.script= script;
+		this.script= script.replace("\"", "\\\"");
 	}
 
 	public String getScript()
