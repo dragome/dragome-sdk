@@ -17,10 +17,8 @@
 package com.dragome.callbackevictor.enhancers;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationHandler;
 
 import com.dragome.commons.ProxyRelatedInvocationHandler;
-import com.dragome.commons.javascript.ScriptHelper;
 
 /**
  * Stack to store the frame information along the invocation trace.
@@ -170,27 +168,7 @@ public class Stack implements Serializable
 		Object o= rstack[--rTop];
 		rstack[rTop]= null; // avoid unnecessary reference to object
 
-		//TODO arreglar este parche feo
-		if (o instanceof ProxyRelatedInvocationHandler)
-		{
-			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler= (ProxyRelatedInvocationHandler) o;
-
-			if (!proxyRelatedInvocationHandler.isInvoked())
-				o= proxyRelatedInvocationHandler.getProxy();
-
-			proxyRelatedInvocationHandler.setInvoked(existsIn(rstack, proxyRelatedInvocationHandler));
-		}
-
 		return o;
-	}
-
-	private boolean existsIn(Object[] stack, Object o)
-	{
-		for (Object object : stack)
-			if (object == o)
-				return true;
-
-		return false;
 	}
 
 	public void pushDouble(double d)
@@ -266,10 +244,10 @@ public class Stack implements Serializable
 
 	public void pushReference(Object o)
 	{
-		if (o instanceof InvocationHandler)
+		if (o instanceof ProxyRelatedInvocationHandler)
 		{
-			ScriptHelper.put("handler", o, this);
-			o= ScriptHelper.eval("handler.proxy", this);
+			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler= (ProxyRelatedInvocationHandler) o;
+			o= proxyRelatedInvocationHandler.getProxy();
 		}
 
 		if (rTop == rstack.length)
