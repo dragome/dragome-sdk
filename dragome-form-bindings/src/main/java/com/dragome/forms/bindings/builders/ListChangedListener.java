@@ -15,7 +15,9 @@
  */
 package com.dragome.forms.bindings.builders;
 
-public interface ListChangedListener
+import java.util.EventListener;
+
+public interface ListChangedListener extends EventListener
 {
 
 	void listChanged();
