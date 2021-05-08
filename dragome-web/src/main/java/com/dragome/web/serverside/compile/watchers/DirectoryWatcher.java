@@ -175,7 +175,7 @@ public class DirectoryWatcher
 				System.out.format("%s: %s\n", humanReadable(event.kind().name()), child.getName(child.getNameCount() - 1));
 
 				if (reschedulableTimer.isScheduling())
-					reschedulableTimer.reschedule(500);
+					reschedulableTimer.reschedule(50);
 				else
 					reschedulableTimer.schedule(new Runnable()
 					{
@@ -184,7 +184,7 @@ public class DirectoryWatcher
 							compile(classPath, path);
 						}
 
-					}, 500);
+					}, 50);
 
 				// if directory is created, and watching recursively, then
 				// register it and its sub-directories
