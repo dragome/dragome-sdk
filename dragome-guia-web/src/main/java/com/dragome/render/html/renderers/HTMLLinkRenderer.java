@@ -17,6 +17,7 @@ package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Element;
 
+import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.helpers.DragomeEntityManager;
@@ -52,7 +53,19 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 				{
 					Renderer<String> renderer= visualLink.getRenderer();
 					String aText= renderer.render(visualLink.getValue());
-					setElementInnerHTML(label1, aText == null ? "null" : aText);
+					
+					ScriptHelper.put("element", label1, null);
+					ScriptHelper.put("value", aText, null);
+					Object node= ScriptHelper.eval("element.node", null);
+					ScriptHelper.put("e", node, null);
+
+					Object found= ScriptHelper.eval("e.querySelector(\"[data-template='replaced: label'\")", null);
+					if (found != null) 
+						ScriptHelper.put("e", found, null);
+
+					ScriptHelper.evalNoResult("e.innerHTML= value", null);
+
+//					setElementInnerHTML(label1, aText == null ? "null" : aText);
 				}
 			}
 		});
