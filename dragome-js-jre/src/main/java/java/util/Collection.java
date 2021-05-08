@@ -15,6 +15,7 @@
  */
 package java.util;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Collection<E> extends Iterable<E>
@@ -38,4 +39,17 @@ public interface Collection<E> extends Iterable<E>
 	boolean containsAll(Collection<?> c);
 	boolean removeAll(Collection<?> c);
 	boolean retainAll(Collection<?> c);
+	
+	default boolean removeIf(Predicate<? super E> filter) {
+        Objects.requireNonNull(filter);
+        boolean removed = false;
+        final Iterator<E> each = iterator();
+        while (each.hasNext()) {
+            if (filter.test(each.next())) {
+                each.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
 }
