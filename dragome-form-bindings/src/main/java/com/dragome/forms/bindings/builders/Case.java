@@ -54,13 +54,13 @@ public class Case
 		return caseBuilder;
 	}
 
-	public void setCaseBuilder(CaseBuilder caseBuilder)
+	public void setCaseBuilder(SingleComponentCaseBuilder caseBuilder)
 	{
 		this.caseBuilder= caseBuilder;
 	}
 
 	private boolean defaultCase;
-	private TemplateBindingBuilder templateBindingBuilder;
+	private BaseBuilder templateBindingBuilder;
 	private boolean built;
 
 	public boolean isDefaultCase()
@@ -79,14 +79,14 @@ public class Case
 		this.component= component;
 	}
 
-	public Case(CaseBuilder caseBuilder, boolean defaultCase, TemplateBindingBuilder templateBindingBuilder)
+	public Case(SingleComponentCaseBuilder caseBuilder, boolean defaultCase, TemplateBindingBuilder templateBindingBuilder)
 	{
 		this.caseBuilder= caseBuilder;
 		this.defaultCase= defaultCase;
 		this.templateBindingBuilder= templateBindingBuilder;
 	}
 
-	public Case(Supplier<?> supplier, CaseBuilder caseBuilder, TemplateBindingBuilder templateBindingBuilder)
+	public Case(Supplier<?> supplier, CaseBuilder caseBuilder, BaseBuilder templateBindingBuilder)
 	{
 		this.supplier= supplier;
 		this.caseBuilder= caseBuilder;

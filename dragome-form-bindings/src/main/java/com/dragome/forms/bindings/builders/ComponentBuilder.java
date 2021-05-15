@@ -71,6 +71,11 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 
 	public ComponentBuilder(VisualComponent component)
 	{
+		bindComponent(component);
+	}
+
+	private void bindComponent(VisualComponent component)
+	{
 		this.component= component;
 		if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
 		{
@@ -94,6 +99,12 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 	{
 		return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName), parentBuilder);
 	}
+	
+	public TemplateBindingBuilder bind(VisualPanel visualPanel)
+	{
+		bindComponent(visualPanel);
+		return new TemplateBindingBuilder((VisualPanel) component, template, parentBuilder);
+	}
 
 	public VisualPanel panel()
 	{
@@ -103,5 +114,10 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 	public VisualComponent build()
 	{
 		return component; //throw new RuntimeException("component is not ready");
+	}
+
+	public Template getTemplate()
+	{
+		return template;
 	}
 }

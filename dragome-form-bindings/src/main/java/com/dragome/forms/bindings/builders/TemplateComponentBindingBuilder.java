@@ -244,4 +244,9 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 		});
 	}
 
+	public Template getTemplate()
+	{
+		return template;
+	}
+
 }

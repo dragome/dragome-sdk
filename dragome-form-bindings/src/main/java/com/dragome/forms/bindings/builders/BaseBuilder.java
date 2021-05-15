@@ -34,6 +34,7 @@ import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.model.pectin.VisualComponentHasEnabled;
+import com.dragome.templates.interfaces.Template;
 
 public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuilder<C, B>>
 {
@@ -315,16 +316,24 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 //		parentBuilder.cases.add(new Case(supplier, caseBuilder, componentBuilder.bindTemplate(templateName)));
 //	}
 
-	public void switchDefaultCase(CaseBuilder caseBuilder)
+	public void switchDefaultCase(SingleComponentCaseBuilder caseBuilder)
 	{
 		TemplateBindingBuilder componentBuilder= (TemplateBindingBuilder) this;
 		componentBuilder.getParentBuilder().cases.add(new Case(caseBuilder, true, componentBuilder));
 	}
 
-	public <S> void switchCase(Supplier<S> supplier, CaseBuilder caseBuilder)
+	public <S> void switchCase(Supplier<S> supplier, SingleComponentCaseBuilder caseBuilder)
 	{
 		TemplateBindingBuilder componentBuilder= (TemplateBindingBuilder) this;
 		componentBuilder.getParentBuilder().cases.add(new Case(supplier, caseBuilder, componentBuilder));
 	}
+	
+	public <S> void switchCasePanel(Supplier<S> supplier, CasePanelBuilder casePanelBuilder)
+	{
+		TemplateComponentBindingBuilder componentBuilder= (TemplateComponentBindingBuilder) this;
+		componentBuilder.getParentBuilder().cases.add(new Case(supplier, casePanelBuilder, componentBuilder));
+	}
+
+	public abstract Template getTemplate();
 
 }
