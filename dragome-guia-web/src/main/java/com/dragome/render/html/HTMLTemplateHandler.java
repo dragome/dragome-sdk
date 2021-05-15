@@ -26,6 +26,8 @@ import com.dragome.services.WebServiceLocator;
 import com.dragome.templates.ContentImpl;
 import com.dragome.templates.HTMLTemplateFactory;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTemplateHandler implements TemplateHandler
 {
@@ -75,7 +77,11 @@ public class HTMLTemplateHandler implements TemplateHandler
 		{
 			String childName= child.getName();
 			String selector= aSelector + " " + createSelector(childName);
-			Element clonedElement= WebServiceLocator.getInstance().getDomHandler().getElementBySelector(selector);
+			
+			ElementExtension elementExtension= JsCast.castTo(cloneNode, ElementExtension.class);
+			
+			Element clonedElement= elementExtension.querySelector(createSelector(childName));
+//			Element clonedElement= WebServiceLocator.getInstance().getDomHandler().getElementBySelector(selector);
 			Template clonedChild= cloneChildren(child, selector, clonedElement);
 			clonedTemplate.addChild(clonedChild);
 		}

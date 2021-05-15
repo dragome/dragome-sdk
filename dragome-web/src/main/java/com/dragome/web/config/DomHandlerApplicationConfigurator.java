@@ -67,6 +67,8 @@ import com.dragome.commons.compiler.classpath.InMemoryClasspathFile;
 import com.dragome.commons.compiler.classpath.serverside.VirtualFolderClasspathEntry;
 import com.dragome.web.enhancers.jsdelegate.serverside.JsDelegateGenerator;
 import com.dragome.web.html.dom.w3c.ArrayBufferFactory;
+import com.dragome.web.html.dom.w3c.DocumentExtension;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 import com.dragome.web.html.dom.w3c.HTMLCanvasElementExtension;
 import com.dragome.web.html.dom.w3c.HTMLImageElementExtension;
 import com.dragome.web.html.dom.w3c.MessageEventExtension;
@@ -87,7 +89,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			ArrayBuffer.class, ArrayBufferView.class, Float32Array.class, Float64Array.class, Int16Array.class, //
 			Int32Array.class, Int8Array.class, Uint16Array.class, Uint32Array.class, Uint8Array.class, //
 			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class, //
-			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEventExtension.class, XMLHttpRequestExtension.class));
+			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEventExtension.class, XMLHttpRequestExtension.class, ElementExtension.class, DocumentExtension.class));
 
 	public DomHandlerApplicationConfigurator()
 	{
