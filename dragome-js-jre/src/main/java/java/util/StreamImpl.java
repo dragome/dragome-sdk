@@ -255,18 +255,27 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 		counter[0]= 0;
 		forEach(new Consumer<T>()
 		{
-            public void accept(T t)
-            {
+			public void accept(T t)
+			{
 				counter[0]++;
-            }
+			}
 		});
-		
+
 		return counter[0];
 	}
 	public boolean anyMatch(Predicate<? super T> predicate)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		boolean[] found= new boolean[1];
+		
+		for (Iterator<T> iterator= topStream.iterator(); iterator.hasNext();)
+		{
+			T type= (T) iterator.next();
+			
+			if (!found[0] && predicate.test(type))
+				found[0]= true;
+		}
+		
+		return found[0];
 	}
 	public boolean allMatch(Predicate<? super T> predicate)
 	{
@@ -280,8 +289,18 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	}
 	public Optional<T> findFirst()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		T[] counter= (T[]) new Object[1];
+		counter[0]= null;
+		forEach(new Consumer<T>()
+		{
+			public void accept(T t)
+			{
+				if (counter[0] == null)
+					counter[0]= t;
+			}
+		});
+
+		return Optional.of(counter[0]);
 	}
 	public Optional<T> findAny()
 	{
