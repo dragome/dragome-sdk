@@ -46,7 +46,7 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 
 	public Collection<T> getSelectedValues()
 	{
-		return selectedValues;
+		return new ArrayList<>(this.listModel.asUnmodifiableList());
 	}
 
 	public boolean isMultipleItems()
@@ -62,6 +62,11 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 	public VisualListBoxImpl()
 	{
 		super("", new SimpleRenderer<T>());
+	}
+	
+	public VisualListBoxImpl(Iterable<T> acceptableValues)
+	{
+		this("", acceptableValues);
 	}
 
 	public VisualListBoxImpl(String name, Renderer<T> renderer, Iterable<T> acceptableValues)
