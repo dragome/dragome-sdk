@@ -47,6 +47,7 @@ public final class Constructor<T> extends Executable
 	private Class[] parameterTypes;
 	private Class[] exceptionTypes;
 	private int modifiers;
+	private Method method;
 
 	/**
 	 * Package-private constructor used by ReflectAccess to enable
@@ -59,6 +60,12 @@ public final class Constructor<T> extends Executable
 		this.parameterTypes= parameterTypes;
 		this.exceptionTypes= checkedExceptions;
 		this.modifiers= modifiers;
+	}
+
+	public Constructor(Method method)
+	{
+		this((Class<T>) method.getDeclaringClass(), method.getParameterTypes(), new Class[0], method.getModifiers());
+		this.method= method;
 	}
 
 	public TypeVariable<Constructor<T>>[] getTypeParameters()
@@ -312,7 +319,12 @@ public final class Constructor<T> extends Executable
 	 */
 	public T newInstance(Object... args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
-		return clazz2.newInstance();
+		T newInstance= clazz2.newInstance();
+		
+		if (method != null)
+			method.invoke(newInstance, args);
+		
+		return newInstance;
 	}
 
 	/**

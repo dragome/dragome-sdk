@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
@@ -338,22 +340,40 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Method[] getDeclaredMethods()
 	{
+		return getDeclaredMessages(true);
+	}
+
+	private Method[] getDeclaredMessages(boolean filterConstructors)
+	{
 		if (declaredMethods == null)
 		{
 			declaredMethods= new ArrayList<Method>();
-			String[] signatures= new String[0];
-			ScriptHelper.put("signatures", signatures, this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-			signatures= (String[]) ScriptHelper.eval("signatures", this);
-			addMethods(signatures, Modifier.PUBLIC);
-			signatures= new String[0];
-			ScriptHelper.put("signatures", signatures, this);
-			ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (typeof this.$$$nativeClass___java_lang_Object[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-			signatures= (String[]) ScriptHelper.eval("signatures", this);
-			addMethods(signatures, Modifier.PUBLIC | Modifier.STATIC);
+			findMethods(declaredMethods, filterConstructors);
 		}
 		return declaredMethods.toArray(new Method[0]);
+	}
+
+	private void findMethods(List<Method> declaredMethods2, boolean filterConstructors)
+	{
+		String[] signatures= new String[0];
+		ScriptHelper.put("signatures", signatures, this);
+		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+		signatures= (String[]) ScriptHelper.eval("signatures", this);
+		addMethods(declaredMethods2, signatures, Modifier.PUBLIC, filterConstructors);
+		signatures= new String[0];
+		ScriptHelper.put("signatures", signatures, this);
+		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object) { if (typeof this.$$$nativeClass___java_lang_Object[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+		signatures= (String[]) ScriptHelper.eval("signatures", this);
+		addMethods(declaredMethods2, signatures, Modifier.PUBLIC | Modifier.STATIC, filterConstructors);
+	}
+
+	public Constructor<?>[] getDeclaredConstructors() throws SecurityException
+	{
+		ArrayList<Method> constructors= new ArrayList<>();
+		findMethods(constructors, false);
+		List<Constructor> collect= constructors.stream().map(m -> new Constructor(m)).collect(Collectors.toList());
+		return collect.toArray(new Constructor[0]);
 	}
 
 	@MethodAlias(local_alias= "getMethodBySignature")
@@ -369,15 +389,20 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return new Method(this, signature, Modifier.PUBLIC);
 	}
 
-	private void addMethods(String[] signatures, int modifier)
+	private void addMethods(List<Method> declaredMethods2, String[] signatures, int modifier, boolean filterConstructors)
 	{
 		for (int i= 0; i < signatures.length; i++)
 		{
 			String signature= signatures[i];
-			if (signature.startsWith("$$init_") || signature.startsWith("$$clinit_") /*|| signature.indexOf("_") == -1*/)
-				continue;
-			declaredMethods.add(new Method(this, signatures[i], modifier));
+
+			if ((!isConstructor(signature) && filterConstructors) || (isConstructor(signature) && !filterConstructors))
+				declaredMethods2.add(new Method(this, signatures[i], modifier));
 		}
+	}
+
+	private boolean isConstructor(String signature)
+	{
+		return signature.startsWith("$$init_") || signature.startsWith("$$clinit_") /*|| signature.indexOf("_") == -1*/;
 	}
 
 	public Method[] getDeclaredMethodsInDepth()
@@ -658,11 +683,6 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return foundField;
 	}
 
-	public Constructor<?>[] getDeclaredConstructors() throws SecurityException
-	{
-		return new Constructor<?>[0];
-	}
-
 	public String getResourceAsStream(String resourcePath)
 	{
 		//TODO implementar
@@ -802,7 +822,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			ScriptHelper.put("signature", signature, this);
 			genericSignature= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.$$$$signatures[signature]", this);
 		}
-		
+
 		if (genericSignature == null)
 		{
 			if (getSuperclass() != null)
