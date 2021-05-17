@@ -42,12 +42,14 @@ public final class Method extends Executable
 	protected Class<?>[] parametersTypes;
 	protected Class<?> returnType;
 	private int modifiers;
+	private boolean isDefault;
 
 	public Method(Class<?> newCls, String theSignature, int modifiers)
 	{
 		signature= theSignature;
 		cls= newCls;
 		this.modifiers= modifiers;
+		this.isDefault= newCls.checkIsDefault(theSignature);
 	}
 
 	public String getName()
@@ -399,5 +401,26 @@ public final class Method extends Executable
 	public String toGenericString()
 	{
 		return toString();
+	}
+
+	public boolean isDefault()
+	{
+		return isDefault;
+	}
+	
+	public int hashCode()
+	{
+		return getName().hashCode();
+	}
+
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof Method)
+		{
+			Method method= (Method) obj;
+			return getName().equals(method.getName()) && getDeclaringClass().equals(method.getDeclaringClass()) && getParameterTypes().equals(method.getParameterTypes());
+		}
+		else
+			return false;
 	}
 }

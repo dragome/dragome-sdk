@@ -58,33 +58,44 @@ public class Proxy
 		List<Method> methods= new ArrayList<Method>();
 
 		for (Class interfaze : interfaces)
-			methods.addAll(Arrays.asList(interfaze.getMethods()));
-
-		Method[] objectClassMethods= Object.class.getMethods();
-		for (Method method : objectClassMethods)
 		{
-			if (method.getName().equals("equals") || method.getName().equals("hashCode")|| method.getName().equals("toString"))
-				methods.add(method);
+			List<Method> foundMethods= interfaze.internalGetMethods(false);
+			methods.addAll(foundMethods);
 		}
+
+		List<Method> interfacesMethods= new ArrayList<Method>();
+		for (Class interfaze : interfaces)
+		{
+			List<Method> foundMethods= interfaze.internalGetMethods(true);
+			interfacesMethods.addAll(foundMethods);
+		}
+
+		addObjectClassMethods(methods);
 
 		InvocationHandler handler2= new AbstractProxyRelatedInvocationHandler()
 		{
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 			{
 				setProxy(proxy);
-				
-				ScriptHelper.put("method", method, this);
-				String methodName= (String) ScriptHelper.eval("method.$$$signature___java_lang_String", this);
-				Class declaringClass= (Class) ScriptHelper.eval("method.$$$cls___java_lang_Class", this);
+
+				for (Method interfaceMethod : interfacesMethods)
+				{
+					if (method.getName().equals(interfaceMethod.getName()))
+					{
+						List<Class<?>> asList= Arrays.asList(method.getParameterTypes());
+						List<Class<?>> asList2= Arrays.asList(interfaceMethod.getParameterTypes());
+						if (asList.equals(asList2))
+							method= interfaceMethod;
+					}
+				}
 
 				method.boxParameters(args);
 
-				Method method2= new Method(declaringClass, methodName, Modifier.PUBLIC);
 				Class returnType= method.getReturnType();
+
+				Object result= handler.invoke(proxy, method, args);
+
 				boolean isPrimitive= returnType != null && returnType.isPrimitive();
-
-				Object result= handler.invoke(proxy, method2, args);
-
 				if (isPrimitive && !returnType.equals(Void.class) && !returnType.equals(void.class))
 					result= BoxingHelper.convertObjectToPrimitive(result);
 
@@ -100,8 +111,16 @@ public class Proxy
 		Object result= ScriptHelper.eval("createProxyOf(interfaces, methods, handler1, handler2)", null);
 
 		return result;
-		//
-		//	return new Proxy(handler, interfaces);
+	}
+
+	private static void addObjectClassMethods(List<Method> methods)
+	{
+		Method[] objectClassMethods= Object.class.getMethods();
+		for (Method method : objectClassMethods)
+		{
+			if (method.getName().equals("equals") || method.getName().equals("hashCode") || method.getName().equals("toString"))
+				methods.add(method);
+		}
 	}
 
 	public static boolean isProxyClass(Class class1)

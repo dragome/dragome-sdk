@@ -118,7 +118,7 @@ public class ReflectionHelper
 
 	public static List<Method> getAllGetters(Class<?> aClass)
 	{
-		List<Method> getters= new Vector<Method>();
+		Set<Method> getters= new HashSet<Method>();
 		do
 		{
 			Method[] methods= aClass.getMethods();
@@ -132,7 +132,7 @@ public class ReflectionHelper
 		}
 		while ((aClass= aClass.getSuperclass()) != null);
 
-		return getters;
+		return new ArrayList<>(getters);
 	}
 
 	public static List<Method> getGettersImpl(Class<?> aClass, boolean excludereadonly)

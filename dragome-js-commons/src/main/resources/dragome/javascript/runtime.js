@@ -357,7 +357,9 @@ function createProxyOf(types, methods, handler1, handler) {
 
 	var nextNumber = objectId({});
 
-	qx.Class.define("ProxyOf_" + nextNumber, {
+	var proxyName= "ProxyOf_" + nextNumber;
+	
+	qx.Class.define(proxyName, {
 		extend : java_lang_Object,
 		implement : nativeTypes,
 		construct : function() {
@@ -365,7 +367,7 @@ function createProxyOf(types, methods, handler1, handler) {
 		members : membersMap
 	});
 	
-	var result=  eval("new ProxyOf_" + nextNumber + "()");
+	var result=  eval("new " + proxyName + "()");
 
 	handler1.proxy= result;
 

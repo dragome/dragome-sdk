@@ -27,11 +27,11 @@ import java.lang.reflect.TypeVariable;
 import java.net.URL;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
@@ -396,8 +396,24 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			String signature= signatures[i];
 
 			if ((!isConstructor(signature) && filterConstructors) || (isConstructor(signature) && !filterConstructors))
+			{
 				declaredMethods2.add(new Method(this, signatures[i], modifier));
+			}
 		}
+	}
+
+	public boolean checkIsDefault(String signature)
+	{
+		if (!isInterface())
+			return false;
+
+		ScriptHelper.put("result", "\n{\n}", this);
+		ScriptHelper.put("signature", signature, this);
+		ScriptHelper.eval("try{result= this.$$$nativeClass___java_lang_Object.$$members[signature].toString()}catch(e){}", this);
+		ScriptHelper.eval("try{result= this.$$$nativeClass___java_lang_Object.prototype[signature].toString()}catch(e){}", this);
+		Object result2= ScriptHelper.eval("result", this);
+		boolean isDefault= !result2.toString().endsWith("\n{\n}");
+		return isDefault;
 	}
 
 	private boolean isConstructor(String signature)
@@ -427,23 +443,48 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		if (methods == null)
 		{
-			methods= new Method[0];
-			int j= 0;
+			List<Method> internalGetMethods= internalGetMethods(true);
+			methods= internalGetMethods.toArray(new Method[0]);
+		}
+		return methods;
+	}
 
-			for (Class<?> interfaze : getInterfaces())
-				for (Method method : interfaze.getMethods())
-					methods[j++]= method;
+	public List<Method> internalGetMethods(boolean filterDuplicated)
+	{
+		List<Method> result= new ArrayList<>();
 
-			Class<? super T> superclass= getSuperclass();
-			if (superclass != null)
-				for (Method method : superclass.getMethods())
-					methods[j++]= method;
+		for (Method method : getDeclaredMethods())
+			addMethod(result, method, filterDuplicated);
 
-			for (Method method : getDeclaredMethods())
-				methods[j++]= method;
+		for (Class<?> interfaze : getInterfaces())
+			for (Method method : interfaze.getMethods())
+				addMethod(result, method, filterDuplicated);
+
+		Class<? super T> superclass= getSuperclass();
+		if (superclass != null)
+			for (Method method : superclass.getMethods())
+				addMethod(result, method, filterDuplicated);
+
+		return result;
+	}
+
+	private void addMethod(List<Method> result, Method method, boolean filterDuplicated)
+	{
+		boolean found= false;
+
+		if (filterDuplicated)
+		{
+			for (Method method2 : result)
+			{
+				List<Class<?>> asList= Arrays.asList(method.getParameterTypes());
+				List<Class<?>> asList2= Arrays.asList(method2.getParameterTypes());
+				if (method.getName().equals(method2.getName()) && asList.equals(asList2))
+					found= true;
+			}
 		}
 
-		return methods;
+		if (!found)
+			result.add(method);
 	}
 
 	public Class<?>[] getInterfaces()
