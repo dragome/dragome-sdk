@@ -56,6 +56,7 @@ public class EventDispatcherImpl implements EventDispatcher
 						effectiveParameters.add(object);
 				}
 
+				serviceInvocation.getMethod().setAccessible(true);
 				serviceInvocation.getMethod().invoke(DragomeEntityManager.get(serviceInvocation.getId()), effectiveParameters.toArray());
 			}
 			catch (Exception e)
