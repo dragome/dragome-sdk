@@ -266,15 +266,15 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	public boolean anyMatch(Predicate<? super T> predicate)
 	{
 		boolean[] found= new boolean[1];
-		
+
 		for (Iterator<T> iterator= topStream.iterator(); iterator.hasNext();)
 		{
 			T type= (T) iterator.next();
-			
+
 			if (!found[0] && predicate.test(type))
 				found[0]= true;
 		}
-		
+
 		return found[0];
 	}
 	public boolean allMatch(Predicate<? super T> predicate)
@@ -300,7 +300,10 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 			}
 		});
 
-		return Optional.of(counter[0]);
+		if (counter[0] == null)
+			return Optional.empty();
+		else
+			return Optional.of(counter[0]);
 	}
 	public Optional<T> findAny()
 	{
