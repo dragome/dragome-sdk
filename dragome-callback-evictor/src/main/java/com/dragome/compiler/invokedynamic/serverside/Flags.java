@@ -2,7 +2,7 @@
 // This software is released under the Apache License 2.0.
 // The license text is at http://www.apache.org/licenses/LICENSE-2.0
 
-package com.dragome.compiler.invokedynamic;
+package com.dragome.compiler.invokedynamic.serverside;
 
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 

@@ -74,7 +74,6 @@ import com.dragome.compiler.ast.TypeDeclaration;
 import com.dragome.compiler.ast.VariableDeclaration;
 import com.dragome.compiler.exceptions.UnhandledCompilerProblemException;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
-import com.dragome.compiler.invokedynamic.InvokeDynamicBackporter;
 import com.dragome.compiler.type.Signature;
 import com.dragome.compiler.units.ClassUnit;
 import com.dragome.compiler.utils.Log;
@@ -96,8 +95,6 @@ public class Parser
 
 	private ClassUnit fileUnit;
 
-	InvokeDynamicBackporter lambdaUsageBackporter= new InvokeDynamicBackporter();
-
 	public Parser(ClassUnit theFileUnit)
 	{
 		fileUnit= theFileUnit;
@@ -113,8 +110,6 @@ public class Parser
 			String filename= fileUnit.getName();
 			byte[] originalByteArray= IOUtils.toByteArray(openInputStream);
 			byte[] transformedArray= originalByteArray;
-
-			transformedArray= lambdaUsageBackporter.transform(filename, transformedArray);
 
 			if (DragomeJsCompiler.compiler.bytecodeTransformer != null)
 				if (DragomeJsCompiler.compiler.bytecodeTransformer.requiresTransformation(filename))

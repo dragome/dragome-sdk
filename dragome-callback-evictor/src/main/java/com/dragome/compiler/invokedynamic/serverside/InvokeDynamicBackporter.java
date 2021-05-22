@@ -9,7 +9,7 @@
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
 
-package com.dragome.compiler.invokedynamic;
+package com.dragome.compiler.invokedynamic.serverside;
 
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
