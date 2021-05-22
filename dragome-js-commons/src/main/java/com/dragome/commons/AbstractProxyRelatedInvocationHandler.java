@@ -20,6 +20,7 @@ public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRela
 {
 	private Object proxy;
 	private boolean invoked;
+	private Class<?>[] interfaces;
 
 	public AbstractProxyRelatedInvocationHandler()
 	{
@@ -43,5 +44,16 @@ public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRela
 	public boolean isInvoked()
 	{
 	    return invoked;
+	}
+
+	@Override
+	public Class<?>[] getInterfaces()
+	{
+		return interfaces;
+	}
+
+	public void setInterfaces(Class<?>[] interfaces)
+	{
+		this.interfaces = interfaces;
 	}
 }

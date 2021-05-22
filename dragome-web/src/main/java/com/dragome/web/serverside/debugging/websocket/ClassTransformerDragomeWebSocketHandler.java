@@ -35,6 +35,7 @@ public class ClassTransformerDragomeWebSocketHandler
 	@OnOpen
 	public void onOpen(final Session session)
 	{
+		session.setMaxIdleTimeout(0);
 		executeMethod(getClassName2(), "onOpen", session);
 	}
 

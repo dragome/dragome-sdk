@@ -23,4 +23,6 @@ public interface ProxyRelatedInvocationHandler extends InvocationHandler
 	Object getProxy();
 	void setInvoked(boolean invoked);
 	boolean isInvoked();
+	Class<?>[] getInterfaces();
+	void setInterfaces(Class<?>[] interfaces);
 }
