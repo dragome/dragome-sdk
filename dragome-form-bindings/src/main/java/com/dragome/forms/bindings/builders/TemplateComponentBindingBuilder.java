@@ -128,9 +128,9 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 		if (list instanceof ObservableList)
 		{
 			ObservableList<S> observableList= (ObservableList<S>) list;
-			observableList.setListChangeListener(new ListChangedListener()
+			observableList.setListChangeListener(new ListChangedListener<S>()
 			{
-				public void listChanged()
+				public void listChanged(S s)
 				{
 					valueModelDelegator.fireValueChangeEvent();
 				}

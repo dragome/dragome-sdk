@@ -25,14 +25,9 @@ public class ObservableList<T> implements List<T>
 {
 	protected List<T> list;
 
-	public void fireChangeEvent()
+	protected ListChangedListener listChangeListener= new ListChangedListener<T>()
 	{
-		listChangeListener.listChanged();
-	}
-
-	protected ListChangedListener listChangeListener= new ListChangedListener()
-	{
-		public void listChanged()
+		public void listChanged(T t)
 		{
 		}
 	};
@@ -80,14 +75,14 @@ public class ObservableList<T> implements List<T>
 	public boolean add(T e)
 	{
 		boolean result= list.add(e);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(e);
 		return result;
 	}
 
 	public boolean remove(Object o)
 	{
 		boolean result= list.remove(o);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(o);
 		return result;
 	}
 
@@ -99,35 +94,35 @@ public class ObservableList<T> implements List<T>
 	public boolean addAll(Collection<? extends T> c)
 	{
 		boolean result= list.addAll(c);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(null);
 		return result;
 	}
 
 	public boolean addAll(int index, Collection<? extends T> c)
 	{
 		boolean result= list.addAll(index, c);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(null);
 		return result;
 	}
 
 	public boolean removeAll(Collection<?> c)
 	{
 		boolean result= list.removeAll(c);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(null);
 		return result;
 	}
 
 	public boolean retainAll(Collection<?> c)
 	{
 		boolean retainAll= list.retainAll(c);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(null);
 		return retainAll;
 	}
 
 	public void clear()
 	{
 		list.clear();
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(null);
 	}
 
 	public boolean equals(Object o)
@@ -148,20 +143,20 @@ public class ObservableList<T> implements List<T>
 	public T set(int index, T element)
 	{
 		T set= list.set(index, element);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(element);
 		return set;
 	}
 
 	public void add(int index, T element)
 	{
 		list.add(index, element);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(element);
 	}
 
 	public T remove(int index)
 	{
 		T remove= list.remove(index);
-		listChangeListener.listChanged();
+		listChangeListener.listChanged(remove);
 		return remove;
 	}
 
