@@ -59,6 +59,9 @@ public class Proxy
 
 		for (Class interfaze : interfaces)
 		{
+			if (!interfaze.isInterface())
+				throw new IllegalArgumentException(interfaze.getName() + " is not an interface");
+			
 			List<Method> foundMethods= interfaze.internalGetMethods(false);
 			methods.addAll(foundMethods);
 		}
