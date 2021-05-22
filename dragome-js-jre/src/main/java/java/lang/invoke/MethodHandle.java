@@ -16,6 +16,10 @@
 package java.lang.invoke;
 
 import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
+import java.util.Arrays;
+import java.util.List;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -37,11 +41,30 @@ public class MethodHandle
 
 	public Object invokeWithArguments(Object... args) throws Throwable
 	{
-		ScriptHelper.put("type", lookup.getSpecialCaller(), this);
-		ScriptHelper.put("args", args, this);
-		ScriptHelper.put("proxy", x, this);
-		ScriptHelper.put("method", lookup.getMethod(), this);
-		Object o= ScriptHelper.eval("type.$$$nativeClass___java_lang_Object.$$members[method.$$$signature___java_lang_String].apply(proxy, args)", this);
-		return o;
+		Method method= lookup.getMethod();
+		Class<?> specialCaller= lookup.getSpecialCaller();
+		List<Method> internalGetMethods= specialCaller.internalGetMethods(false);
+
+		for (Method foundMethod : internalGetMethods)
+		{
+			if (foundMethod.getName().equals(method.getName()))
+			{
+				if (foundMethod.getReturnType().equals(method.getReturnType()))
+				{
+					List<TypeVariable<?>> typeParameters1= Arrays.asList(method.getTypeParameters());
+					List<TypeVariable<?>> typeParameters2= Arrays.asList(foundMethod.getTypeParameters());
+					if (typeParameters1.equals(typeParameters2))
+					{
+						ScriptHelper.put("type", foundMethod.getDeclaringClass(), this);
+						ScriptHelper.put("args", args, this);
+						ScriptHelper.put("proxy", x, this);
+						ScriptHelper.put("method", method, this);
+						Object o= ScriptHelper.eval("type.$$$nativeClass___java_lang_Object.$$members[method.$$$signature___java_lang_String].apply(proxy, args)", this);
+						return o;
+					}
+				}
+			}
+		}
+		return null;
 	}
 }
