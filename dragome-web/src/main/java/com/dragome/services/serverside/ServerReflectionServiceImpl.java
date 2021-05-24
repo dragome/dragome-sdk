@@ -24,18 +24,15 @@ import com.dragome.web.config.DomHandlerApplicationConfigurator;
 
 public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {
+	Reflections reflections= new Reflections("^");
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
-		//		return null;
-		Reflections reflections= new Reflections("^");
 		Set<Class<? extends T>> implementations= reflections.getSubTypesOf(type);
 		return implementations;
 	}
 
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
 	{
-		//		return null;
-		Reflections reflections= new Reflections("^");
 		return reflections.getTypesAnnotatedWith((Class<? extends Annotation>) class1);
 	}
 

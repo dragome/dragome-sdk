@@ -16,7 +16,9 @@
 package com.dragome.templates;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -25,7 +27,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.RegExp;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTemplateFactory
 {
@@ -33,37 +37,114 @@ public class HTMLTemplateFactory
 
 	public Template createTemplate(Element fromElement, String aTemplateName)
 	{
-		Template template= createTemplate(aTemplateName);
-		template.setFiringEvents(false);
+		return fasterCreateTemplate(fromElement, aTemplateName);
 
-		Element mainElement= fromElement;
-		String attributeValue= fromElement.getAttribute(DATA_TEMPLATE);
+		//		Template template= createTemplate(aTemplateName);
+		//		template.setFiringEvents(false);
+		//
+		//		Element mainElement= fromElement;
+		//		String attributeValue= fromElement.getAttribute(DATA_TEMPLATE);
+		//
+		//		if (attributeValue.equals(""))
+		//			mainElement= (Element) getTemplateElements(fromElement, aTemplateName, false).get(0);
+		//
+		//		List<Element> subTemplates= getTemplateElements(mainElement, ".+", false);
+		//
+		//		for (int i= 0; i < subTemplates.size(); i++)
+		//		{
+		//			Element childTemplateElement= subTemplates.get(i);
+		//			String childTemplateName= childTemplateElement.getAttribute(DATA_TEMPLATE);
+		//			template.addChild(this.createTemplate(childTemplateElement, childTemplateName));
+		//		}
+		//
+		//		template.setContent(new ContentImpl<Element>(mainElement));
+		//		template.setInner(mainElement.getAttribute(DATA_TEMPLATE).indexOf("*") != -1);
+		//		//mainElement.removeAttribute(DATA_TEMPLATE);
+		//		mainElement.setAttribute(DATA_TEMPLATE, "replaced: " + aTemplateName);
+		//
+		//		template.setFiringEvents(true);
+		//
+		//		return template;
+	}
 
-		if (attributeValue.equals(""))
-			mainElement= (Element) getTemplateElements(fromElement, aTemplateName, false).get(0);
+	private Template fasterCreateTemplate(Element fromElement, String aTemplateName)
+	{
+		Template result= null;
 
-		List<Element> subTemplates= getTemplateElements(mainElement, ".+", false);
+		List<Element> foundElements= new ArrayList<>();
+		Map<Node, Template> templates= new HashMap<>();
+		putTemplate(foundElements, templates, fromElement, aTemplateName);
 
-		for (int i= 0; i < subTemplates.size(); i++)
+		ElementExtension elementExtension= JsCast.castTo(fromElement, ElementExtension.class);
+		NodeList querySelector= elementExtension.querySelectorAll("[" + DATA_TEMPLATE + "]");
+		for (int i= 0; i < querySelector.getLength(); i++)
 		{
-			Element childTemplateElement= subTemplates.get(i);
-			String childTemplateName= childTemplateElement.getAttribute(DATA_TEMPLATE);
-			template.addChild(this.createTemplate(childTemplateElement, childTemplateName));
+			Node node= (Node) querySelector.item(i);
+			Element element= (Element) node;
+			String attribute= element.getAttribute(DATA_TEMPLATE);
+			putTemplate(foundElements, templates, element, attribute);
 		}
 
-		template.setContent(new ContentImpl<Element>(mainElement));
-		template.setInner(mainElement.getAttribute(DATA_TEMPLATE).indexOf("*") != -1);
-		//mainElement.removeAttribute(DATA_TEMPLATE);
-		mainElement.setAttribute(DATA_TEMPLATE, "replaced: " + aTemplateName);
+		for (Element element : foundElements)
+		{
+			Element parent= findParentInList(element, foundElements);
+			Template subTemplate= templates.get(element);
 
-		template.setFiringEvents(true);
+			element.setAttribute(DATA_TEMPLATE, "replaced: " + subTemplate.getName());
 
-		return template;
+			if (parent != null)
+			{
+				Template parentTemplate= templates.get(parent);
+				parentTemplate.setFiringEvents(false);
+				parentTemplate.addChild(subTemplate);
+				parentTemplate.setFiringEvents(true);
+			}
+			else
+				result= subTemplate;
+		}
+
+		return result;
+	}
+
+	public void putTemplate(List<Element> foundElements, Map<Node, Template> templates, Element element, String name)
+	{
+		foundElements.add(element);
+		Template subTemplate= createTemplate(name);
+		subTemplate.setContent(new ContentImpl<Element>(element));
+		subTemplate.setInner(name.indexOf("*") != -1);
+		templates.put(element, subTemplate);
+	}
+
+	private Element findParentInList(Element element, List<Element> result)
+	{
+		Node parent= element.getParentNode();
+		while (parent != null)
+		{
+			for (Element element2 : result)
+			{
+				if (element2.isSameNode(parent))
+					return element2;
+			}
+
+			parent= parent.getParentNode();
+		}
+		return null;
 	}
 
 	public static List getTemplateElements(Element fromNode, String aNameRegexp, boolean deepSearch)
 	{
 		List result= new ArrayList();
+
+		//		ElementExtension elementExtension= JsCast.castTo(fromNode, ElementExtension.class);
+		//		NodeList querySelector= elementExtension.querySelectorAll("["+DATA_TEMPLATE+"]");
+		//		for (int i= 0; i < querySelector.getLength(); i++)
+		//		{
+		//			Node node= (Node) querySelector.item(i);
+		//			result.add(node);
+		//			String attribute= ((Element) node).getAttribute(DATA_TEMPLATE);
+		//			System.out.println(attribute);
+		//		}
+
 		NodeList childs= fromNode.getChildNodes();
 
 		for (int i= 0; i < childs.getLength(); i++)
