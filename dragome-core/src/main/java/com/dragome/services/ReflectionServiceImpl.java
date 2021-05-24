@@ -73,7 +73,8 @@ public class ReflectionServiceImpl implements ReflectionService
 	private <T> Class<? extends T> getHardcodedImplementation(final Class<T> type)
 	{
 		String[] implementations= new String[] { // 
-		"com.dragome.guia.GuiaServiceFactory", "com.dragome.render.html.HTMLGuiaServiceFactory", //
+				"com.dragome.templates.interfaces.TemplateLoadingStrategy", "com.dragome.render.html.HTMLTemplateLoadingStrategy", //
+				"com.dragome.guia.GuiaServiceFactory", "com.dragome.render.html.HTMLGuiaServiceFactory", //
 				"com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor", "com.dragome.web.debugging.CrossExecutionCommandProcessorImpl" };
 
 		for (int i= 0; i < implementations.length; i++)

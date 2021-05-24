@@ -59,7 +59,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 						textFieldElement.setAttribute("value", value);
 						ScriptHelper.put("textFieldElement", textFieldElement, this);
 						ScriptHelper.put("value", value, this);
-						ScriptHelper.evalNoResult("textFieldElement.node.value=value", this);
+						ScriptHelper.eval("textFieldElement.node.value=value", this);
 					}
 				});
 
@@ -91,7 +91,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 				ScriptHelper.put("value", value == null ? "" : value, this);
 				ScriptHelper.put("textFieldElement", textFieldElement, this);
-				ScriptHelper.evalNoResult("textFieldElement.node.value=value", this);
+				ScriptHelper.eval("textFieldElement.node.value=value", this);
 
 				
 				EventTarget eventTarget= JsCast.castTo(textFieldElement, EventTarget.class);

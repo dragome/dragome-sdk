@@ -16,6 +16,7 @@ import org.w3c.dom.html.MessageEvent;
 import org.w3c.dom.websocket.WebSocket;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.helpers.Base64Coder;
 import com.dragome.web.annotations.ClientSideMethod;
 import com.dragome.web.dispatcher.EventDispatcherHelper;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
@@ -79,7 +80,10 @@ public class ClientToServerMessageChannel implements MessageChannel
 				try
 				{
 					MessageEventExtension messageEvent= JsCast.castTo(evt, MessageEventExtension.class);
-					receiver.messageReceived(messageEvent.getDataAsString());
+					String dataAsString= messageEvent.getDataAsString();
+					ScriptHelper.put("encodedData", dataAsString, this);
+					String result= (String) ScriptHelper.eval("new TextReader(new Utf8Translator(new Inflator(new Base64Reader(encodedData)))).readToEnd()", this);
+					receiver.messageReceived(result);
 					evt.stopPropagation();
 				}
 				catch (Exception e)

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.zip.Deflater;
 
+import com.dragome.helpers.Base64Coder;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
@@ -35,7 +36,7 @@ public class ServerToClientServiceInvoker
 		ServiceInvocation serviceInvocation= new ServiceInvocation(type, method, args != null ? Arrays.asList(args) : new ArrayList<Object>());
 		invocations.add(serviceInvocation);
 
-		if (true ||!WebServiceLocator.getInstance().isMethodVoid(method))
+		if (!WebServiceLocator.getInstance().isMethodVoid(method))
 		{
 			returnValue= serviceInvocation;
 			performInvocations();
@@ -69,8 +70,8 @@ public class ServerToClientServiceInvoker
 
 		String message3= message.toString().replace("\"null\"", "null");
 		invocations.clear();
-		//	byte[] compress= compress(message3.getBytes());
-		//	message3= new String(Base64Coder.encode(compress));
+		byte[] compress= compress(message3.getBytes());
+		message3= new String(Base64Coder.encode(compress));
 
 		WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
 	}
