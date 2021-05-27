@@ -59,7 +59,13 @@ public class MethodHandle
 						ScriptHelper.put("args", args, this);
 						ScriptHelper.put("proxy", x, this);
 						ScriptHelper.put("method", method, this);
-						Object o= ScriptHelper.eval("type.$$$nativeClass___java_lang_Object.$$members[method.$$$signature___java_lang_String].apply(proxy, args)", this);
+
+						boolean notMembers= ScriptHelper.evalBoolean("type.$$$nativeClass___java_lang_Object.$$members === undefined", this);
+						Object o;
+						if (notMembers)
+							o= ScriptHelper.eval("type.$$$nativeClass___java_lang_Object.prototype[method.$$$signature___java_lang_String].apply(proxy, args)", this);
+						else
+							o= ScriptHelper.eval("type.$$$nativeClass___java_lang_Object.$$members[method.$$$signature___java_lang_String].apply(proxy, args)", this);
 						return o;
 					}
 				}
