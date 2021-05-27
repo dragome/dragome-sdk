@@ -11,7 +11,6 @@
 package com.dragome.services.serverside;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,7 +23,9 @@ import com.dragome.web.config.DomHandlerApplicationConfigurator;
 
 public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {
-	Reflections reflections= new Reflections("^");
+	static Reflections reflections= new Reflections("^");
+	static Reflections reflections2= new Reflections(".*");
+
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
 		Set<Class<? extends T>> implementations= reflections.getSubTypesOf(type);
@@ -41,10 +42,9 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 		try
 		{
 			DragomeConfigurator foundConfigurator= null;
-			Reflections reflections= new Reflections(".*");
 
 			Set<Class<?>> typesAnnotatedWith= null;
-			typesAnnotatedWith= reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
+			typesAnnotatedWith= reflections2.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
 			int priorityMax= -1;
 			Class<?> nextClass= null;
 			Iterator<Class<?>> iterator= typesAnnotatedWith.iterator();
@@ -67,7 +67,7 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 
 			if (foundConfigurator == null)
 			{
-				Set<Class<? extends DragomeConfigurator>> configurators= reflections.getSubTypesOf(DragomeConfigurator.class);
+				Set<Class<? extends DragomeConfigurator>> configurators= reflections2.getSubTypesOf(DragomeConfigurator.class);
 				for (Class<? extends DragomeConfigurator> class1 : configurators)
 				{
 					if (!class1.equals(DomHandlerApplicationConfigurator.class))

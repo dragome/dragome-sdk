@@ -7,6 +7,7 @@ import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 import com.dragome.services.WebServiceLocator;
+import com.dragome.web.debugging.CrossExecutionSemaphore;
 import com.dragome.web.debugging.messages.ChannelReceiverImpl;
 import com.dragome.web.debugging.messages.Receiver;
 import com.dragome.web.debugging.messages.Sender;
@@ -29,7 +30,8 @@ public class DragomeDebugServerEndpoint
 			{
 				try
 				{
-					session.getBasicRemote().sendText(aMessage);
+					if (session != null && session.isOpen())
+						session.getBasicRemote().sendText(aMessage);
 				}
 				catch (IOException e)
 				{
