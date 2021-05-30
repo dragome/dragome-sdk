@@ -15,11 +15,14 @@
  */
 package com.dragome.render.html.renderers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
@@ -33,7 +36,9 @@ import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.services.WebServiceLocator;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBox<Object>>
 {
@@ -50,6 +55,8 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 			public void mergeWith(final Element selectElement)
 			{
 
+				setElementInnerHTML(selectElement, "");
+
 				//	visualList.addValueChangeHandler(new ValueChangeHandler<Object>()
 				//	{
 				//	    public void onValueChange(ValueChangeEvent<Object> event)
@@ -65,10 +72,12 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
 					{
-						if (event.getValue() instanceof Collection)
-							selectValue(selectElement, (Collection) event.getValue());
-						else
-							selectValue(selectElement, Arrays.asList(event.getValue()));
+						renderInnerContent(visualList, selectElement);
+
+						//						if (event.getValue() instanceof Collection)
+						//							selectValue(selectElement, (Collection) event.getValue());
+						//						else
+						//							selectValue(selectElement, Arrays.asList(event.getValue()));
 					}
 
 					private void selectValue(final Element selectElement, Collection<Object> values)
@@ -80,11 +89,11 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 						for (Object object : values)
 						{
 							ScriptHelper.put("value", renderer.render(object), this);
-							ScriptHelper.evalNoResult("renderedValues[value]=true", this);
+							ScriptHelper.eval("renderedValues[value]=true", this);
 						}
 
 						ScriptHelper.put("sel", selectElement, this);
-						ScriptHelper.evalNoResult("for(var opt, j = 0; opt = sel.node.options[j]; j++) {opt.selected= renderedValues[opt.value]; }", this);
+						ScriptHelper.eval("for(var opt, j = 0; opt = sel.node.options[j]; j++) {opt.selected= renderedValues[opt.value]; }", this);
 					}
 				});
 
@@ -98,33 +107,13 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				});
 
 				selectElement.setAttribute("size", getSelectElementSize() + "");
-//				selectElement.setAttribute("style", "min-width:300px;");
+				//				selectElement.setAttribute("style", "min-width:300px;");
 
 				if (visualList.isMultipleItems())
 					selectElement.setAttribute("multiple", "multiple");
 
-				int i= 1;
-				String options= "";
-				for (Object element : visualList.getAcceptableValues())
-				{
-					Renderer<Object> renderer= visualList.getRenderer();
-					String rendered= renderer.render(element);
-					Object value= visualList.getValue();
-					String selected= "";
+				renderInnerContent(visualList, selectElement);
 
-					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
-					isSelected|= !visualList.isMultipleItems() && element.equals(value);
-
-					if (isSelected)
-						selected= "selected=\"selected\"";
-
-					String option= "<option value=\"" + rendered + "\" " + selected + ">" + rendered + "</option>\n";
-					options+= option;
-				}
-				
-				setElementInnerHTML(selectElement, options);
-				
-				
 				EventTarget eventTarget= JsCast.castTo(selectElement, EventTarget.class);
 				eventTarget.addEventListener("change", new EventListener()
 				{
@@ -133,8 +122,65 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 						updateSelected(visualList, selectElement);
 					}
 				}, false);
-				
+
 				addListeners(visualList, selectElement);
+			}
+
+			public void renderInnerContent(final VisualListBox<Object> visualList, final Element selectElement)
+			{
+				ElementExtension selectExtension= JsCast.castTo(selectElement, ElementExtension.class);
+
+				for (Object element : visualList.getAcceptableValues())
+				{
+					Renderer<Object> renderer= visualList.getRenderer();
+					String rendered= renderer.render(element);
+					Object value= visualList.getValue();
+
+					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
+					isSelected|= !visualList.isMultipleItems() && element.equals(value);
+
+					Element querySelector= selectExtension.querySelector("option[value='" + rendered + "']");
+					if (querySelector != null)
+					{
+						if (isSelected)
+							querySelector.setAttribute("selected", "selected");
+						else
+							querySelector.removeAttribute("selected");
+
+					}
+					else
+					{
+
+						Element optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createElement("option");
+						if (isSelected)
+							optionElement.setAttribute("selected", "selected");
+
+						optionElement.setAttribute("value", rendered);
+						setElementInnerHTML(optionElement, rendered);
+
+						selectExtension.appendChild(optionElement);
+					}
+				}
+
+				NodeList options= selectExtension.querySelectorAll("option");
+				for (int i= 0; i < options.getLength(); i++)
+				{
+					Node item= options.item(i);
+					Element element2= (Element) item;
+					String value2= element2.getAttribute("value");
+					boolean found= false;
+					for (Object element : visualList.getAcceptableValues())
+					{
+						Renderer<Object> renderer= visualList.getRenderer();
+						String rendered= renderer.render(element);
+
+						if (value2.equals(rendered))
+							found= true;
+					}
+
+					if (!found)
+						selectElement.removeChild(element2);
+				}
 			}
 		});
 
@@ -147,25 +193,45 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 	}
 	private void updateSelected(final VisualListBox<Object> visualList, final Element selectElement)
 	{
-		ScriptHelper.put("e", selectElement, this);
-		if (ScriptHelper.evalBoolean("e.node.multiple", this))
+		ElementExtension selectExtension= JsCast.castTo(selectElement, ElementExtension.class);
+
+		NodeList options= selectExtension.querySelectorAll("option");
+
+		ArrayList<Object> selectedItems= new ArrayList<>();
+		for (int i= 0; i < options.getLength(); i++)
 		{
-			String values= (String) ScriptHelper.eval("(function (){for (var options = e.node.options, values= [], i = 0, len = options.length; i < len;i++)  if (options[i].selected) values.push(options[i].value); return values.join(',')})()", this);
-			visualList.setSelectedValues((List) Arrays.asList(values.split(",")));
+			Node item= options.item(i);
+			Element element= (Element) item;
+			ScriptHelper.put("e", element, this);
+			boolean isSelected= ScriptHelper.evalBoolean("e.node.selected", this);
+			System.out.println(isSelected);
+			String value= element.getAttribute("value");
+			Object selectedObject= findSelectedItem(visualList, value);
+
+			if (isSelected)
+				if (visualList.isMultipleItems())
+					selectedItems.add(selectedObject);
+				else
+				{
+					visualList.setValue(selectedObject);
+					return;
+				}
 		}
-		else
+
+		visualList.setSelectedValues(selectedItems);
+	}
+
+	public Object findSelectedItem(final VisualListBox<Object> visualList, String value)
+	{
+		Renderer<Object> renderer= visualList.getRenderer();
+
+		Collection<Object> acceptableValues= visualList.getAcceptableValues();
+		for (Object object : acceptableValues)
 		{
-			String value= (String) ScriptHelper.eval("e.node.options[e.node.selectedIndex].value", this);
-			
-			Renderer<Object> renderer= visualList.getRenderer();
-			
-			Collection<Object> acceptableValues= visualList.getAcceptableValues();
-			for (Object object : acceptableValues)
-			{
-				String render= renderer.render(object);
-				if (render.equals(value))
-					visualList.setValue(object);
-			}
+			String render= renderer.render(object);
+			if (render.equals(value))
+				return object;
 		}
+		return null;
 	}
 }
