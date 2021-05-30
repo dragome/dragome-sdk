@@ -63,7 +63,7 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 	{
 		super("", new SimpleRenderer<T>());
 	}
-	
+
 	public VisualListBoxImpl(Iterable<T> acceptableValues)
 	{
 		this("", acceptableValues);
@@ -105,8 +105,9 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 	}
 
 	public void setValue(T value, boolean fireEvents)
-	{   int lastSelectedIndex= selectedIndex;
-	
+	{
+		int lastSelectedIndex= selectedIndex;
+
 		for (int i= 0; i < acceptableValues.size(); i++)
 		{
 			if (acceptableValues.get(i).equals(value))
@@ -115,25 +116,26 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 
 		if (lastSelectedIndex != selectedIndex)
 		{
-    		if (this.listModel != null)
-    			this.listModel.setElements(Arrays.asList(value));
-    
-    		
-    		if (fireEvents)
-    		{
-    			fireValueChange(value);
-    		}
+			if (this.listModel != null)
+				this.listModel.setElements(Arrays.asList(value));
+
+			if (fireEvents)
+			{
+				fireValueChange(value);
+			}
 		}
 	}
 
 	public void setAcceptableValues(Collection<T> values)
 	{
 		setAcceptableValues((Iterable) values);
+		fireListChangedEvent((List<T>) values);
 	}
 
 	public void setSelectedValues(Iterable<T> selectedValues)
 	{
-		this.listModel.setElements((Collection<? extends T>) selectedValues);
+		if (listModel != null)
+			this.listModel.setElements((Collection<? extends T>) selectedValues);
 	}
 
 	public void setListModel(MutableListModel<T> listModel)

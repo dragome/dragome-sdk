@@ -189,4 +189,9 @@ public class ObservableList<T> implements List<T>
 	{
 		this.listChangeListener= listChangeListener;
 	}
+	
+	public String toString()
+	{
+		return list.toString();
+	}
 }
