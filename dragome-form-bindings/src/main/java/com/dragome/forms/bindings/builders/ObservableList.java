@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Predicate;
 
 public class ObservableList<T> implements List<T>
 {
@@ -193,5 +194,12 @@ public class ObservableList<T> implements List<T>
 	public String toString()
 	{
 		return list.toString();
+	}
+
+	public boolean removeIf(Predicate<? super T> filter)
+	{
+		boolean removeIf= list.removeIf(filter);
+		listChangeListener.listChanged(null);
+		return removeIf;
 	}
 }
