@@ -16,9 +16,7 @@
 package com.dragome.render.html.renderers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -57,43 +55,11 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				setElementInnerHTML(selectElement, "");
 
-				//	visualList.addValueChangeHandler(new ValueChangeHandler<Object>()
-				//	{
-				//	    public void onValueChange(ValueChangeEvent<Object> event)
-				//	    {
-				//		final DomHandler domHandler= ServiceLocator.getInstance().getDomHandler();
-				//		Element elementById= domHandler.getDocument().getElementById(id);
-				//		elementById.setAttribute("value", (String) event.getValue());
-				//	    }
-				//	});
-				//		final Element selectElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("select");
-
 				visualList.addValueChangeHandler(new ValueChangeHandler<Object>()
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
 					{
 						renderInnerContent(visualList, selectElement);
-
-						//						if (event.getValue() instanceof Collection)
-						//							selectValue(selectElement, (Collection) event.getValue());
-						//						else
-						//							selectValue(selectElement, Arrays.asList(event.getValue()));
-					}
-
-					private void selectValue(final Element selectElement, Collection<Object> values)
-					{
-						Renderer<Object> renderer= visualList.getRenderer();
-						ScriptHelper.put("renderedValues", new Object(), this);
-						ScriptHelper.eval("renderedValues={}", this);
-
-						for (Object object : values)
-						{
-							ScriptHelper.put("value", renderer.render(object), this);
-							ScriptHelper.eval("renderedValues[value]=true", this);
-						}
-
-						ScriptHelper.put("sel", selectElement, this);
-						ScriptHelper.eval("for(var opt, j = 0; opt = sel.node.options[j]; j++) {opt.selected= renderedValues[opt.value]; }", this);
 					}
 				});
 
@@ -107,7 +73,6 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				});
 
 				selectElement.setAttribute("size", getSelectElementSize() + "");
-				//				selectElement.setAttribute("style", "min-width:300px;");
 
 				if (visualList.isMultipleItems())
 					selectElement.setAttribute("multiple", "multiple");
@@ -204,7 +169,6 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 			Element element= (Element) item;
 			ScriptHelper.put("e", element, this);
 			boolean isSelected= ScriptHelper.evalBoolean("e.node.selected", this);
-			System.out.println(isSelected);
 			String value= element.getAttribute("value");
 			Object selectedObject= findSelectedItem(visualList, value);
 
