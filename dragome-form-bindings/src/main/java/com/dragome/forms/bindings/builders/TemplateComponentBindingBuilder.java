@@ -45,7 +45,6 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 {
 	private Class<? extends VisualComponent> componentType;
 	private VisualPanel panel;
-	private FormBinder binder= new FormBinder();
 	private Template template;
 	private boolean built= false;
 
@@ -73,6 +72,11 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 
 		component= (C) ServiceLocator.getInstance().getReflectionService().createClassInstance(this.componentType);
 		setupComponent();
+	}
+
+	public TemplateComponentBindingBuilder(Template template, Class<C> componentType)
+	{
+		this(template, null, componentType, null);
 	}
 
 	private void setupComponent()
@@ -159,10 +163,16 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 
 	public <S> TemplateComponentBindingBuilder<C> toProperty(final Supplier<S> getter)
 	{
-		return toProperty(getter, (Consumer<S>)null);
+		return toProperty(getter, (Consumer<S>) null);
 	}
-	
+
 	public <S> TemplateComponentBindingBuilder<C> toProperty(final Supplier<S> getter, final Consumer<S> setter)
+	{
+		bindProperty(getter, setter, component);
+		return this;
+	}
+
+	static public <S> void bindProperty(final Supplier<S> getter, final Consumer<S> setter, VisualComponent component)
 	{
 		ValueModelDelegator<S> valueModelDelegator= new ValueModelDelegator<S>(new NullMutableValueModel<S>()
 		{
@@ -181,14 +191,14 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 			}
 		});
 
-		return with(valueModelDelegator);
+		with(valueModelDelegator, component);
 	}
 
-	private <S> TemplateComponentBindingBuilder<C> with(ValueModelDelegator<S> valueModelDelegator)
+	static private <S> void with(ValueModelDelegator<S> valueModelDelegator, VisualComponent component)
 	{
+		FormBinder binder= new FormBinder();
 		binder.bind(valueModelDelegator).to((HasValue<S>) component);
 		BindingSync.addCondition(valueModelDelegator);
-		return this;
 	}
 
 	public <S> TemplateComponentBindingBuilder<C> to(final ValueSource<S> valueSource)
@@ -201,14 +211,16 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 			}
 		});
 
-		return with(valueModelDelegator);
+		with(valueModelDelegator, component);
+		return this;
 	}
 
 	public C build()
 	{
 		if (!built)
 		{
-			panel.addChild(component);
+			if (panel != null)
+				panel.addChild(component);
 			built= true;
 		}
 
