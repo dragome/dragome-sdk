@@ -69,6 +69,6 @@ function loadScript(url, callback)
 
 		loadScript("dragome-resources/js/qx-oo-5.0.1.min.js", function()
 		{
-			script("compiled-js/webapp.js");
+			script("compiled-js/webapp.js?version="+ Date.now());
 		});
 })();
