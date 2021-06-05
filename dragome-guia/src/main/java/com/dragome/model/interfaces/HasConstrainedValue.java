@@ -15,10 +15,10 @@
  */
 package com.dragome.model.interfaces;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface HasConstrainedValue<T> extends HasValue<T>
 {
-	void setAcceptableValues(Collection<T> values);
-	Collection<T> getAcceptableValues();
+	void setAcceptableValues(List<T> values);
+	List<T> getAcceptableValues();
 }

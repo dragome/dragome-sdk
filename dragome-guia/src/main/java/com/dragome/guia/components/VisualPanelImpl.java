@@ -28,8 +28,6 @@ import com.dragome.templates.interfaces.Template;
 public class VisualPanelImpl extends AbstractVisualComponent implements VisualPanel
 {
 	protected List<VisualComponent> children= new ArrayList<VisualComponent>();
-	protected Layout layout;
-
 	public VisualPanelImpl()
 	{
 		children= new ArrayList<VisualComponent>();
@@ -45,19 +43,13 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 	{
 		this(aName);
 		setLayout(aLayout);
-		layout.setAssociatedPanel(this);
+		layout.setAssociatedComponent(this);
 	}
 
 	public VisualPanelImpl(Layout layout)
 	{
 		initLayout(layout);
 	}
-
-	public void initLayout(Layout layout)
-    {
-	    setLayout(layout);
-		layout.setAssociatedPanel(this);
-    }
 
 	public VisualPanelImpl(String aName, Template template)
 	{
@@ -68,11 +60,6 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 	public VisualPanelImpl(Template template)
 	{
 		this(new TemplateLayout(template));
-	}
-
-	public void setLayout(Layout layout)
-	{
-		this.layout= layout;
 	}
 
 	public VisualPanel addChild(VisualComponent visualComponent)
@@ -94,11 +81,6 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 		children.clear();
 		for (VisualComponent child : elements)
 			addChild(child);
-	}
-
-	public Layout getLayout()
-	{
-		return layout;
 	}
 
 	public void removeChild(VisualComponent aVisualComponent)

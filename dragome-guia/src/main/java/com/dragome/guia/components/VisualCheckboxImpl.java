@@ -25,6 +25,13 @@ public class VisualCheckboxImpl extends SelectableButtonComponent implements Vis
 		init();
     }
 	
+	public VisualCheckboxImpl(String aName, String aCaption)
+	{
+		super(aName, aCaption);
+		init();
+
+	}
+	
 	public VisualCheckboxImpl(String aName, String aCaption, Boolean selected)
 	{
 		super(aName, aCaption);

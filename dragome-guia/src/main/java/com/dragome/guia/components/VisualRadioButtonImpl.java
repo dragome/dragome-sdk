@@ -19,6 +19,11 @@ package com.dragome.guia.components;
 public class VisualRadioButtonImpl extends SelectableButtonComponent implements VisualRadioButton
 {
 	protected String buttonGroupId;
+	
+	public VisualRadioButtonImpl()
+	{
+		init();
+	}
 
 	public String getButtonGroup()
 	{
@@ -33,11 +38,14 @@ public class VisualRadioButtonImpl extends SelectableButtonComponent implements 
 	public VisualRadioButtonImpl(String aName, String aCaption)
 	{
 		super(aName, aCaption);
+		init();
+
 	}
 
 	public VisualRadioButtonImpl(String aGroupId, String aName, String aCaption)
 	{
 		super(aName, aCaption);
 		this.buttonGroupId= aGroupId;
+		init();
 	}
 }

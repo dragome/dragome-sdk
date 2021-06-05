@@ -76,6 +76,8 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				if (visualList.isMultipleItems())
 					selectElement.setAttribute("multiple", "multiple");
+				else
+					selectElement.removeAttribute("multiple");
 
 				renderInnerContent(visualList, selectElement);
 
@@ -102,7 +104,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					Object value= visualList.getValue();
 
 					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
-					isSelected|= !visualList.isMultipleItems() && element.equals(value);
+					isSelected|= !visualList.isMultipleItems() && element == value;
 
 					Element querySelector= selectExtension.querySelector("option[value='" + rendered + "']");
 					if (querySelector != null)

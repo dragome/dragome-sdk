@@ -15,6 +15,7 @@
  */
 package com.dragome.forms.bindings.builders;
 
+import com.dragome.guia.components.VisualPanelImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.methodlogger.enhancers.MethodInvocationListener;
@@ -22,7 +23,7 @@ import com.dragome.methodlogger.enhancers.MethodInvocationLogger;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 
-public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuilder>
+public class ComponentBuilder<C extends VisualComponent> extends BaseBuilder<C, ComponentBuilder<C>>
 {
 	private Template template;
 
@@ -69,12 +70,12 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 			});
 	}
 
-	public ComponentBuilder(VisualComponent component)
+	public ComponentBuilder(C component)
 	{
 		bindComponent(component);
 	}
 
-	private void bindComponent(VisualComponent component)
+	private void bindComponent(C component)
 	{
 		this.component= component;
 		if (component instanceof VisualPanel && ((VisualPanel) component).getLayout() instanceof TemplateLayout)
@@ -88,10 +89,10 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 		configureMethodListener();
 	}
 
-	public ComponentBuilder(VisualComponent itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
+	public ComponentBuilder(C itemPanel, BaseBuilder<? extends VisualComponent, ?> templateComponentBindingBuilder)
 	{
 		this(itemPanel);
-		this.parentBuilder= (BaseBuilder<? extends VisualComponent, ComponentBuilder>) templateComponentBindingBuilder;
+		this.parentBuilder= (BaseBuilder<? extends VisualComponent, ComponentBuilder<C>>) templateComponentBindingBuilder;
 
 	}
 
@@ -100,7 +101,7 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 		return new TemplateBindingBuilder((VisualPanel) component, template.getChild(aChildTemplateName), parentBuilder);
 	}
 	
-	public TemplateBindingBuilder bind(VisualPanel visualPanel)
+	public TemplateBindingBuilder bind(C visualPanel)
 	{
 		bindComponent(visualPanel);
 		return new TemplateBindingBuilder((VisualPanel) component, template, parentBuilder);
@@ -111,7 +112,7 @@ public class ComponentBuilder extends BaseBuilder<VisualComponent, ComponentBuil
 		return (VisualPanel) component;
 	}
 
-	public VisualComponent build()
+	public C build()
 	{
 		return component; //throw new RuntimeException("component is not ready");
 	}

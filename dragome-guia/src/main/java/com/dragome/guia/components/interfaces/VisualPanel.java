@@ -18,9 +18,8 @@ package com.dragome.guia.components.interfaces;
 import java.util.List;
 
 import com.dragome.model.interfaces.HasLayout;
-import com.dragome.model.interfaces.Layout;
 
-public interface VisualPanel extends VisualComponent, HasLayout
+public interface VisualPanel extends VisualComponent
 {
 	public VisualPanel addChild(VisualComponent aVisualComponent);
 	public List<? extends VisualComponent> getChildren();
@@ -30,5 +29,4 @@ public interface VisualPanel extends VisualComponent, HasLayout
 	public void replaceChild(VisualComponent child);
 	void addOrReplaceChild(VisualComponent child);
 	public void replaceChild(VisualComponent newChild, VisualComponent oldChild);
-	void initLayout(Layout layout);
 }

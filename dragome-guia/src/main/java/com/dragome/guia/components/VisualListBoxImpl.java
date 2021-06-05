@@ -86,14 +86,22 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 		return null;
 	}
 
-	public Collection<T> getAcceptableValues()
+	public List<T> getAcceptableValues()
 	{
 		return acceptableValues;
 	}
 
 	public T getValue()
 	{
-		return acceptableValues.get(selectedIndex);
+		if (listModel != null)
+		{
+			return getSelectedValues().isEmpty() ? null : getSelectedValues().iterator().next();
+		}
+		else
+		{
+			selectedIndex= selectedIndex % acceptableValues.size();
+			return acceptableValues.get(selectedIndex);
+		}
 	}
 
 	public void setAcceptableValues(Iterable<T> values)
@@ -106,27 +114,34 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 
 	public void setValue(T value, boolean fireEvents)
 	{
-		int lastSelectedIndex= selectedIndex;
-
-		for (int i= 0; i < acceptableValues.size(); i++)
+		if (listModel != null)
 		{
-			if (acceptableValues.get(i).equals(value))
-				selectedIndex= i;
+			setSelectedValues(Arrays.asList(value));
 		}
-
-		if (lastSelectedIndex != selectedIndex)
+		else
 		{
-			if (this.listModel != null)
-				this.listModel.setElements(Arrays.asList(value));
+			int lastSelectedIndex= selectedIndex;
 
-			if (fireEvents)
+			for (int i= 0; i < acceptableValues.size(); i++)
 			{
-				fireValueChange(value);
+				if (acceptableValues.get(i).equals(value))
+					selectedIndex= i;
+			}
+
+			if (lastSelectedIndex != selectedIndex)
+			{
+				if (this.listModel != null)
+					this.listModel.setElements(Arrays.asList(value));
+
+				if (fireEvents)
+				{
+					fireValueChange(value);
+				}
 			}
 		}
 	}
 
-	public void setAcceptableValues(Collection<T> values)
+	public void setAcceptableValues(List<T> values)
 	{
 		setAcceptableValues((Iterable) values);
 		fireListChangedEvent((List<T>) values);

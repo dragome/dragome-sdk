@@ -28,7 +28,7 @@ public class TemplateBindingBuilder extends BaseBuilder<VisualComponent, Templat
 		return template;
 	}
 
-	public VisualPanel getPanel()
+	public VisualComponent getPanel()
 	{
 		return panel;
 	}

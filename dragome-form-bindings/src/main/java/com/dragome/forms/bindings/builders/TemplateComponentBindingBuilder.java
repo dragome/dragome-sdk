@@ -36,6 +36,7 @@ import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.components.interfaces.VisualTextField;
+import com.dragome.model.interfaces.HasLayout;
 import com.dragome.model.interfaces.HasValue;
 import com.dragome.services.ServiceLocator;
 import com.dragome.templates.TemplateLayout;
@@ -82,9 +83,9 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 	private void setupComponent()
 	{
 		component.setName(template.getName());
-		if (component instanceof VisualPanel)
+		if (component instanceof HasLayout)
 		{
-			VisualPanel visualPanel= (VisualPanel) component;
+			HasLayout visualPanel= (HasLayout) component;
 			if (!(visualPanel.getLayout() instanceof TemplateLayout) || ((TemplateLayout) visualPanel.getLayout()).getTemplate() == null)
 				visualPanel.initLayout(new TemplateLayout(template));
 		}
@@ -105,7 +106,7 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 	//	return childrenBuilder();
 	//    }
 
-	public <S> RepeaterBuilder<S> toListProperty(final Supplier<List<S>> getter)
+	public <S> RepeaterBuilder<S, C> toListProperty(final Supplier<List<S>> getter)
 	{
 		final ValueModelDelegator<List<S>> valueModelDelegator= new ValueModelDelegator<List<S>>();
 
@@ -124,7 +125,7 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 		valueModelDelegator.setValueSource(valueSource);
 
 		BindingSync.addCondition(valueModelDelegator);
-		return new RepeaterBuilder<S>(valueModelDelegator, template, panel, (TemplateComponentBindingBuilder<VisualPanel>) this);
+		return new RepeaterBuilder<S, C>(valueModelDelegator, template, panel, (TemplateComponentBindingBuilder<VisualPanel>) this);
 	}
 
 	private <S> void addListenerIfObservable(final ValueModelDelegator<List<S>> valueModelDelegator, List<S> list)
@@ -142,7 +143,7 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 		}
 	}
 
-	public <S> RepeaterBuilder<S> toList(final List<S> list)
+	public <S> RepeaterBuilder<S, C> toList(final List<S> list)
 	{
 		final ValueModelDelegator<List<S>> valueModelDelegator= new ValueModelDelegator<List<S>>();
 		addListenerIfObservable(valueModelDelegator, list);
@@ -158,7 +159,7 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 		valueModelDelegator.setValueSource(valueSource);
 
 		BindingSync.addCondition(valueModelDelegator);
-		return new RepeaterBuilder(valueModelDelegator, template, panel, (TemplateComponentBindingBuilder<VisualPanel>) this);
+		return new RepeaterBuilder<S, C>(valueModelDelegator, template, panel, (TemplateComponentBindingBuilder<VisualPanel>) this);
 	}
 
 	public <S> TemplateComponentBindingBuilder<C> toProperty(final Supplier<S> getter)
