@@ -22,6 +22,8 @@ public class MethodHandles
 	public static final class Lookup
 	{
 		public static final Object PRIVATE= null;
+
+		public static final Object PUBLIC= null;
 		
 		private Class<?> requestedLookupClass;
 

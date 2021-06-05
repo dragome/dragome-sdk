@@ -20,7 +20,11 @@ import org.w3c.dom.Element;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualButton;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.model.interfaces.Layout;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.templates.TemplateLayout;
+import com.dragome.templates.interfaces.Content;
+import com.dragome.templates.interfaces.Template;
 
 public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButton>
 {
@@ -30,23 +34,47 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 
 	public Canvas<Element> render(final VisualButton visualButton)
 	{
+		final String id= DragomeEntityManager.add(visualButton);
+
+		Layout layout= visualButton.getLayout();
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-		canvas.setContent(new MergeableElement()
+		if (layout instanceof TemplateLayout && ((TemplateLayout) layout).getTemplate().hasChild("button"))
 		{
-			public void mergeWith(Element element)
+			Element radioButtonElement;
+			TemplateLayout templateLayout= (TemplateLayout) layout;
+
+			Template template= templateLayout.getTemplate();
+			Content<Element> content= (Content<Element>) template.getContent();
+			radioButtonElement= content.getValue();
+
+			Template inputTemplate= template.getChild("button");
+
+			Content<Element> inputElementContent= (Content<Element>) inputTemplate.getContent();
+			setupElement(visualButton, inputElementContent.getValue());
+			canvas.setContent(radioButtonElement);
+			return canvas;
+		}
+		else
+		{
+			canvas.setContent(new MergeableElement()
 			{
-				String id= DragomeEntityManager.add(visualButton);
+				public void mergeWith(Element element)
+				{
+					setupElement(visualButton, element);
+				}
+			});
 
-				//		Element button1= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("input");
-				element.setAttribute("type", "button");
-				element.setAttribute("value", visualButton.getCaption());
+			return canvas;
+		}
+	}
 
-				addListeners(visualButton, element);
-			}
-		});
+	public void setupElement(final VisualButton visualButton, final Element element)
+	{
+		element.setAttribute("type", "button");
+		element.setAttribute("value", visualButton.getCaption());
 
-		return canvas;
+		addListeners(visualButton, element);
 	}
 
 }

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dragome.model.interfaces;
+package com.dragome.forms.bindings.builders;
 
 import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.templates.interfaces.Template;
 
-public interface Layout
+public interface VisualComponentSupplierForItem<T>
 {
-	void setAssociatedComponent(VisualComponent visualComponent);
+	public VisualComponent process(T item, Template aTemplate);
 }

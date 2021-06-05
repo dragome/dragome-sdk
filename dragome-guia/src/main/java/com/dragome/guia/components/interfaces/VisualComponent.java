@@ -19,10 +19,11 @@ import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
 import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
 import com.dragome.model.interfaces.EventProducer;
+import com.dragome.model.interfaces.HasLayout;
 import com.dragome.model.interfaces.HasVisible;
 import com.dragome.model.interfaces.Style;
 
-public interface VisualComponent extends EventProducer, HasVisible
+public interface VisualComponent extends EventProducer, HasVisible, HasLayout
 {
 	public String getName();
 	public VisualComponent setName(String name);

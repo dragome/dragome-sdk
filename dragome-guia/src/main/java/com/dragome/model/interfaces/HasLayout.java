@@ -19,4 +19,5 @@ public interface HasLayout
 {
 	public abstract Layout getLayout();
 	public abstract void setLayout(Layout aLayout);
+	void initLayout(Layout layout);
 }

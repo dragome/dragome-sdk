@@ -17,6 +17,8 @@ package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
@@ -24,18 +26,57 @@ import com.dragome.guia.components.VisualRadioButton;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.model.interfaces.Layout;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.templates.TemplateLayout;
+import com.dragome.templates.interfaces.Content;
+import com.dragome.templates.interfaces.Template;
 
 public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<VisualRadioButton>
 {
 	public Canvas<Element> render(final VisualRadioButton radioButton)
 	{
 		final String id= DragomeEntityManager.add(radioButton);
+		final Element radioButtonElement;
 
-		Document document= WebServiceLocator.getInstance().getDomHandler().getDocument();
-		final Element radioButtonElement= document.createElement("input");
+		Layout layout= radioButton.getLayout();
 
+		if (layout instanceof TemplateLayout)
+		{
+			TemplateLayout templateLayout= (TemplateLayout) layout;
+
+			Template template= templateLayout.getTemplate();
+			Content<Element> content= (Content<Element>) template.getContent();
+			radioButtonElement= content.getValue();
+
+			Template inputTemplate= template.getChild("input");
+			Template textTemplate= template.getChild("text");
+
+			Content<Element> inputElementContent= (Content<Element>) inputTemplate.getContent();
+			Content<Element> textElementContent= (Content<Element>) textTemplate.getContent();
+			setupElement(radioButton, inputElementContent.getValue());
+			Element value= textElementContent.getValue();
+			Node parentNode= value.getParentNode();
+			Text optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createTextNode(radioButton.getCaption());
+			parentNode.replaceChild(optionElement, value);
+		}
+		else
+		{
+
+			Document document= WebServiceLocator.getInstance().getDomHandler().getDocument();
+			radioButtonElement= document.createElement("input");
+
+			setupElement(radioButton, radioButtonElement);
+
+		}
+		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
+		canvas.setContent(radioButtonElement);
+		return canvas;
+	}
+
+	public void setupElement(final VisualRadioButton radioButton, final Element radioButtonElement)
+	{
 		radioButton.addListener(ClickListener.class, new ClickListener()
 		{
 			public void clickPerformed(VisualComponent aVisualComponent)
@@ -53,10 +94,5 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 			radioButtonElement.setAttribute("checked", "checked");
 
 		addListeners(radioButton, radioButtonElement);
-
-		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
-		canvas.setContent(radioButtonElement);
-
-		return canvas;
 	}
 }

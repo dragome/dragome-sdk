@@ -57,7 +57,7 @@ public class RequestExecutorImpl implements RequestExecutor
 	public String executeSynchronousRequest(String url, Map<String, String> parameters)
 	{
 		final ExecutionHandler executionHandler= ServiceLocator.getInstance().getConfigurator().getExecutionHandler();
-		if (executionHandler.canSuspend())
+		if (false && executionHandler.canSuspend())
 		{
 			final String[] resultArray= new String[] { "" };
 

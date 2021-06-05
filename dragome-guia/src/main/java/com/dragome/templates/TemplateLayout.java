@@ -17,7 +17,6 @@ package com.dragome.templates;
 
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.events.listeners.interfaces.PanelListener;
 import com.dragome.model.interfaces.HasLayout;
 import com.dragome.model.interfaces.Layout;
@@ -30,11 +29,11 @@ public class TemplateLayout implements Layout
 	public static class PanelListenerImpl implements PanelListener
 	{
 		protected ComponentRenderer<Object, VisualComponent> renderer= GuiaServiceLocator.getInstance().getTemplateManager().getComponentRenderer();
-		protected VisualPanel visualPanel;
+		protected VisualComponent visualPanel;
 
-		private PanelListenerImpl(VisualPanel visualPanel)
+		private PanelListenerImpl(VisualComponent visualPanel2)
 		{
-			this.visualPanel= visualPanel;
+			this.visualPanel= visualPanel2;
 		}
 		public void componentAdded(VisualComponent aVisualComponent)
 		{
@@ -89,7 +88,7 @@ public class TemplateLayout implements Layout
 	}
 
 	protected Template template;
-	protected VisualPanel associatedPanel;
+	protected VisualComponent associatedComponent;
 
 	public TemplateLayout()
 	{
@@ -110,9 +109,9 @@ public class TemplateLayout implements Layout
 		this.template= template;
 	}
 
-	public void setAssociatedPanel(VisualPanel visualPanel)
+	public void setAssociatedComponent(VisualComponent visualComponent)
 	{
-		this.associatedPanel= visualPanel;
-		visualPanel.addListener(PanelListener.class, new PanelListenerImpl(visualPanel));
+		this.associatedComponent= visualComponent;
+		visualComponent.addListener(PanelListener.class, new PanelListenerImpl(visualComponent));
 	}
 }

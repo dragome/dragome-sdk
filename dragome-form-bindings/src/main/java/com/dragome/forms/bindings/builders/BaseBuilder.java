@@ -266,7 +266,7 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 		return (B) this;
 	}
 
-	public VisualComponent component()
+	public C component()
 	{
 		return component;
 	}

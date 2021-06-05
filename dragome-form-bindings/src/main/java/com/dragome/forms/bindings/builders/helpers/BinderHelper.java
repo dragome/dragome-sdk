@@ -6,6 +6,7 @@ import com.dragome.forms.bindings.builders.ActionExecutor;
 import com.dragome.forms.bindings.builders.ChildrenBuilder;
 import com.dragome.forms.bindings.builders.ComponentBuilder;
 import com.dragome.forms.bindings.builders.Consumer;
+import com.dragome.forms.bindings.builders.RepeaterBuilder;
 import com.dragome.forms.bindings.builders.Supplier;
 import com.dragome.forms.bindings.builders.TemplateBindingBuilder;
 import com.dragome.forms.bindings.builders.TemplateComponentBindingBuilder;
@@ -71,9 +72,9 @@ public class BinderHelper
 		return (TemplateComponentBindingBuilder<C>) templateComponentBindingBuilder.toProperty(getter, setter);
 	}
 
-	public static <S> RepeaterBuilderHelper<S> toListProperty(final Supplier<List<S>> getter)
+	public static <S, C extends VisualComponent> RepeaterBuilderHelper<S, C> toListProperty(final Supplier<List<S>> getter)
 	{
-		return new RepeaterBuilderHelper<S>(templateComponentBindingBuilder.toListProperty(getter));
+		return new RepeaterBuilderHelper<S, C>((RepeaterBuilder<S, C>) templateComponentBindingBuilder.toListProperty(getter));
 	}
 
 	public static <S, C extends VisualComponent> TemplateComponentBindingBuilder<C> to(final ValueSource<S> valueSource)
@@ -114,12 +115,12 @@ public class BinderHelper
 
 	public static ComponentBuilder styleWith(String className)
 	{
-		return componentBuilder.styleWith(className);
+		return (ComponentBuilder) componentBuilder.styleWith(className);
 	}
 
 	public static ComponentBuilder style()
 	{
-		return componentBuilder.style(component);
+		return (ComponentBuilder) componentBuilder.style(component);
 	}
 
 	public static void start(VisualPanel mainPanel)

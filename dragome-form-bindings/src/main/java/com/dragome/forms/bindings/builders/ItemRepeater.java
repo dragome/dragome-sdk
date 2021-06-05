@@ -15,7 +15,9 @@
  */
 package com.dragome.forms.bindings.builders;
 
-public interface ItemRepeater<T>
+import com.dragome.guia.components.interfaces.VisualComponent;
+
+public interface ItemRepeater<T, C extends VisualComponent>
 {
-	public void process(T item, ComponentBuilder componentBuilder);
+	public void process(T item, ComponentBuilder<C> componentBuilder);
 }

@@ -88,6 +88,12 @@
       <artifactId>dragome-web</artifactId>
       <version>0.96-beta4</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-form-bindings</artifactId>
+      <version>0.96-beta4</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -23,6 +23,7 @@ import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
 import com.dragome.guia.events.listeners.interfaces.FocusListener;
 import com.dragome.guia.events.listeners.interfaces.KeyUpListener;
 import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
+import com.dragome.model.interfaces.Layout;
 import com.dragome.model.interfaces.Style;
 
 public class AbstractVisualComponent extends DefaultEventProducer implements VisualComponent
@@ -30,6 +31,7 @@ public class AbstractVisualComponent extends DefaultEventProducer implements Vis
 	protected String name;
 	protected VisualPanel parent;
 	protected Style style= new DefaultStyle(this);
+	protected Layout layout;
 
 	protected static StyleChangedListener styleChangedListener= GuiaServiceLocator.getInstance().getStyleChangeListener();
 	
@@ -112,5 +114,21 @@ public class AbstractVisualComponent extends DefaultEventProducer implements Vis
 		if (hasListener(FocusListener.class))
 			getListener(FocusListener.class).focusGained(this);
     }
+
+	public void initLayout(Layout layout)
+	{
+	    setLayout(layout);
+		layout.setAssociatedComponent(this);
+	}
+
+	public void setLayout(Layout layout)
+	{
+		this.layout= layout;
+	}
+
+	public Layout getLayout()
+	{
+		return layout;
+	}
 
 }

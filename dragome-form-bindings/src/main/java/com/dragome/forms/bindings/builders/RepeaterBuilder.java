@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.dragome.guia.components.AbstractVisualComponent;
 import com.dragome.guia.components.VisualPanelImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
@@ -29,7 +30,7 @@ import com.dragome.templates.TemplateRepeater;
 import com.dragome.templates.interfaces.SimpleItemProcessor;
 import com.dragome.templates.interfaces.Template;
 
-public class RepeaterBuilder<T>
+public class RepeaterBuilder<T, C extends VisualComponent>
 {
 	private ValueModelDelegator<List<T>> valueModelDelegator;
 	private Template mainTemplate;
@@ -41,6 +42,7 @@ public class RepeaterBuilder<T>
 	private Supplier<Order> order;
 	private ValueModelDelegator<Boolean> valueModelDelegatorForFilter;
 	private ValueModelDelegator<?> valueModelDelegatorForOrder;
+	private VisualComponentSupplierForItem<T> visualComponentSupplierForItem= (i, t) -> new VisualPanelImpl(t);
 
 	public RepeaterBuilder(ValueModelDelegator<List<T>> valueModelDelegator, Template template, VisualPanel panel, TemplateComponentBindingBuilder<VisualPanel> templateComponentBindingBuilder)
 	{
@@ -50,7 +52,13 @@ public class RepeaterBuilder<T>
 		this.templateComponentBindingBuilder= templateComponentBindingBuilder;
 	}
 
-	public RepeaterBuilder<T> repeat(final ItemRepeater<T> itemRepeater)
+	public RepeaterBuilder<T, C> setupComponentSupplier(final VisualComponentSupplierForItem<T> visualComponentSupplierForItem)
+	{
+		this.visualComponentSupplierForItem= visualComponentSupplierForItem;
+		return this;
+	}
+
+	public RepeaterBuilder<T, C> repeat(final ItemRepeater<T, C> itemRepeater)
 	{
 		final List<T> list= new ArrayList<T>(collectItems(valueModelDelegator.getValue()));
 		sortList(list);
@@ -59,7 +67,7 @@ public class RepeaterBuilder<T>
 		{
 			public void fillTemplate(T item, Template aTemplate)
 			{
-				VisualPanelImpl itemPanel= new VisualPanelImpl(aTemplate);
+				VisualComponent itemPanel= visualComponentSupplierForItem.process(item, aTemplate);
 				panel.addChild(itemPanel);
 				ComponentBuilder componentBuilder= new ComponentBuilder(itemPanel, templateComponentBindingBuilder);
 				itemRepeater.process(item, componentBuilder);
@@ -86,7 +94,7 @@ public class RepeaterBuilder<T>
 
 		return this;
 	}
-	
+
 	private void sortList(final List<T> list)
 	{
 		if (orderByGetter != null)
@@ -119,7 +127,6 @@ public class RepeaterBuilder<T>
 				}
 			});
 	}
-	
 
 	private List<T> collectItems(List<T> value)
 	{
@@ -170,13 +177,13 @@ public class RepeaterBuilder<T>
 		return delegator;
 	}
 
-	public RepeaterBuilder<T> filter(Supplier<Tester<T>> aFilter)
+	public RepeaterBuilder<T, C> filter(Supplier<Tester<T>> aFilter)
 	{
 		this.filter= aFilter;
 		return this;
 	}
 
-	public RepeaterBuilder<T> orderBy(Getter<T, Comparable<?>> getter, Supplier<Order> order)
+	public RepeaterBuilder<T, C> orderBy(Getter<T, Comparable<?>> getter, Supplier<Order> order)
 	{
 		this.orderByGetter= getter;
 		this.order= order;
