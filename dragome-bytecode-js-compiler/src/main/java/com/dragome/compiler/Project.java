@@ -495,7 +495,7 @@ public class Project implements Serializable
 			{
 				String[] split= genericSignature.split("\\|");
 				if (getWrittenSignatures().contains(split[0] /*+ "|" + split[1]*/))
-					writer.write("addSignatureTo(" + split[0] + ",\"" + split[1] + "\", \"" + split[2] + "\");\n");
+					writer.write("addSignatureTo(\"" + split[0] + "\",\"" + split[1] + "\", \"" + split[2] + "\");\n");
 			}
 		}
 		catch (Exception e)
