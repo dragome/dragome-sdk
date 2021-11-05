@@ -10,10 +10,14 @@ function _isNull(aObject) {
 }
 
 function addSignatureTo(aClass, aMethodSignature, aGenericSignature) {
-	if (!aClass.$$$$signatures)
-		aClass.$$$$signatures = [];
-
-	aClass.$$$$signatures[aMethodSignature] = aGenericSignature;
+	try {
+		aClass= eval(aClass);
+		if (!aClass.$$$$signatures)
+			aClass.$$$$signatures = [];
+	
+		aClass.$$$$signatures[aMethodSignature] = aGenericSignature;
+	} catch {
+	}
 }
 
 java_lang_null = function() {
