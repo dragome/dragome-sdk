@@ -2,6 +2,7 @@ package com.dragome.render.serverside.swing;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.util.List;
 
 import com.dragome.templates.ContentImpl;
 import com.dragome.templates.TemplateImpl;
@@ -72,6 +73,13 @@ public class SwingTemplateLoadingStrategy implements TemplateLoadingStrategy
 
 	public Template loadTemplateCloned(String templateName, String aContainerId)
 	{
+		return null;
+	}
+
+	@Override
+	public List<Template> findAllTemplates()
+	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 

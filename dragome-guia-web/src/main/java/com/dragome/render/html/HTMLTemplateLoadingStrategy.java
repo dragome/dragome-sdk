@@ -15,6 +15,8 @@
  */
 package com.dragome.render.html;
 
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
@@ -99,5 +101,10 @@ public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 	public Template loadTemplate(String templateName)
 	{
 	    return loadTemplate(templateName, "");
+	}
+
+	public List<Template> findAllTemplates()
+	{
+		return null;
 	}
 }

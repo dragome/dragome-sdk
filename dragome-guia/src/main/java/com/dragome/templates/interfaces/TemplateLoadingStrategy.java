@@ -15,6 +15,7 @@
  */
 package com.dragome.templates.interfaces;
 
+import java.util.List;
 
 public interface TemplateLoadingStrategy
 {
@@ -26,4 +27,5 @@ public interface TemplateLoadingStrategy
 	Template loadTemplate(String templateName);
 	Template getMainTemplate();
 	Template loadTemplateCloned(String templateName, String aContainerId);
+	List<Template> findAllTemplates();
 }
