@@ -65,9 +65,9 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 	public VisualPanel addChild(VisualComponent visualComponent)
 	{
 		children.add(visualComponent);
+		visualComponent.setParent(this);
 		if (hasListener(PanelListener.class))
 			getListener(PanelListener.class).componentAdded(visualComponent);
-		visualComponent.setParent(this);
 		return this;
 	}
 

@@ -17,7 +17,7 @@ package com.dragome.guia.components.interfaces;
 
 import java.util.List;
 
-import com.dragome.model.interfaces.HasLayout;
+import com.dragome.guia.events.listeners.interfaces.PanelListener;
 
 public interface VisualPanel extends VisualComponent
 {

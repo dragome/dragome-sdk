@@ -23,7 +23,7 @@ public class VisualLabelImpl<T> extends ComponentWithValueAndRendererImpl<T> imp
 {
 	public VisualLabelImpl()
     {
-		this("");
+		this(null);
     }
 	
 	public VisualLabelImpl(String aName)
