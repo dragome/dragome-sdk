@@ -15,9 +15,13 @@
  */
 package com.dragome.guia.components;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dragome.guia.events.listeners.interfaces.ListenerChanged;
@@ -28,6 +32,7 @@ public class DefaultEventProducer implements EventProducer
 {
 	protected Map<Class<? extends EventListener>, EventListener> listeners= new HashMap<Class<? extends EventListener>, EventListener>();
 	protected Map<Object, EventListener> owners= new HashMap<Object, EventListener>();
+	private List<Class<? extends EventListener>> suspendedListeners= new ArrayList<>();
 
 	public DefaultEventProducer()
 	{
@@ -74,7 +79,16 @@ public class DefaultEventProducer implements EventProducer
 
 	public <T extends EventListener> T getListener(Class<T> aType)
 	{
-		return (T) listeners.get(aType);
+		if (suspendedListeners.contains(aType))
+			return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { aType }, new InvocationHandler()
+			{
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+				{
+					return null;
+				}
+			});
+		else
+			return (T) listeners.get(aType);
 	}
 
 	public <T extends EventListener> void addListenerForOwner(Class<T> aType, T aListener, Object owner)
@@ -88,5 +102,15 @@ public class DefaultEventProducer implements EventProducer
 		//	
 		//	owners.put(owner, aListener);
 		addListener(aType, aListener);
+	}
+
+	public void suspendListening(Class<? extends EventListener> aType)
+	{
+		suspendedListeners.add(aType);
+	}
+
+	public void continueListening(Class<? extends EventListener> aType)
+	{
+		suspendedListeners.remove(aType);
 	}
 }

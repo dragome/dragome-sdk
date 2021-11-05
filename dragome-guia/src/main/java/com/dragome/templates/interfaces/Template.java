@@ -15,6 +15,7 @@
  */
 package com.dragome.templates.interfaces;
 
+import java.util.List;
 import java.util.Map;
 
 import com.dragome.model.interfaces.EventProducer;
@@ -48,4 +49,6 @@ public interface Template extends EventProducer
 	void insertAfter(Template newChild, Template referenceChild);
 	void remove(Template child);
 	void insertBefore(Template newChild, Template referenceChild);
+	public List<Template> getChildren();
+	public boolean isActive();
 }

@@ -97,8 +97,8 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 						newValue.setAttribute("class", className);
 						parentNode.replaceChild(newValue, element);
 					}
-//					else
-//						System.out.println("sdgasdg");
+					//					else
+					//						System.out.println("sdgasdg");
 				}
 			}
 		}
@@ -129,7 +129,7 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		this.enabled= enabled;
 	}
 
-	public void childReplaced(TemplateImpl parent, Template previousChild, Template newChild)
+	public void childReplaced(Template parent, Template previousChild, Template newChild)
 	{
 		if (isInvokingEvents())
 		{
@@ -137,5 +137,15 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 			Element newElement= (Element) newChild.getContent().getValue();
 			previousElement.getParentNode().replaceChild(newElement, previousElement);
 		}
+	}
+
+	public void nameChanged(Template template, String name)
+	{
+		((Element) template.getContent().getValue()).setAttribute("data-template", "replaced: " + name);
+	}
+
+	public boolean isActive(Template template)
+	{
+		return ((Element) template.getContent().getValue()).hasAttribute("data-component-id");
 	}
 }

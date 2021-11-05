@@ -94,12 +94,26 @@ public class SwingTemplateListener implements TemplateListener
 		}
 	}
 
-	public void childReplaced(TemplateImpl parent, Template previousChild, Template newChild)
+	public void childReplaced(Template parent, Template previousChild, Template newChild)
 	{
 		if (previousChild != newChild)
 		{
 			System.out.println("child replaced");
 		}
+	}
+
+	@Override
+	public void nameChanged(Template template, String name)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isActive(Template templateImpl)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

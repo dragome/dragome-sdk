@@ -20,7 +20,6 @@ import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.PanelListener;
 import com.dragome.model.interfaces.HasLayout;
 import com.dragome.model.interfaces.Layout;
-import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.templates.interfaces.Template;
 
@@ -46,16 +45,24 @@ public class TemplateLayout implements Layout
 					getTemplate(this.visualPanel).addChild(template);
 				}
 			}
-
-			Canvas<Object> render= renderer.render(aVisualComponent);
-			if (render != null)
+			else
 			{
-				if (aVisualComponent.getName() != null)
-				{
-					Template child= getTemplate(this.visualPanel).getChild(aVisualComponent.getName());
-					child.setContent(new ContentImpl<Object>(render.getContent()));
-				}
+				aVisualComponent.initLayout(new TemplateLayout());
 			}
+
+			if (aVisualComponent.getLayout() != null && aVisualComponent.getLayout() instanceof TemplateLayout)
+			{
+				TemplateLayout templateLayout= (TemplateLayout) aVisualComponent.getLayout();
+				Template childTemplate= templateLayout.getTemplate();
+				if (childTemplate == null)
+					if (aVisualComponent.getName() != null)
+					{
+						Template child= getTemplate(this.visualPanel).getChild(aVisualComponent.getName());
+						templateLayout.setTemplate(child);
+					}
+			}
+
+			renderer.render(aVisualComponent);
 		}
 		public void componentRemoved(VisualComponent aVisualComponent)
 		{
@@ -89,6 +96,7 @@ public class TemplateLayout implements Layout
 
 	protected Template template;
 	protected VisualComponent associatedComponent;
+	private TemplateChangeListener templateChangeListener;
 
 	public TemplateLayout()
 	{
@@ -106,6 +114,9 @@ public class TemplateLayout implements Layout
 
 	public void setTemplate(Template template)
 	{
+		if (templateChangeListener != null)
+			templateChangeListener.changingTemplate(associatedComponent, this.template, template);
+		
 		this.template= template;
 	}
 
@@ -113,5 +124,10 @@ public class TemplateLayout implements Layout
 	{
 		this.associatedComponent= visualComponent;
 		visualComponent.addListener(PanelListener.class, new PanelListenerImpl(visualComponent));
+	}
+
+	public void addTemplateChangeListener(TemplateChangeListener templateChangeListener)
+	{
+		this.templateChangeListener= templateChangeListener;
 	}
 }

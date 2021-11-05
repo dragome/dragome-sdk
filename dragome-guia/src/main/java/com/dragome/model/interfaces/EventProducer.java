@@ -23,4 +23,6 @@ public interface EventProducer
 	public <T extends EventListener> void removeListener(Class<T> aType, T aListener);
 	public <T extends EventListener> void addListener(Class<T> aType, T aListener);
 	public <T extends EventListener> T getListener(Class<T> aType);
+	public void suspendListening(Class<? extends EventListener> aType);
+	public void continueListening(Class<? extends EventListener> aType);
 }

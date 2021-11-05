@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.DefaultEventProducer;
+import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateListener;
@@ -116,13 +117,16 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public void setName(String name)
 	{
 		this.name= name;
+		
+		templateListener.nameChanged(this, name);
 	}
 
 	public void setContent(Content<?> templateContent)
 	{
 		templateListener.contentChanged(this.templateContent, templateContent);
 
-		this.templateContent= templateContent;
+		if (!(templateContent.getValue() instanceof Mergeable))
+			this.templateContent= templateContent;
 	}
 
 	public Template setChild(String anAlias, Template templateElement)
@@ -248,5 +252,15 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		templateVisitor.visitTemplate(this);
 		for (Template template : children.values())
 			template.accept(templateVisitor);
+	}
+
+	public List<Template> getChildren()
+	{
+		return childrenList;
+	}
+
+	public boolean isActive()
+	{
+		return templateListener.isActive(this);
 	}
 }
