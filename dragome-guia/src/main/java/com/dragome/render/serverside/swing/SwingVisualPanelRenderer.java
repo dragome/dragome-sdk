@@ -5,6 +5,7 @@ import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.templates.interfaces.Template;
 
 public class SwingVisualPanelRenderer implements ComponentRenderer<Object, VisualPanel>
 {
@@ -19,5 +20,12 @@ public class SwingVisualPanelRenderer implements ComponentRenderer<Object, Visua
 			}
 		});
 		return canvasImpl;
+	}
+
+	@Override
+	public boolean matches(VisualPanel aVisualComponent, Template child)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

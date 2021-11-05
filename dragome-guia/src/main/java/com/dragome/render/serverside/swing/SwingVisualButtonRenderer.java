@@ -11,6 +11,7 @@ import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.templates.interfaces.Template;
 
 public class SwingVisualButtonRenderer implements ComponentRenderer<Object, VisualButton>
 {
@@ -33,5 +34,12 @@ public class SwingVisualButtonRenderer implements ComponentRenderer<Object, Visu
 			}
 		});
 		return canvasImpl;
+	}
+
+	@Override
+	public boolean matches(VisualButton aVisualComponent, Template child)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

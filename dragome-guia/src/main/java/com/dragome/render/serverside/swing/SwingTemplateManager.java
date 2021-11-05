@@ -52,6 +52,13 @@ public class SwingTemplateManager implements TemplateManager
 				else
 					return new CanvasImpl<>();
 			}
+
+			@Override
+			public boolean matches(Object aVisualComponent, Template child)
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
 	}
 }

@@ -53,4 +53,15 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 
 		return null;
 	}
+	
+	public boolean matches(VisualPanel aVisualComponent, Template child)
+	{
+		Element element= ((Content<Element>) child.getContent()).getValue(); 
+
+		String nodeName= element.getNodeName();
+		
+		return "div".equalsIgnoreCase(nodeName) || "table".equalsIgnoreCase(nodeName) || "tr".equalsIgnoreCase(nodeName) || "th".equalsIgnoreCase(nodeName);
+		
+//		return child.getName().equals(aVisualComponent.getName()) || child.getName().equalsIgnoreCase("panel");
+	}
 }

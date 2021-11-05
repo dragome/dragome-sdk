@@ -9,6 +9,7 @@ import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.templates.interfaces.Template;
 
 public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, VisualTextField<Object>>
 {
@@ -34,5 +35,12 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 			}
 		});
 		return canvasImpl;
+	}
+
+	@Override
+	public boolean matches(VisualTextField<Object> aVisualComponent, Template child)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

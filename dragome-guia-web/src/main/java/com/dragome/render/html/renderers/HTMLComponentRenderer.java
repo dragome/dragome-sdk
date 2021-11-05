@@ -37,6 +37,9 @@ import com.dragome.guia.components.interfaces.VisualTextArea;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.services.ServiceLocator;
+import com.dragome.templates.ContentImpl;
+import com.dragome.templates.TemplateLayout;
+import com.dragome.templates.interfaces.Template;
 
 public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualComponent>
 {
@@ -48,6 +51,28 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 	}
 
 	public Canvas render(final VisualComponent visualComponent)
+	{
+		ComponentRenderer renderer= findComponentRenderer(visualComponent);
+		Canvas render;
+
+		if (renderer != null)
+			render= renderer.render(visualComponent);
+		else
+			render= new HTMLLabelRenderer().render(new VisualLabelImpl("l1", "no renderer!!"));
+
+		if (visualComponent.getLayout() instanceof TemplateLayout)
+		{
+			TemplateLayout templateLayout= (TemplateLayout) visualComponent.getLayout();
+
+			Template template= templateLayout.getTemplate();
+			if (template != null)
+				template.setContent(new ContentImpl<Object>(render.getContent()));
+		}
+
+		return render;
+	}
+
+	public ComponentRenderer findComponentRenderer(final VisualComponent visualComponent)
 	{
 		ComponentRenderer renderer= null;
 
@@ -77,15 +102,18 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 			if (entry.getKey().isAssignableFrom(visualComponent.getClass()))
 				renderer= ServiceLocator.getInstance().getReflectionService().createClassInstance(entry.getValue());
 		}
-
-		if (renderer != null)
-			return renderer.render(visualComponent);
-		else
-			return new HTMLLabelRenderer().render(new VisualLabelImpl("l1", "no renderer!!"));
+		return renderer;
 	}
 
 	public static <A extends VisualComponent> void addRenderFor(Class<A> componentClass, Class<? extends ComponentRenderer<Element, ? extends A>> rendererClass)
 	{
 		renderers.put(componentClass, rendererClass);
+	}
+
+	@Override
+	public boolean matches(VisualComponent aVisualComponent, Template child)
+	{
+		ComponentRenderer renderer= findComponentRenderer(aVisualComponent);
+		return renderer != null ? renderer.matches(aVisualComponent, child) : false;
 	}
 }

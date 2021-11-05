@@ -36,6 +36,7 @@ import com.dragome.guia.events.listeners.interfaces.MouseOutListener;
 import com.dragome.guia.events.listeners.interfaces.MouseOverListener;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRenderer<Element, T>
@@ -106,5 +107,10 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 			listeners.add(jsAttributeName);
 
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");
+	}
+	
+	public boolean matches(T aVisualComponent, Template child)
+	{
+		return false;
 	}
 }

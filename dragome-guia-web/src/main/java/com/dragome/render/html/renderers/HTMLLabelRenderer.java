@@ -24,6 +24,7 @@ import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.templates.interfaces.Template;
 
 public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel<Object>>
 {
@@ -78,6 +79,13 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 		});
 
 		return canvas;
+	}
+	
+	public boolean matches(VisualLabel<Object> aVisualComponent, Template child)
+	{
+		Element element= (Element) child.getContent().getValue();
+		String tagName= element.getTagName();
+		return tagName.equalsIgnoreCase("span");
 	}
 
 }

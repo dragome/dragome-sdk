@@ -29,12 +29,15 @@ import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualListBox;
+import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.templates.interfaces.Content;
+import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.w3c.ElementExtension;
 
@@ -199,5 +202,13 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				return object;
 		}
 		return null;
+	}
+	
+	
+	public boolean matches(VisualListBox<Object> aVisualComponent, Template child)
+	{
+		Element element= ((Content<Element>) child.getContent()).getValue(); 
+		String nodeName= element.getNodeName();
+		return "select".equalsIgnoreCase(nodeName) ;
 	}
 }

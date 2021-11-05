@@ -16,8 +16,11 @@
 package com.dragome.render.interfaces;
 
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.templates.interfaces.Template;
 
 public interface ComponentRenderer<ContentType, ComponentType>
 {
 	public Canvas<ContentType> render(ComponentType aVisualComponent);
+
+	public boolean matches(ComponentType aVisualComponent, Template child);
 }

@@ -77,4 +77,13 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 		addListeners(visualButton, element);
 	}
 
+	public boolean matches(VisualButton aVisualComponent, Template child)
+	{
+		Element element= (Element) child.getContent().getValue();
+
+		boolean matches= element != null && "button".equals(element.getAttribute("type"));
+		
+		return matches;
+	}
+
 }
