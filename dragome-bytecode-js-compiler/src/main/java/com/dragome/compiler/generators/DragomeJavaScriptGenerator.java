@@ -833,38 +833,6 @@ public class DragomeJavaScriptGenerator extends Generator
 		}
 	}
 
-	private boolean isW3C(MethodInvocation invocation)
-	{
-		MethodBinding methodBinding= invocation.getMethodBinding();
-
-		String name= methodBinding.getName();
-		int argCount= invocation.getArguments().size();
-		boolean isSetter= name.startsWith("set") && argCount == 1;
-		boolean isGetter= name.startsWith("get") && argCount == 0;
-
-		if (!isSetter && !isGetter)
-			return false;
-
-		if (methodBinding.equals("org.w3c.dom5.NamedNodeMap"))
-		{
-			if (name.equals("setNamedItemNS") || name.equals("setNamedItem"))
-				return false;
-		}
-		if (methodBinding.equals("org.w3c.dom5.Element"))
-		{
-			if (name.equals("setAttributeNode") || name.equals("setAttributeNodeNS"))
-				return false;
-		}
-
-		if (name.equals("getContentDocument"))
-			return false;
-		if (name.equals("getButton"))
-			return false;
-
-		return true;
-
-	}
-
 	private void generateScriptCode(MethodInvocation invocation)
 	{
 		MethodBinding methodBinding= invocation.getMethodBinding();
