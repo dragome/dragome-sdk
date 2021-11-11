@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.dragome.render.DomHelper;
 import com.dragome.render.interfaces.TemplateHandler;
@@ -54,39 +55,39 @@ public class HTMLTemplateHandler implements TemplateHandler
 	{
 		Element node= (Element) template.getContent().getValue();
 		Element cloneNode= (Element) node.cloneNode(true);
-		cloneNode.setAttribute("data-template-cloning", "true");
-		node.getParentNode().appendChild(cloneNode);
+		//		node.getParentNode().appendChild(cloneNode);
 
-		String path= "[data-template-cloning=\"true\"]  ";
-		Template clonedTemplate= cloneChildren(template, path, cloneNode);
+		Template clonedTemplate= cloneChildren(template, cloneNode);
 
-		cloneNode.removeAttribute("data-template-cloning");
-		node.getParentNode().removeChild(cloneNode);
+		//		node.getParentNode().removeChild(cloneNode);
 
 		return clonedTemplate;
 	}
 
-	private Template cloneChildren(Template template, String aSelector, Element cloneNode)
+	private Template cloneChildren(Template template, Element cloneNode)
 	{
-		cloneNode.removeAttribute("data-debug-id");
-		Template clonedTemplate= HTMLTemplateFactory.createTemplate(template.getName());
-		clonedTemplate.setFiringEvents(false);
-		clonedTemplate.setContent(new ContentImpl<Element>(cloneNode));
-
-		for (Template child : template.getChildrenMap().values())
+		Template clonedTemplate= null;
+		if (cloneNode != null)
 		{
-			String childName= child.getName();
-			String selector= aSelector + " " + createSelector(childName);
-			
-			ElementExtension elementExtension= JsCast.castTo(cloneNode, ElementExtension.class);
-			
-			Element clonedElement= elementExtension.querySelector(createSelector(childName));
-//			Element clonedElement= WebServiceLocator.getInstance().getDomHandler().getElementBySelector(selector);
-			Template clonedChild= cloneChildren(child, selector, clonedElement);
-			clonedTemplate.addChild(clonedChild);
-		}
+			cloneNode.removeAttribute("data-debug-id");
+			clonedTemplate= HTMLTemplateFactory.createTemplate(template.getName());
+			clonedTemplate.setFiringEvents(false);
+			clonedTemplate.setContent(new ContentImpl<Element>(cloneNode));
 
-		clonedTemplate.setFiringEvents(true);
+			for (Template child : template.getChildrenMap().values())
+			{
+				String childName= child.getName();
+
+				ElementExtension elementExtension= JsCast.castTo(cloneNode, ElementExtension.class);
+
+				Element clonedElement= elementExtension.querySelector(createSelector(childName));
+				Template clonedChild= cloneChildren(child, clonedElement);
+				if (clonedChild != null)
+					clonedTemplate.addChild(clonedChild);
+			}
+
+			clonedTemplate.setFiringEvents(true);
+		}
 
 		return clonedTemplate;
 	}
@@ -112,6 +113,24 @@ public class HTMLTemplateHandler implements TemplateHandler
 			clonedTemplates.add(clone(childTemplate));
 
 		return clonedTemplates;
+	}
+	
+	public boolean isConnected(Template aTemplate)
+	{
+		boolean bodyNodeFound= false;
+		Node parentNode= (Node) aTemplate.getContent().getValue();
+
+		while (parentNode != null && !bodyNodeFound)
+		{
+			parentNode= parentNode.getParentNode();
+			if (parentNode != null && parentNode.getAttributes() != null)
+			{
+				Element e1= JsCast.castTo(parentNode, Element.class);
+				bodyNodeFound= "body".equals(e1.getAttribute("id"));
+			}
+		}
+
+		return bodyNodeFound;
 	}
 
 }
