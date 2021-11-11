@@ -161,6 +161,8 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public void insertAfter(Template newChild, Template referenceChild)
 	{
+		Template previous= addToChildren(newChild);
+
 		templateListener.insertAfter(newChild, referenceChild, children, childrenList, this);
 	}
 
@@ -174,10 +176,22 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public void insertBefore(Template newChild, Template referenceChild)
 	{
+		Template previous= addToChildren(newChild);
+
 		templateListener.insertBefore(newChild, referenceChild, children, childrenList, this);
 	}
 
 	public void addChild(Template template)
+	{
+		Template previous= addToChildren(template);
+
+		if (previous != null)
+			templateListener.childReplaced(this, previous, template);
+		else
+			templateListener.childAdded(this, template);
+	}
+
+	public Template addToChildren(Template template)
 	{
 		Template previous= children.put(template.getName(), template);
 		if (previous != null)
@@ -191,11 +205,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		}
 
 		template.setParent(this);
-
-		if (previous != null)
-			templateListener.childReplaced(this, previous, template);
-		else
-			templateListener.childAdded(this, template);
+		return previous;
 	}
 
 	public String toString()

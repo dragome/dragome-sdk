@@ -27,4 +27,5 @@ public interface TemplateHandler
 	public void releaseTemplate(Template template);
 	public List<Template> cloneTemplates(List<Template> templates);
 	void makeInvisible(Template template);
+	boolean isConnected(Template aTemplate);
 }

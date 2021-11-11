@@ -16,6 +16,7 @@
 package com.dragome.templates;
 
 import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.DefaultEventProducer;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.PanelListener;
 import com.dragome.model.interfaces.HasLayout;
@@ -23,7 +24,7 @@ import com.dragome.model.interfaces.Layout;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.templates.interfaces.Template;
 
-public class TemplateLayout implements Layout
+public class TemplateLayout extends DefaultEventProducer implements Layout
 {
 	public static class PanelListenerImpl implements PanelListener
 	{
@@ -96,7 +97,7 @@ public class TemplateLayout implements Layout
 
 	protected Template template;
 	protected VisualComponent associatedComponent;
-	private TemplateChangeListener templateChangeListener;
+	protected boolean repeatTemplate;
 
 	public TemplateLayout()
 	{
@@ -114,9 +115,9 @@ public class TemplateLayout implements Layout
 
 	public void setTemplate(Template template)
 	{
-		if (templateChangeListener != null)
-			templateChangeListener.changingTemplate(associatedComponent, this.template, template);
-		
+		TemplateChangeListener listener= getListener(TemplateChangeListener.class);
+		if (listener != null)
+			listener.changingTemplate(associatedComponent, this.template, template);
 		this.template= template;
 	}
 
@@ -128,6 +129,16 @@ public class TemplateLayout implements Layout
 
 	public void addTemplateChangeListener(TemplateChangeListener templateChangeListener)
 	{
-		this.templateChangeListener= templateChangeListener;
+		addListener(TemplateChangeListener.class, templateChangeListener);
+	}
+
+	public void setRepeatTemplate(boolean repeatTemplate)
+	{
+		this.repeatTemplate= repeatTemplate;
+	}
+
+	public boolean isRepeatTemplate()
+	{
+		return repeatTemplate;
 	}
 }

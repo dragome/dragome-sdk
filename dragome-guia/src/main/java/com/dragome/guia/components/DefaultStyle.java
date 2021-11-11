@@ -229,15 +229,22 @@ public class DefaultStyle implements Style
 	public void addClass(String name)
 	{
 		fireStyleChanged();
+		String componentStyleName= getComponentStyleName();
+
+		name= name.trim();
+
+		if (!isClassPresent(name, componentStyleName))
+			setName(componentStyleName + " " + name);
+	}
+
+	public String getComponentStyleName()
+	{
 		String componentStyleName= getName();
 		if (componentStyleName == null)
 			componentStyleName= "";
 
-		name= name.trim();
 		componentStyleName= componentStyleName.trim();
-
-		if (!isClassPresent(name, componentStyleName))
-			setName(componentStyleName + " " + name);
+		return componentStyleName;
 	}
 
 	private boolean isClassPresent(String name, String componentStyleName)
@@ -255,5 +262,11 @@ public class DefaultStyle implements Style
 
 		if (isClassPresent(styleName, componentStyleName))
 			setName(componentStyleName.replace(styleName, ""));
+	}
+
+	public boolean hasClass(String styleName)
+	{
+		String componentStyleName= getComponentStyleName();
+		return isClassPresent(styleName, componentStyleName);
 	}
 }
