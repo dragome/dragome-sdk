@@ -33,6 +33,8 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 
 	public Canvas<Element> render(VisualPanel visualPanel)
 	{
+		super.render(visualPanel);
+		
 		Template template= ((TemplateLayout) visualPanel.getLayout()).getTemplate();
 
 		if (template != null)

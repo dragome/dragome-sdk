@@ -106,4 +106,11 @@ public class SwingTemplateHandler implements TemplateHandler
 
 		return clonedTemplates;
 	}
+
+	@Override
+	public boolean isConnected(Template aTemplate)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

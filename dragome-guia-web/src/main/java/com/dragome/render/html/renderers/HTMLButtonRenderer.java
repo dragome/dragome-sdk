@@ -34,6 +34,8 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 
 	public Canvas<Element> render(final VisualButton visualButton)
 	{
+		super.render(visualButton);
+		
 		final String id= DragomeEntityManager.add(visualButton);
 
 		Layout layout= visualButton.getLayout();

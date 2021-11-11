@@ -24,6 +24,7 @@ import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
@@ -35,11 +36,14 @@ import com.dragome.guia.events.listeners.interfaces.ListenerChanged;
 import com.dragome.guia.events.listeners.interfaces.MouseOutListener;
 import com.dragome.guia.events.listeners.interfaces.MouseOverListener;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
+import com.dragome.templates.TemplateChangeListener;
+import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 
-public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRenderer<Element, T>
+public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> implements ComponentRenderer<Element, T>
 {
 	public static final String COMPONENT_ID_ATTRIBUTE= "data-component-id";
 
@@ -108,9 +112,38 @@ public abstract class AbstractHTMLComponentRenderer<T> implements ComponentRende
 
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
-	
+
 	public boolean matches(T aVisualComponent, Template child)
 	{
 		return false;
+	}
+
+	public Canvas<Element> render(T aVisualComponent)
+	{
+		boolean isRendered= aVisualComponent.getStyle().hasClass("rendered");
+
+		if (!isRendered)
+		{
+			((TemplateLayout) aVisualComponent.getLayout()).addTemplateChangeListener(new TemplateChangeListener()
+			{
+				public void changingTemplate(VisualComponent aComponent, Template currentTemplate, Template newTemplate)
+				{
+					clearRendering(aComponent, currentTemplate);
+				}
+			});
+
+			aVisualComponent.getStyle().addClass("rendered");
+		}
+
+		return null;
+	}
+
+	protected void clearRendering(VisualComponent aComponent, Template currentTemplate)
+	{
+		if (currentTemplate != null)
+		{
+			Element value= (Element) currentTemplate.getContent().getValue();
+			value.getParentNode().removeChild(value);
+		}
 	}
 }

@@ -34,6 +34,8 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 
 	public Canvas<Element> render(final VisualLabel<Object> visualLabel)
 	{
+		super.render(visualLabel);
+
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
@@ -80,12 +82,12 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 
 		return canvas;
 	}
-	
+
 	public boolean matches(VisualLabel<Object> aVisualComponent, Template child)
 	{
 		Element element= (Element) child.getContent().getValue();
 		String tagName= element.getTagName();
-		return tagName.equalsIgnoreCase("span");
+		return tagName.equalsIgnoreCase("span") || tagName.equalsIgnoreCase("nobr");
 	}
 
 }
