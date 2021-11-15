@@ -82,7 +82,8 @@ public class ClientToServerMessageChannel implements MessageChannel
 					MessageEventExtension messageEvent= JsCast.castTo(evt, MessageEventExtension.class);
 					String dataAsString= messageEvent.getDataAsString();
 					ScriptHelper.put("encodedData", dataAsString, this);
-					String result= (String) ScriptHelper.eval("new TextReader(new Utf8Translator(new Inflator(new Base64Reader(encodedData)))).readToEnd()", this);
+//					String result= (String) ScriptHelper.eval("new TextReader(new Utf8Translator(new Inflator(new Base64Reader(encodedData)))).readToEnd()", this);
+					String result= dataAsString;
 					receiver.messageReceived(result);
 					evt.stopPropagation();
 				}

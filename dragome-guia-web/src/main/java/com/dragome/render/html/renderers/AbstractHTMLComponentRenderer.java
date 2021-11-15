@@ -36,6 +36,7 @@ import com.dragome.guia.events.listeners.interfaces.ListenerChanged;
 import com.dragome.guia.events.listeners.interfaces.MouseOutListener;
 import com.dragome.guia.events.listeners.interfaces.MouseOverListener;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.render.DomHelper;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.templates.TemplateChangeListener;
@@ -83,7 +84,8 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		});
 
 		addListeners(visualComponent, element, null);
-
+		
+		visualComponent.getStyle().setName(element.getAttribute("class"));
 		visualComponent.getStyle().fireStyleChanged();
 	}
 
@@ -120,19 +122,28 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 	public Canvas<Element> render(T aVisualComponent)
 	{
-		boolean isRendered= aVisualComponent.getStyle().hasClass("rendered");
 
-		if (!isRendered)
+		if (aVisualComponent.getLayout() != null)
 		{
-			((TemplateLayout) aVisualComponent.getLayout()).addTemplateChangeListener(new TemplateChangeListener()
+			TemplateLayout templateLayout= (TemplateLayout) aVisualComponent.getLayout();
+			if (templateLayout.getTemplate() != null)
 			{
-				public void changingTemplate(VisualComponent aComponent, Template currentTemplate, Template newTemplate)
-				{
-					clearRendering(aComponent, currentTemplate);
-				}
-			});
+				Element element= (Element) templateLayout.getTemplate().getContent().getValue();
+				boolean isRendered= element.getAttribute("rendered") != null;
 
-			aVisualComponent.getStyle().addClass("rendered");
+				if (!isRendered)
+				{
+					templateLayout.addTemplateChangeListener(new TemplateChangeListener()
+					{
+						public void changingTemplate(VisualComponent aComponent, Template currentTemplate, Template newTemplate)
+						{
+							clearRendering(aComponent, currentTemplate);
+						}
+					});
+
+					element.setAttribute("rendered", "true");
+				}
+			}
 		}
 
 		return null;
@@ -143,7 +154,13 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		if (currentTemplate != null)
 		{
 			Element value= (Element) currentTemplate.getContent().getValue();
-			value.getParentNode().removeChild(value);
+			if (value.getParentNode() != null)
+			{
+				String attribute= value.getAttribute("data-cloned-element");
+				value.getParentNode().removeChild(value);
+				DomHelper.makeOriginalClonedVisible(attribute);
+			}
 		}
+		
 	}
 }

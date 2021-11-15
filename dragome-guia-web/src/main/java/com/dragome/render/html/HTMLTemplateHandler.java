@@ -23,7 +23,6 @@ import org.w3c.dom.Node;
 
 import com.dragome.render.DomHelper;
 import com.dragome.render.interfaces.TemplateHandler;
-import com.dragome.services.WebServiceLocator;
 import com.dragome.templates.ContentImpl;
 import com.dragome.templates.HTMLTemplateFactory;
 import com.dragome.templates.interfaces.Template;
@@ -32,6 +31,8 @@ import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTemplateHandler implements TemplateHandler
 {
+	private static int i;
+
 	public void makeVisible(Template clonedChild)
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
@@ -54,6 +55,12 @@ public class HTMLTemplateHandler implements TemplateHandler
 	private Template cloneTemplate(Template template)
 	{
 		Element node= (Element) template.getContent().getValue();
+
+		String clonedNumber= node.getAttribute("data-cloned-element");
+
+		if (clonedNumber == null)
+			node.setAttribute("data-cloned-element", "" + i++);
+
 		Element cloneNode= (Element) node.cloneNode(true);
 		//		node.getParentNode().appendChild(cloneNode);
 
@@ -114,7 +121,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 
 		return clonedTemplates;
 	}
-	
+
 	public boolean isConnected(Template aTemplate)
 	{
 		boolean bodyNodeFound= false;

@@ -15,8 +15,15 @@
  */
 package com.dragome.render;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.services.WebServiceLocator;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class DomHelper
 {
@@ -34,7 +41,7 @@ public class DomHelper
 		String classes= element.getAttribute("class");
 		if (classes == null)
 			classes= "";
-		
+
 		if (!classes.contains(className))
 		{
 			classes+= " " + className;
@@ -47,5 +54,33 @@ public class DomHelper
 		Node parentNode= element.getParentNode();
 		if (parentNode != null)
 			parentNode.removeChild(element);
+	}
+
+	public static boolean hasClass(Element element, String aName)
+	{
+		String classes= element.getAttribute("class");
+		if (classes == null)
+			return false;
+		else
+			return classes.contains(aName);
+	}
+
+	public static void makeOriginalClonedVisible(String cloneNumber)
+	{
+		if (cloneNumber != null)
+		{
+			Document document= WebServiceLocator.getInstance().getDomHandler().getDocument();
+
+			ElementExtension elementExtension= JsCast.castTo(document.getDocumentElement(), ElementExtension.class);
+
+			NodeList nodeList= elementExtension.querySelectorAll("[data-cloned-element=\"" + cloneNumber + "\"]");
+
+			if (nodeList.getLength() == 1)
+			{
+				Element element= JsCast.castTo(nodeList.item(0), Element.class);
+
+				DomHelper.removeClassName(element, "dragome-hide");
+			}
+		}
 	}
 }

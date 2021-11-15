@@ -70,8 +70,8 @@ public class ServerToClientServiceInvoker
 
 		String message3= message.toString().replace("\"null\"", "null");
 		invocations.clear();
-		byte[] compress= compress(message3.getBytes());
-		message3= new String(Base64Coder.encode(compress));
+//		byte[] compress= compress(message3.getBytes());
+//		message3= new String(Base64Coder.encode(compress));
 
 		WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
 	}

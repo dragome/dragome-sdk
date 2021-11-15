@@ -207,7 +207,7 @@ public class DefaultStyle implements Style
 	public void setName(String name)
 	{
 		if (this.name == null)
-			fireStyleChanged();
+			name= "";
 
 		if (!name.trim().equals(this.name))
 		{

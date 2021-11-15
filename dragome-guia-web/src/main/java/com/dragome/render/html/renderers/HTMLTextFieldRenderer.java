@@ -23,6 +23,7 @@ import org.w3c.dom.events.EventTarget;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
+import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.guia.events.listeners.interfaces.FocusListener;
 import com.dragome.guia.events.listeners.interfaces.InputListener;
@@ -30,6 +31,7 @@ import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualTextField<Object>>
@@ -40,6 +42,8 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 	public Canvas<Element> render(final VisualTextField<Object> visualTextField)
 	{
+		super.render(visualTextField);
+
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
@@ -115,5 +119,12 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 		ScriptHelper.put("textFieldElement", textFieldElement, this);
 		String value= (String) ScriptHelper.eval("textFieldElement.node.value", this);
 		visualTextField.setValue(value);
+	}
+	
+	public boolean matches(VisualTextField<Object> aVisualComponent, Template child)
+	{
+		Element element= (Element) child.getContent().getValue();
+		String tagName= element.getTagName();
+		return tagName.equalsIgnoreCase("input") && "text".equals(element.getAttribute("type"));
 	}
 }

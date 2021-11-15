@@ -1,13 +1,12 @@
 package com.dragome.web.serverside.debugging.websocket;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.websocket.CloseReason;
+import javax.websocket.RemoteEndpoint.Basic;
 import javax.websocket.Session;
 
 import com.dragome.services.WebServiceLocator;
-import com.dragome.web.debugging.CrossExecutionSemaphore;
 import com.dragome.web.debugging.messages.ChannelReceiverImpl;
 import com.dragome.web.debugging.messages.Receiver;
 import com.dragome.web.debugging.messages.Sender;
@@ -15,6 +14,7 @@ import com.dragome.web.debugging.messages.Sender;
 public class DragomeDebugServerEndpoint
 {
 	private Logger logger= Logger.getLogger(this.getClass().getName());
+	private Basic remote;
 
 	public void onOpen(final Session session)
 	{
@@ -24,6 +24,12 @@ public class DragomeDebugServerEndpoint
 		else
 			configuredReceiver.reset();
 
+		if (session != null && session.isOpen())
+		{
+			//			remote= session.getAsyncRemote();
+			remote= session.getBasicRemote();
+		}
+
 		WebServiceLocator.getInstance().getServerToClientMessageChannel().setSender(new Sender()
 		{
 			public void send(String aMessage)
@@ -31,9 +37,9 @@ public class DragomeDebugServerEndpoint
 				try
 				{
 					if (session != null && session.isOpen())
-						session.getBasicRemote().sendText(aMessage);
+						remote.sendText(aMessage);
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
 					throw new RuntimeException(e);
 				}
