@@ -674,7 +674,22 @@ public class DragomeJavaScriptGenerator extends Generator
 		//		if ((leftIsObject && rightIsObject) && isEqualOrNotEqual)
 		//			print(" " + op + "= ");
 		//		else
-		print(" " + op + " ");
+
+		if (left.getTypeBinding().equals(Type.OBJECT))
+		{
+			String op2= op.toString();
+
+			if (op.toString().equals("=="))
+				op2= "===";
+			else if (op.toString().equals("!="))
+				op2= "!==";
+
+			print(" " + op2 + " ");
+		}
+		else
+		{
+			print(" " + op + " ");
+		}
 
 		bracket(right, op);
 
@@ -710,7 +725,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (signature.isArrayType())
 			normalizeExpression= "\"" + normalizeExpression + "\"";
 
-		print(normalizeExpression); 
+		print(normalizeExpression);
 		print(")");
 	}
 
