@@ -1,6 +1,8 @@
 package java.util.stream;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -13,6 +15,37 @@ public final class Collectors
 	private static <I, R> Function<I, R> castingIdentity()
 	{
 		return i -> (R) i;
+	}
+
+	private static final class CollectorImplementation<T, J extends Collection<T>> implements Collector<T, Object, J>
+	{
+		J result;
+
+		public CollectorImplementation(J result)
+		{
+			this.result= result;
+		}
+		
+		public Supplier<Object> supplier()
+		{
+			return null;
+		}
+		public BiConsumer<Object, T> accumulator()
+		{
+			return (o, t) -> result.add(t);
+		}
+		public BinaryOperator<Object> combiner()
+		{
+			return null;
+		}
+		public Function<Object, J> finisher()
+		{
+			return o -> (J) result;
+		}
+		public Set<Characteristics> characteristics()
+		{
+			return null;
+		}
 	}
 
 	static class CollectorImpl<T, A, R> implements Collector<T, A, R>
@@ -65,34 +98,13 @@ public final class Collectors
 
 	public static <T> Collector<T, ?, List<T>> toList()
 	{
-		return new Collector<T, Object, List<T>>()
-		{
-			List<Object> result= new ArrayList<Object>();
-
-			public Supplier<Object> supplier()
-			{
-				return null;
-			}
-
-			public BiConsumer<Object, T> accumulator()
-			{
-				return (o, t) -> result.add(t);
-			}
-
-			public BinaryOperator<Object> combiner()
-			{
-				return null;
-			}
-
-			public Function<Object, List<T>> finisher()
-			{
-				return o -> (List) result;
-			}
-
-			public Set<Characteristics> characteristics()
-			{
-				return null;
-			}
-		};
+		return new CollectorImplementation<T, List<T>>(new ArrayList<>());
 	}
+	
+	public static <T> Collector<T, ?, Set<T>> toSet()
+	{
+		return new CollectorImplementation<T, Set<T>>(new HashSet<>());
+	}
+	
+	
 }

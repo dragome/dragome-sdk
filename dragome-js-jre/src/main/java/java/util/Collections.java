@@ -172,16 +172,29 @@ public class Collections
 		return (Collection<T>) collection;
 	}
 
+	private static final int REVERSE_THRESHOLD= 18;
+
 	public static void reverse(List<?> list)
 	{
 		int size= list.size();
-		ListIterator fwd= list.listIterator();
-		ListIterator rev= list.listIterator(size);
-		for (int i= 0, mid= list.size() >> 1; i < mid; i++)
+		if (size < REVERSE_THRESHOLD || list instanceof RandomAccess)
 		{
-			Object tmp= fwd.next();
-			fwd.set(rev.previous());
-			rev.set(tmp);
+			for (int i= 0, mid= size >> 1, j= size - 1; i < mid; i++, j--)
+				swap(list, i, j);
+		}
+		else
+		{
+			// instead of using a raw type here, it's possible to capture
+			// the wildcard but it will require a call to a supplementary
+			// private method
+			ListIterator fwd= list.listIterator();
+			ListIterator rev= list.listIterator(size);
+			for (int i= 0, mid= list.size() >> 1; i < mid; i++)
+			{
+				Object tmp= fwd.next();
+				fwd.set(rev.previous());
+				rev.set(tmp);
+			}
 		}
 	}
 
@@ -202,10 +215,11 @@ public class Collections
 		return list;
 	}
 
-	public static <T> boolean addAll(Collection<? super T> c, T... elements) {
-		boolean result = false;
+	public static <T> boolean addAll(Collection<? super T> c, T... elements)
+	{
+		boolean result= false;
 		for (T element : elements)
-			result |= c.add(element);
+			result|= c.add(element);
 		return result;
 	}
 }

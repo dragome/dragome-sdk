@@ -167,14 +167,6 @@ public class HashMap<K, V> implements Map<K, V>
 	}
 
 	/**
-	 * Returns a string representation of this map.
-	 */
-	public String toString()
-	{
-		return "";
-	}
-
-	/**
 	 * Returns a collection view of the values contained in this map.
 	 */
 	public Collection<V> values()
@@ -204,4 +196,24 @@ public class HashMap<K, V> implements Map<K, V>
 		for (Entry<? extends K, ? extends V> entry : oldMap.entrySet())
 			put(entry.getKey(), entry.getValue());
 	}
+	
+	 public String toString() {
+	        Iterator<Entry<K,V>> i = entrySet().iterator();
+	        if (! i.hasNext())
+	            return "{}";
+
+	        StringBuilder sb = new StringBuilder();
+	        sb.append('{');
+	        for (;;) {
+	            Entry<K,V> e = i.next();
+	            K key = e.getKey();
+	            V value = e.getValue();
+	            sb.append(key   == this ? "(this Map)" : key);
+	            sb.append('=');
+	            sb.append(value == this ? "(this Map)" : value);
+	            if (! i.hasNext())
+	                return sb.append('}').toString();
+	            sb.append(',').append(' ');
+	        }
+	    }
 }
