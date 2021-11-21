@@ -61,7 +61,7 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 		{
 			canvas.setContent(new MergeableElement()
 			{
-				public void mergeWith(Element element)
+				public void mergeWith(Template template, Element element)
 				{
 					setupElement(visualButton, element);
 				}

@@ -19,11 +19,9 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
-import com.dragome.templates.TemplateImpl;
-
 public interface TemplateListener extends EventListener
 {
-	void contentChanged(Content<?> oldTemplateContent, Content<?> newTemplateContent);
+	void contentChanged(Template template, Content<?> oldTemplateContent, Content<?> newTemplateContent);
 	void insertAfter(Template newChild, Template referenceChild, Map<String, Template> children, List<Template> childrenList, Template template);
 	void childRemoved(Template child);
 	void childAdded(Template parent, Template child);

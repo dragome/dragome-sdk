@@ -19,7 +19,7 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 
 		canvasImpl.setContent(new Mergeable<Object>()
 		{
-			public void mergeWith(Object element)
+			public void mergeWith(Template template, Object element)
 			{
 				final JTextField jTextField= (JTextField) element;
 

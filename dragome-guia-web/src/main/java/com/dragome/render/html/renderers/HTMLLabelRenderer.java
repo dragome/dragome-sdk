@@ -15,6 +15,9 @@
  */
 package com.dragome.render.html.renderers;
 
+import java.util.Iterator;
+import java.util.Optional;
+
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
@@ -42,9 +45,24 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 		{
 			private String originalAttribute;
 
-			public void mergeWith(final Element labelElement)
+			public void mergeWith(Template template, Element labelElement1)
 			{
+				boolean templateCompatible= isTemplateCompatible(template);
 				String id= DragomeEntityManager.add(visualLabel);
+
+				labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+				Template t2= template;
+				if (!templateCompatible)
+				{
+					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
+					t2= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst().get();
+				}
+				else
+					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+
+				final Element labelElement= templateCompatible ? labelElement1 : (Element) t2.getContent().getValue();
+				labelElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+
 				//final Element labelElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("span");
 				setInnerText(visualLabel, labelElement);
 
@@ -83,11 +101,13 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 		return canvas;
 	}
 
-	public boolean matches(VisualLabel<Object> aVisualComponent, Template child)
+	@Override
+	public boolean isTemplateCompatible(Template child)
 	{
 		Element element= (Element) child.getContent().getValue();
 		String tagName= element.getTagName();
-		return tagName.equalsIgnoreCase("span") || tagName.equalsIgnoreCase("nobr");
+		boolean result= tagName.equalsIgnoreCase("span") || tagName.equalsIgnoreCase("nobr");
+		return result;
 	}
 
 }

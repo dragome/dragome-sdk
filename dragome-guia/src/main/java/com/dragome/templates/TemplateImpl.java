@@ -31,11 +31,11 @@ import com.dragome.templates.interfaces.TemplateVisitor;
 
 public class TemplateImpl extends DefaultEventProducer implements Template
 {
-	
+
 	public static Template findTemplate(Template templateElement, final String name)
 	{
 		final Template[] foundTemplate= new Template[1];
-		
+
 		templateElement.accept(new TemplateVisitor()
 		{
 			public void visitTemplate(Template aTemplate)
@@ -47,7 +47,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 		return foundTemplate[0];
 	}
-	
+
 	public static Template getTemplateElementInDepth(Template templateElement, String aDeepAlias)
 	{
 		String[] aliases= aDeepAlias.split("\\.");
@@ -117,13 +117,13 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public void setName(String name)
 	{
 		this.name= name;
-		
+
 		templateListener.nameChanged(this, name);
 	}
 
 	public void setContent(Content<?> templateContent)
 	{
-		templateListener.contentChanged(this.templateContent, templateContent);
+		templateListener.contentChanged(this, this.templateContent, templateContent);
 
 		if (!(templateContent.getValue() instanceof Mergeable))
 			this.templateContent= templateContent;
@@ -215,12 +215,12 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public int hashCode()
 	{
-		return getName().hashCode();
+		return toString().hashCode();
 	}
 
 	public boolean equals(Object obj)
 	{
-		return obj != null && obj instanceof Template && getName().equals(((Template) obj).getName());
+		return obj != null && obj instanceof Template && toString().equals(obj.toString());
 	}
 
 	public void removeChild(String name)

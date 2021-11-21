@@ -24,7 +24,7 @@ import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.components.interfaces.VisualPanel;
+import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
@@ -114,11 +114,20 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
-
+	
 	public boolean matches(T aVisualComponent, Template child)
 	{
-		return false;
+		boolean compatible= isTemplateCompatible(child);
+
+		if (!compatible)
+		{
+			for (Template c : child.getChildren())
+				compatible|= isTemplateCompatible(c);
+		}
+
+		return compatible;
 	}
+
 
 	public Canvas<Element> render(T aVisualComponent)
 	{
@@ -162,5 +171,10 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 			}
 		}
 		
+	}
+
+	public boolean isTemplateCompatible(Template child)
+	{
+		return false;
 	}
 }

@@ -19,7 +19,7 @@ public class SwingVisualLabelRenderer implements ComponentRenderer<Object, Visua
 
 		canvasImpl.setContent(new Mergeable<Object>()
 		{
-			public void mergeWith(Object element)
+			public void mergeWith(Template template, Object element)
 			{
 				final JLabel jLabel= (JLabel) element;
 

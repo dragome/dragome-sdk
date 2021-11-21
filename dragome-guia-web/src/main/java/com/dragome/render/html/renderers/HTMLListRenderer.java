@@ -29,7 +29,6 @@ import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualListBox;
-import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
@@ -53,7 +52,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 		canvas.setContent(new MergeableElement()
 		{
-			public void mergeWith(final Element selectElement)
+			public void mergeWith(Template template, final Element selectElement)
 			{
 
 				setElementInnerHTML(selectElement, "");

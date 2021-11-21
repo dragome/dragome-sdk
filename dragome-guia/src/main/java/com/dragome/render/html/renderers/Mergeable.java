@@ -15,7 +15,9 @@
  */
 package com.dragome.render.html.renderers;
 
+import com.dragome.templates.interfaces.Template;
+
 public interface Mergeable<T>
 {
-	public void mergeWith(T element);
+	public void mergeWith(Template template, T element);
 }

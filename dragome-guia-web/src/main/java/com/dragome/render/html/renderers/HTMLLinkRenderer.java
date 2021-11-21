@@ -23,6 +23,7 @@ import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.templates.interfaces.Template;
 
 public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 {
@@ -36,7 +37,7 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 
 		canvas.setContent(new MergeableElement()
 		{
-			public void mergeWith(final Element linkElement)
+			public void mergeWith(Template template, final Element linkElement)
 			{
 				String id= DragomeEntityManager.add(visualLink);
 				if (visualLink.getUrl() != null)

@@ -21,7 +21,7 @@ public class SwingVisualButtonRenderer implements ComponentRenderer<Object, Visu
 		
 		canvasImpl.setContent(new Mergeable<Object>()
 		{
-			public void mergeWith(Object element)
+			public void mergeWith(Template template, Object element)
 			{
 				AbstractButton abstractButton= (AbstractButton) element;
 				abstractButton.addActionListener(new ActionListener()

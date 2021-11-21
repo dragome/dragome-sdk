@@ -75,7 +75,8 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		}
 	}
 
-	public void contentChanged(Content<?> oldTemplateContent, Content<?> newTemplateContent)
+	
+	public void contentChanged(Template template, Content<?> oldTemplateContent, Content<?> newTemplateContent)
 	{
 		if (isInvokingEvents())
 		{
@@ -85,7 +86,7 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 				if (newTemplateContent.getValue() instanceof Mergeable)
 				{
 					Mergeable<Element> mergeable= (Mergeable<Element>) newTemplateContent.getValue();
-					mergeable.mergeWith(element);
+					mergeable.mergeWith(template, element);
 				}
 				else
 				{

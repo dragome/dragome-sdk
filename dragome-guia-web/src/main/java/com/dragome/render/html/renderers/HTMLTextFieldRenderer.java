@@ -23,7 +23,6 @@ import org.w3c.dom.events.EventTarget;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.guia.events.listeners.interfaces.FocusListener;
 import com.dragome.guia.events.listeners.interfaces.InputListener;
@@ -48,10 +47,25 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 		canvas.setContent(new MergeableElement()
 		{
-			public void mergeWith(final Element textFieldElement)
+			public void mergeWith(Template template, final Element textFieldElement1)
 			{
-				final String id= DragomeEntityManager.add(visualTextField);
+				boolean templateCompatible= isTemplateCompatible(template);
+				String id= DragomeEntityManager.add(visualTextField);
 
+				textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+				Template t2= template;
+				if (!templateCompatible)
+				{
+					textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
+					t2= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst().get();
+				}
+				else
+					textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+
+				final Element textFieldElement= templateCompatible ? textFieldElement1 : (Element) t2.getContent().getValue();
+				textFieldElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+				
+				
 				//				final DomHandler domHandler= ServiceLocator.getInstance().getDomHandler();
 				//				final Element textFieldElement= domHandler.getDocument().createElement("input");
 
@@ -121,7 +135,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 		visualTextField.setValue(value);
 	}
 	
-	public boolean matches(VisualTextField<Object> aVisualComponent, Template child)
+	public boolean isTemplateCompatible(Template child)
 	{
 		Element element= (Element) child.getContent().getValue();
 		String tagName= element.getTagName();

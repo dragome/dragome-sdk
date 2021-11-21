@@ -29,7 +29,7 @@ public class SwingTemplateListener implements TemplateListener
 		this.enabled= enabled;
 	}
 
-	public void contentChanged(Content<?> oldTemplateContent, Content<?> newTemplateContent)
+	public void contentChanged(Template template, Content<?> oldTemplateContent, Content<?> newTemplateContent)
 	{
 		if (isInvokingEvents())
 		{
@@ -38,7 +38,7 @@ public class SwingTemplateListener implements TemplateListener
 				Component value= (Component) oldTemplateContent.getValue();
 				Mergeable<Component> value2= (Mergeable<Component>) newTemplateContent.getValue();
 
-				value2.mergeWith(value);
+				value2.mergeWith(template, value);
 			}
 		}
 	}
