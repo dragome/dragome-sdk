@@ -18,9 +18,12 @@ package com.dragome.helpers;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.w3c.dom.Element;
+
 public class DragomeEntityManager
 {
-	protected static Map<String, Object> entities= new Hashtable<String, Object>();
+	protected static Map<String, Object> entities= new Hashtable<>();
+	protected static Map<String, String> aliases= new Hashtable<>();
 
 	public static String add(Object entity)
 	{
@@ -28,16 +31,23 @@ public class DragomeEntityManager
 		entities.put(identityHashCode, entity);
 		return identityHashCode;
 	}
-	
+
 	public static Object remove(Object entity)
 	{
 		String identityHashCode= getEntityId(entity);
 		return entities.remove(identityHashCode);
 	}
 
-
 	public static Object get(String id)
 	{
+		if (id == null)
+			return entities.get(aliases.get("global"));
+
+		String entityId= aliases.get(id);
+
+		if (entityId != null)
+			id= entityId;
+
 		return entities.get(id);
 	}
 
@@ -49,5 +59,30 @@ public class DragomeEntityManager
 	public static void clear()
 	{
 		entities.clear();
+	}
+
+	public static void put(String id, Object object)
+	{
+		if (id == null)
+			id= "global";
+
+		String objectId= getEntityId(object);
+
+		if (id != null && !id.equals(objectId))
+			aliases.put(id, objectId);
+
+		entities.put(objectId, object);
+	}
+
+	public static String getId(Object object)
+	{
+		String objectId= getEntityId(object);
+
+		String result= aliases.get(objectId);
+
+		if (result == null)
+			result= getEntityId(object);
+
+		return result;
 	}
 }

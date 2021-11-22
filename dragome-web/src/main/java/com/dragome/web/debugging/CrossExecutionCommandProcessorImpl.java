@@ -176,14 +176,17 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			else
 			{
 				String id= referenceHolder.getId();
-				Object reference= CrossExecutionCommandProcessorImpl.javaInstances.get(id);
+				
+				Object reference= DragomeEntityManager.get(id);
+//				Object reference= CrossExecutionCommandProcessorImpl.javaInstances.get(id);
 				if (reference == null)
 				{
 					reference= referenceHolder.getType().newInstance();
 					ScriptHelper.put("javaId", id, null);
 					ScriptHelper.put("reference", reference, null);
 					ScriptHelper.eval("reference.javaId=javaId", null);
-					CrossExecutionCommandProcessorImpl.javaInstances.put(id, reference);
+//					CrossExecutionCommandProcessorImpl.javaInstances.put(id, reference);
+					DragomeEntityManager.put(id, reference);
 				}
 
 				return reference;
