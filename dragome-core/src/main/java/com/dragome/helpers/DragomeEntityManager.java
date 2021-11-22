@@ -24,15 +24,16 @@ public class DragomeEntityManager
 {
 	protected static Map<String, Object> entities= new Hashtable<>();
 	protected static Map<String, String> aliases= new Hashtable<>();
+	protected static Map<String, String> inverseAliases= new Hashtable<>();
 
 	public static String add(Object entity)
 	{
 		String identityHashCode= getEntityId(entity);
 
-		Optional<Entry<String, String>> findFirst= aliases.entrySet().stream().filter(e -> e.getValue().equals(identityHashCode)).findFirst();
+		String string= inverseAliases.get(identityHashCode);
 
-		if (findFirst.isPresent())
-			return findFirst.get().getKey();
+		if (string != null)
+			return string;
 
 		entities.put(identityHashCode, entity);
 		return identityHashCode;
@@ -75,7 +76,10 @@ public class DragomeEntityManager
 		String objectId= getEntityId(object);
 
 		if (id != null && !id.equals(objectId))
+		{
 			aliases.put(id, objectId);
+			inverseAliases.put(objectId, id);
+		}
 
 		entities.put(objectId, object);
 	}
