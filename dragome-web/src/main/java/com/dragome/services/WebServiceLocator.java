@@ -112,7 +112,10 @@ public class WebServiceLocator
 
 	public ServiceFactory getServerSideServiceFactory()
 	{
-		return new ServerSideServiceFactory();
+		if (!isClientSide())
+			return new ServerSideServiceFactory();
+		else
+			return new LocalServiceFactory();
 	}
 
 	public EventDispatcher getEventDispatcher()
