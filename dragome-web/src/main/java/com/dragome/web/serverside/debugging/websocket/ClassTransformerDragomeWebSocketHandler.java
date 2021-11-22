@@ -36,6 +36,7 @@ public class ClassTransformerDragomeWebSocketHandler
 	public void onOpen(final Session session)
 	{
 		session.setMaxIdleTimeout(0);
+		session.setMaxTextMessageBufferSize(10000000);
 		executeMethod(getClassName2(), "onOpen", session);
 	}
 

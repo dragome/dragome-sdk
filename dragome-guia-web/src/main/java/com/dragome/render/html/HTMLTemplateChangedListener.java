@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.dragome.render.html.renderers.Mergeable;
+import com.dragome.templates.HTMLTemplateFactory;
 import com.dragome.templates.TemplateImpl;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
@@ -75,7 +76,6 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		}
 	}
 
-	
 	public void contentChanged(Template template, Content<?> oldTemplateContent, Content<?> newTemplateContent)
 	{
 		if (isInvokingEvents())
@@ -142,7 +142,12 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 
 	public void nameChanged(Template template, String name)
 	{
-		((Element) template.getContent().getValue()).setAttribute("data-template", "replaced: " + name);
+		Content<?> content= template.getContent();
+		if (content != null)
+		{
+			Element element= (Element) content.getValue();
+			HTMLTemplateFactory.setReplacedName(element, name);
+		}
 	}
 
 	public boolean isActive(Template template)

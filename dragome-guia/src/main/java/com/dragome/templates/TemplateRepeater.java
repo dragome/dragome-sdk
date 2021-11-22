@@ -160,7 +160,7 @@ public class TemplateRepeater<T>
 		Template insertChild= entry != null ? entry.getValue().get(0) : itemProcessor.getInsertTemplate(item);
 		for (Template clonedRepeatedChild : clonedRepeatChildren)
 		{
-			clonedRepeatedChild.setName(clonedRepeatedChild.getName() + "_" + Integer.toHexString((int) System.currentTimeMillis()));
+			clonedRepeatedChild.updateName(clonedRepeatedChild.getName() + "_" + Integer.toHexString((int) System.currentTimeMillis()));
 			insertChild.getParent().insertAfter(clonedRepeatedChild, insertChild);
 		}
 	}

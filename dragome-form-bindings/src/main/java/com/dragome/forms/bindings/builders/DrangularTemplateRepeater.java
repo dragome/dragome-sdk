@@ -75,7 +75,7 @@ public class DrangularTemplateRepeater<T>
 			for (T item : items)
 			{
 				Template clonedChild= templateHandler.clone(child);
-				clonedChild.setName(clonedChild.getName() + System.currentTimeMillis());
+				clonedChild.updateName(clonedChild.getName() + System.currentTimeMillis());
 				clonedChildren.put(item, clonedChild);
 				simpleItemProcessor.fillTemplate(item, clonedChild);
 

@@ -51,7 +51,7 @@ public class SwingTemplateLoadingStrategy implements TemplateLoadingStrategy
 		if (component.getName() != null)
 		{
 			template= new TemplateImpl(component.getName());
-			template.setContent(new ContentImpl<Object>(component));
+			template.updateContent(new ContentImpl<Object>(component));
 		}
 		template.setFiringEvents(false);
 

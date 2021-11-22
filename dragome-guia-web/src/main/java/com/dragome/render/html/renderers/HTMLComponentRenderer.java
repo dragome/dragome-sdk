@@ -66,7 +66,7 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 
 			Template template= templateLayout.getTemplate();
 			if (template != null)
-				template.setContent(new ContentImpl<Object>(render.getContent()));
+				template.updateContent(new ContentImpl<Object>(render.getContent()));
 		}
 
 		return render;

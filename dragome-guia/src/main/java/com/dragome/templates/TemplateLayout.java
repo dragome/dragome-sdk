@@ -42,7 +42,7 @@ public class TemplateLayout extends DefaultEventProducer implements Layout
 			{
 				if (aVisualComponent.getName() != null)
 				{
-					template.setName(aVisualComponent.getName());
+					template.updateName(aVisualComponent.getName());
 					getTemplate(this.visualPanel).addChild(template);
 				}
 			}
@@ -80,7 +80,7 @@ public class TemplateLayout extends DefaultEventProducer implements Layout
 				Template newTemplated= getTemplate(newChild);
 				if (newTemplated != null)
 				{
-					newTemplated.setName(oldTemplate.getName());
+					newTemplated.updateName(oldTemplate.getName());
 					oldTemplate.getParent().addChild(newTemplated);
 				}
 			}

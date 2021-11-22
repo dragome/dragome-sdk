@@ -64,12 +64,12 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		return currentTemplateElement;
 	}
 
-	protected String name;
-	protected Map<String, Template> children= new HashMap<String, Template>();
-	protected Content<?> templateContent;
+	private String name;
+	protected Map<String, Template> childrenMap= new HashMap<String, Template>();
+	private Content<?> templateContent;
 	protected Boolean inner= Boolean.FALSE;
 	private Template parent;
-	protected List<Template> childrenList= new ArrayList<Template>();
+	private List<Template> children= new ArrayList<Template>();
 	protected TemplateListener templateListener= GuiaServiceLocator.getInstance().getTemplateListener();
 
 	public TemplateImpl()
@@ -79,7 +79,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public TemplateImpl(String aName)
 	{
 		this();
-		name= aName;
+		setName(aName);
 	}
 
 	public String getName()
@@ -94,34 +94,34 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public Template getChild(String anAlias)
 	{
-		Template templateElement= children.get(anAlias);
+		Template templateElement= childrenMap.get(anAlias);
 		if (templateElement == null)
-			throw new RuntimeException("Cannot find template element '" + anAlias + "' in '" + name + "'");
+			throw new RuntimeException("Cannot find template element '" + anAlias + "' in '" + getName() + "'");
 
 		return templateElement;
 	}
 
 	public Map<String, Template> getChildrenMap()
 	{
-		return children;
+		return childrenMap;
 	}
 	public void setChildrenMap(Map<String, Template> templateElements)
 	{
-		this.children= templateElements;
-		for (Entry<String, Template> entries : templateElements.entrySet())
-		{
-			childrenList.add(entries.getValue());
-		}
+		this.childrenMap= templateElements;
+//		for (Entry<String, Template> entries : templateElements.entrySet())
+//		{
+//			getChildren().add(entries.getValue());
+//		}
 	}
 
-	public void setName(String name)
+	public void updateName(String name)
 	{
-		this.name= name;
+		this.setName(name);
 
 		templateListener.nameChanged(this, name);
 	}
 
-	public void setContent(Content<?> templateContent)
+	public void updateContent(Content<?> templateContent)
 	{
 		templateListener.contentChanged(this, this.templateContent, templateContent);
 
@@ -131,7 +131,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public Template setChild(String anAlias, Template templateElement)
 	{
-		return children.put(anAlias, templateElement);
+		return childrenMap.put(anAlias, templateElement);
 	}
 
 	public void setInner(Boolean inner)
@@ -146,7 +146,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public Content<?> getElementById(String id)
 	{
-		return children.get(id).getContent();
+		return childrenMap.get(id).getContent();
 	}
 
 	public Template getParent()
@@ -163,13 +163,13 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	{
 		Template previous= addToChildren(newChild);
 
-		templateListener.insertAfter(newChild, referenceChild, children, childrenList, this);
+		templateListener.insertAfter(newChild, referenceChild, childrenMap, getChildren(), this);
 	}
 
 	public void remove(Template child)
 	{
-		childrenList.remove(child);
-		children.remove(child.getName());
+		getChildren().remove(child);
+		childrenMap.remove(child.getName());
 		child.setParent(null);
 		templateListener.childRemoved(child);
 	}
@@ -178,7 +178,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	{
 		Template previous= addToChildren(newChild);
 
-		templateListener.insertBefore(newChild, referenceChild, children, childrenList, this);
+		templateListener.insertBefore(newChild, referenceChild, childrenMap, getChildren(), this);
 	}
 
 	public void addChild(Template template)
@@ -193,15 +193,15 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public Template addToChildren(Template template)
 	{
-		Template previous= children.put(template.getName(), template);
+		Template previous= childrenMap.put(template.getName(), template);
 		if (previous != null)
 		{
 			previous.setParent(null);
-			childrenList.set(childrenList.indexOf(previous), template);
+			getChildren().set(getChildren().indexOf(previous), template);
 		}
 		else
 		{
-			childrenList.add(template);
+			getChildren().add(template);
 		}
 
 		template.setParent(this);
@@ -210,7 +210,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public String toString()
 	{
-		return getName() + ": " + children;
+		return getName() + ": " + childrenMap;
 	}
 
 	public int hashCode()
@@ -237,22 +237,22 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public void renameChild(Template child, String aName)
 	{
 		String childName= child.getName();
-		Template previous= children.remove(childName);
+		Template previous= childrenMap.remove(childName);
 		if (previous != child)
 			throw new RuntimeException("This is not a child of this template!");
 
-		children.put(aName, child);
+		childrenMap.put(aName, child);
 	}
 
 	public boolean hasChild(String aName)
 	{
-		Template templateElement= children.get(aName);
+		Template templateElement= childrenMap.get(aName);
 		return templateElement != null;
 	}
 
 	public void removeAll()
 	{
-		ArrayList<Template> childrenCopy= new ArrayList<Template>(childrenList);
+		ArrayList<Template> childrenCopy= new ArrayList<Template>(getChildren());
 		for (Template child : childrenCopy)
 			remove(child);
 	}
@@ -260,17 +260,33 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public void accept(TemplateVisitor templateVisitor)
 	{
 		templateVisitor.visitTemplate(this);
-		for (Template template : children.values())
+		for (Template template : childrenMap.values())
 			template.accept(templateVisitor);
 	}
 
 	public List<Template> getChildren()
 	{
-		return childrenList;
+		return children;
 	}
 
 	public boolean isActive()
 	{
 		return templateListener.isActive(this);
+	}
+
+	public void setChildren(List<Template> children)
+	{
+		this.children= children;
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		this.name= name;
+	}
+
+	public void setContent(Content<?> templateContent)
+	{
+		this.templateContent= templateContent;
 	}
 }

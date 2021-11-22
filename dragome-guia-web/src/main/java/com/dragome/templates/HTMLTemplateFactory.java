@@ -90,7 +90,8 @@ public class HTMLTemplateFactory
 			Element parent= findParentInList(element, foundElements);
 			Template subTemplate= templates.get(element);
 
-			element.setAttribute(DATA_TEMPLATE, "replaced: " + subTemplate.getName());
+			String name= subTemplate.getName();
+			setReplacedName(element, name);
 
 			if (parent != null)
 			{
@@ -106,11 +107,17 @@ public class HTMLTemplateFactory
 		return result;
 	}
 
+	public static void setReplacedName(Element element, String name)
+	{
+		String replace= name.replace("replaced: ", "");
+		element.setAttribute(DATA_TEMPLATE, "replaced: " + replace);
+	}
+
 	public void putTemplate(List<Element> foundElements, Map<Node, Template> templates, Element element, String name)
 	{
 		foundElements.add(element);
 		Template subTemplate= createTemplate(name);
-		subTemplate.setContent(new ContentImpl<Element>(element));
+		subTemplate.updateContent(new ContentImpl<Element>(element));
 		subTemplate.setInner(name.indexOf("*") != -1);
 		templates.put(element, subTemplate);
 	}

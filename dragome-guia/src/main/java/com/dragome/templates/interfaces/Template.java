@@ -23,7 +23,7 @@ import com.dragome.model.interfaces.EventProducer;
 public interface Template extends EventProducer
 {
 	public Content<?> getContent();
-	public void setContent(Content<?> templateContent);
+	public void updateContent(Content<?> templateContent);
 
 	public Map<String, Template> getChildrenMap();
 	public void setChildrenMap(Map<String, Template> templateElements);
@@ -37,7 +37,7 @@ public interface Template extends EventProducer
 	public Template getParent();
 	public void setParent(Template parent);
 	public void addChild(Template template);
-	public abstract void setName(String name);
+	public abstract void updateName(String name);
 	public abstract String getName();
 	public void removeChild(String name);
 	public void setFiringEvents(boolean firing);
@@ -51,4 +51,7 @@ public interface Template extends EventProducer
 	void insertBefore(Template newChild, Template referenceChild);
 	public List<Template> getChildren();
 	public boolean isActive();
+	void setChildren(List<Template> children);
+	void setName(String name);
+	void setContent(Content<?> templateContent);
 }

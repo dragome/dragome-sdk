@@ -79,7 +79,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 			cloneNode.removeAttribute("data-debug-id");
 			clonedTemplate= HTMLTemplateFactory.createTemplate(template.getName());
 			clonedTemplate.setFiringEvents(false);
-			clonedTemplate.setContent(new ContentImpl<Element>(cloneNode));
+			clonedTemplate.updateContent(new ContentImpl<Element>(cloneNode));
 
 			for (Template child : template.getChildrenMap().values())
 			{
