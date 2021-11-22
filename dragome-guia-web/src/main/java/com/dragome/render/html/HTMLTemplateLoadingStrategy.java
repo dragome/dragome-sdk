@@ -49,16 +49,16 @@ public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 		Template template= loadTemplate(templateName, aContainerId);
 		return GuiaServiceLocator.getInstance().getTemplateHandler().clone(template);
 	}
-	
+
 	public Template loadTemplate(String templateName, String aContainerId)
 	{
 		String templateContent= HtmlTemplateHelper.getHtmlPart(templateName + ".html", aContainerId);
-		return createTemplateFromHtml(templateContent);
+		return createTemplateFromHtml(templateName + "_" + aContainerId, templateContent);
 	}
 
-	public Template createTemplateFromHtml(String templateContent)
-    {
-	    Element element= WebServiceLocator.getInstance().getDomHandler().getDocument().createElement("div");
+	public Template createTemplateFromHtml(String name, String templateContent)
+	{
+		Element element= WebServiceLocator.getInstance().getDomHandler().getDocument().createElement("div");
 		element.setAttribute("class", "dragome-hide");
 
 		Element childElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createElement("div");
@@ -67,14 +67,14 @@ public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 		getContainerElement().getParentNode().appendChild(element);
 		AbstractHTMLComponentRenderer.setElementInnerHTML(childElement, templateContent);
 
-		String aTemplateName= "loaded-template-" + templateNumber++;
+		String aTemplateName= "loaded-template-" + name;
 		childElement.setAttribute("data-template", aTemplateName);
 		childElement.setAttribute("id", aTemplateName);
 
 		Template createTemplate= GuiaServiceLocator.getInstance().getTemplateManager().createTemplate(aTemplateName);
 		//	Template createTemplate= new HTMLTemplateFactory().createTemplate(element, aTemplateName);
 		return createTemplate;
-    }
+	}
 
 	public void hideContainer()
 	{
@@ -100,7 +100,7 @@ public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 
 	public Template loadTemplate(String templateName)
 	{
-	    return loadTemplate(templateName, "");
+		return loadTemplate(templateName, "");
 	}
 
 	public List<Template> findAllTemplates()
