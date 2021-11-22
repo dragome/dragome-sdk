@@ -3,6 +3,7 @@ package flexjson.factories;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import flexjson.ObjectBinder;

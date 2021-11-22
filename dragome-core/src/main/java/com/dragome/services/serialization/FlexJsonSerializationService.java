@@ -61,6 +61,7 @@ public class FlexJsonSerializationService implements SerializationService
 		jsonDeserializer= new JSONDeserializer<Object>();
 		jsonDeserializer.use(Method.class, new MethodFactory());
 		jsonDeserializer.use(Class.class, new DragomeClassFactory());
+		jsonDeserializer.use(Element.class, new ElementFactory());
 		return jsonDeserializer;
 	}
 

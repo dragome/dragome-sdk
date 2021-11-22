@@ -17,6 +17,8 @@ package com.dragome.services.serialization;
 
 import org.w3c.dom.Element;
 
+import com.dragome.helpers.DragomeEntityManager;
+
 import flexjson.JSONContext;
 import flexjson.TypeContext;
 import flexjson.transformer.AbstractTransformer;
@@ -28,7 +30,9 @@ public class ElementTrasformer extends AbstractTransformer
 	{
 		JSONContext context= getContext();
 		Element element= (Element) object;
-		String id= System.identityHashCode(element) + "";
+		
+		String id= DragomeEntityManager.add(element);
+		
 		element.setAttribute("data-debug-id", id);
 		TypeContext typeContext= context.writeOpenObject();
 

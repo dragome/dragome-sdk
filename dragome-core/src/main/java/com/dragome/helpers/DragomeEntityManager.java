@@ -17,8 +17,8 @@ package com.dragome.helpers;
 
 import java.util.Hashtable;
 import java.util.Map;
-
-import org.w3c.dom.Element;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 public class DragomeEntityManager
 {
@@ -28,6 +28,12 @@ public class DragomeEntityManager
 	public static String add(Object entity)
 	{
 		String identityHashCode= getEntityId(entity);
+
+		Optional<Entry<String, String>> findFirst= aliases.entrySet().stream().filter(e -> e.getValue().equals(identityHashCode)).findFirst();
+
+		if (findFirst.isPresent())
+			return findFirst.get().getKey();
+
 		entities.put(identityHashCode, entity);
 		return identityHashCode;
 	}
