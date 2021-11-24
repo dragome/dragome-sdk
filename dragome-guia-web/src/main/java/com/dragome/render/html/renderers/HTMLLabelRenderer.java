@@ -55,7 +55,9 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 				if (!templateCompatible)
 				{
 					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
-					t2= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst().get();
+					Optional<Template> findFirst= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst();
+					if (findFirst.isPresent())
+						t2= findFirst.get();
 				}
 				else
 					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
