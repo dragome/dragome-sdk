@@ -108,10 +108,10 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public void setChildrenMap(Map<String, Template> templateElements)
 	{
 		this.childrenMap= templateElements;
-//		for (Entry<String, Template> entries : templateElements.entrySet())
-//		{
-//			getChildren().add(entries.getValue());
-//		}
+		//		for (Entry<String, Template> entries : templateElements.entrySet())
+		//		{
+		//			getChildren().add(entries.getValue());
+		//		}
 	}
 
 	public void updateName(String name)
@@ -210,17 +210,30 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public String toString()
 	{
-		return getName() + ": " + childrenMap;
+		StringBuilder result= new StringBuilder();
+		for (Template template : children)
+		{
+			String childString= template.toString();
+			result.append(childString + "//");
+		}
+		return getName() + ": (" + result.toString() + ")";
 	}
 
 	public int hashCode()
 	{
-		return toString().hashCode();
+		return getName().hashCode();
 	}
 
 	public boolean equals(Object obj)
 	{
-		return obj != null && obj instanceof Template && toString().equals(obj.toString());
+		if (obj instanceof Template)
+		{
+			Template other= (Template) obj;
+			boolean childrenEqual= children.size() == other.getChildren().size();
+			return name.equals(other.getName()) && childrenEqual;
+		}
+		else
+			return false;
 	}
 
 	public void removeChild(String name)

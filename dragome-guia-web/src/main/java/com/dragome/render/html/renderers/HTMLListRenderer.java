@@ -48,6 +48,8 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 	public Canvas<Element> render(final VisualListBox<Object> visualList)
 	{
+		super.render(visualList);
+
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
 		canvas.setContent(new MergeableElement()
