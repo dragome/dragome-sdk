@@ -17,8 +17,6 @@ package com.dragome.services.serialization;
 
 import java.lang.reflect.Method;
 
-import org.w3c.dom.Element;
-
 import com.dragome.services.interfaces.SerializationService;
 
 import flexjson.JSONDeserializer;
@@ -50,7 +48,6 @@ public class FlexJsonSerializationService implements SerializationService
 	private JSONSerializer createSerializer()
 	{
 		jsonSerializer= new JSONSerializer();
-		jsonSerializer.transform(new ElementTrasformer(), Element.class);
 		jsonSerializer.transform(new MethodTrasformer(), Method.class);
 		jsonSerializer.transform(new DragomeClassTransformer(), Class.class);
 		return jsonSerializer;
@@ -61,7 +58,6 @@ public class FlexJsonSerializationService implements SerializationService
 		jsonDeserializer= new JSONDeserializer<Object>();
 		jsonDeserializer.use(Method.class, new MethodFactory());
 		jsonDeserializer.use(Class.class, new DragomeClassFactory());
-		jsonDeserializer.use(Element.class, new ElementFactory());
 		return jsonDeserializer;
 	}
 

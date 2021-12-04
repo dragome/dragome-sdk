@@ -31,8 +31,6 @@ import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTemplateHandler implements TemplateHandler
 {
-	private static int i;
-
 	public void makeVisible(Template clonedChild)
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
@@ -56,12 +54,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 	{
 		Element node= (Element) template.getContent().getValue();
 
-		String clonedNumber= node.getAttribute("data-cloned-element");
-
-		if (clonedNumber == null)
-			node.setAttribute("data-cloned-element", "" + i++);
-
-		Element cloneNode= (Element) node.cloneNode(true);
+		Element cloneNode= JsCast.elementRepository.cloneElement(node);
 		//		node.getParentNode().appendChild(cloneNode);
 
 		Template clonedTemplate= cloneChildren(template, cloneNode);

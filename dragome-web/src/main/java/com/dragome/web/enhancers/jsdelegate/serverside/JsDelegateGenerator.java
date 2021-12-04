@@ -21,10 +21,10 @@ import java.util.Set;
 
 import com.dragome.commons.DelegateCode;
 import com.dragome.commons.compiler.classpath.InMemoryClasspathFile;
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.annotations.Keep;
 import com.dragome.web.enhancers.jsdelegate.DefaultDelegateStrategy;
-import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.enhancers.jsdelegate.interfaces.DelegateStrategy;
 import com.dragome.web.enhancers.jsdelegate.interfaces.SubTypeFactory;
 
@@ -288,6 +288,8 @@ public class JsDelegateGenerator
 	private static String createParameters(CtMethod method, StringBuffer code) throws NotFoundException
 	{
 		Class<?> scriptHelperClass= ScriptHelper.class;
+		Class<?> jsHelperClass= JsHelper.class;
+
 		int parametersCount= method.getParameterTypes().length;
 		if (parametersCount > 0)
 		{
@@ -296,7 +298,11 @@ public class JsDelegateGenerator
 			{
 				String variableName= "$" + (i + 1);
 				CtClass parameterType= method.getParameterTypes()[i];
-				code.append("" + scriptHelperClass.getName() + ".put(\"" + variableName + "\", " + createParameterForPut(variableName, parameterType) + ", this);");
+				String name= scriptHelperClass.getName();
+				if (isPrimitive(parameterType) || isBoolean(parameterType))
+					code.append("" + name + ".put(\"" + variableName + "\", " + createParameterForPut(variableName, parameterType) + ", this);");
+				else
+					code.append("" + name + ".put(\"" + variableName + "\", " + jsHelperClass.getName() + ".unProxy(" + createParameterForPut(variableName, parameterType) + "), this);");
 
 				if (i != 0)
 					parameters.append(", ");
@@ -310,17 +316,31 @@ public class JsDelegateGenerator
 
 	private static String createParameterForPut(String string, CtClass ctClass)
 	{
+		if (isPrimitive(ctClass))
+			return "(double)" + string;
+		else
+			return string;
+	}
+
+	public static boolean isPrimitive(CtClass ctClass)
+	{
 		String javaName= toJavaName(ctClass);
 
-		if (javaName.equals(Integer.class.getName()) || javaName.equals(int.class.getName()) || //
+		boolean b= javaName.equals(Integer.class.getName()) || javaName.equals(int.class.getName()) || //
 				javaName.equals(Double.class.getName()) || javaName.equals(double.class.getName()) || //
 				javaName.equals(Short.class.getName()) || javaName.equals(short.class.getName()) || //
 				javaName.equals(Float.class.getName()) || javaName.equals(float.class.getName()) || //
 				javaName.equals(Byte.class.getName()) || javaName.equals(byte.class.getName()) || //
-				javaName.equals(Long.class.getName()) || javaName.equals(long.class.getName()))
-			return "(double)" + string;
-		else
-			return string;
+				javaName.equals(Long.class.getName()) || javaName.equals(long.class.getName());
+		return b;
+	}
+
+	public static boolean isBoolean(CtClass ctClass)
+	{
+		String javaName= toJavaName(ctClass);
+
+		boolean b= javaName.equals(Boolean.class.getName()) || javaName.equals(boolean.class.getName());
+		return b;
 	}
 
 	public static String createVariableForEval(String string, Class<?> ctClass)
@@ -359,7 +379,7 @@ public class JsDelegateGenerator
 		try
 		{
 			String type= interface1.getName();
-			String classname= JsCast.createDelegateClassName(type);
+			String classname= JsDelegateGenerator.createDelegateClassName(type);
 			CtClass ctClass= ClassPool.getDefault().getOrNull(classname);
 
 			if (ctClass == null)
@@ -377,6 +397,28 @@ public class JsDelegateGenerator
 
 	public InMemoryClasspathFile generateAsClasspathFile(Class<?> class1)
 	{
-		return new InMemoryClasspathFile(JsCast.createDelegateClassName(class1.getName()), generate(class1));
+		return new InMemoryClasspathFile(JsDelegateGenerator.createDelegateClassName(class1.getName()), generate(class1));
+	}
+
+	public static Object createDelegateFor(Class type)
+	{
+		try
+		{
+			String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
+			Class<?> class2= Class.forName(delegateClassName);
+			Object newInstance= class2.newInstance();
+			return newInstance;
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static String createDelegateClassName(String type)
+	{
+		int lastIndexOf= type.lastIndexOf(".");
+		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
+		return classname;
 	}
 }

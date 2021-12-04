@@ -209,7 +209,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 	public boolean matches(VisualListBox<Object> aVisualComponent, Template child)
 	{
 		Element element= ((Content<Element>) child.getContent()).getValue(); 
-		String nodeName= element.getNodeName();
+		String nodeName= element.getTagName();
 		return "select".equalsIgnoreCase(nodeName) ;
 	}
 }

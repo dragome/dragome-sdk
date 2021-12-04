@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelperInterface;
 import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor;
@@ -58,6 +59,7 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 
 	public void put(String name, Object value, Object caller)
 	{
+		value= JsHelper.unProxy(value);
 		String methodName= getMethodName();
 
 		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), methodName));

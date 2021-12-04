@@ -16,13 +16,20 @@
 package com.dragome.services;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+import org.w3c.dom.Element;
 
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.services.interfaces.RequestExecutor;
+import com.dragome.services.interfaces.SerializationService;
 import com.dragome.services.interfaces.ServiceFactory;
+import com.dragome.services.serialization.ElementFactory;
+import com.dragome.services.serialization.ElementTrasformer;
+import com.dragome.services.serialization.ProxyTrasformer;
 import com.dragome.services.serverside.ServerReflectionServiceImpl;
 import com.dragome.services.serverside.ServerSideServiceFactory;
 import com.dragome.web.debugging.messages.ClientToServerMessageChannel;
@@ -78,6 +85,13 @@ public class WebServiceLocator
 
 		if (serviceLocator.getConfigurator() == null && !isClientSide())
 			serviceLocator.setConfigurator(serviceLocator.getReflectionService().getConfigurator());
+		
+		SerializationService serializationService= serviceLocator.getSerializationService();
+		
+		
+		serializationService.addFactory(Element.class, new ElementFactory());
+		serializationService.addTransformer(new ElementTrasformer(), Element.class);
+		serializationService.addTransformer(new ProxyTrasformer(), Proxy.class);
 	}
 
 	public boolean isClientSideEnabled()

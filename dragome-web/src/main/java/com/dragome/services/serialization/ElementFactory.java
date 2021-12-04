@@ -15,10 +15,15 @@
  */
 package com.dragome.services.serialization;
 
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import org.w3c.dom.Element;
+
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.enhancers.jsdelegate.JsCastInvocationHandler;
 
 import flexjson.ObjectBinder;
 import flexjson.factories.BeanObjectFactory;
@@ -38,8 +43,12 @@ public final class ElementFactory extends BeanObjectFactory
 		else
 		{
 			Object instantiate= super.instantiate(context, value, targetType, targetClass);
+			
+			
+			Object newProxyInstance= Proxy.newProxyInstance(JsCast.class.getClassLoader(), new Class[] { Element.class }, new JsCastInvocationHandler(instantiate));
+
 			DragomeEntityManager.put(id, instantiate);
-			return instantiate;
+			return newProxyInstance;
 		}
 	}
 }

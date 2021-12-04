@@ -11,14 +11,28 @@
 
 package com.dragome.web.enhancers.jsdelegate;
 
+import java.lang.reflect.Proxy;
+import java.util.Hashtable;
+import java.util.Map;
+
+import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
+import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.services.WebServiceLocator;
+import com.dragome.services.interfaces.ServiceFactory;
+import com.dragome.web.enhancers.jsdelegate.serverside.JsDelegateGenerator;
 
 public class JsCast
 {
+	static ServiceFactory serverSideServiceFactory= WebServiceLocator.getInstance().getServerSideServiceFactory();
+	public static ElementRepository elementRepository= serverSideServiceFactory.createSyncService(ElementRepository.class);
+
+	static Map<String, ElementData> attributes= new Hashtable<>();
+
 	@SuppressWarnings("unchecked")
 	public static <T> T castTo(Object instance, Class<T> type, Object callerInstance)
 	{
@@ -26,6 +40,13 @@ public class JsCast
 		{
 			if (instance == null)
 				return null;
+			boolean isElement= Element.class.isAssignableFrom(type);
+
+			if (isElement)
+				if (!WebServiceLocator.getInstance().isClientSide())
+				{
+					instance= unProxy(instance);
+				}
 
 			ScriptHelper.put("instance", instance, callerInstance);
 
@@ -45,23 +66,40 @@ public class JsCast
 				return (T) ScriptHelper.eval("instance", callerInstance);
 			else
 			{
-				String delegateClassName= JsCast.createDelegateClassName(type.getName());
-				Class<?> class2= Class.forName(delegateClassName);
-				Object newInstance= class2.newInstance();
+				Object newInstance= JsDelegateGenerator.createDelegateFor(type);
 
 				ScriptHelper.put("delegate", newInstance, callerInstance);
-				if (ScriptHelper.eval("instance.node", callerInstance) == null)
-					ScriptHelper.eval("delegate.node= instance", callerInstance);
-				else
-					ScriptHelper.eval("delegate.node= instance.node", callerInstance);
+				ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
 
-				return (T) newInstance;
+				T result= (T) newInstance;
+
+				if (isElement)
+					if (!WebServiceLocator.getInstance().isClientSide())
+					{
+						result= (T) Proxy.newProxyInstance(JsCast.class.getClassLoader(), new Class[] { type }, new JsCastInvocationHandler(newInstance));
+
+						ScriptHelper.put("delegateProxy2", newInstance, callerInstance);
+						ScriptHelper.put("delegateProxy", result, callerInstance);
+						ScriptHelper.evalNoResult("delegateProxy2.node= delegateProxy.node= instance.node != null ? instance.node : instance", callerInstance);
+					}
+
+				return result;
 			}
 		}
 		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static Object unProxy(Object instance)
+	{
+		if (instance != null && Proxy.isProxyClass(instance.getClass()))
+		{
+			AbstractProxyRelatedInvocationHandler invocationHandler= (AbstractProxyRelatedInvocationHandler) Proxy.getInvocationHandler(instance);
+			instance= invocationHandler.getProxy();
+		}
+		return instance;
 	}
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
@@ -110,12 +148,5 @@ public class JsCast
 	{
 		String script= "new " + type.getSimpleName() + "()";
 		return ScriptHelper.evalCasting(script, type, null);
-	}
-
-	public static String createDelegateClassName(String type)
-	{
-		int lastIndexOf= type.lastIndexOf(".");
-		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
-		return classname;
 	}
 }

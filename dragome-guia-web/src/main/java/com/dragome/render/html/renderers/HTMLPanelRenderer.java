@@ -60,7 +60,7 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 	{
 		Element element= ((Content<Element>) child.getContent()).getValue(); 
 
-		String nodeName= element.getNodeName();
+		String nodeName= element.getTagName();
 		
 		return "div".equalsIgnoreCase(nodeName) || "table".equalsIgnoreCase(nodeName) || "tr".equalsIgnoreCase(nodeName) || "th".equalsIgnoreCase(nodeName);
 		

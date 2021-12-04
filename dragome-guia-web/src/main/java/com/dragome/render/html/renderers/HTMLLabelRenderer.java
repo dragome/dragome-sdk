@@ -15,14 +15,10 @@
  */
 package com.dragome.render.html.renderers;
 
-import java.util.Iterator;
-import java.util.Optional;
-
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualLabel;
-import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
@@ -47,36 +43,18 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 
 			public void mergeWith(Template template, Element labelElement1)
 			{
-				boolean templateCompatible= isTemplateCompatible(template);
-				String id= DragomeEntityManager.add(visualLabel);
+				Element foundElement= findCompatibleElement(visualLabel, template, labelElement1);
 
-				labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-				Template t2= template;
-				if (!templateCompatible)
-				{
-					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
-					Optional<Template> findFirst= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst();
-					if (findFirst.isPresent())
-						t2= findFirst.get();
-				}
-				else
-					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-
-				final Element labelElement= templateCompatible ? labelElement1 : (Element) t2.getContent().getValue();
-				labelElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-
-				//final Element labelElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("span");
-				setInnerText(visualLabel, labelElement);
-
+				setInnerText(visualLabel, foundElement);
 				visualLabel.addValueChangeHandler(new ValueChangeHandler<Object>()
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
 					{
-						setInnerText(visualLabel, labelElement);
+						setInnerText(visualLabel, foundElement);
 					}
 				});
 
-				addListeners(visualLabel, labelElement);
+				addListeners(visualLabel, foundElement);
 			}
 
 			private void setInnerText(VisualLabel<Object> visualLabel, Element label1)

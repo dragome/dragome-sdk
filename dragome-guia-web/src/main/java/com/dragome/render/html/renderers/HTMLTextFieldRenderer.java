@@ -26,7 +26,6 @@ import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.guia.events.listeners.interfaces.FocusListener;
 import com.dragome.guia.events.listeners.interfaces.InputListener;
-import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
@@ -49,25 +48,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 		{
 			public void mergeWith(Template template, final Element textFieldElement1)
 			{
-				boolean templateCompatible= isTemplateCompatible(template);
-				String id= DragomeEntityManager.add(visualTextField);
-
-				textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-				Template t2= template;
-				if (!templateCompatible)
-				{
-					textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
-					t2= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst().get();
-				}
-				else
-					textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-
-				final Element textFieldElement= templateCompatible ? textFieldElement1 : (Element) t2.getContent().getValue();
-				textFieldElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-				
-				
-				//				final DomHandler domHandler= ServiceLocator.getInstance().getDomHandler();
-				//				final Element textFieldElement= domHandler.getDocument().createElement("input");
+				Element textFieldElement= findCompatibleElement(visualTextField, template, textFieldElement1);
 
 				visualTextField.addValueChangeHandler(new ValueChangeHandler<Object>()
 				{
@@ -111,16 +92,15 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				ScriptHelper.put("textFieldElement", textFieldElement, this);
 				ScriptHelper.eval("textFieldElement.node.value=value", this);
 
-				
 				EventTarget eventTarget= JsCast.castTo(textFieldElement, EventTarget.class);
 				eventTarget.addEventListener("change", new EventListener()
 				{
 					public void handleEvent(Event evt)
 					{
-						updateComponentValue(visualTextField, textFieldElement);					
+						updateComponentValue(visualTextField, textFieldElement);
 					}
 				}, false);
-				
+
 				addListeners(visualTextField, textFieldElement);
 			}
 		});
@@ -134,7 +114,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 		String value= (String) ScriptHelper.eval("textFieldElement.node.value", this);
 		visualTextField.setValue(value);
 	}
-	
+
 	public boolean isTemplateCompatible(Template child)
 	{
 		Element element= (Element) child.getContent().getValue();

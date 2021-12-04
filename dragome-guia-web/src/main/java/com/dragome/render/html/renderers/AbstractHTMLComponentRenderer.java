@@ -17,6 +17,7 @@ package com.dragome.render.html.renderers;
 
 import java.util.EventListener;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.w3c.dom.Element;
@@ -84,7 +85,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		});
 
 		addListeners(visualComponent, element, null);
-		
+
 		visualComponent.getStyle().setName(element.getAttribute("class"));
 		visualComponent.getStyle().fireStyleChanged();
 	}
@@ -114,7 +115,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
-	
+
 	public boolean matches(T aVisualComponent, Template child)
 	{
 		boolean compatible= isTemplateCompatible(child);
@@ -127,7 +128,6 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		return compatible;
 	}
-
 
 	public Canvas<Element> render(T aVisualComponent)
 	{
@@ -170,11 +170,30 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 				DomHelper.makeOriginalClonedVisible(attribute);
 			}
 		}
-		
+
 	}
 
 	public boolean isTemplateCompatible(Template child)
 	{
 		return false;
+	}
+
+	public Element findCompatibleElement(final VisualComponent visualComponent, Template template, Element element)
+	{
+		Element foundElement= element;
+		String id= DragomeEntityManager.add(visualComponent);
+		if (!isTemplateCompatible(template))
+		{
+			Optional<Template> foundTemplate= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst();
+
+			if (foundTemplate.isPresent())
+			{
+				foundElement= (Element) foundTemplate.get().getContent().getValue();
+				element.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
+			}
+		}
+
+		foundElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+		return foundElement;
 	}
 }
