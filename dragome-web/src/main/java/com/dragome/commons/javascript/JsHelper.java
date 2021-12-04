@@ -18,12 +18,13 @@ package com.dragome.commons.javascript;
 import java.lang.reflect.Proxy;
 
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
+import com.dragome.services.WebServiceLocator;
 
 public final class JsHelper
 {
 	public static Object unProxy(Object instance)
 	{
-		if (instance != null && Proxy.isProxyClass(instance.getClass()))
+		if (!WebServiceLocator.getInstance().isClientSide() && instance != null && Proxy.isProxyClass(instance.getClass()))
 		{
 			AbstractProxyRelatedInvocationHandler invocationHandler= (AbstractProxyRelatedInvocationHandler) Proxy.getInvocationHandler(instance);
 			instance= invocationHandler.getProxy();

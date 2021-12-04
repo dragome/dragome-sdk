@@ -8,4 +8,7 @@ public interface MessageEventExtension extends MessageEvent
 {
 	@DelegateCode(eval= "this.node.data")
 	String getDataAsString();
+	
+	@DelegateCode(eval= "this.node.data")
+	Object getDataAsObject();
 }

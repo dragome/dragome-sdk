@@ -17,7 +17,9 @@ package com.dragome.web.dispatcher;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
@@ -30,6 +32,8 @@ import com.dragome.web.debugging.ScriptCrossExecutionCommand;
 
 public class EventDispatcherExtraUtils
 {
+	private static Map<String, Method> foundMethods= new HashMap<>();
+
 	@MethodAlias(alias= "EventDispatcher.equalsFunction")
 	private static boolean equalsFunction(Object o1, Object o2)
 	{
@@ -93,12 +97,19 @@ public class EventDispatcherExtraUtils
 
 	private static Method findMethod(String methodName, Class<?> aClass)
 	{
-		Method foundMethod= null;
+		String key= aClass.getName() + "." + methodName;
+		Method foundMethod= foundMethods.get(key);
 
-		Method[] methods= aClass.getMethods();
-		for (Method method : methods)
-			if (method.getName().equals(methodName))
-				foundMethod= method;
+		if (foundMethod == null)
+		{
+			Method[] methods= aClass.getMethods();
+			for (Method method : methods)
+				if (method.getName().equals(methodName))
+				{
+					foundMethod= method;
+					foundMethods.put(key, foundMethod);
+				}
+		}
 
 		return foundMethod;
 	}

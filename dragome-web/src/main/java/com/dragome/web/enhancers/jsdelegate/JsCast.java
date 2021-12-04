@@ -24,7 +24,6 @@ import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.ServiceFactory;
-import com.dragome.web.enhancers.jsdelegate.serverside.JsDelegateGenerator;
 
 public class JsCast
 {
@@ -66,7 +65,7 @@ public class JsCast
 				return (T) ScriptHelper.eval("instance", callerInstance);
 			else
 			{
-				Object newInstance= JsDelegateGenerator.createDelegateFor(type);
+				Object newInstance= DefaultDelegateStrategy.createDelegateFor(type);
 
 				ScriptHelper.put("delegate", newInstance, callerInstance);
 				ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);

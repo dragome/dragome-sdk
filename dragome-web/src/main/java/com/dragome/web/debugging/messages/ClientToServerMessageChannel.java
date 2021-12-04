@@ -37,7 +37,10 @@ public class ClientToServerMessageChannel implements MessageChannel
 
 	public void send(String aMessage)
 	{
-		websocket.send(aMessage + "|" + counter);
+		String data= aMessage + "|" + counter;
+		ScriptHelper.put("messageAsString", data, this);
+		Object result= ScriptHelper.eval("new TextEncoder().encode(messageAsString)", this);
+		websocket.send(result);
 		counter++;
 	}
 
@@ -62,6 +65,7 @@ public class ClientToServerMessageChannel implements MessageChannel
 		String url= (String) ScriptHelper.eval("((window.location.protocol === \"https:\") ? \"wss://\" : \"ws://\") + window.location.host + (location.pathname).substr(0, (location.pathname).lastIndexOf('/')) + s", this);
 		ScriptHelper.put("url", url, this);
 		WebSocket webSocket= ScriptHelper.evalCasting("new WebSocket(url)", WebSocket.class, this);
+		webSocket.setBinaryType("arraybuffer");
 		webSocket.setOnopen(new EventListener()
 		{
 			@ClientSideMethod
@@ -80,10 +84,13 @@ public class ClientToServerMessageChannel implements MessageChannel
 				try
 				{
 					MessageEventExtension messageEvent= JsCast.castTo(evt, MessageEventExtension.class);
-					String dataAsString= messageEvent.getDataAsString();
+					Object dataAsString= messageEvent.getDataAsObject();
+
 					ScriptHelper.put("encodedData", dataAsString, this);
-//					String result= (String) ScriptHelper.eval("new TextReader(new Utf8Translator(new Inflator(new Base64Reader(encodedData)))).readToEnd()", this);
-					String result= dataAsString;
+					String result= (String) ScriptHelper.eval("new TextDecoder().decode(dataAsString.node)", this);
+
+					//					String result= (String) ScriptHelper.eval("new TextReader(new Utf8Translator(new Inflator(new Base64Reader(encodedData)))).readToEnd()", this);
+//					String result= dataAsString.toString();
 					receiver.messageReceived(result);
 					evt.stopPropagation();
 				}

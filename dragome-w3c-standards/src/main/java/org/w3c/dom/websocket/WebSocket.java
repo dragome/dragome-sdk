@@ -20,6 +20,9 @@ public interface WebSocket extends EventTarget
     public void setOnmessage(EventListener onmessage);
     public EventListener getOnclose();
     public void setOnclose(EventListener onclose);
-    public boolean send(String data);
+    public boolean send(Object data);
     public void close();
+    
+    public void setBinaryType(String type);
+
 }

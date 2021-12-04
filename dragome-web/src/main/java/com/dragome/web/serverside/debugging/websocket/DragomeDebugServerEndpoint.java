@@ -1,5 +1,6 @@
 package com.dragome.web.serverside.debugging.websocket;
 
+import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
 import javax.websocket.CloseReason;
@@ -37,7 +38,12 @@ public class DragomeDebugServerEndpoint
 				try
 				{
 					if (session != null && session.isOpen())
-						remote.sendText(aMessage);
+					{
+	                    byte[] bytes= aMessage.getBytes();
+	                    
+	                    ByteBuffer byteBuffer =  ByteBuffer.wrap(bytes);
+						remote.sendBinary(byteBuffer);
+					}
 				}
 				catch (Exception e)
 				{
@@ -49,9 +55,10 @@ public class DragomeDebugServerEndpoint
 		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().reset();
 	}
 
-	public String onMessage(String message, Session session)
+	public String onMessage(byte[] message, Session session)
 	{
-		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(message);
+		String messageAsString= new String(message);
+		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(messageAsString);
 		return null;
 	}
 

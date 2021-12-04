@@ -119,4 +119,26 @@ public class DefaultDelegateStrategy implements DelegateStrategy
 
 		return null;
 	}
+
+	public static String createDelegateClassName(String type)
+	{
+		int lastIndexOf= type.lastIndexOf(".");
+		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
+		return classname;
+	}
+
+	public static Object createDelegateFor(Class type)
+	{
+		try
+		{
+			String delegateClassName= DefaultDelegateStrategy.createDelegateClassName(type.getName());
+			Class<?> class2= Class.forName(delegateClassName);
+			Object newInstance= class2.newInstance();
+			return newInstance;
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 }

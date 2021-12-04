@@ -379,7 +379,7 @@ public class JsDelegateGenerator
 		try
 		{
 			String type= interface1.getName();
-			String classname= JsDelegateGenerator.createDelegateClassName(type);
+			String classname= DefaultDelegateStrategy.createDelegateClassName(type);
 			CtClass ctClass= ClassPool.getDefault().getOrNull(classname);
 
 			if (ctClass == null)
@@ -397,28 +397,6 @@ public class JsDelegateGenerator
 
 	public InMemoryClasspathFile generateAsClasspathFile(Class<?> class1)
 	{
-		return new InMemoryClasspathFile(JsDelegateGenerator.createDelegateClassName(class1.getName()), generate(class1));
-	}
-
-	public static Object createDelegateFor(Class type)
-	{
-		try
-		{
-			String delegateClassName= JsDelegateGenerator.createDelegateClassName(type.getName());
-			Class<?> class2= Class.forName(delegateClassName);
-			Object newInstance= class2.newInstance();
-			return newInstance;
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static String createDelegateClassName(String type)
-	{
-		int lastIndexOf= type.lastIndexOf(".");
-		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
-		return classname;
+		return new InMemoryClasspathFile(DefaultDelegateStrategy.createDelegateClassName(class1.getName()), generate(class1));
 	}
 }
