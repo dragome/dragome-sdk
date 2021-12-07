@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.DefaultEventProducer;
@@ -280,11 +279,6 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public List<Template> getChildren()
 	{
 		return children;
-	}
-
-	public boolean isActive()
-	{
-		return templateListener.isActive(this);
 	}
 
 	public void setChildren(List<Template> children)

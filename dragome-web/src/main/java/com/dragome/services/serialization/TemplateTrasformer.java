@@ -24,7 +24,7 @@ import flexjson.TypeContext;
 import flexjson.transformer.AbstractTransformer;
 import flexjson.transformer.ClassTransformer;
 
-public class ElementTrasformer extends AbstractTransformer
+public class TemplateTrasformer extends AbstractTransformer
 {
 	public void transform(Object object)
 	{
@@ -33,7 +33,7 @@ public class ElementTrasformer extends AbstractTransformer
 		
 		String id= DragomeEntityManager.add(element);
 		
-//		element.setAttribute("data-debug-id", id);
+		element.setAttribute("data-debug-id", id);
 		TypeContext typeContext= context.writeOpenObject();
 
 		context.writeName("id");

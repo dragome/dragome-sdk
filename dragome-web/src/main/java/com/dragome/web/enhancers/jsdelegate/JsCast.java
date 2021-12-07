@@ -40,6 +40,7 @@ public class JsCast
 			if (instance == null)
 				return null;
 			boolean isElement= Element.class.isAssignableFrom(type);
+			isElement= false;
 
 			if (isElement)
 				if (!WebServiceLocator.getInstance().isClientSide())

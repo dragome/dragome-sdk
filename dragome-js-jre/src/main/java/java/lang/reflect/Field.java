@@ -22,6 +22,7 @@ import java.util.List;
 import com.dragome.commons.javascript.ScriptHelper;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public final class Field extends AccessibleObject implements Member
 {
@@ -73,7 +74,7 @@ public final class Field extends AccessibleObject implements Member
 			result= ScriptHelper.eval("obj.constructor[sig]", this);
 		else
 			result= ScriptHelper.eval("obj[sig]", this);
-		
+
 		return Method.adaptResult(result, getType());
 	}
 
@@ -129,7 +130,11 @@ public final class Field extends AccessibleObject implements Member
 		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
 		{
 			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
-			return new ParameterizedTypeImpl(genericSignature);
+
+			if (genericSignature.contains("<"))
+				return new ParameterizedTypeImpl(genericSignature);
+			else
+				return new TypeVariableImpl(declaringClass, genericSignature);
 		}
 		else
 			return getType();

@@ -23,14 +23,17 @@ import org.w3c.dom.Node;
 
 import com.dragome.render.DomHelper;
 import com.dragome.render.interfaces.TemplateHandler;
-import com.dragome.templates.ContentImpl;
-import com.dragome.templates.HTMLTemplateFactory;
+import com.dragome.services.WebServiceLocator;
+import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
-import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTemplateHandler implements TemplateHandler
 {
+	static ServiceFactory serverSideServiceFactory= WebServiceLocator.getInstance().getServerSideServiceFactory();
+	public static TemplateService templateService= serverSideServiceFactory.createSyncService(TemplateService.class);
+
+	
 	public void makeVisible(Template clonedChild)
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
@@ -47,74 +50,14 @@ public class HTMLTemplateHandler implements TemplateHandler
 
 	public Template clone(Template mainPanel)
 	{
-		return cloneTemplate(mainPanel);
+		Template parent= mainPanel.getParent();
+		mainPanel.setParent(null);
+		Template cloneTemplate= templateService.cloneTemplate(mainPanel);
+		mainPanel.setParent(parent);
+		return cloneTemplate;
 	}
 
-	private Template cloneTemplate(Template template)
-	{
-		Element node= (Element) template.getContent().getValue();
-
-		Element cloneNode= JsCast.elementRepository.cloneElement(node);
-		//		node.getParentNode().appendChild(cloneNode);
-
-		Template clonedTemplate= cloneChildren(template, cloneNode);
-
-		//		node.getParentNode().removeChild(cloneNode);
-
-		return clonedTemplate;
-	}
-
-	private Template cloneChildren(Template template, Element cloneNode)
-	{
-		Template clonedTemplate= null;
-		if (cloneNode != null)
-		{
-			cloneNode.removeAttribute("data-debug-id");
-			clonedTemplate= HTMLTemplateFactory.createTemplate(template.getName());
-			clonedTemplate.setFiringEvents(false);
-			clonedTemplate.updateContent(new ContentImpl<Element>(cloneNode));
-
-			for (Template child : template.getChildrenMap().values())
-			{
-				String childName= child.getName();
-
-				ElementExtension elementExtension= JsCast.castTo(cloneNode, ElementExtension.class);
-
-				Element clonedElement= elementExtension.querySelector(createSelector(childName));
-				Template clonedChild= cloneChildren(child, clonedElement);
-				if (clonedChild != null)
-					clonedTemplate.addChild(clonedChild);
-			}
-
-			clonedTemplate.setFiringEvents(true);
-		}
-
-		return clonedTemplate;
-	}
-
-	private String createSelector(String childName)
-	{
-		return "[data-template=\"replaced: " + childName + "\"]";
-	}
-
-	public void markWith(Template child, String name)
-	{
-		((Element) child.getContent().getValue()).setAttribute("data-result", name);
-	}
-	public void releaseTemplate(Template clonedChild)
-	{
-		((Element) clonedChild.getContent().getValue()).removeAttribute("data-template");
-	}
-
-	public List<Template> cloneTemplates(List<Template> templates)
-	{
-		List<Template> clonedTemplates= new ArrayList<Template>();
-		for (Template childTemplate : templates)
-			clonedTemplates.add(clone(childTemplate));
-
-		return clonedTemplates;
-	}
-
+	
 	public boolean isConnected(Template aTemplate)
 	{
 		boolean bodyNodeFound= false;
@@ -133,4 +76,22 @@ public class HTMLTemplateHandler implements TemplateHandler
 		return bodyNodeFound;
 	}
 
+	public void markWith(Template child, String name)
+	{
+		((Element) child.getContent().getValue()).setAttribute("data-result", name);
+	}
+	public void releaseTemplate(Template clonedChild)
+	{
+		((Element) clonedChild.getContent().getValue()).removeAttribute("data-template");
+	}
+	
+
+	public List<Template> cloneTemplates(List<Template> templates)
+	{
+		List<Template> clonedTemplates= new ArrayList<Template>();
+		for (Template childTemplate : templates)
+			clonedTemplates.add(clone(childTemplate));
+
+		return clonedTemplates;
+	}
 }

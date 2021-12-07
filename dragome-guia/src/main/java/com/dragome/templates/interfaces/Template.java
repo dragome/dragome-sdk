@@ -50,7 +50,6 @@ public interface Template extends EventProducer
 	void remove(Template child);
 	void insertBefore(Template newChild, Template referenceChild);
 	public List<Template> getChildren();
-	public boolean isActive();
 	void setChildren(List<Template> children);
 	void setName(String name);
 	void setContent(Content<?> templateContent);

@@ -46,7 +46,7 @@ public class ClassTransformerDragomeWebSocketHandler
 	}
 
 	@OnMessage
-	public String onMessage(byte[] message, Session session)
+	public String onMessage(String message, Session session)
 	{
 		return (String) executeMethod(getClassName2(), "onMessage", message, session);
 	}
