@@ -15,7 +15,7 @@
  */
 package java.lang;
 
-public final class Boolean
+public final class Boolean implements java.io.Serializable, Comparable<Boolean>
 {
 
 	/**
@@ -53,9 +53,10 @@ public final class Boolean
 		return FALSE;
 	}
 
-    public static Boolean valueOf(String aBoolean) {
-        return "true".equalsIgnoreCase(aBoolean);
-    }
+	public static Boolean valueOf(String aBoolean)
+	{
+		return "true".equalsIgnoreCase(aBoolean);
+	}
 
 	/**
 	 * Allocates a Boolean object representing the value argument.
@@ -97,4 +98,27 @@ public final class Boolean
 		return Boolean.toString(value);
 	}
 
+	public int compareTo(Boolean b)
+	{
+		return compare(this.value, b.value);
+	}
+
+	/**
+	 * Compares two {@code boolean} values.
+	 * The value returned is identical to what would be returned by:
+	 * <pre>
+	 *    Boolean.valueOf(x).compareTo(Boolean.valueOf(y))
+	 * </pre>
+	 *
+	 * @param  x the first {@code boolean} to compare
+	 * @param  y the second {@code boolean} to compare
+	 * @return the value {@code 0} if {@code x == y};
+	 *         a value less than {@code 0} if {@code !x && y}; and
+	 *         a value greater than {@code 0} if {@code x && !y}
+	 * @since 1.7
+	 */
+	public static int compare(boolean x, boolean y)
+	{
+		return (x == y) ? 0 : (x ? 1 : -1);
+	}
 }

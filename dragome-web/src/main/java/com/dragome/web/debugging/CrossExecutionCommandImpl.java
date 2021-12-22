@@ -10,10 +10,13 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
+import java.io.Serializable;
+
 import com.dragome.web.debugging.interfaces.CrossExecutionCommand;
 
-public class CrossExecutionCommandImpl implements CrossExecutionCommand
+public class CrossExecutionCommandImpl implements CrossExecutionCommand, Serializable
 {
+	private static final long serialVersionUID= -6045368255314647157L;
 	protected String methodName;
 	private ReferenceHolder callerReferenceHolder;
 

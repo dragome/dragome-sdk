@@ -675,7 +675,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		//			print(" " + op + "= ");
 		//		else
 
-		if (left.getTypeBinding().equals(Type.OBJECT))
+		if (left.getTypeBinding().equals(Type.OBJECT) && right.getTypeBinding().equals(Type.OBJECT))
 		{
 			String op2= op.toString();
 

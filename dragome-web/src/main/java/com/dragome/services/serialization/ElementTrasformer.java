@@ -33,7 +33,7 @@ public class ElementTrasformer extends AbstractTransformer
 		
 		String id= DragomeEntityManager.add(element);
 		
-//		element.setAttribute("data-debug-id", id);
+		element.setAttribute("data-debug-id", id);
 		TypeContext typeContext= context.writeOpenObject();
 
 		context.writeName("id");

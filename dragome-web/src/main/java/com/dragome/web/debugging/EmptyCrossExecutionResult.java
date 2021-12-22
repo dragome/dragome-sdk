@@ -10,10 +10,17 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
+import java.io.Serializable;
+
 import com.dragome.web.debugging.interfaces.CrossExecutionResult;
 
-public class EmptyCrossExecutionResult implements CrossExecutionResult
+public class EmptyCrossExecutionResult implements CrossExecutionResult, Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID= 6629412530763766075L;
+
 	public EmptyCrossExecutionResult()
 	{
 	}

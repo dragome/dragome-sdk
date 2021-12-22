@@ -23,9 +23,9 @@ import java.util.Set;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventTarget;
 
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
@@ -57,14 +57,14 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 	public static void setElementInnerHTML(Element label1, String aText)
 	{
-		ScriptHelper.put("element", label1, null);
+		ScriptHelper.put("element", JsHelper.getFinalElement(label1), null);
 		ScriptHelper.put("value", aText, null);
 		ScriptHelper.evalNoResult("element.node.innerHTML= value", null);
 	}
 
 	public static String getElementInnerHTML(Element label1)
 	{
-		ScriptHelper.put("element", label1, null);
+		ScriptHelper.put("element", JsHelper.getFinalElement(label1), null);
 		return (String) ScriptHelper.eval("element.node.innerHTML", null);
 	}
 
@@ -102,7 +102,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		addListener(visualComponent, element, MouseOutListener.class, MultipleEventListener.MOUSEOUT, expectedType);
 		addListener(visualComponent, element, BlurListener.class, MultipleEventListener.BLUR, expectedType);
 
-		EventTarget eventTarget= JsCast.castTo(element, EventTarget.class);
+		EventTarget eventTarget= JsCast.castTo(JsHelper.getFinalElement(element), EventTarget.class);
 
 		for (String listener : listeners)
 			eventTarget.addEventListener(listener, new MultipleEventListener<T>(visualComponent), false);

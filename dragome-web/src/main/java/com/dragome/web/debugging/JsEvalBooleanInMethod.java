@@ -10,8 +10,12 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
-public class JsEvalBooleanInMethod extends ScriptCrossExecutionCommand
+import java.io.Serializable;
+
+public class JsEvalBooleanInMethod extends ScriptCrossExecutionCommand implements Serializable
 {
+	private static final long serialVersionUID= 7388519253238580615L;
+
 	public JsEvalBooleanInMethod(ReferenceHolder referenceHolder, String script, String methodName)
 	{
 		super(referenceHolder, methodName, script);

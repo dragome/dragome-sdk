@@ -36,7 +36,6 @@
 package java.util.concurrent.locks;
 
 import java.util.concurrent.TimeUnit;
-import java.util.Collection;
 
 /**
  * A reentrant mutual exclusion {@link Lock} with the same basic
@@ -107,6 +106,15 @@ import java.util.Collection;
 public class ReentrantLock implements Lock, java.io.Serializable
 {
 
+	public ReentrantLock()
+	{
+		// TODO Auto-generated constructor stub
+	}
+
+	public ReentrantLock(boolean fair)
+	{
+	}
+
 	@Override
 	public void lock()
 	{
@@ -125,14 +133,14 @@ public class ReentrantLock implements Lock, java.io.Serializable
 	public boolean tryLock()
 	{
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean tryLock(long time, TimeUnit unit) throws InterruptedException
 	{
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

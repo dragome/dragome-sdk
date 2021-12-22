@@ -15,6 +15,9 @@
  */
 package java.util;
 
-public class TreeMap<K, V> extends HashMap<K, V>
+import java.io.Serializable;
+
+public class TreeMap<K, V> extends HashMap<K, V> implements Serializable
 {
+	private static final long serialVersionUID= -7308370970782149915L;
 }

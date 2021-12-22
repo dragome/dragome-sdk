@@ -22,7 +22,7 @@ import com.dragome.commons.javascript.ScriptHelper;
  *
  * 
  */
-public final class Long
+public final class Long extends Number
 {
 	public static final long MIN_VALUE= 0x8000000000000000L;
 
@@ -68,9 +68,10 @@ public final class Long
 		return new Long(value);
 	}
 
-    public static Long valueOf(String aValue) {
-        return new Long(aValue);
-    }
+	public static Long valueOf(String aValue)
+	{
+		return new Long(aValue);
+	}
 
 	/**
 	 * Returns the value of this Long as a long.
@@ -105,21 +106,37 @@ public final class Long
 	{
 		return Integer.toString((int) i, radix);
 	}
-	
+
 	public static int hashCode(long value)
 	{
 		return (int) (value ^ (value >>> 32));
 	}
-	
+
 	public static int numberOfTrailingZeros(long i)
 	{
-		int low = (int) i;
-		if (low != 0) 
+		int low= (int) i;
+		if (low != 0)
 		{
 			return Integer.numberOfTrailingZeros(low);
-		} else 
+		}
+		else
 		{
 			return Integer.numberOfTrailingZeros((int) (i >> 32)) + 32;
 		}
+	}
+
+	public float floatValue()
+	{
+		return (float) value;
+	}
+
+	public double doubleValue()
+	{
+		return (double) value;
+	}
+
+	public int intValue()
+	{
+		return (int) value;
 	}
 }

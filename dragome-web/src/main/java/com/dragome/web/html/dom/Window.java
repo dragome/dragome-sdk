@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
@@ -57,7 +58,7 @@ public class Window
 	public void addEventListener(EventListener aEventListener, String aEvent)
 	{
 		Element theElement= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("body");
-		EventTarget eventTarget= JsCast.castTo(theElement, EventTarget.class);
+		EventTarget eventTarget= JsCast.castTo(JsHelper.getFinalElement(theElement), EventTarget.class);
 		eventTarget.addEventListener(aEvent, aEventListener, false);
 	}
 

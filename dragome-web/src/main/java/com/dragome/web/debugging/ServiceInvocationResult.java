@@ -10,12 +10,17 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.dragome.services.ServiceInvocation;
 
-public class ServiceInvocationResult
+public class ServiceInvocationResult implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID= 4751276683327600386L;
 	private Object objectResult;
 
 	public Object getObjectResult()

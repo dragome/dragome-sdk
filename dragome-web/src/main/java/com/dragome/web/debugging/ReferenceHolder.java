@@ -10,10 +10,16 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
+import java.io.Serializable;
+
 import com.dragome.helpers.DragomeEntityManager;
 
-public class ReferenceHolder
+public class ReferenceHolder implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID= -5518372057882483007L;
 	protected String id;
 	protected Class<?> type;
 	private String value;

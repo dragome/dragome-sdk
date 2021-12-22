@@ -10,8 +10,14 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
-public class ScriptCrossExecutionCommand extends CrossExecutionCommandImpl
+import java.io.Serializable;
+
+public class ScriptCrossExecutionCommand extends CrossExecutionCommandImpl implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID= -6356565271384078621L;
 	protected String script;
 
 	public ScriptCrossExecutionCommand()

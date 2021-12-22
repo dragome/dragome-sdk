@@ -25,6 +25,7 @@ import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.ServiceFactory;
 
+@SuppressWarnings("unchecked")
 public class JsCast
 {
 	static ServiceFactory serverSideServiceFactory= WebServiceLocator.getInstance().getServerSideServiceFactory();
@@ -32,64 +33,88 @@ public class JsCast
 
 	static Map<String, ElementData> attributes= new Hashtable<>();
 
-	@SuppressWarnings("unchecked")
 	public static <T> T castTo(Object instance, Class<T> type, Object callerInstance)
 	{
-		try
+		if (instance == null)
+			return null;
+
+		ScriptHelper.put("instance", instance, callerInstance);
+
+		if (type.equals(Float.class))
+			return (T) new Float(ScriptHelper.evalFloat("instance", callerInstance));
+		else if (type.equals(Integer.class))
+			return (T) new Integer(ScriptHelper.evalInt("instance", callerInstance));
+		else if (type.equals(Double.class))
+			return (T) new Double(ScriptHelper.evalDouble("instance", callerInstance));
+		else if (type.equals(Long.class))
+			return (T) new Long(ScriptHelper.evalLong("instance", callerInstance));
+		else if (type.equals(Boolean.class))
+			return (T) new Boolean(ScriptHelper.evalBoolean("instance", callerInstance));
+		else if (type.equals(Short.class))
+			return (T) new Short((short) ScriptHelper.evalInt("instance", callerInstance));
+		else if (type.equals(String.class))
+			return (T) ScriptHelper.eval("instance", callerInstance);
+		else
 		{
-			if (instance == null)
-				return null;
-			boolean isElement= Element.class.isAssignableFrom(type);
+			Object newInstance= DefaultDelegateStrategy.createDelegateFor(type);
+
+			ScriptHelper.put("delegate", newInstance, callerInstance);
+			ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
+
+			T result= (T) newInstance;
+
+			return result;
+		}
+	}
+
+	public static <T> T cacheElement(Object instance, Class<T> type, Object callerInstance)
+	{
+		boolean isElement= Element.class.isAssignableFrom(type);
+
+		if (isElement && instance != null)
+		{
 			isElement= false;
+			
+			if (isElement)
+				if (!WebServiceLocator.getInstance().isClientSide())
+					instance= unProxy(instance);
+
+			ScriptHelper.put("instance", instance, callerInstance);
+
+			Object newInstance= DefaultDelegateStrategy.createDelegateFor(type);
+
+			ScriptHelper.put("delegate", newInstance, callerInstance);
+			ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
+
+			T result= (T) newInstance;
+
+			if (Element.class.isAssignableFrom(type))
+			{
+				CachedElement cachedElement= new CachedElement(null, (Element) newInstance);
+				ScriptHelper.put("cachedElement", cachedElement, callerInstance);
+				ScriptHelper.evalNoResult("cachedElement.node= instance.node != null ? instance.node : instance", callerInstance);
+				result= (T) cachedElement;
+			}
 
 			if (isElement)
 				if (!WebServiceLocator.getInstance().isClientSide())
 				{
-					instance= unProxy(instance);
+					result= (T) Proxy.newProxyInstance(JsCast.class.getClassLoader(), new Class[] { type }, new JsCastInvocationHandler(newInstance));
+
+					ScriptHelper.put("delegateProxy2", newInstance, callerInstance);
+					ScriptHelper.put("delegateProxy", result, callerInstance);
+					ScriptHelper.evalNoResult("delegateProxy2.node= delegateProxy.node= instance.node != null ? instance.node : instance", callerInstance);
 				}
 
-			ScriptHelper.put("instance", instance, callerInstance);
-
-			if (type.equals(Float.class))
-				return (T) new Float(ScriptHelper.evalFloat("instance", callerInstance));
-			else if (type.equals(Integer.class))
-				return (T) new Integer(ScriptHelper.evalInt("instance", callerInstance));
-			else if (type.equals(Double.class))
-				return (T) new Double(ScriptHelper.evalDouble("instance", callerInstance));
-			else if (type.equals(Long.class))
-				return (T) new Long(ScriptHelper.evalLong("instance", callerInstance));
-			else if (type.equals(Boolean.class))
-				return (T) new Boolean(ScriptHelper.evalBoolean("instance", callerInstance));
-			else if (type.equals(Short.class))
-				return (T) new Short((short) ScriptHelper.evalInt("instance", callerInstance));
-			else if (type.equals(String.class))
-				return (T) ScriptHelper.eval("instance", callerInstance);
-			else
-			{
-				Object newInstance= DefaultDelegateStrategy.createDelegateFor(type);
-
-				ScriptHelper.put("delegate", newInstance, callerInstance);
-				ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
-
-				T result= (T) newInstance;
-
-				if (isElement)
-					if (!WebServiceLocator.getInstance().isClientSide())
-					{
-						result= (T) Proxy.newProxyInstance(JsCast.class.getClassLoader(), new Class[] { type }, new JsCastInvocationHandler(newInstance));
-
-						ScriptHelper.put("delegateProxy2", newInstance, callerInstance);
-						ScriptHelper.put("delegateProxy", result, callerInstance);
-						ScriptHelper.evalNoResult("delegateProxy2.node= delegateProxy.node= instance.node != null ? instance.node : instance", callerInstance);
-					}
-
-				return result;
-			}
+			return result;
 		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
+		else
+			return null;
+	}
+	
+	public static <T> T cacheElement(Object instance, Class<T> type)
+	{
+		return cacheElement(instance, type, null);
 	}
 
 	public static Object unProxy(Object instance)

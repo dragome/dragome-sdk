@@ -23,6 +23,8 @@ import com.dragome.web.debugging.interfaces.CrossExecutionResult;
 
 public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommandProcessor
 {
+	private static final long serialVersionUID= 1590215023362866761L;
+
 	public CrossExecutionCommandProcessorImpl()
 	{
 	}

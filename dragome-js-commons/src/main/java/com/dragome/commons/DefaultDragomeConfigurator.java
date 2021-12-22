@@ -99,6 +99,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		include|= addClassesFolder(classpathEntry, "dragome-guia");
 		include|= addClassesFolder(classpathEntry, "dragome-form-bindings");
 		include|= addClassesFolder(classpathEntry, "dragome-method-logger");
+		include|= addClassesFolder(classpathEntry, "fst");
 		return include;
 	}
 

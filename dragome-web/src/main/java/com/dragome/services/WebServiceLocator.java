@@ -27,6 +27,8 @@ import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.services.interfaces.RequestExecutor;
 import com.dragome.services.interfaces.SerializationService;
 import com.dragome.services.interfaces.ServiceFactory;
+import com.dragome.services.serialization.CachedElementFactory;
+import com.dragome.services.serialization.CachedElementTrasformer;
 import com.dragome.services.serialization.ElementFactory;
 import com.dragome.services.serialization.ElementTrasformer;
 import com.dragome.services.serialization.ProxyTrasformer;
@@ -37,6 +39,8 @@ import com.dragome.web.debugging.messages.MessageChannel;
 import com.dragome.web.debugging.messages.ServerToClientMessageChannel;
 import com.dragome.web.dispatcher.EventDispatcher;
 import com.dragome.web.dispatcher.EventDispatcherImpl;
+import com.dragome.web.enhancers.jsdelegate.CachedElement;
+import com.dragome.web.enhancers.jsdelegate.ElementData;
 import com.dragome.web.html.dom.DomHandler;
 import com.dragome.web.html.dom.w3c.BrowserDomHandler;
 import com.dragome.web.services.BrowserParametersHandler;
@@ -88,8 +92,10 @@ public class WebServiceLocator
 		
 		SerializationService serializationService= serviceLocator.getSerializationService();
 		
-		
+//		serializationService.addFactory(CachedElement.class, new CachedElementFactory());
 		serializationService.addFactory(Element.class, new ElementFactory());
+
+		serializationService.addTransformer(new CachedElementTrasformer(), CachedElement.class);
 		serializationService.addTransformer(new ElementTrasformer(), Element.class);
 		serializationService.addTransformer(new ProxyTrasformer(), Proxy.class);
 	}

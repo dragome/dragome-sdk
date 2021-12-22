@@ -25,6 +25,7 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
@@ -85,7 +86,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				renderInnerContent(visualList, selectElement);
 
-				EventTarget eventTarget= JsCast.castTo(selectElement, EventTarget.class);
+				EventTarget eventTarget= JsCast.castTo(JsHelper.getFinalElement(selectElement), EventTarget.class);
 				eventTarget.addEventListener("change", new EventListener()
 				{
 					public void handleEvent(Event evt)
@@ -99,7 +100,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 			public void renderInnerContent(final VisualListBox<Object> visualList, final Element selectElement)
 			{
-				ElementExtension selectExtension= JsCast.castTo(selectElement, ElementExtension.class);
+				ElementExtension selectExtension= JsCast.castTo(JsHelper.getFinalElement(selectElement), ElementExtension.class);
 
 				for (Object element : visualList.getAcceptableValues())
 				{
@@ -110,7 +111,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
 					isSelected|= !visualList.isMultipleItems() && element == value;
 
-					Element querySelector= selectExtension.querySelector("option[value='" + rendered + "']");
+					Element querySelector= selectExtension.querySelector("option[value='" + rendered + "']");	
 					if (querySelector != null)
 					{
 						if (isSelected)
@@ -173,7 +174,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		{
 			Node item= options.item(i);
 			Element element= (Element) item;
-			ScriptHelper.put("e", element, this);
+			ScriptHelper.put("e", JsHelper.getFinalElement(element), this);
 			boolean isSelected= ScriptHelper.evalBoolean("e.node.selected", this);
 			String value= element.getAttribute("value");
 			Object selectedObject= findSelectedItem(visualList, value);

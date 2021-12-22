@@ -10,6 +10,12 @@
  ******************************************************************************/
 package com.dragome.web.debugging.messages;
 
+import java.io.ByteArrayInputStream;
+import java.lang.reflect.Method;
+
+import org.nustaq.serialization.FSTConfiguration;
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.html.MessageEvent;
@@ -38,8 +44,8 @@ public class ClientToServerMessageChannel implements MessageChannel
 	public void send(String aMessage)
 	{
 		String data= aMessage + "|" + counter;
-//		ScriptHelper.put("messageAsString", data, this);
-//		Object result= ScriptHelper.eval("new TextEncoder().encode(messageAsString)", this);
+		//		ScriptHelper.put("messageAsString", data, this);
+		//		Object result= ScriptHelper.eval("new TextEncoder().encode(messageAsString)", this);
 		websocket.send(data);
 		counter++;
 	}
@@ -65,7 +71,7 @@ public class ClientToServerMessageChannel implements MessageChannel
 		String url= (String) ScriptHelper.eval("((window.location.protocol === \"https:\") ? \"wss://\" : \"ws://\") + window.location.host + (location.pathname).substr(0, (location.pathname).lastIndexOf('/')) + s", this);
 		ScriptHelper.put("url", url, this);
 		WebSocket webSocket= ScriptHelper.evalCasting("new WebSocket(url)", WebSocket.class, this);
-//		webSocket.setBinaryType("arraybuffer");
+		//		webSocket.setBinaryType("arraybuffer");
 		webSocket.setOnopen(new EventListener()
 		{
 			@ClientSideMethod
@@ -85,14 +91,33 @@ public class ClientToServerMessageChannel implements MessageChannel
 				{
 					MessageEventExtension messageEvent= JsCast.castTo(evt, MessageEventExtension.class);
 					String dataAsString= messageEvent.getDataAsString();
-//					Object dataAsString= messageEvent.getDataAsObject();
+					//					Object dataAsString= messageEvent.getDataAsObject();
 
-//					ScriptHelper.put("encodedData", dataAsString, this);
-//					String result= (String) ScriptHelper.eval("new TextDecoder().decode(dataAsString.node)", this);
+					ScriptHelper.put("encodedData", dataAsString, this);
+					//					String result= (String) ScriptHelper.eval("new TextDecoder().decode(dataAsString.node)", this);
 
 					//					String result= (String) ScriptHelper.eval("new TextReader(new Utf8Translator(new Inflator(new Base64Reader(encodedData)))).readToEnd()", this);
-					String result= dataAsString;
-					receiver.messageReceived(result);
+					Object result= ScriptHelper.eval("Uint8Array.from(atob(encodedData), c => c.charCodeAt(0))", this);
+					//					String result= dataAsString;
+					ScriptHelper.put("resultArray", result, this);
+
+					byte[] byteArray= new byte[1000];
+
+					for (int i= 0; i < 600; i++)
+					{
+						ScriptHelper.put("index", i, this);
+						int item= ScriptHelper.evalInt("resultArray[index]", this);
+						byteArray[i]= (byte) item;
+					}
+
+					FSTConfiguration conf= FSTConfiguration.getDefaultConfiguration();
+					conf.setForceSerializable(false);
+					conf.registerSerializer(Method.class, new MethodSerializer(), false);
+
+					FSTObjectInput fstObjectInput= new FSTObjectInput(new ByteArrayInputStream(byteArray));
+					Object readObject= fstObjectInput.readObject();
+
+					receiver.messageReceived((String) readObject);
 					evt.stopPropagation();
 				}
 				catch (Exception e)

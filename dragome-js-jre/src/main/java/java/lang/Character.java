@@ -22,10 +22,10 @@ import com.dragome.commons.javascript.ScriptHelper;
  *
  *
  */
-public final class Character
+public final class Character implements java.io.Serializable, Comparable<Character>
 {
-	public static final int MIN_RADIX = 2;
-	public static final int MAX_RADIX = 36;
+	public static final int MIN_RADIX= 2;
+	public static final int MAX_RADIX= 36;
 
 	public static final char MIN_HIGH_SURROGATE= '\uD800';
 
@@ -60,21 +60,26 @@ public final class Character
 		return String.valueOf(ch).matches("[0-9]");
 	}
 
-	public static int digit(char c, int radix) {
-		if (radix < MIN_RADIX || radix > MAX_RADIX) {
+	public static int digit(char c, int radix)
+	{
+		if (radix < MIN_RADIX || radix > MAX_RADIX)
+		{
 			return -1;
 		}
 
-		if (c >= '0' && c < '0' + Math.min(radix, 10)) {
+		if (c >= '0' && c < '0' + Math.min(radix, 10))
+		{
 			return c - '0';
 		}
 
 		// The offset by 10 is to re-base the alpha values
-		if (c >= 'a' && c < (radix + 'a' - 10)) {
+		if (c >= 'a' && c < (radix + 'a' - 10))
+		{
 			return c - 'a' + 10;
 		}
 
-		if (c >= 'A' && c < (radix + 'A' - 10)) {
+		if (c >= 'A' && c < (radix + 'A' - 10))
+		{
 			return c - 'A' + 10;
 		}
 
@@ -195,38 +200,59 @@ public final class Character
 	{
 		if (0 <= codePoint && codePoint <= 0xFFFF)
 		{
-			dst[dstIndex] = (char) codePoint;
+			dst[dstIndex]= (char) codePoint;
 			return 1;
 		}
 		else
 		{
 			// https://unicodebook.readthedocs.io/unicode_encodings.html
-			assert(0x10000 <= codePoint && codePoint <= 0x10FFFF);
-		    final int code = (codePoint - 0x10000);
-		    dst[dstIndex] = (char) (0x0000D800 | (code >> 10));
-		    dst[dstIndex] = (char) (0x0000DC00 | (code & 0x000003FF));
-		    return 2;
+			assert (0x10000 <= codePoint && codePoint <= 0x10FFFF);
+			final int code= (codePoint - 0x10000);
+			dst[dstIndex]= (char) (0x0000D800 | (code >> 10));
+			dst[dstIndex]= (char) (0x0000DC00 | (code & 0x000003FF));
+			return 2;
 		}
 	}
-	
+
 	// Converts the specified character (Unicode code point) to its UTF-16 representation stored in a char array. If the specified code point is a BMP (Basic Multilingual Plane or Plane 0) value, the resulting char array has the same value as codePoint. If the specified code point is a supplementary code point, the resulting char array has the corresponding surrogate pair.
 	// https://docs.oracle.com/javase/8/docs/api/java/lang/Character.html#toChars-int-
 	public static char[] toChars(int codePoint)
 	{
 		if (0 <= codePoint && codePoint <= 0xFFFF)
 		{
-			return new char[] {(char) codePoint};
+			return new char[] { (char) codePoint };
 		}
 		else
 		{
 			// https://unicodebook.readthedocs.io/unicode_encodings.html
-			assert(0x10000 <= codePoint && codePoint <= 0x10FFFF);
-		    final int code = (codePoint - 0x10000);
-		    return new char[] {
-		    		(char) (0x0000D800 | (code >> 10)),
-		    		(char) (0x0000DC00 | (code & 0x000003FF))
-		    };
+			assert (0x10000 <= codePoint && codePoint <= 0x10FFFF);
+			final int code= (codePoint - 0x10000);
+			return new char[] { (char) (0x0000D800 | (code >> 10)), (char) (0x0000DC00 | (code & 0x000003FF)) };
 		}
 	}
-	
+
+	public int compareTo(Character anotherCharacter)
+	{
+		return compare(this.value, anotherCharacter.value);
+	}
+
+	/**
+	 * Compares two {@code char} values numerically.
+	 * The value returned is identical to what would be returned by:
+	 * <pre>
+	 *    Character.valueOf(x).compareTo(Character.valueOf(y))
+	 * </pre>
+	 *
+	 * @param  x the first {@code char} to compare
+	 * @param  y the second {@code char} to compare
+	 * @return the value {@code 0} if {@code x == y};
+	 *         a value less than {@code 0} if {@code x < y}; and
+	 *         a value greater than {@code 0} if {@code x > y}
+	 * @since 1.7
+	 */
+	public static int compare(char x, char y)
+	{
+		return x - y;
+	}
+
 }

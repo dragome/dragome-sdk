@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
-public class JavascriptReference
+import java.io.Serializable;
+
+public class JavascriptReference implements Serializable
 {
+	private static final long serialVersionUID= 526944876267959879L;
 	private String jsId;
 	private String className;
 

@@ -5,6 +5,8 @@ import org.w3c.dom.Element;
 import com.dragome.templates.ContentImpl;
 import com.dragome.templates.HTMLTemplateFactory;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.enhancers.jsdelegate.CachedElement;
+import com.dragome.web.enhancers.jsdelegate.ElementData;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.w3c.ElementExtension;
 
@@ -32,7 +34,9 @@ public class TemplateServiceImpl implements TemplateService
 			cloneNode.removeAttribute("data-debug-id");
 			clonedTemplate= HTMLTemplateFactory.createTemplate(template.getName());
 			clonedTemplate.setFiringEvents(false);
-			clonedTemplate.updateContent(new ContentImpl<Element>(cloneNode));
+			ElementData elementData= JsCast.elementRepository.getElementData(cloneNode);
+			CachedElement value= new CachedElement(elementData, cloneNode);
+			clonedTemplate.updateContent(new ContentImpl<Element>(value));
 
 			for (Template child : template.getChildrenMap().values())
 			{
@@ -56,7 +60,6 @@ public class TemplateServiceImpl implements TemplateService
 	{
 		return "[data-template=\"replaced: " + childName + "\"]";
 	}
-	
 
 	public Template clone(Template mainPanel)
 	{

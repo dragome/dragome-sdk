@@ -10,10 +10,16 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
+import java.io.Serializable;
+
 import com.dragome.web.debugging.interfaces.CrossExecutionResult;
 
-public class CrossExecutionResultImpl implements CrossExecutionResult
+public class CrossExecutionResultImpl implements CrossExecutionResult, Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID= -4124521121973981016L;
 	private String result;
 
 	public CrossExecutionResultImpl()

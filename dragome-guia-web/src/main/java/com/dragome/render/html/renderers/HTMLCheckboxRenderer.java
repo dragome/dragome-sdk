@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualCheckbox;
@@ -61,7 +62,7 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 			Element value= textElementContent.getValue();
 			Node parentNode= value.getParentNode();
 			Text optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createTextNode(checkbox.getCaption());
-			parentNode.replaceChild(optionElement, value);
+			parentNode.replaceChild( optionElement, value);
 		}
 		else
 		{
@@ -95,7 +96,7 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 		{
 			public void clickPerformed(VisualComponent aVisualComponent)
 			{
-				ScriptHelper.put("e", button1, this);
+				ScriptHelper.put("e", JsHelper.getFinalElement(button1), this);
 				boolean value= ScriptHelper.evalBoolean("e.node.checked", this);
 				checkbox.setValue(value);
 			}
@@ -110,7 +111,7 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 		String isChecked= checked ? "true" : "false";
 
 		ScriptHelper.put("checked", isChecked, this);
-		ScriptHelper.put("button1", button1, this);
+		ScriptHelper.put("button1", JsHelper.getFinalElement(button1), this);
 		ScriptHelper.evalNoResult("button1.node.checked= (checked == 'true')", this);
 		//				
 		//				if (checked)

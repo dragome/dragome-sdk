@@ -10,8 +10,9 @@
  ******************************************************************************/
 package com.dragome.web.debugging.interfaces;
 
+import java.io.Serializable;
 
-public interface CrossExecutionCommandProcessor
+public interface CrossExecutionCommandProcessor extends Serializable
 {
 	public abstract CrossExecutionResult process(CrossExecutionCommand crossExecutionCommand);
 	public abstract void processNoResult(CrossExecutionCommand crossExecutionCommand);

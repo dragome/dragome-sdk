@@ -17,8 +17,11 @@ package com.dragome.commons.javascript;
 
 import java.lang.reflect.Proxy;
 
+import org.w3c.dom.Element;
+
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.web.enhancers.jsdelegate.CachedElement;
 
 public final class JsHelper
 {
@@ -29,6 +32,17 @@ public final class JsHelper
 			AbstractProxyRelatedInvocationHandler invocationHandler= (AbstractProxyRelatedInvocationHandler) Proxy.getInvocationHandler(instance);
 			instance= invocationHandler.getProxy();
 		}
-		return instance;
+		return getFinalElement(instance);
+	}
+
+	public static Object getFinalElement(Object element)
+	{
+		if (element instanceof CachedElement)
+		{
+			CachedElement cachedElement= (CachedElement) element;
+			return cachedElement.getElement();
+		}
+		else
+			return element;
 	}
 }

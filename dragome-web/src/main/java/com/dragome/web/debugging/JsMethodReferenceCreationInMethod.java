@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
-public class JsMethodReferenceCreationInMethod extends CrossExecutionCommandImpl
+import java.io.Serializable;
+
+public class JsMethodReferenceCreationInMethod extends CrossExecutionCommandImpl implements Serializable
 {
+	private static final long serialVersionUID= -4022637937064492948L;
 	private String name;
 	private String methodSignature;
 	private String declaringClassName;

@@ -15,15 +15,11 @@
  */
 package com.dragome.services.serialization;
 
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import org.w3c.dom.Element;
-
 import com.dragome.helpers.DragomeEntityManager;
-import com.dragome.web.enhancers.jsdelegate.JsCast;
-import com.dragome.web.enhancers.jsdelegate.JsCastInvocationHandler;
+import com.dragome.web.enhancers.jsdelegate.CachedElement;
 
 import flexjson.ObjectBinder;
 import flexjson.factories.BeanObjectFactory;
@@ -32,23 +28,29 @@ public final class ElementFactory extends BeanObjectFactory
 {
 	public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass)
 	{
-		String id= ((Map<String, String>) value).get("id");
-
-		Object object= DragomeEntityManager.get(id);
-
-		if (object != null)
+		if (CachedElement.class.isAssignableFrom(targetClass))
 		{
-			return object;
+			return super.instantiate(context, value, targetType, targetClass);
 		}
 		else
 		{
-			Object instantiate= super.instantiate(context, value, targetType, targetClass);
-			
-			
-//			Object newProxyInstance= Proxy.newProxyInstance(JsCast.class.getClassLoader(), new Class[] { Element.class }, new JsCastInvocationHandler(instantiate));
+			String id= ((Map<String, String>) value).get("id");
 
-			DragomeEntityManager.put(id, instantiate);
-			return instantiate;
+			Object object= DragomeEntityManager.get(id);
+
+			if (object != null)
+			{
+				return object;
+			}
+			else
+			{
+				Object instantiate= super.instantiate(context, value, targetType, targetClass);
+
+				//			Object newProxyInstance= Proxy.newProxyInstance(JsCast.class.getClassLoader(), new Class[] { Element.class }, new JsCastInvocationHandler(instantiate));
+
+				DragomeEntityManager.put(id, instantiate);
+				return instantiate;
+			}
 		}
 	}
 }

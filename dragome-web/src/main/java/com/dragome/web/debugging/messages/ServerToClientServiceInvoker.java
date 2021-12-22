@@ -10,16 +10,19 @@
  ******************************************************************************/
 package com.dragome.web.debugging.messages;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
 
-import org.mockito.cglib.proxy.Proxy;
+import org.nustaq.serialization.FSTConfiguration;
+import org.nustaq.serialization.FSTObjectOutput;
+import org.nustaq.serialization.serializers.FSTDateSerializer;
 
 import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.helpers.Base64Coder;
@@ -69,34 +72,53 @@ public class ServerToClientServiceInvoker
 
 	private static void performInvocations()
 	{
-		StringBuilder message= new StringBuilder();
-
-		if (invocations.size() > 0)
+		try
 		{
-			message.append("_ed.nl(");
+			String result2= "";
+			StringBuilder message= new StringBuilder();
 
-			synchronized (invocations)
+			if (invocations.size() > 0)
 			{
-				List<ServiceInvocation> invocationsTemp= new ArrayList<>(invocations);
-				invocations.clear();
-				for (ServiceInvocation serviceInvocation2 : invocationsTemp)
+				message.append("_ed.nl(");
+
+				synchronized (invocations)
 				{
-					StringBuilder partialMessage= new StringBuilder();
-					serializeServiceInvocation(partialMessage, serviceInvocation2);
-					//				System.out.println(partialMessage);
-					message.append(partialMessage);
-					message.append(",");
+					FSTConfiguration conf= FSTConfiguration.getDefaultConfiguration();
+					conf.setForceSerializable(false);
+					conf.registerSerializer(Method.class, new MethodSerializer(), false);
+					
+					FSTObjectOutput fstObjectOutput= new FSTObjectOutput();
+					fstObjectOutput.writeObject(invocations);
+					byte[] buffer= fstObjectOutput.getBuffer();
+					//					byte[] compress= compress(buffer);
+					result2= new String(Base64Coder.encode(buffer));
+
+					List<ServiceInvocation> invocationsTemp= new ArrayList<>(invocations);
+					invocations.clear();
+					for (ServiceInvocation serviceInvocation2 : invocationsTemp)
+					{
+						StringBuilder partialMessage= new StringBuilder();
+						serializeServiceInvocation(partialMessage, serviceInvocation2);
+						//				System.out.println(partialMessage);
+						message.append(partialMessage);
+						message.append(",");
+					}
 				}
+				message.setLength(message.length() - 1);
+				message.append(")");
 			}
-			message.setLength(message.length() - 1);
-			message.append(")");
+
+			String message3= message.toString().replace("\"null\"", "null");
+
+			byte[] compress= compress(message3.getBytes());
+			message3= new String(Base64Coder.encode(compress));
+
+			WebServiceLocator.getInstance().getServerToClientMessageChannel().send(result2.toString());
 		}
-
-		String message3= message.toString().replace("\"null\"", "null");
-		//		byte[] compress= compress(message3.getBytes());
-		//		message3= new String(Base64Coder.encode(compress));
-
-		WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 	private static void serializeServiceInvocation(StringBuilder message, ServiceInvocation serviceInvocation2)
 	{

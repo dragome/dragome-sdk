@@ -15,7 +15,9 @@
  */
 package java.util;
 
-public interface Map<K, V>
+import java.io.Serializable;
+
+public interface Map<K, V> extends Serializable
 {
 	public void clear();
 	public boolean containsKey(Object key);

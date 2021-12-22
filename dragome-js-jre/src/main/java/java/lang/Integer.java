@@ -113,10 +113,10 @@ public class Integer extends Number implements Comparable<Integer>
 	 */
 	public static int parseInt(String s, int radix)
 	{
-		return __parseAndValidateInt(s, radix, MIN_VALUE, MAX_VALUE);
+		return parseAndValidateInt(s, radix, MIN_VALUE, MAX_VALUE);
 	}
 
-	protected static int __parseAndValidateInt(String s, int radix, int lowerBound, int upperBound) throws NumberFormatException
+	protected static int parseAndValidateInt(String s, int radix, int lowerBound, int upperBound) throws NumberFormatException
 	{
 		if (s == null)
 		{

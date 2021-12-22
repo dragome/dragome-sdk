@@ -15,6 +15,7 @@
  */
 package com.dragome.services;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +24,9 @@ import java.util.Map;
 import com.dragome.commons.ContinueReflection;
 import com.dragome.helpers.DragomeEntityManager;
 
-public class ServiceInvocation
+public class ServiceInvocation implements Serializable
 {
+	private static final long serialVersionUID= 6277750981651592520L;
 	private Class<?> type;
 	private Method method;
 	private List<?> args;

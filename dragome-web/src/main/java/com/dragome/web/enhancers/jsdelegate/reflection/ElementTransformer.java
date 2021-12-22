@@ -20,6 +20,7 @@ import java.lang.reflect.Proxy;
 
 import org.w3c.dom.Element;
 
+import com.dragome.commons.javascript.JsHelper;
 import com.dragome.commons.javascript.ScriptHelper;
 
 public class ElementTransformer
@@ -31,7 +32,7 @@ public class ElementTransformer
 			public void init(Object proxy)
 			{
 				ScriptHelper.put("newElement", proxy, this);
-				ScriptHelper.put("foundElement", foundElement, this);
+				ScriptHelper.put("foundElement", JsHelper.getFinalElement(foundElement), this);
 				ScriptHelper.eval("newElement.jsDelegate= foundElement.node", this);
 			}
 		}, type);

@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -113,7 +114,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		Class<?> clazz= classesByName.get(className);
 		if (clazz == null)
 		{
-			if (className.startsWith("["))
+			java.lang.String suffix= "ARRAYTYPE";
+			boolean containsArrayType= className.endsWith(suffix);
+			if (className.startsWith("[") || containsArrayType)
 			{ // temp fix  for [].getClass();
 
 				String jsClassName= "java_lang_reflect_Array";
@@ -147,6 +150,9 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 					type= "long";
 				else if (type.startsWith("S"))
 					type= "short";
+
+				if (containsArrayType)
+					type= className.substring(0, className.length() - suffix.length());
 
 				clazz= new Class(nativeClass);
 				clazz.isArray= true;
@@ -873,5 +879,44 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		}
 
 		return genericSignature;
+	}
+
+	private volatile transient T[] enumConstants= null;
+
+	public T[] getEnumConstants()
+	{
+		T[] values= getEnumConstantsShared();
+		return (values != null) ? values.clone() : null;
+	}
+
+	T[] getEnumConstantsShared()
+	{
+		if (enumConstants == null)
+		{
+			if (!isEnum())
+				return null;
+			try
+			{
+				final Method values= getMethod("values");
+				java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<Void>()
+				{
+					public Void run()
+					{
+						values.setAccessible(true);
+						return null;
+					}
+				});
+				@SuppressWarnings("unchecked")
+				T[] temporaryConstants= (T[]) values.invoke(null);
+				enumConstants= temporaryConstants;
+			}
+			// These can happen when users concoct enum-like classes
+			// that don't comply with the enum spec.
+			catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException ex)
+			{
+				return null;
+			}
+		}
+		return enumConstants;
 	}
 }
