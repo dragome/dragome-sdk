@@ -6,6 +6,8 @@ import javax.websocket.CloseReason;
 import javax.websocket.RemoteEndpoint.Basic;
 import javax.websocket.Session;
 
+import com.dragome.services.ServiceInvocation;
+import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.web.debugging.messages.ChannelReceiverImpl;
 import com.dragome.web.debugging.messages.Receiver;
@@ -51,7 +53,10 @@ public class DragomeDebugServerEndpoint
 
 	public String onMessage(String message, Session session)
 	{
-		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(message);
+		ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(message);
+		serviceInvocation.invoke();
+		
+//		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(message);
 		return null;
 	}
 

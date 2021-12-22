@@ -40,11 +40,13 @@ public class ClientToServerServiceInvocationHandler implements InvocationHandler
 
 	public Object invokeMethod2(Class type, Method method, Object[] args)
 	{
-		boolean serialized= false;
+		boolean serialized= true;
 
 		String serialize= "";
 
 		serialize= "{\"@id\":0,\"method\":\"${AE}.pushResult:1\",\"id\":\"16\",\"args\":[{\"@id\":1,\"listResult\":null,\"id\":\"${id}\",\"objectResult\":{\"@id\":2,\"result\":\"${result}\",\"class\":\"${CERI}\"},\"class\":\"${SIR}\"}],\"type\":{\"name\":\"${AE}\",\"class\":\"java.lang.Class\"},\"class\":\"${SI}\"}";
+
+		//		serialize= "{\"@id\":0,\"method\":\"${AE}.pushResult:1\",\"id\":\"16\",\"args\":[{\"@id\":1,\"listResult\":null,\"id\":\"${id}\",\"objectResult\":{\"@id\":2,\"result\":\"${result}\",\"class\":\"${CERI}\"},\"class\":\"${SIR}\"}],\"type\":{\"name\":\"${AE}\",\"class\":\"java.lang.Class\"},\"class\":\"${SI}\"}";
 		//	serialize= "{\"@id\":0,\"method\":\"${AE}.pushResult:1\",\"id\":\"292\",\"args\":[{\"@id\":1,\"result\":{\"@id\":2,\"result\":\"${result}\",\"class\":\"${CERI}\"},\"id\":\"${id}\",\"class\":\"${SIR}\"}],\"type\":{\"name\":\"${AE}\",\"class\":\"java.lang.Class\"},\"class\":\"${SI}\"}";
 
 		serialize= serialize.replace("${AE}", ApplicationExecutor.class.getName());
@@ -62,18 +64,26 @@ public class ClientToServerServiceInvocationHandler implements InvocationHandler
 				serialize= serialize.replace("${id}", serviceInvocationResult.getId());
 				serialized= true;
 			}
+			else
+				serialize= serializeResult(type, method, args);
 		}
-
-		if (!serialized)
+		else
 		{
-			List<Object> arguments= args != null ? Arrays.asList(args) : new ArrayList<Object>();			
-			ServiceInvocation serviceInvocation= new ServiceInvocation(type, method, arguments);
-			serialize= ServiceLocator.getInstance().getSerializationService().serialize(serviceInvocation);
-			//	    System.out.println(serialize);
+			serialize= serializeResult(type, method, args);
 		}
 
 		Sender serverMessageChannel= WebServiceLocator.getInstance().getClientToServerMessageChannel();
 		serverMessageChannel.send(serialize);
 		return null;
+	}
+
+	public String serializeResult(Class type, Method method, Object[] args)
+	{
+		String serialize;
+		List<Object> arguments= args != null ? Arrays.asList(args) : new ArrayList<Object>();
+		ServiceInvocation serviceInvocation= new ServiceInvocation(type, method, arguments);
+		serialize= ServiceLocator.getInstance().getSerializationService().serialize(serviceInvocation);
+		//	    System.out.println(serialize);
+		return serialize;
 	}
 }
