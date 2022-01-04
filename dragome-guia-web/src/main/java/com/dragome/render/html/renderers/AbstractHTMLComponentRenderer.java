@@ -22,9 +22,7 @@ import java.util.Set;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventTarget;
 
-import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;
@@ -43,6 +41,7 @@ import com.dragome.templates.TemplateChangeListener;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> implements ComponentRenderer<Element, T>
 {
@@ -56,15 +55,22 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 	public static void setElementInnerHTML(Element label1, String aText)
 	{
-		ScriptHelper.put("element", label1, null);
-		ScriptHelper.put("value", aText, null);
-		ScriptHelper.evalNoResult("element.node.innerHTML= value", null);
+		ElementExtension elementExtension= JsCast.castTo(label1, ElementExtension.class);
+		elementExtension.setInnerHTML(aText);
+
+		//		
+		//		ScriptHelper.put("element", label1, null);
+		//		ScriptHelper.put("value", aText, null);
+		//		ScriptHelper.evalNoResult("element.node.innerHTML= value", null);
 	}
 
 	public static String getElementInnerHTML(Element label1)
 	{
-		ScriptHelper.put("element", label1, null);
-		return (String) ScriptHelper.eval("element.node.innerHTML", null);
+		ElementExtension elementExtension= JsCast.castTo(label1, ElementExtension.class);
+		return elementExtension.getInnerHTML();
+
+		//		ScriptHelper.put("element", label1, null);
+		//		return (String) ScriptHelper.eval("element.node.innerHTML", null);
 	}
 
 	public void addListeners(final VisualComponent visualComponent, final Element element)
@@ -84,7 +90,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		});
 
 		addListeners(visualComponent, element, null);
-		
+
 		visualComponent.getStyle().setName(element.getAttribute("class"));
 		visualComponent.getStyle().fireStyleChanged();
 	}
@@ -101,10 +107,10 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		addListener(visualComponent, element, MouseOutListener.class, MultipleEventListener.MOUSEOUT, expectedType);
 		addListener(visualComponent, element, BlurListener.class, MultipleEventListener.BLUR, expectedType);
 
-		EventTarget eventTarget= JsCast.castTo(element, EventTarget.class);
+		ElementExtension eventTarget= JsCast.castTo(element, ElementExtension.class);
 
-		for (String listener : listeners)
-			eventTarget.addEventListener(listener, new MultipleEventListener<T>(visualComponent), false);
+//		for (String listener : listeners)
+//			eventTarget.addEventListener(listener, new MultipleEventListener<T>(visualComponent), false);
 	}
 
 	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName, Class<? extends EventListener> expectedType)
@@ -114,7 +120,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
-	
+
 	public boolean matches(T aVisualComponent, Template child)
 	{
 		boolean compatible= isTemplateCompatible(child);
@@ -127,7 +133,6 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		return compatible;
 	}
-
 
 	public Canvas<Element> render(T aVisualComponent)
 	{
@@ -170,7 +175,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 				DomHelper.makeOriginalClonedVisible(attribute);
 			}
 		}
-		
+
 	}
 
 	public boolean isTemplateCompatible(Template child)

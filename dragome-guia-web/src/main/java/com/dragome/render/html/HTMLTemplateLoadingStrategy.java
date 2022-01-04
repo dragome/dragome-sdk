@@ -17,6 +17,7 @@ package com.dragome.render.html;
 
 import java.util.List;
 
+import org.cobraparser.html.domimpl.HTMLDivElementImpl;
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
@@ -24,6 +25,8 @@ import com.dragome.render.html.renderers.AbstractHTMLComponentRenderer;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateLoadingStrategy;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 {
@@ -65,7 +68,9 @@ public class HTMLTemplateLoadingStrategy implements TemplateLoadingStrategy
 		element.appendChild(childElement);
 
 		getContainerElement().getParentNode().appendChild(element);
-		AbstractHTMLComponentRenderer.setElementInnerHTML(childElement, templateContent);
+		
+		ElementExtension elementExtension= JsCast.castTo(childElement, ElementExtension.class);
+		elementExtension.setInnerHTML(templateContent);
 
 		String aTemplateName= "loaded-template-" + name;
 		childElement.setAttribute("data-template", aTemplateName);

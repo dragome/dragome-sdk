@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.w3c.dom.html.HTMLInputElement;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
@@ -34,6 +35,7 @@ import com.dragome.services.WebServiceLocator;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCheckbox>
 {
@@ -108,10 +110,12 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 	{
 		boolean checked= checkbox.getValue() != null && checkbox.getValue();
 		String isChecked= checked ? "true" : "false";
-
-		ScriptHelper.put("checked", isChecked, this);
-		ScriptHelper.put("button1", button1, this);
-		ScriptHelper.evalNoResult("button1.node.checked= (checked == 'true')", this);
+		
+		HTMLInputElement htmlInputElement= JsCast.castTo(button1, HTMLInputElement.class);
+		htmlInputElement.setChecked(checked);
+//		ScriptHelper.put("checked", isChecked, this);
+//		ScriptHelper.put("button1", button1, this);
+//		ScriptHelper.evalNoResult("button1.node.checked= (checked == 'true')", this);
 		//				
 		//				if (checked)
 		//					button1.setAttribute("checked", "checked");

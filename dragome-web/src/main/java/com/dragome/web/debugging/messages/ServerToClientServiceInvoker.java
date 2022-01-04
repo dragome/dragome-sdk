@@ -159,7 +159,7 @@ public class ServerToClientServiceInvoker
 		message.append(")");
 	}
 
-	private static String escapeChars(String value)
+	public static String escapeChars(String value)
 	{
 		return value != null ? value.replace("\\\"", "\\\\\"").replace("\"", "\\\"").replace("\\n", "\\\\n").replace("\\r", "\\\\r").replace("\n", "\\n").replace("\r", "\\\\r") : value;
 	}

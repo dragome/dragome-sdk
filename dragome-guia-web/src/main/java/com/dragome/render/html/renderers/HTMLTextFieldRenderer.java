@@ -18,9 +18,8 @@ package com.dragome.render.html.renderers;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLInputElement;
 
-import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualTextField;
@@ -32,6 +31,7 @@ import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualTextField<Object>>
 {
@@ -64,8 +64,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 				final Element textFieldElement= templateCompatible ? textFieldElement1 : (Element) t2.getContent().getValue();
 				textFieldElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-				
-				
+
 				//				final DomHandler domHandler= ServiceLocator.getInstance().getDomHandler();
 				//				final Element textFieldElement= domHandler.getDocument().createElement("input");
 
@@ -75,9 +74,13 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 					{
 						String value= visualTextField.getRenderer().render(event.getValue());
 						textFieldElement.setAttribute("value", value);
-						ScriptHelper.put("textFieldElement", textFieldElement, this);
-						ScriptHelper.put("value", value, this);
-						ScriptHelper.eval("textFieldElement.node.value=value", this);
+
+						HTMLInputElement htmlInputElement= JsCast.castTo(textFieldElement, HTMLInputElement.class);
+						htmlInputElement.setValue(value);
+						
+//						ScriptHelper.put("textFieldElement", textFieldElement, this);
+//						ScriptHelper.put("value", value, this);
+//						ScriptHelper.eval("textFieldElement.node.value=value", this);
 					}
 				});
 
@@ -94,8 +97,10 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				{
 					public void focusGained(VisualComponent component)
 					{
-						ScriptHelper.put("textFieldElement", textFieldElement, this);
-						ScriptHelper.evalNoResult("textFieldElement.node.focus()", this);
+						HTMLInputElement htmlInputElement= JsCast.castTo(textFieldElement, HTMLInputElement.class);
+						htmlInputElement.focus();
+						//						ScriptHelper.put("textFieldElement", textFieldElement, this);
+						//						ScriptHelper.evalNoResult("textFieldElement.node.focus()", this);
 					}
 
 					public void focusLost(VisualComponent component)
@@ -107,20 +112,23 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				textFieldElement.setAttribute("type", "text");
 				textFieldElement.setAttribute("value", value);
 
-				ScriptHelper.put("value", value == null ? "" : value, this);
-				ScriptHelper.put("textFieldElement", textFieldElement, this);
-				ScriptHelper.eval("textFieldElement.node.value=value", this);
+				HTMLInputElement htmlInputElement= JsCast.castTo(textFieldElement, HTMLInputElement.class);
 
-				
-				EventTarget eventTarget= JsCast.castTo(textFieldElement, EventTarget.class);
+				htmlInputElement.setValue(value);
+
+				//				ScriptHelper.put("value", value == null ? "" : value, this);
+				//				ScriptHelper.put("textFieldElement", textFieldElement, this);
+				//				ScriptHelper.eval("textFieldElement.node.value=value", this);
+
+				ElementExtension eventTarget= JsCast.castTo(textFieldElement, ElementExtension.class);
 				eventTarget.addEventListener("change", new EventListener()
 				{
 					public void handleEvent(Event evt)
 					{
-						updateComponentValue(visualTextField, textFieldElement);					
+						updateComponentValue(visualTextField, textFieldElement);
 					}
 				}, false);
-				
+
 				addListeners(visualTextField, textFieldElement);
 			}
 		});
@@ -130,11 +138,13 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 	private void updateComponentValue(final VisualTextField<Object> visualTextField, final Element textFieldElement)
 	{
-		ScriptHelper.put("textFieldElement", textFieldElement, this);
-		String value= (String) ScriptHelper.eval("textFieldElement.node.value", this);
+		HTMLInputElement htmlInputElement= JsCast.castTo(textFieldElement, HTMLInputElement.class);
+		String value= htmlInputElement.getValue();
+		//		ScriptHelper.put("textFieldElement", textFieldElement, this);
+		//		String value= (String) ScriptHelper.eval("textFieldElement.node.value", this);
 		visualTextField.setValue(value);
 	}
-	
+
 	public boolean isTemplateCompatible(Template child)
 	{
 		Element element= (Element) child.getContent().getValue();

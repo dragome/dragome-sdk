@@ -15,10 +15,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import com.dragome.commons.javascript.ScriptHelperInterface;
+import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.ServiceFactory;
 import com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor;
 import com.dragome.web.debugging.interfaces.CrossExecutionResult;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.BrowserDomHandler;
+import com.dragome.web.html.dom.w3c.CobraDomHandler;
+import com.dragome.web.html.dom.w3c.CombinedDomInstance;
 
 public class RemoteScriptHelper implements ScriptHelperInterface
 {
@@ -59,6 +63,10 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 	public void put(String name, Object value, Object caller)
 	{
 		String methodName= getMethodName();
+
+		CombinedDomInstance fromLocal= CombinedDomInstance.getFromLocal(value);
+		if (fromLocal != null)
+			value= fromLocal.getRemoteInstance();
 
 		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), methodName));
 	}
@@ -144,7 +152,8 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 		System.setProperty(SCRIPTHELPER_METHOD_NAME, getMethodName());
 
 		Object result= eval(script, callerInstance);
-		T castTo= JsCast.castTo(result, castType, callerInstance);
+
+		T castTo= new BrowserDomHandler().castTo(result, castType, callerInstance);
 
 		System.clearProperty(SCRIPTHELPER_METHOD_NAME);
 		return castTo;

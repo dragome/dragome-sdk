@@ -16,53 +16,11 @@ import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.services.WebServiceLocator;
 
 public class JsCast
 {
-	@SuppressWarnings("unchecked")
-	public static <T> T castTo(Object instance, Class<T> type, Object callerInstance)
-	{
-		try
-		{
-			if (instance == null)
-				return null;
-
-			ScriptHelper.put("instance", instance, callerInstance);
-
-			if (type.equals(Float.class))
-				return (T) new Float(ScriptHelper.evalFloat("instance", callerInstance));
-			else if (type.equals(Integer.class))
-				return (T) new Integer(ScriptHelper.evalInt("instance", callerInstance));
-			else if (type.equals(Double.class))
-				return (T) new Double(ScriptHelper.evalDouble("instance", callerInstance));
-			else if (type.equals(Long.class))
-				return (T) new Long(ScriptHelper.evalLong("instance", callerInstance));
-			else if (type.equals(Boolean.class))
-				return (T) new Boolean(ScriptHelper.evalBoolean("instance", callerInstance));
-			else if (type.equals(Short.class))
-				return (T) new Short((short) ScriptHelper.evalInt("instance", callerInstance));
-			else if (type.equals(String.class))
-				return (T) ScriptHelper.eval("instance", callerInstance);
-			else
-			{
-				String delegateClassName= JsCast.createDelegateClassName(type.getName());
-				Class<?> class2= Class.forName(delegateClassName);
-				Object newInstance= class2.newInstance();
-
-				ScriptHelper.put("delegate", newInstance, callerInstance);
-				if (ScriptHelper.eval("instance.node", callerInstance) == null)
-					ScriptHelper.eval("delegate.node= instance", callerInstance);
-				else
-					ScriptHelper.eval("delegate.node= instance.node", callerInstance);
-
-				return (T) newInstance;
-			}
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
+	
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
 	{
@@ -103,7 +61,7 @@ public class JsCast
 
 	public static <T> T castTo(Object instance, Class<T> type)
 	{
-		return castTo(instance, type, null);
+		return WebServiceLocator.getInstance().getDomHandler().castTo(instance, type, null);
 	}
 
 	public static <T> T createInstanceOf(Class<T> type)

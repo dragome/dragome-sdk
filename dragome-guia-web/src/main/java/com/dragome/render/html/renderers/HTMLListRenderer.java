@@ -85,7 +85,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				renderInnerContent(visualList, selectElement);
 
-				EventTarget eventTarget= JsCast.castTo(selectElement, EventTarget.class);
+				ElementExtension eventTarget= JsCast.castTo(selectElement, ElementExtension.class);
 				eventTarget.addEventListener("change", new EventListener()
 				{
 					public void handleEvent(Event evt)

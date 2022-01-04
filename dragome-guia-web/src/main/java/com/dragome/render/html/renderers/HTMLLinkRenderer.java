@@ -24,6 +24,8 @@ import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 {
@@ -55,16 +57,22 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 					Renderer<String> renderer= visualLink.getRenderer();
 					String aText= renderer.render(visualLink.getValue());
 					
-					ScriptHelper.put("element", label1, null);
-					ScriptHelper.put("value", aText, null);
-					Object node= ScriptHelper.eval("element.node", null);
-					ScriptHelper.put("e", node, null);
-
-					Object found= ScriptHelper.eval("e.querySelector(\"[data-template='replaced: label'\")", null);
-					if (found != null) 
-						ScriptHelper.put("e", found, null);
-
-					ScriptHelper.evalNoResult("e.innerHTML= value", null);
+					ElementExtension castTo= JsCast.castTo(label1, ElementExtension.class);
+					
+					Element querySelector= castTo.querySelector("[data-template='replaced: label']");
+					if (querySelector != null) 
+						castTo.setInnerHTML(aText);
+					
+//					ScriptHelper.put("element", label1, null);
+//					ScriptHelper.put("value", aText, null);
+//					Object node= ScriptHelper.eval("element.node", null);
+//					ScriptHelper.put("e", node, null);
+//
+//					Object found= ScriptHelper.eval("e.querySelector(\"[data-template='replaced: label'\")", null);
+//					if (found != null) 
+//						ScriptHelper.put("e", found, null);
+//
+//					ScriptHelper.evalNoResult("e.innerHTML= value", null);
 
 //					setElementInnerHTML(label1, aText == null ? "null" : aText);
 				}

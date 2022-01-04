@@ -15,10 +15,15 @@
  */
 package com.dragome.web.html.dom.w3c;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.services.WebServiceLocator;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.DomHandler;
 
@@ -43,5 +48,76 @@ public class BrowserDomHandler implements DomHandler
 			result= JsCast.castTo(object, Element.class);
 
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T castTo(Object instance, Class<T> type, Object callerInstance)
+	{
+		boolean clientSide= WebServiceLocator.getInstance().isClientSide();
+
+		if (instance != null && !clientSide && type.isAssignableFrom(instance.getClass()))
+			return (T) instance;
+
+		if (true || clientSide)
+			return createCastedInstance(instance, type, callerInstance);
+		else
+		{
+			T result= (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new AbstractProxyRelatedInvocationHandler()
+			{
+				private Object castedInstance;
+
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+				{
+					if (castedInstance == null)
+						castedInstance= createCastedInstance(instance, type, callerInstance);
+
+					return method.invoke(castedInstance, args);
+				}
+
+			});
+
+			return result;
+		}
+	}
+
+	public <T> T createCastedInstance(Object instance, Class<T> type, Object callerInstance)
+	{
+		try
+		{
+			if (instance == null)
+				return null;
+
+			ScriptHelper.put("instance", instance, callerInstance);
+
+			if (type.equals(Float.class))
+				return (T) new Float(ScriptHelper.evalFloat("instance", callerInstance));
+			else if (type.equals(Integer.class))
+				return (T) new Integer(ScriptHelper.evalInt("instance", callerInstance));
+			else if (type.equals(Double.class))
+				return (T) new Double(ScriptHelper.evalDouble("instance", callerInstance));
+			else if (type.equals(Long.class))
+				return (T) new Long(ScriptHelper.evalLong("instance", callerInstance));
+			else if (type.equals(Boolean.class))
+				return (T) new Boolean(ScriptHelper.evalBoolean("instance", callerInstance));
+			else if (type.equals(Short.class))
+				return (T) new Short((short) ScriptHelper.evalInt("instance", callerInstance));
+			else if (type.equals(String.class))
+				return (T) ScriptHelper.eval("instance", callerInstance);
+			else
+			{
+				String delegateClassName= JsCast.createDelegateClassName(type.getName());
+				Class<?> class2= Class.forName(delegateClassName);
+				Object newInstance= class2.newInstance();
+
+				ScriptHelper.put("delegate", newInstance, callerInstance);
+				ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
+
+				return (T) newInstance;
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 }

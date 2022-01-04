@@ -13,6 +13,13 @@ EventDispatcher = {};
 _ed = EventDispatcher;
 var __next_objid = 1;
 
+function byXpath(parentId, xpathExpression)
+{
+	var parent= com_dragome_helpers_DragomeEntityManager.$get___java_lang_String$java_lang_Object(parentId)
+
+	return document.evaluate(xpathExpression, parent.node, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+}
+
 function objectId(obj)
 {
     if (obj == null)

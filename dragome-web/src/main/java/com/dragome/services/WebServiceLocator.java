@@ -32,6 +32,7 @@ import com.dragome.web.dispatcher.EventDispatcher;
 import com.dragome.web.dispatcher.EventDispatcherImpl;
 import com.dragome.web.html.dom.DomHandler;
 import com.dragome.web.html.dom.w3c.BrowserDomHandler;
+import com.dragome.web.html.dom.w3c.CobraDomHandler;
 import com.dragome.web.services.BrowserParametersHandler;
 import com.dragome.web.services.ClientSideServiceFactory;
 import com.dragome.web.services.RequestExecutorImpl;
@@ -95,7 +96,7 @@ public class WebServiceLocator
 	public DomHandler getDomHandler()
 	{
 		if (domHandler == null)
-			domHandler= new BrowserDomHandler();
+			domHandler= new CobraDomHandler();
 
 		return domHandler;
 	}

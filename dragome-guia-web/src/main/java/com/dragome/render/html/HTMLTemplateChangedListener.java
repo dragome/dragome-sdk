@@ -96,7 +96,8 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 						String className= element.getAttribute("class");
 						Element newValue= (Element) newTemplateContent.getValue();
 						newValue.setAttribute("class", className);
-						parentNode.replaceChild(newValue, element);
+						if (newValue != element)
+							parentNode.replaceChild(newValue, element);
 					}
 					//					else
 					//						System.out.println("sdgasdg");
@@ -136,7 +137,8 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		{
 			Element previousElement= (Element) previousChild.getContent().getValue();
 			Element newElement= (Element) newChild.getContent().getValue();
-			previousElement.getParentNode().replaceChild(newElement, previousElement);
+			if (previousElement != newElement)
+				previousElement.getParentNode().replaceChild(newElement, previousElement);
 		}
 	}
 

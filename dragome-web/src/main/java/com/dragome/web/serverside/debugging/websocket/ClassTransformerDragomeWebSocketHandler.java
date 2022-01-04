@@ -11,6 +11,9 @@
 package com.dragome.web.serverside.debugging.websocket;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -26,6 +29,7 @@ import com.dragome.services.ServiceLocator;
 public class ClassTransformerDragomeWebSocketHandler
 {
 	private static ClassLoader classLoader;
+	private static Map<String, Method> methods= Collections.synchronizedMap(new HashMap<>());
 
 	private String getClassName2()
 	{
@@ -37,6 +41,7 @@ public class ClassTransformerDragomeWebSocketHandler
 	{
 		session.setMaxIdleTimeout(0);
 		session.setMaxTextMessageBufferSize(10000000);
+		session.setMaxBinaryMessageBufferSize(10000000);
 		executeMethod(getClassName2(), "onOpen", session);
 	}
 
@@ -56,35 +61,50 @@ public class ClassTransformerDragomeWebSocketHandler
 	{
 		try
 		{
-			if (classLoader == null)
+			updateClassloader();
+			
+			String key= className + "." + methodName;
+			Method foundMethod= methods.get(key);
+
+			Class<?> loadClass;
+
+			if (foundMethod == null)
 			{
-				ClassLoader lastContextClassLoader= Thread.currentThread().getContextClassLoader();
-				classLoader= lastContextClassLoader;
-
-				DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
-				if (configurator != null)
-				{
-					ClassLoader parentClassloader= ClassTransformerDragomeWebSocketHandler.class.getClassLoader();
-					classLoader= configurator.getNewClassloaderInstance(parentClassloader, parentClassloader);
-				}
+				loadClass= classLoader.loadClass(className);
+				for (Method method : loadClass.getMethods())
+					if (method.getName().equals(methodName))
+					{
+						methods.put(key, method);
+						foundMethod= method;
+					}
 			}
+			else
+				loadClass= foundMethod.getDeclaringClass();
 
-			Thread.currentThread().setContextClassLoader(classLoader);
-
-			Class<?> loadClass= classLoader.loadClass(className);
-
-			for (Method method : loadClass.getMethods())
-			{
-				if (method.getName().equals(methodName))
-					return method.invoke(loadClass.newInstance(), args);
-			}
+			return foundMethod != null ? foundMethod.invoke(loadClass.newInstance(), args) : null;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
 
-		return null;
+	public static void updateClassloader()
+	{
+		if (classLoader == null)
+		{
+			ClassLoader lastContextClassLoader= Thread.currentThread().getContextClassLoader();
+			classLoader= lastContextClassLoader;
+
+			DragomeConfigurator configurator= ServiceLocator.getInstance().getConfigurator();
+			if (configurator != null)
+			{
+				ClassLoader parentClassloader= ClassTransformerDragomeWebSocketHandler.class.getClassLoader();
+				classLoader= configurator.getNewClassloaderInstance(parentClassloader, parentClassloader);
+			}
+		}
+
+		Thread.currentThread().setContextClassLoader(classLoader);
 	}
 }
