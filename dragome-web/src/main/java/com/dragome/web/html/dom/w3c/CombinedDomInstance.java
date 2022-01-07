@@ -15,6 +15,7 @@ import org.cobraparser.html.domimpl.HTMLDocumentImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
@@ -72,10 +73,24 @@ public class CombinedDomInstance
 				List<String> modifierMethods= Arrays.asList("insertBefore", "appendChild", "replaceChild", "removeChild", "setTextContent");
 				if (modifierMethods.contains(method.getName()) || method.getReturnType() == void.class || method.getReturnType() == Void.class || !discardReturnValue)
 				{
-					boolean isNotVoidMethod= method.getName().equals("cloneNode") || method.getName().equals("createElement") || method.getName().equals("appendChild") || method.getName().equals("setTextContent") || method.getName().equals("removeChild") || method.getName().equals("insertBefore") || method.getName().equals("createTextNode") || method.getName().equals("replaceChild");
+					boolean isAddListenerMethod= method.getName().equals("addEventListener");
+					boolean isNotVoidMethod= method.getName().equals("cloneNode") //
+							|| method.getName().equals("createElement") //
+							|| method.getName().equals("appendChild") //
+							|| method.getName().equals("setTextContent")// 
+							|| method.getName().equals("removeChild") //
+							|| method.getName().equals("insertBefore") //
+							|| method.getName().equals("createTextNode") //
+							|| isAddListenerMethod//
+							|| method.getName().equals("replaceChild");
+
 					if (!Proxy.isProxyClass(remote.getClass()) && isNotVoidMethod)
 					{
-						try
+						if (isAddListenerMethod)
+						{
+							JsCast.addEventListener((EventTarget) remote, args[0].toString(), (EventListener) args[1]);
+						}
+						else
 						{
 							String delegateClassName= JsCast.createDelegateClassName(ElementExtension.class.getName());
 							Class<?> class2= Class.forName(delegateClassName);
@@ -102,25 +117,9 @@ public class CombinedDomInstance
 							ScriptHelper.evalNoResult(script, this);
 							invoke2= newInstance;
 						}
-						catch (ClassNotFoundException | InstantiationException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					}
-					else if (!method.getName().equals("addEventListener"))
-						invoke2= getActualMethod(method, remote).invoke(remote, convertArgs(args, false));
 					else
-					{
-						if (rr++ % 5 == 0)
-							ServiceLocator.getInstance().getExecutorService().execute(new Runnable()
-							{
-								public void run()
-								{
-									ScriptHelper.eval("document", this);
-								}
-							});
-					}
+						invoke2= getActualMethod(method, remote).invoke(remote, convertArgs(args, false));
 
 					if (!discardReturnValue && invoke2 instanceof Element && !(invoke2 instanceof ElementExtension))
 						invoke2= new BrowserDomHandler().castTo(invoke2, ElementExtension.class, this);
@@ -142,7 +141,7 @@ public class CombinedDomInstance
 			if (result != null && !result.getClass().isPrimitive() && !(result instanceof Boolean) && !(result instanceof String) && !(result instanceof Number))
 				new CombinedDomInstance(result, remoteResult, isBrowserReference);
 		}
-		catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+		catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | InstantiationException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -181,28 +180,38 @@ public class CombinedDomInstance
 				if (String.class.isAssignableFrom(method.getReturnType()))
 					return "";
 
-				String script= executeRemote(localInstance2, method, args);
-
-				if (script.isEmpty())
-					return null;
-
-				if (realResult)
+				if (method.getName().equals("addEventListener"))
 				{
-					String delegateClassName= JsCast.createDelegateClassName(ElementExtension.class.getName());
-					Class<?> class2= Class.forName(delegateClassName);
-					Object newInstance= class2.newInstance();
-
-					ScriptHelper.put("instance", script, this);
-					ScriptHelper.put("delegate", newInstance, this);
-					ScriptHelper.evalNoResult("delegate.node= eval(instance)", this);
-
-					return newInstance;
+					String script= createElementAccessorScript(localInstance2);
+					ElementExtension eval= ScriptHelper.evalCasting(script, ElementExtension.class, this);
+					JsCast.addEventListener((EventTarget) eval, args[0].toString(), (EventListener) args[1]);
+					return null;
 				}
 				else
 				{
-					String script2= script;
-					ScriptHelper.evalNoResult(script2, this);
-					return null;
+					String script= executeRemote(localInstance2, method, args);
+
+					if (script.isEmpty())
+						return null;
+
+					if (realResult)
+					{
+						String delegateClassName= JsCast.createDelegateClassName(ElementExtension.class.getName());
+						Class<?> class2= Class.forName(delegateClassName);
+						Object newInstance= class2.newInstance();
+
+						ScriptHelper.put("instance", script, this);
+						ScriptHelper.put("delegate", newInstance, this);
+						ScriptHelper.evalNoResult("delegate.node= eval(instance)", this);
+
+						return newInstance;
+					}
+					else
+					{
+						String script2= script;
+						ScriptHelper.evalNoResult(script2, this);
+						return null;
+					}
 				}
 			}
 
@@ -213,12 +222,9 @@ public class CombinedDomInstance
 				{
 					if (localInstance2 instanceof Node && ((Node) localInstance2).getParentNode() != null)
 					{
-						if (!method.getName().equals("addEventListener") && !method.getName().equals("getNodeName") && !method.getName().equals("getTagName"))
+						if (!method.getName().equals("getNodeName") && !method.getName().equals("getTagName"))
 						{
-							Element element= (Element) localInstance2;
-							Node remoteParent= findTopParent(element);
-							String parentVariableName= createParentVariableName(remoteParent);
-							script= createScript(element, parentVariableName);
+							script= createElementAccessorScript(localInstance2);
 
 							script+= "." + adaptNameToJs(method);
 
@@ -268,10 +274,20 @@ public class CombinedDomInstance
 				}
 				return script;
 			}
+
+			public String createElementAccessorScript(Object localInstance2)
+			{
+				String script;
+				Element element= (Element) localInstance2;
+				Node remoteParent= findTopParent(element);
+				String parentVariableName= createParentVariableName(remoteParent);
+				script= createScript(element, parentVariableName);
+				return script;
+			}
 		};
 
 		h.setProxy(this);
-		return Proxy.newProxyInstance(getClass().getClassLoader(), this.getProxyInterfaces(), h);
+		return Proxy.newProxyInstance(getClass().getClassLoader(), this.getProxyInterfaces(localInstance), h);
 	}
 
 	public Node findTopParent(Node node)
@@ -353,7 +369,15 @@ public class CombinedDomInstance
 		return remote.getClass().getMethod(method.getName(), method.getParameterTypes());
 	}
 
-	public Class<?>[] getProxyInterfaces()
+	public static Class<?>[] getProxyInterfaces(Object localInstance)
+	{
+		Class<?>[] interfaces;
+		List<Class<?>> interfacesList= getInterfaces(localInstance);
+		interfaces= interfacesList.toArray(new Class[0]);
+		return interfaces;
+	}
+
+	public static List<Class<?>> getInterfaces(Object localInstance)
 	{
 		Class<?>[] interfaces= new Class<?>[] {};
 		Class<?>[] interfaces2= localInstance.getClass().getInterfaces();
@@ -364,8 +388,7 @@ public class CombinedDomInstance
 			interfaces= new Class[] { Element.class, ElementExtension.class, EventTarget.class };
 			interfacesList.addAll(Arrays.asList(interfaces));
 		}
-		interfaces= interfacesList.toArray(new Class[0]);
-		return interfaces;
+		return interfacesList;
 	}
 
 	//	public Object findByXpath(Object object)

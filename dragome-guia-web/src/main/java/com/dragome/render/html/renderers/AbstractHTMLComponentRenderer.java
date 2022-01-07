@@ -109,8 +109,8 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		ElementExtension eventTarget= JsCast.castTo(element, ElementExtension.class);
 
-//		for (String listener : listeners)
-//			eventTarget.addEventListener(listener, new MultipleEventListener<T>(visualComponent), false);
+		for (String listener : listeners)
+			eventTarget.addEventListener(listener, new MultipleEventListener<T>(visualComponent), false);
 	}
 
 	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName, Class<? extends EventListener> expectedType)

@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.html.HTMLInputElement;
+import org.w3c.dom.html.HTMLOptionElement;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
@@ -97,8 +98,8 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 		{
 			public void clickPerformed(VisualComponent aVisualComponent)
 			{
-				ScriptHelper.put("e", button1, this);
-				boolean value= ScriptHelper.evalBoolean("e.node.checked", this);
+				HTMLInputElement htmlInputElement= JsCast.castTo(button1, HTMLInputElement.class);
+				boolean value= htmlInputElement.getChecked();
 				checkbox.setValue(value);
 			}
 		});

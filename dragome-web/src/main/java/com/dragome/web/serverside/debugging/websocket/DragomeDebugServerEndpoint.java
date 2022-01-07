@@ -53,10 +53,10 @@ public class DragomeDebugServerEndpoint
 
 	public String onMessage(String message, Session session)
 	{
-		ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(message);
-		serviceInvocation.invoke();
+//		ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(message);
+//		serviceInvocation.invoke();
 		
-//		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(message);
+		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(message);
 		return null;
 	}
 

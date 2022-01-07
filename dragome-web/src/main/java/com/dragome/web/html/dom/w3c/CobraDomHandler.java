@@ -17,9 +17,10 @@ package com.dragome.web.html.dom.w3c;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashSet;
+import java.util.List;
 
 import org.cobraparser.DummyHtmlRendererContext;
 import org.cobraparser.html.domimpl.HTMLDocumentImpl;
@@ -32,7 +33,6 @@ import org.xml.sax.SAXException;
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelper;
-import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.DomHandler;
 
 @SuppressWarnings("unchecked")
@@ -101,7 +101,7 @@ public class CobraDomHandler implements DomHandler
 		};
 
 		h.setProxy(combinedDomInstance);
-		return Proxy.newProxyInstance(getClass().getClassLoader(), combinedDomInstance.getProxyInterfaces(), h);
+		return Proxy.newProxyInstance(getClass().getClassLoader(), combinedDomInstance.getProxyInterfaces(combinedDomInstance.getLocalInstance()), h);
 	}
 
 	public Element getElementBySelector(String selector)
@@ -128,9 +128,13 @@ public class CobraDomHandler implements DomHandler
 			Object remoteInstance= combinedDomInstance.getRemoteInstance();
 
 			T castTo;
+			List<Class<?>> interfaces= combinedDomInstance.getInterfaces(instance);
+			interfaces.add(type);
+			Class[] interfacesArray= new HashSet<>(interfaces).toArray(new Class[0]);
+
 			if (Proxy.isProxyClass(remoteInstance.getClass()))
 			{
-				castTo= (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new AbstractProxyRelatedInvocationHandler()
+				AbstractProxyRelatedInvocationHandler h= new AbstractProxyRelatedInvocationHandler()
 				{
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 					{
@@ -138,11 +142,13 @@ public class CobraDomHandler implements DomHandler
 						Object invoke= actualMethod.invoke(remoteInstance, args);
 						return invoke;
 					}
-				});
+				};
+				h.setProxy(combinedDomInstance);
+				castTo= (T) Proxy.newProxyInstance(getClass().getClassLoader(), interfacesArray, h);
 			}
 			else
 				castTo= new BrowserDomHandler().castTo(remoteInstance, type, callerInstance);
-			
+
 			combinedDomInstance.setRemoteInstance(castTo);
 			combinedDomInstance.updateMaps(combinedDomInstance.getLocalInstance(), castTo, combinedDomInstance);
 			return (T) instance;

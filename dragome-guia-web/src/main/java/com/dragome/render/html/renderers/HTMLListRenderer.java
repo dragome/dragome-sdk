@@ -24,6 +24,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLInputElement;
+import org.w3c.dom.html.HTMLOptionElement;
+import org.w3c.dom.html.HTMLSelectElement;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
@@ -173,8 +176,9 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		{
 			Node item= options.item(i);
 			Element element= (Element) item;
-			ScriptHelper.put("e", element, this);
-			boolean isSelected= ScriptHelper.evalBoolean("e.node.selected", this);
+			
+			HTMLOptionElement htmlOptionElement= JsCast.castTo(element, HTMLOptionElement.class);
+			boolean isSelected= htmlOptionElement.getSelected();
 			String value= element.getAttribute("value");
 			Object selectedObject= findSelectedItem(visualList, value);
 
