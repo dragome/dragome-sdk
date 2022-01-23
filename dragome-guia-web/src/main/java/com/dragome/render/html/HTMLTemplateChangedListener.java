@@ -63,17 +63,30 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 			Element referenceElement= (Element) referenceChild.getContent().getValue();
 			childrenList.add(childrenList.indexOf(referenceChild) + 1, newChild);
 			children.put(newChild.getName(), newChild);
-			Node nextSibling= referenceElement.getNextSibling();
+			Node nextSibling= findNextSiblingElement(referenceElement);
 			Element newElement= (Element) newChild.getContent().getValue();
+			Node parentNode= referenceElement.getParentNode();
 			if (nextSibling != null)
 			{
-				referenceElement.getParentNode().insertBefore(newElement, nextSibling);
+				parentNode.replaceChild(newElement, referenceElement);
+				parentNode.insertBefore(referenceElement, newElement);
+
 			}
 			else
-				referenceElement.getParentNode().appendChild(newElement);
+				parentNode.appendChild(newElement);
 
 			newChild.setParent(template);
 		}
+	}
+
+	public Node findNextSiblingElement(Node referenceElement)
+	{
+		Node nextSibling= referenceElement.getNextSibling();
+
+		if (nextSibling == null || nextSibling.getNodeType() == Node.ELEMENT_NODE)
+			return nextSibling;
+		else
+			return findNextSiblingElement(nextSibling);
 	}
 
 	public void contentChanged(Template template, Content<?> oldTemplateContent, Content<?> newTemplateContent)
