@@ -27,15 +27,14 @@ public class JsCast
 		Class<? extends EventListener> eventListenerClass= eventListener.getClass();
 		ScriptHelper.putMethodReference("handleEventMethod", eventListenerClass, null).handleEvent(null);
 		ScriptHelper.put("eventListener", eventListener, null);
-		Object listener= ScriptHelper.eval("(function(){handleEventMethod.apply(eventListener, arguments)})", null);
-		ScriptHelper.put("listener", listener, null);
 
 		ScriptHelper.put("javaRefId", DragomeEntityManager.add(eventListener), null);
-		ScriptHelper.eval("eventListener.javaRefId= javaRefId", null);
+		ScriptHelper.evalNoResult("eventListener.javaRefId= javaRefId", null);
 
 		ScriptHelper.put("eventTarget", eventTarget, null);
 		ScriptHelper.put("type", type, null);
-		ScriptHelper.eval("eventTarget.node.addEventListener(type, listener)", null);
+
+		ScriptHelper.evalNoResult("eventTarget.node.addEventListener(type, (function(){handleEventMethod.apply(eventListener, arguments)}))", null);
 	}
 
 	public static void addOnEventListener(EventTarget eventTarget, EventListener eventListener, String methodName)
@@ -43,15 +42,13 @@ public class JsCast
 		Class<? extends EventListener> eventListenerClass= eventListener.getClass();
 		ScriptHelper.putMethodReference("handleEventMethod", eventListenerClass, null).handleEvent(null);
 		ScriptHelper.put("eventListener", eventListener, null);
-		Object listener= ScriptHelper.eval("(function(){handleEventMethod.apply(eventListener, arguments)})", null);
-		ScriptHelper.put("listener", listener, null);
 
 		ScriptHelper.put("javaRefId", DragomeEntityManager.add(eventListener), null);
-		ScriptHelper.eval("eventListener.javaRefId= javaRefId", null);
+		ScriptHelper.evalNoResult("eventListener.javaRefId= javaRefId", null);
 
 		ScriptHelper.put("eventTarget", eventTarget, null);
-		String script= "eventTarget.node." + methodName + "= listener";
-		ScriptHelper.eval(script, null);
+		String script= "eventTarget.node." + methodName + "= (function(){handleEventMethod.apply(eventListener, arguments)})";
+		ScriptHelper.evalNoResult(script, null);
 	}
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener)
