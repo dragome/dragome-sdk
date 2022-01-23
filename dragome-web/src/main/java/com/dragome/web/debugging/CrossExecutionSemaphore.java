@@ -19,24 +19,34 @@ public class CrossExecutionSemaphore
 {
 	private static Map<String, ServiceInvocationResult> results= new Hashtable<String, ServiceInvocationResult>();
 
-	public void pushResult(ServiceInvocationResult result)
+	public synchronized void pushResult(ServiceInvocationResult result)
 	{
 		results.put(result.getId(), result);
+		notify();
 	}
 
-	public Object waitUntilResponse(String id)
+	public synchronized Object waitUntilResponse(String id)
 	{
-		while (!(results.containsKey(id)))
-			;
+		try
+		{
+			wait(5000);
 
-		ServiceInvocationResult result= results.remove(id);
+			ServiceInvocationResult result= results.remove(id);
 
-		if (result.getObjectResult() instanceof DragomeJsException)
-			throw (DragomeJsException) result.getObjectResult();
+			if (result == null)
+				return null;
+			
+			if (result.getObjectResult() instanceof DragomeJsException)
+				throw (DragomeJsException) result.getObjectResult();
 
-		return result.obtainRealResult();
+			return result.obtainRealResult();
+		}
+		catch (InterruptedException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
-	public void reset()
+	public static void reset()
 	{
 		results.clear();
 	}
