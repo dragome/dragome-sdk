@@ -141,7 +141,7 @@ public class Throwable
 		Object calle= ScriptHelper.eval("arguments.callee", this);
 
 		int i= 0;
-		while (calle != null)
+		while (calle != null && i < 100)
 		{
 			String displayName= (String) ScriptHelper.eval("calle.displayName || ''", this);
 
