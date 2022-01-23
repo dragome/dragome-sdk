@@ -66,14 +66,14 @@ public class ServerToClientServiceInvoker
 			}
 			message.setLength(message.length() - 1);
 			message.append(")");
+
+			String message3= message.toString().replace("\"null\"", "null");
+			invocations.clear();
+			//		byte[] compress= compress(message3.getBytes());
+			//		message3= new String(Base64Coder.encode(compress));
+
+			WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
 		}
-
-		String message3= message.toString().replace("\"null\"", "null");
-		invocations.clear();
-//		byte[] compress= compress(message3.getBytes());
-//		message3= new String(Base64Coder.encode(compress));
-
-		WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
 	}
 	private static void serializeServiceInvocation(StringBuilder message, ServiceInvocation serviceInvocation2)
 	{

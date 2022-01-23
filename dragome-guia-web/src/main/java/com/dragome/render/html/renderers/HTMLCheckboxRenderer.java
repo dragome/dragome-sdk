@@ -86,13 +86,13 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 		button1.setAttribute("value", checkbox.getCaption());
 		updateChecked(checkbox, button1);
 
-		checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-		{
-			public void onValueChange(ValueChangeEvent<Boolean> event)
-			{
-				updateChecked(checkbox, button1);
-			}
-		});
+//		checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+//		{
+//			public void onValueChange(ValueChangeEvent<Boolean> event)
+//			{
+//				updateChecked(checkbox, button1);
+//			}
+//		});
 		
 		checkbox.addListener(ClickListener.class, new ClickListener()
 		{
