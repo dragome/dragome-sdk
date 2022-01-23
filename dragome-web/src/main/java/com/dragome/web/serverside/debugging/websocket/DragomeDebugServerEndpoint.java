@@ -6,12 +6,13 @@ import javax.websocket.CloseReason;
 import javax.websocket.RemoteEndpoint.Basic;
 import javax.websocket.Session;
 
-import com.dragome.services.ServiceInvocation;
-import com.dragome.services.ServiceLocator;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.web.debugging.CrossExecutionSemaphore;
 import com.dragome.web.debugging.messages.ChannelReceiverImpl;
 import com.dragome.web.debugging.messages.Receiver;
 import com.dragome.web.debugging.messages.Sender;
+import com.dragome.web.html.dom.w3c.CombinedDomInstance;
 
 public class DragomeDebugServerEndpoint
 {
@@ -25,6 +26,11 @@ public class DragomeDebugServerEndpoint
 			WebServiceLocator.getInstance().getServerToClientMessageChannel().setReceiver(new ChannelReceiverImpl());
 		else
 			configuredReceiver.reset();
+
+		WebServiceLocator.getInstance().getDomHandler().reset();
+		DragomeEntityManager.clear();
+		CombinedDomInstance.reset();
+		CrossExecutionSemaphore.reset();
 
 		if (session != null && session.isOpen())
 		{
@@ -53,10 +59,11 @@ public class DragomeDebugServerEndpoint
 
 	public String onMessage(String message, Session session)
 	{
-//		ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(message);
-//		serviceInvocation.invoke();
-		
+		//		ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(message);
+		//		serviceInvocation.invoke();
+
 		WebServiceLocator.getInstance().getServerToClientMessageChannel().getReceiver().messageReceived(message);
+
 		return null;
 	}
 

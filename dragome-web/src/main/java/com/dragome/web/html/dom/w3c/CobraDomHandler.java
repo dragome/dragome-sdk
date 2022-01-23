@@ -38,8 +38,14 @@ import com.dragome.web.html.dom.DomHandler;
 @SuppressWarnings("unchecked")
 public class CobraDomHandler implements DomHandler
 {
-
-	private Document result;
+	private Document documentInstance;
+	
+	public void reset()
+	{
+		documentInstance= null;
+		rendererContext= new DummyHtmlRendererContext();
+		htmlDocumentImpl= new HTMLDocumentImpl(rendererContext);
+	}
 
 	public CobraDomHandler()
 	{
@@ -47,10 +53,10 @@ public class CobraDomHandler implements DomHandler
 
 	public Document getDocument()
 	{
-		if (result == null)
-			result= createCobraDocument();
+		if (documentInstance == null)
+			documentInstance= createCobraDocument();
 
-		return result;
+		return documentInstance;
 	}
 
 	static DummyHtmlRendererContext rendererContext= new DummyHtmlRendererContext();
@@ -58,7 +64,7 @@ public class CobraDomHandler implements DomHandler
 
 	public Document createCobraDocument()
 	{
-		return (Document) createProxy(new CombinedDomInstance(htmlDocumentImpl, createRemoteDocumentInstance(), true));
+		return (Document) createProxy(new CombinedDomInstance(htmlDocumentImpl, createRemoteDocumentInstance()));
 	}
 
 	public Document createRemoteDocumentInstance()

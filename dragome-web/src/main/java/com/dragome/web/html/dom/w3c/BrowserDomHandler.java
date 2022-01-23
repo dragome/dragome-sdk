@@ -120,4 +120,9 @@ public class BrowserDomHandler implements DomHandler
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void reset()
+	{
+	}
 }

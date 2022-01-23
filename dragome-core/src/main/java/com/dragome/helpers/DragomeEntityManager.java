@@ -66,6 +66,8 @@ public class DragomeEntityManager
 	public static void clear()
 	{
 		entities.clear();
+		aliases.clear();
+		inverseAliases.clear();
 	}
 
 	public static void put(String id, Object object)

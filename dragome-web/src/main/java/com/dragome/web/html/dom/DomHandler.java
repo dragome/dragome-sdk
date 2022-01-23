@@ -23,4 +23,5 @@ public interface DomHandler
 	public Document getDocument();
 	public Element getElementBySelector(String selector);
 	public <T> T castTo(Object instance, Class<T> type, Object callerInstance);
+	void reset();
 }
