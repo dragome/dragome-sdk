@@ -92,6 +92,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	protected Class<?>[] interfacesCache;
 	protected boolean isArray;
 	protected String type;
+	private String name;
 
 	private Class(Object theNativeClass)
 	{
@@ -288,19 +289,23 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public String getName()
 	{
-		String result;
-
-		if (!isArray && !isPrimitive())
+		if (name == null)
 		{
-			if (isInterface())
-				result= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.name", this);
-			else
-				result= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.classname", this);
-		}
-		else
-			result= (java.lang.String) ScriptHelper.eval("this.realName", null);
+			String partialResult;
 
-		return result != null ? result.replace("_", ".") : "java.lang.Object"; //TODO arreglar, no se pueden usar nombre de clases con _!!
+			if (!isArray && !isPrimitive())
+			{
+				if (isInterface())
+					partialResult= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.name", this);
+				else
+					partialResult= (String) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.classname", this);
+			}
+			else
+				partialResult= (java.lang.String) ScriptHelper.eval("this.realName", null);
+
+			name= partialResult != null ? partialResult.replace("_", ".") : "java.lang.Object";
+		}
+		return name; //TODO arreglar, no se pueden usar nombre de clases con _!!
 	}
 
 	public Class<? super T> getSuperclass()

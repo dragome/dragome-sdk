@@ -43,6 +43,7 @@ public final class Method extends Executable
 	protected Class<?> returnType;
 	private int modifiers;
 	private boolean isDefault;
+	private String name;
 
 	public Method(Class<?> newCls, String theSignature, int modifiers)
 	{
@@ -54,13 +55,16 @@ public final class Method extends Executable
 
 	public String getName()
 	{
-		String name= signature.substring(1, signature.lastIndexOf("$"));
+		if (name == null)
+		{
+			name= signature.substring(1, signature.lastIndexOf("$"));
 
-		int parametersStart= name.indexOf("___");
-		if (parametersStart != -1)
-			return name.substring(0, parametersStart);
-		else
-			return name;
+			int parametersStart= name.indexOf("___");
+			if (parametersStart != -1)
+				name= name.substring(0, parametersStart);
+		}
+
+		return name;
 	}
 
 	public Class<?>[] getParameterTypes()
@@ -407,7 +411,7 @@ public final class Method extends Executable
 	{
 		return isDefault;
 	}
-	
+
 	public int hashCode()
 	{
 		return getName().hashCode();
