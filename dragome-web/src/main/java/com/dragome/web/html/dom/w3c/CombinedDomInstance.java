@@ -34,7 +34,8 @@ public class CombinedDomInstance
 	private Object remoteInstance;
 	private HTMLDocumentImpl document;
 	private static String innerHTML;
-	List<String> modifierMethods= Arrays.asList("insertBefore", "appendChild", "replaceChild", "removeChild", "setTextContent", "setAttribute", "removeAttribute");
+	List<String> modifierMethods= Arrays.asList("setInnerHTML", "insertBefore", "appendChild", "replaceChild", "removeChild", "setTextContent", "setAttribute", "removeAttribute");
+	private static int refresher;
 
 	public static void reset()
 	{
@@ -69,17 +70,29 @@ public class CombinedDomInstance
 			if (remote != null)
 			{
 				Object invoke2= null;
-				if (modifierMethods.contains(method.getName()) || method.getReturnType() == void.class || method.getReturnType() == Void.class || !discardReturnValue)
+				boolean modifier= modifierMethods.contains(method.getName());
+				if (modifier || method.getReturnType() == void.class || method.getReturnType() == Void.class || !discardReturnValue)
 				{
 					boolean isProxyRemote= Proxy.isProxyClass(remote.getClass());
 
-					if (!isProxyRemote && isAddingEventListener(method))
-						addEventListenerWrapper((EventTarget) remote, args[0].toString(), (EventListener) args[1]);
+					if (isAddingEventListener(method))
+					{
+						EventTarget eventTarget= (EventTarget) remote;
+
+						if (isProxyRemote)
+							eventTarget= (EventTarget) invokeAndCreateLocalInstance(createElementAccessorScript(localInstance), method, true);
+
+						addEventListenerWrapper(eventTarget, args[0].toString(), (EventListener) args[1]);
+					}
 					else
 					{
-						invoke2= getActualMethod(method, remote).invoke(remote, convertArgs(args, false));
-						if (modifierMethods.contains(method.getName()))
-							ScriptHelper.eval("document", this);
+						if (modifier || !discardReturnValue)
+						{
+							if (!method.getName().equals("setInnerHTML"))
+								invoke2= invokeAndCreateLocalInstance(createRemoteInstanceGetterScript(localInstance, method, args), method, true);
+							else
+								invoke2= getActualMethod(method, remote).invoke(remote, convertArgs(args, false));
+						}
 					}
 
 					if (!discardReturnValue && invoke2 instanceof Element && !(invoke2 instanceof ElementExtension))
@@ -122,7 +135,7 @@ public class CombinedDomInstance
 
 				ScriptHelper.put("delegate", newInstance, this);
 				String finalScript= "delegate.node= " + localInstanceAssignmentScript;
-				ScriptHelper.eval(finalScript, this);
+				ScriptHelper.evalNoResult(finalScript, this);
 				return newInstance;
 			}
 			else
@@ -130,10 +143,10 @@ public class CombinedDomInstance
 				String script2= localInstanceAssignmentScript;
 				if (modifierMethods.contains(method.getName()))
 				{
-					//							if ((refresher++ % 1) ==0)
-					ScriptHelper.eval(script2, this);
-					//							else
-					//								ScriptHelper.evalNoResult(script2, this);
+					if ((refresher++ % 10) == 0)
+						ScriptHelper.eval(script2, this);
+					else
+						ScriptHelper.evalNoResult(script2, this);
 				}
 				else
 				{
@@ -159,18 +172,16 @@ public class CombinedDomInstance
 		fromRemote.put(System.identityHashCode(remote), combinedDomInstance);
 	}
 
-	public String createElementAccessorScript(Object localInstance2)
+	public String createElementAccessorScript(Object aLocalInstance)
 	{
-		if (localInstance2 instanceof HTMLDocument)
+		if (aLocalInstance instanceof HTMLDocument)
 			return "document";
 		else
 		{
-			String script;
-			Element element= (Element) localInstance2;
+			Element element= (Element) aLocalInstance;
 			Node remoteParent= findTopParent(element);
 			String parentVariableName= createParentVariableName(remoteParent);
-			script= createScript(element, parentVariableName);
-			return script;
+			return createScript(element, parentVariableName);
 		}
 	}
 
@@ -199,10 +210,7 @@ public class CombinedDomInstance
 						Object object= convertArgs[i];
 						if (object instanceof Node)
 						{
-							Node element1= (Node) object;
-							Node remoteParent1= findTopParent(element1);
-							String parentVariableName1= createParentVariableName(remoteParent1);
-							script1= createScript(element1, parentVariableName1);
+							script1= createElementAccessorScript(object);
 
 							if (method.getName().equals("replaceChild") && i == 1)
 							{
@@ -289,6 +297,7 @@ public class CombinedDomInstance
 					}
 				}
 				eventListener.handleEvent(evt);
+				ScriptHelper.eval("document", this);
 			}
 		});
 	}
