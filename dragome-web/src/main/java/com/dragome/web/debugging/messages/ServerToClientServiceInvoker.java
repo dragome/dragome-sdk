@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.zip.Deflater;
 
-import com.dragome.helpers.Base64Coder;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
@@ -25,6 +24,8 @@ import com.dragome.web.debugging.JsMethodReferenceCreationInMethod;
 import com.dragome.web.debugging.JsVariableCreationInMethod;
 import com.dragome.web.debugging.ReferenceHolder;
 import com.dragome.web.debugging.ScriptCrossExecutionCommand;
+import com.dragome.web.debugging.interfaces.CrossExecutionCommand;
+import com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor;
 
 public class ServerToClientServiceInvoker
 {
@@ -47,32 +48,64 @@ public class ServerToClientServiceInvoker
 
 	private static void performInvocations()
 	{
-		StringBuilder message= new StringBuilder();
-
-		if (invocations.size() > 0)
+		try
 		{
-			message.append("_ed.nl(");
+			StringBuilder message= new StringBuilder();
 
-			synchronized (invocations)
+			if (invocations.size() > 0)
 			{
-				for (ServiceInvocation serviceInvocation2 : invocations)
+				message.append("_ed.nl(");
+
+				synchronized (invocations)
 				{
+					List<CrossExecutionCommand> commands= new ArrayList<CrossExecutionCommand>();
+					String id= "sin id";
+					for (ServiceInvocation serviceInvocation2 : invocations)
+					{
+						List<?> args= serviceInvocation2.getArgs();
+						if (args.size() > 1)
+							System.out.println("sdgsdg");
+
+						CrossExecutionCommand crossExecutionCommand= (CrossExecutionCommand) args.get(0);
+						commands.add(crossExecutionCommand);
+						id= serviceInvocation2.getId();
+					}
+
+					Class<CrossExecutionCommandProcessor> class1= CrossExecutionCommandProcessor.class;
+					Method method= class1.getMethod("processMultiple", List.class);
+					List<Object> commands2= new ArrayList<>();
+					commands2.add(commands);
+					ServiceInvocation serviceInvocation= new ServiceInvocation(class1, method, commands2);
+					serviceInvocation.setId(id);
+
 					StringBuilder partialMessage= new StringBuilder();
-					serializeServiceInvocation(partialMessage, serviceInvocation2);
-					//				System.out.println(partialMessage);
+					serializeServiceInvocation(partialMessage, serviceInvocation);
 					message.append(partialMessage);
 					message.append(",");
+
+					//					for (ServiceInvocation serviceInvocation2 : invocations)
+					//					{
+					//						StringBuilder partialMessage= new StringBuilder();
+					//						serializeServiceInvocation(partialMessage, serviceInvocation2);
+					//						//				System.out.println(partialMessage);
+					//						message.append(partialMessage);
+					//						message.append(",");
+					//					}
 				}
+				message.setLength(message.length() - 1);
+				message.append(")");
+
+				String message3= message.toString().replace("\"null\"", "null");
+				invocations.clear();
+				//		byte[] compress= compress(message3.getBytes());
+				//		message3= new String(Base64Coder.encode(compress));
+
+				WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
 			}
-			message.setLength(message.length() - 1);
-			message.append(")");
-
-			String message3= message.toString().replace("\"null\"", "null");
-			invocations.clear();
-			//		byte[] compress= compress(message3.getBytes());
-			//		message3= new String(Base64Coder.encode(compress));
-
-			WebServiceLocator.getInstance().getServerToClientMessageChannel().send(message3.toString());
+		}
+		catch (NoSuchMethodException | SecurityException e)
+		{
+			throw new RuntimeException(e);
 		}
 	}
 	private static void serializeServiceInvocation(StringBuilder message, ServiceInvocation serviceInvocation2)
@@ -137,6 +170,20 @@ public class ServerToClientServiceInvoker
 			String string= (String) arg;
 			message.append("_ed.ns(");
 			message.append("\"" + string + "\"");
+			message.append(")");
+		}
+		else if (arg instanceof List)
+		{
+			List<Object> list= (List) arg;
+			message.append("_ed.nl(");
+
+			for (int i= 0; i < list.size(); i++)
+			{
+				serializeArg(message, list.get(i));
+				if (i < list.size() - 1)
+					message.append(",");
+			}
+
 			message.append(")");
 		}
 		else

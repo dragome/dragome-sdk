@@ -43,6 +43,8 @@ public class ClientToServerServiceInvocationHandler implements InvocationHandler
 		boolean serialized= true;
 
 		String serialize= "";
+		
+		
 
 		serialize= "{\"@id\":0,\"method\":\"${AE}.pushResult:1\",\"id\":\"16\",\"args\":[{\"@id\":1,\"listResult\":null,\"id\":\"${id}\",\"objectResult\":{\"@id\":2,\"result\":\"${result}\",\"class\":\"${CERI}\"},\"class\":\"${SIR}\"}],\"type\":{\"name\":\"${AE}\",\"class\":\"java.lang.Class\"},\"class\":\"${SI}\"}";
 

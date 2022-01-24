@@ -10,9 +10,11 @@
  ******************************************************************************/
 package com.dragome.web.debugging.interfaces;
 
+import java.util.List;
 
 public interface CrossExecutionCommandProcessor
 {
 	public abstract CrossExecutionResult process(CrossExecutionCommand crossExecutionCommand);
+	public abstract CrossExecutionResult processMultiple(List<CrossExecutionCommand> crossExecutionCommand);
 	public abstract void processNoResult(CrossExecutionCommand crossExecutionCommand);
 }

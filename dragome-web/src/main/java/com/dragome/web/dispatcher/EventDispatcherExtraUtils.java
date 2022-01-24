@@ -17,12 +17,15 @@ package com.dragome.web.dispatcher;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dragome.commons.compiler.annotations.MethodAlias;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
+import com.dragome.services.interfaces.ReflectionService;
 import com.dragome.web.debugging.JsMethodReferenceCreationInMethod;
 import com.dragome.web.debugging.JsVariableCreationInMethod;
 import com.dragome.web.debugging.ReferenceHolder;
@@ -30,6 +33,9 @@ import com.dragome.web.debugging.ScriptCrossExecutionCommand;
 
 public class EventDispatcherExtraUtils
 {
+	private static ReflectionService reflectionService= ServiceLocator.getInstance().getReflectionService();
+	private static Map<String, Method> foundMethods= new HashMap<>();
+
 	@MethodAlias(alias= "EventDispatcher.equalsFunction")
 	private static boolean equalsFunction(Object o1, Object o2)
 	{
@@ -45,7 +51,7 @@ public class EventDispatcherExtraUtils
 	@MethodAlias(alias= "EventDispatcher.njeim")
 	private static ScriptCrossExecutionCommand njeim(String methodName, ReferenceHolder caller, String script, String type)
 	{
-		ScriptCrossExecutionCommand scriptCrossExecutionCommand= (ScriptCrossExecutionCommand) ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
+		ScriptCrossExecutionCommand scriptCrossExecutionCommand= (ScriptCrossExecutionCommand) reflectionService.createClassInstance(type);
 		scriptCrossExecutionCommand.setCallerReferenceHolder(caller);
 		scriptCrossExecutionCommand.setScript(script);
 		scriptCrossExecutionCommand.setMethodName(methodName);
@@ -65,7 +71,7 @@ public class EventDispatcherExtraUtils
 		Boolean booleanValue2= ScriptHelper.evalBoolean("booleanValue", null);
 		ScriptHelper.put("booleanValue2", booleanValue2, null);
 		booleanValue2= (Boolean) ScriptHelper.eval("booleanValue != null ? booleanValue2 : null", null);
-		ReferenceHolder referenceHolder= new ReferenceHolder(id, ServiceLocator.getInstance().getReflectionService().forName(type), value, booleanValue2);
+		ReferenceHolder referenceHolder= new ReferenceHolder(id, reflectionService.forName(type), value, booleanValue2);
 		return referenceHolder;
 	}
 
@@ -84,7 +90,7 @@ public class EventDispatcherExtraUtils
 	@MethodAlias(alias= "EventDispatcher.nsi")
 	private static ServiceInvocation nsi(String type, String methodName, String id, List<Object> args) throws NoSuchMethodException
 	{
-		Class<?> forName= ServiceLocator.getInstance().getReflectionService().forName(type);
+		Class<?> forName= reflectionService.forName(type);
 
 		ServiceInvocation serviceInvocation= new ServiceInvocation(forName, findMethod(methodName, forName), args, id);
 		ScriptHelper.put("serviceInvocation", serviceInvocation, null);
@@ -93,13 +99,20 @@ public class EventDispatcherExtraUtils
 
 	private static Method findMethod(String methodName, Class<?> aClass)
 	{
-		Method foundMethod= null;
+		String key= aClass.getName() + "." + methodName;
 
-		Method[] methods= aClass.getMethods();
-		for (Method method : methods)
-			if (method.getName().equals(methodName))
-				foundMethod= method;
-
+		Method foundMethod= foundMethods.get(key);
+		if (foundMethod == null)
+		{
+			Method[] methods= aClass.getMethods();
+			for (Method method : methods)
+				if (method.getName().equals(methodName))
+				{
+					foundMethod= method;
+					foundMethods.put(key, foundMethod);
+				}
+		}
+		
 		return foundMethod;
 	}
 

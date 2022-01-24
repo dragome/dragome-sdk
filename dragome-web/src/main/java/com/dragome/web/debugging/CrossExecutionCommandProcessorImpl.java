@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.dragome.web.debugging;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -39,21 +41,16 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			ScriptHelper.eval("caller.variablesList= []", this);
 
 		if (!ScriptHelper.evalBoolean("caller.variablesList[containerMethod]", this))
-		{
-			Map<String, Object> variables= new HashMap<String, Object>();
-			ScriptHelper.put("list", variables, null);
-			ScriptHelper.eval("caller.variablesList[containerMethod]= list", this);
-		}
+			ScriptHelper.eval("caller.variablesList[containerMethod]= []", this);
+
 		ScriptHelper.eval("var variablesList= caller.variablesList[containerMethod]", this);
 		CrossExecutionResult result= (CrossExecutionResult) ScriptHelper.eval("EventDispatcher.doProcess.call(caller, variablesList, crossExecutionCommand)", this);
 
 		return result;
-		//	    boolean sameId= nextCommand.getCallerReferenceHolder().getId().equals(crossExecutionCommand.getCallerReferenceHolder().getId());
-		//	    boolean sameMethodName= nextCommand.getMethodName().equals(crossExecutionCommand.getMethodName());
 	}
 
 	@MethodAlias(alias= "EventDispatcher.doProcess")
-	public static CrossExecutionResult doProcess(Map<String, Object> variableCreations, CrossExecutionCommand crossExecutionCommand)
+	public static CrossExecutionResult doProcess(Object variableCreations, CrossExecutionCommand crossExecutionCommand)
 	{
 		CrossExecutionResult result= new EmptyCrossExecutionResult();
 
@@ -62,62 +59,47 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 		else if (crossExecutionCommand instanceof JsMethodReferenceCreationInMethod)
 			result= processMethodReferenceCreationCommand(variableCreations, (JsMethodReferenceCreationInMethod) crossExecutionCommand);
 
-		for (Entry<String, Object> entry : variableCreations.entrySet())
+		else
 		{
-			ScriptHelper.put("_name", entry.getKey(), null);
-			ScriptHelper.put("_value", entry.getValue(), null);
-			ScriptHelper.eval("eval('var '+_name+'= _value')", null);
-		}
+			ScriptHelper.put("variablesObject", variableCreations, null);
+			Object variablesContext= ScriptHelper.eval("createVariablesContext(variablesObject)", null);
+			ScriptHelper.put("variablesContext", variablesContext, null);
+			ScriptHelper.eval("variablesContext.node= this.node", null);
 
-		if (crossExecutionCommand instanceof JsEvalInMethod)
-		{
 			ScriptCrossExecutionCommand jsEvalInMethod= (ScriptCrossExecutionCommand) crossExecutionCommand;
 			ScriptHelper.put("script", jsEvalInMethod.getScript(), null);
-			//	    System.out.println(jsEvalInMethod.getScript());
-			Object eval2= ScriptHelper.eval("eval(script)", null);
-			ScriptHelper.put("eval2", eval2, null);
-			if (eval2 instanceof String)
-				eval2= eval2.toString();
-			else if (ScriptHelper.evalBoolean("typeof eval2 === 'number'", null))
-				eval2= ScriptHelper.eval("eval2.toString()", null);
-			else
+			String stringResult= "";
+
+			if (crossExecutionCommand instanceof JsEvalInMethod)
 			{
-				//		eval2= new JavascriptReference(eval2);
-				eval2= "js-ref:" + DragomeEntityManager.add(eval2);
+				Object eval2= ScriptHelper.eval("variablesContext.execute(script)", null);
+				ScriptHelper.put("eval2", eval2, null);
+				if (eval2 instanceof String)
+					eval2= eval2.toString();
+				else if (ScriptHelper.evalBoolean("typeof eval2 === 'number'", null))
+					eval2= ScriptHelper.eval("eval2.toString()", null);
+				else
+					eval2= "js-ref:" + DragomeEntityManager.add(eval2);
+
+				stringResult= (String) eval2;
+			}
+			else if (crossExecutionCommand instanceof JsEvalIntegerInMethod)
+			{
+				int evalInt= ScriptHelper.evalInt("variablesContext.execute(script)", null);
+				stringResult= evalInt + "";
+			}
+			else if (crossExecutionCommand instanceof JsEvalBooleanInMethod)
+			{
+				boolean evalBoolean= ScriptHelper.evalBoolean("variablesContext.execute(script)", null);
+				stringResult= evalBoolean + "";
 			}
 
-			result= new CrossExecutionResultImpl((String) eval2);
+			result= new CrossExecutionResultImpl(stringResult);
 		}
-		else if (crossExecutionCommand instanceof JsEvalIntegerInMethod)
-		{
-			JsEvalIntegerInMethod jsEvalInMethod= (JsEvalIntegerInMethod) crossExecutionCommand;
-			ScriptHelper.put("script", jsEvalInMethod.getScript(), null);
-			//	    System.out.println(jsEvalInMethod.getScript());
-			int evalInt= ScriptHelper.evalInt("eval(script)", null);
-			result= new CrossExecutionResultImpl(evalInt + "");
-		}
-		else if (crossExecutionCommand instanceof JsEvalBooleanInMethod)
-		{
-			JsEvalBooleanInMethod jsEvalInMethod= (JsEvalBooleanInMethod) crossExecutionCommand;
-			ScriptHelper.put("script", jsEvalInMethod.getScript(), null);
-			//	    System.out.println(jsEvalInMethod.getScript());
-			boolean evalBoolean= ScriptHelper.evalBoolean("eval(script)", null);
-			result= new CrossExecutionResultImpl(evalBoolean + "");
-		}
-
-		for (Entry<String, Object> entry : variableCreations.entrySet())
-		{
-			ScriptHelper.put("localVariable", entry.getKey(), null);
-
-			Object evaluation= ScriptHelper.eval("eval(localVariable.toString())", null);
-			variableCreations.remove(entry.getKey());
-			variableCreations.put(entry.getKey(), evaluation);
-		}
-
 		return result;
 	}
 
-	private static CrossExecutionResult processVariableCreationCommand(Map<String, Object> variableCreations, JsVariableCreationInMethod jsVariableCreationInMethod)
+	private static CrossExecutionResult processVariableCreationCommand(Object variableCreations, JsVariableCreationInMethod jsVariableCreationInMethod)
 	{
 		CrossExecutionResult result;
 		Object reference;
@@ -135,33 +117,36 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			if (jsVariableCreationInMethod.getValueReferenceHolder().getValue() != null)
 			{
 				reference= jsVariableCreationInMethod.getValueReferenceHolder().getValue();
-				//		System.out.println(jsVariableCreationInMethod.getName() + "= " + reference);
 			}
 			else if (jsVariableCreationInMethod.getValueReferenceHolder().getBooleanValue() != null)
 			{
 				ScriptHelper.put("booleanPrimitiveValue", jsVariableCreationInMethod.getValueReferenceHolder().getBooleanValue().booleanValue(), null);
 				reference= ScriptHelper.eval("booleanPrimitiveValue", null);
-				//		System.out.println(jsVariableCreationInMethod.getName() + "= " + reference);
 			}
 			else
 			{
-				//	    else
-				//		System.out.println(jsVariableCreationInMethod.getName() + "= " + reference.getClass());
 			}
 		}
 
-		variableCreations.put(jsVariableCreationInMethod.getName(), reference);
+		ScriptHelper.put("variables", variableCreations, null);
+		ScriptHelper.put("variableName", jsVariableCreationInMethod.getName(), null);
+		ScriptHelper.put("value", reference, null);
+
+		ScriptHelper.eval("variables[variableName]= value", null);
 		result= null;
 		return result;
 	}
 
-	private static CrossExecutionResult processMethodReferenceCreationCommand(Map<String, Object> variableCreations, JsMethodReferenceCreationInMethod jsMethodReferenceCreationInMethod)
+	private static CrossExecutionResult processMethodReferenceCreationCommand(Object variableCreations, JsMethodReferenceCreationInMethod jsMethodReferenceCreationInMethod)
 	{
 		ScriptHelper.put("declaringClass", jsMethodReferenceCreationInMethod.getDeclaringClassName(), null);
 		ScriptHelper.put("methodSignature", jsMethodReferenceCreationInMethod.getMethodSignature(), null);
 		Object method= ScriptHelper.eval("dragomeJs.resolveMethod(declaringClass, methodSignature)", null);
 
-		variableCreations.put(jsMethodReferenceCreationInMethod.getName(), method);
+		ScriptHelper.put("variables", variableCreations, null);
+		ScriptHelper.put("variableName", jsMethodReferenceCreationInMethod.getName(), null);
+		ScriptHelper.put("value", method, null);
+		ScriptHelper.eval("variables[variableName]= value", null);
 		return null;
 	}
 
@@ -174,7 +159,7 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			else
 			{
 				String id= referenceHolder.getId();
-				
+
 				Object reference= DragomeEntityManager.get(id);
 				if (reference == null)
 				{
@@ -197,5 +182,43 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 	public void processNoResult(CrossExecutionCommand crossExecutionCommand)
 	{
 		process(crossExecutionCommand);
+	}
+
+	public CrossExecutionResult processMultiple(List<CrossExecutionCommand> commands)
+	{
+		List<CrossExecutionResult> result= new ArrayList<CrossExecutionResult>();
+		String methodName= "";
+		
+		ScriptHelper.eval("var variablesList= []", this);
+
+		for (CrossExecutionCommand crossExecutionCommand : commands)
+		{
+			boolean sameMethod= crossExecutionCommand.getMethodName().equals(methodName);
+
+			if (!sameMethod)
+			{
+				ScriptHelper.put("crossExecutionCommand", crossExecutionCommand, null);
+				ReferenceHolder callerReferenceHolder= crossExecutionCommand.getCallerReferenceHolder();
+				Object caller= getOrCreateReference(callerReferenceHolder);
+				ScriptHelper.put("caller", caller, null);
+
+				ScriptHelper.put("containerMethod", crossExecutionCommand.getMethodName(), null);
+				if (!ScriptHelper.evalBoolean("caller.variablesList", this))
+					ScriptHelper.eval("caller.variablesList= []", this);
+
+				if (!ScriptHelper.evalBoolean("caller.variablesList[containerMethod]", this))
+					ScriptHelper.eval("caller.variablesList[containerMethod]= []", this);
+
+				ScriptHelper.eval("variablesList= caller.variablesList[containerMethod]", this);
+			}
+			
+			CrossExecutionResult result1= (CrossExecutionResult) ScriptHelper.eval("EventDispatcher.doProcess.call(caller, variablesList, crossExecutionCommand)", this);
+
+//			CrossExecutionResult process= process(crossExecutionCommand);
+			result.add(result1);
+			methodName= crossExecutionCommand.getMethodName();
+		}
+
+		return result.get(result.size() - 1);
 	}
 }

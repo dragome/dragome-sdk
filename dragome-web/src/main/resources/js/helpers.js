@@ -13,6 +13,39 @@ EventDispatcher = {};
 _ed = EventDispatcher;
 var __next_objid = 1;
 
+function createVariablesContext(o1) {
+  var properties= Object.getOwnPropertyNames(o1);
+
+  var fieldToLocal=""
+  var localToField=""
+  for (key in properties)
+    if (!properties[key].toString().startsWith("function("))
+    {
+		fieldToLocal+= "var " + properties[key] + "= o1." + properties[key] + ";";
+    	localToField+= "o1." + properties[key] + "= " + properties[key] + ";";
+	}
+
+	
+      
+  function f1(o1, fieldToLocalScript, localToFieldScript) {
+      eval(fieldToLocalScript);
+      
+      function EvalFunction() {
+		this.execute= function (p1)
+		{
+        var result= eval(p1);
+        eval(localToFieldScript);
+        return result;
+        }
+      };
+      
+      return new EvalFunction();
+    }
+  
+  return f1(o1, fieldToLocal, localToField);
+}
+
+
 function byXpath(parentId, xpathExpression)
 {
 	var parent= com_dragome_helpers_DragomeEntityManager.$get___java_lang_String$java_lang_Object(parentId)
