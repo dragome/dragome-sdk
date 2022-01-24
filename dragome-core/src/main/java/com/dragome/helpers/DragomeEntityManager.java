@@ -17,8 +17,6 @@ package com.dragome.helpers;
 
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
 
 public class DragomeEntityManager
 {

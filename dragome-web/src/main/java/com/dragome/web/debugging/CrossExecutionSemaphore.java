@@ -29,7 +29,7 @@ public class CrossExecutionSemaphore
 	{
 		try
 		{
-			wait(5000);
+			wait();
 
 			ServiceInvocationResult result= results.remove(id);
 
