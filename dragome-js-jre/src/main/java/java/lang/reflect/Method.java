@@ -186,7 +186,7 @@ public final class Method extends Executable
 					typedParametersRefs.add(args[i]);
 			}
 
-			ServiceInvocation serviceInvocation= new ServiceInvocation(getDeclaringClass(), this, typedParametersRefs, javaRefIdString);
+			ServiceInvocation serviceInvocation= new ServiceInvocation(getDeclaringClass(), this, typedParametersRefs, javaRefIdString, true);
 
 			webServiceLocator.getEventDispatcher().callJavaMethod(serviceInvocation);
 			return null;

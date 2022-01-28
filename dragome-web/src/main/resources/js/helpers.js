@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
  *
@@ -8,53 +7,38 @@
  * available under the terms of the GNU Public License v3.0 which accompanies
  * this distribution, and is available at http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-
+ 
 EventDispatcher = {};
 _ed = EventDispatcher;
 var __next_objid = 1;
 
-function createVariablesContext(o1) {
-  var properties= Object.getOwnPropertyNames(o1);
+function EvalFunction() {
+    this.execute = function(o1, p1) {
+        var properties = Object.getOwnPropertyNames(o1);
 
-  var fieldToLocal=""
-  var localToField=""
-  for (key in properties)
-    if (!properties[key].toString().startsWith("function("))
-    {
-		fieldToLocal+= "var " + properties[key] + "= o1." + properties[key] + ";";
-    	localToField+= "o1." + properties[key] + "= " + properties[key] + ";";
-	}
-
-	
-      
-  function f1(o1, fieldToLocalScript, localToFieldScript) {
-      eval(fieldToLocalScript);
-      
-      function EvalFunction() {
-		this.execute= function (p1)
-		{
-        var result= eval(p1);
-        eval(localToFieldScript);
+        var fieldToLocal = "";
+        var localToField = "";
+        for (key in properties)
+            if (!properties[key].toString().startsWith("function(")) {
+                fieldToLocal += "var " + properties[key] + "= o1." + properties[key] + ";";
+                localToField += "o1." + properties[key] + "= " + properties[key] + ";";
+            }
+        eval(fieldToLocal);
+        var result = eval(p1);
+        eval(localToField);
         return result;
-        }
-      };
-      
-      return new EvalFunction();
     }
-  
-  return f1(o1, fieldToLocal, localToField);
+};
+
+contextEvaluator= new EvalFunction();
+
+function byXpath(parentId, xpathExpression) {
+    var parent = com_dragome_helpers_DragomeEntityManager.$get___java_lang_String$java_lang_Object(parentId)
+
+    return document.evaluate(xpathExpression, parent.node, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 }
 
-
-function byXpath(parentId, xpathExpression)
-{
-	var parent= com_dragome_helpers_DragomeEntityManager.$get___java_lang_String$java_lang_Object(parentId)
-
-	return document.evaluate(xpathExpression, parent.node, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-}
-
-function objectId(obj)
-{
+function objectId(obj) {
     if (obj == null)
         return null;
     if (obj.__obj_id == null)
@@ -62,11 +46,12 @@ function objectId(obj)
     return obj.__obj_id;
 }
 
-function decode_base64(s)
-{
-    var b = l = 0, r = '', s = s.split(''), i, m = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
-    for (i in s)
-    {
+function decode_base64(s) {
+    var b = l = 0,
+        r = '',
+        s = s.split(''),
+        i, m = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
+    for (i in s) {
         b = (b << 6) + m.indexOf(s[i]);
         l += 6;
         while (l >= 8)
@@ -75,12 +60,10 @@ function decode_base64(s)
     return r;
 }
 
-function getOuterHTML(anElement)
-{
+function getOuterHTML(anElement) {
     var parent = anElement.parentNode;
     var hasParent = parent != null;
-    if (!hasParent)
-    {
+    if (!hasParent) {
         parent = document.createElement("div");
         parent.appendChild(anElement);
     }
@@ -100,8 +83,7 @@ function getOuterHTML(anElement)
     return result;
 }
 
-function stopEvent(pE)
-{
+function stopEvent(pE) {
     if (!pE)
         if (window.event)
             pE = window.event;
@@ -119,14 +101,12 @@ function stopEvent(pE)
         pE.cancel = true;
 }
 
-function rgb2html(red, green, blue)
-{
+function rgb2html(red, green, blue) {
     var decColor = red + 256 * green + 65536 * blue;
     return decColor.toString(16);
 }
 
-function getQuerystring(key, default_)
-{
+function getQuerystring(key, default_) {
     if (default_ == null)
         default_ = "";
     key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -136,31 +116,24 @@ function getQuerystring(key, default_)
         return unescape(default_);
     else
         return unescape(qs[1]);
-}
-;
+};
 
-function executeLocalstorageQuery(tx, aQuery, parameters, callback)
-{
-    // alert("executing: "+aQuery+" - "+ parameters);
+function executeLocalstorageQuery(tx, aQuery, parameters, callback) {
     tx.executeSql(aQuery, parameters, callback);
 }
 
 window.performance = window.performance || {};
-performance.now = (function ()
-{
-    return performance.now || performance.mozNow || performance.msNow || performance.oNow || performance.webkitNow || function ()
-    {
+performance.now = (function() {
+    return performance.now || performance.mozNow || performance.msNow || performance.oNow || performance.webkitNow || function() {
         return new Date().getTime();
     };
 })();
 
-function socketCreator(aUrl, successCallback, errorCallback)
-{
+function socketCreator(aUrl, successCallback, errorCallback) {
     window.onSocketMessage = successCallback;
 }
 
-function getTemplatePart(content, id)
-{
+function getTemplatePart(content, id) {
     var mainElement = document.createElement('div');
     mainElement.setAttribute("style", "display:none;");
     document.body.appendChild(mainElement);
@@ -189,16 +162,13 @@ function consoleMessage(message) {
     }
 }
 
-function refreshPageSetup()
-{
+function refreshPageSetup() {
     lastCompilationTime = parseInt(getURL("compiler-service"));
 
     if (getQuerystring("refresh") == "true")
-        setInterval(function ()
-        {
+        setInterval(function() {
             var compilationTime = parseInt(getURL("compiler-service"));
-            if (compilationTime > lastCompilationTime)
-            {
+            if (compilationTime > lastCompilationTime) {
                 lastCompilationTime = compilationTime;
                 window.location.reload();
             }
@@ -208,35 +178,28 @@ function refreshPageSetup()
 if (getQuerystring("refresh") == "true")
     refreshPageSetup();
 
-function getElementByDebugId(attrib)
-{
+function getElementByDebugId(attrib) {
     return document.querySelectorAll('[data-debug-id="' + attrib + '"]')[0];
 }
 
-function getElementByAttributeValue(attribName, value)
-{
+function getElementByAttributeValue(attribName, value) {
     return getDocumentElementByAttributeValue(document, attribName, value);
 }
 
-function getDocumentElementByAttributeValue(aDocument, attribName, value)
-{
+function getDocumentElementByAttributeValue(aDocument, attribName, value) {
     return aDocument.querySelectorAll('[' + attribName + '="' + value + '"]')[0];
 }
 
-function checkStyleSheet(url)
-{
+function checkStyleSheet(url) {
     var found = false;
-    for (var i = 0; i < document.styleSheets.length; i++)
-    {
-        if (document.styleSheets[i].href == url)
-        {
+    for (var i = 0; i < document.styleSheets.length; i++) {
+        if (document.styleSheets[i].href == url) {
             found = true;
             break;
         }
     }
-    if (!found)
-    {
-        var fileref=document.createElement("link");
+    if (!found) {
+        var fileref = document.createElement("link");
         fileref.setAttribute("rel", "stylesheet");
         fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", url);
@@ -244,32 +207,27 @@ function checkStyleSheet(url)
     }
 }
 
-// checkStyleSheet("dragome/dragome.css");
-
-function setupCheckCast()
-{
+function setupCheckCast() {
     if (getQuerystring("check-cast-disabled") == "true")
-        dragomeJs.checkCast = function (obj) {
+        dragomeJs.checkCast = function(obj) {
             return obj;
         };
 }
 
-function onReady(callback)
-{
-    if ( document.readyState == "complete" ) {
-             return setTimeout( callback, 1 );
+function onReady(callback) {
+    if (document.readyState == "complete") {
+        return setTimeout(callback, 1);
     }
 
     window.addEventListener("load", function(event) {
-       callback();
+        callback();
     });
 }
 
-function jsonToQueryString(params)
-{
-	var query = "";
-	for (key in params)
-	    query += encodeURIComponent(key)+"="+encodeURIComponent(params[key])+"&";
+function jsonToQueryString(params) {
+    var query = "";
+    for (key in params)
+        query += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&";
 
-	return query;
+    return query;
 }

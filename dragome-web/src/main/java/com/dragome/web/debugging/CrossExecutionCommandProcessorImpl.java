@@ -62,9 +62,7 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 		else
 		{
 			ScriptHelper.put("variablesObject", variableCreations, null);
-			Object variablesContext= ScriptHelper.eval("createVariablesContext(variablesObject)", null);
-			ScriptHelper.put("variablesContext", variablesContext, null);
-			ScriptHelper.eval("variablesContext.node= this.node", null);
+			ScriptHelper.eval("contextEvaluator.node= this.node", null);
 
 			ScriptCrossExecutionCommand jsEvalInMethod= (ScriptCrossExecutionCommand) crossExecutionCommand;
 			ScriptHelper.put("script", jsEvalInMethod.getScript(), null);
@@ -72,7 +70,7 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 
 			if (crossExecutionCommand instanceof JsEvalInMethod)
 			{
-				Object eval2= ScriptHelper.eval("variablesContext.execute(script)", null);
+				Object eval2= ScriptHelper.eval("contextEvaluator.execute(variablesObject, script)", null);
 				ScriptHelper.put("eval2", eval2, null);
 				if (eval2 instanceof String)
 					eval2= eval2.toString();
@@ -85,12 +83,12 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			}
 			else if (crossExecutionCommand instanceof JsEvalIntegerInMethod)
 			{
-				int evalInt= ScriptHelper.evalInt("variablesContext.execute(script)", null);
+				int evalInt= ScriptHelper.evalInt("contextEvaluator.execute(variablesObject, script)", null);
 				stringResult= evalInt + "";
 			}
 			else if (crossExecutionCommand instanceof JsEvalBooleanInMethod)
 			{
-				boolean evalBoolean= ScriptHelper.evalBoolean("variablesContext.execute(script)", null);
+				boolean evalBoolean= ScriptHelper.evalBoolean("contextEvaluator.execute(variablesObject, script)", null);
 				stringResult= evalBoolean + "";
 			}
 
@@ -214,7 +212,6 @@ public class CrossExecutionCommandProcessorImpl implements CrossExecutionCommand
 			
 			CrossExecutionResult result1= (CrossExecutionResult) ScriptHelper.eval("EventDispatcher.doProcess.call(caller, variablesList, crossExecutionCommand)", this);
 
-//			CrossExecutionResult process= process(crossExecutionCommand);
 			result.add(result1);
 			methodName= crossExecutionCommand.getMethodName();
 		}

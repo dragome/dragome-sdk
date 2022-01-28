@@ -30,6 +30,7 @@ import com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor;
 public class ServerToClientServiceInvoker
 {
 	protected static List<ServiceInvocation> invocations= Collections.synchronizedList(new ArrayList<ServiceInvocation>());
+	private static long lastTime= System.currentTimeMillis();
 
 	public static synchronized ServiceInvocation invokeMethodInClient(Class<?> type, Method method, Object[] args)
 	{
@@ -37,16 +38,28 @@ public class ServerToClientServiceInvoker
 		ServiceInvocation serviceInvocation= new ServiceInvocation(type, method, args != null ? Arrays.asList(args) : new ArrayList<Object>());
 		invocations.add(serviceInvocation);
 
-		if (!WebServiceLocator.getInstance().isMethodVoid(method))
+		long currentTimeMillis= System.currentTimeMillis();
+		boolean canInvoke= false;
+
+		if (currentTimeMillis - lastTime > 500)
+		{
+			lastTime= currentTimeMillis;
+			canInvoke= true;
+		}
+		else if (currentTimeMillis - lastTime < 50)
+			canInvoke= true;
+
+		boolean methodVoid= WebServiceLocator.getInstance().isMethodVoid(method);
+		if (canInvoke || !methodVoid)
 		{
 			returnValue= serviceInvocation;
-			performInvocations();
+			performInvocations(methodVoid);
 		}
 
 		return returnValue;
 	}
 
-	private static void performInvocations()
+	private static void performInvocations(boolean isVoid)
 	{
 		try
 		{
@@ -77,6 +90,7 @@ public class ServerToClientServiceInvoker
 					commands2.add(commands);
 					ServiceInvocation serviceInvocation= new ServiceInvocation(class1, method, commands2);
 					serviceInvocation.setId(id);
+					serviceInvocation.setVoidService(isVoid);
 
 					StringBuilder partialMessage= new StringBuilder();
 					serializeServiceInvocation(partialMessage, serviceInvocation);
@@ -125,7 +139,8 @@ public class ServerToClientServiceInvoker
 		}
 		if (!serviceInvocation2.getArgs().isEmpty())
 			message.setLength(message.length() - 1);
-		message.append(")");
+		message.append("),");
+		message.append(serviceInvocation2.isVoidService());
 		message.append(")");
 	}
 
@@ -238,6 +253,6 @@ public class ServerToClientServiceInvoker
 
 	public static void finalizeMethodInvocationsInClient()
 	{
-		performInvocations();
+		performInvocations(false);
 	}
 }

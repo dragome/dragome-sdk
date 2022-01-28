@@ -34,36 +34,36 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 	public Canvas<Element> render(VisualPanel visualPanel)
 	{
 		super.render(visualPanel);
-		
+
 		Template template= ((TemplateLayout) visualPanel.getLayout()).getTemplate();
 
 		if (template != null)
 		{
-			Element element= ((Content<Element>) template.getContent()).getValue(); 
+			Element element= ((Content<Element>) template.getContent()).getValue();
 
 			addListeners(visualPanel, element);
-//			if (visualPanel.hasListener(ClickListener.class))
-//			{
-//				element.setAttribute("onclick", "_ed.onEvent(event)");
-//				element.setAttribute("onmousedown", "stopEvent(event);");
-//			}
-			
+			//			if (visualPanel.hasListener(ClickListener.class))
+			//			{
+			//				element.setAttribute("onclick", "_ed.onEvent(event)");
+			//				element.setAttribute("onmousedown", "stopEvent(event);");
+			//			}
+
 			final String id= DragomeEntityManager.add(visualPanel);
-			
+
 			return new HTMLCanvas(element);
 		}
 
 		return null;
 	}
-	
+
 	public boolean matches(VisualPanel aVisualComponent, Template child)
 	{
-		Element element= ((Content<Element>) child.getContent()).getValue(); 
+		Element element= ((Content<Element>) child.getContent()).getValue();
 
 		String nodeName= element.getNodeName();
-		
-		return "div".equalsIgnoreCase(nodeName) || "table".equalsIgnoreCase(nodeName) || "tr".equalsIgnoreCase(nodeName) || "th".equalsIgnoreCase(nodeName);
-		
-//		return child.getName().equals(aVisualComponent.getName()) || child.getName().equalsIgnoreCase("panel");
+
+		return "div".equalsIgnoreCase(nodeName) || "table".equalsIgnoreCase(nodeName) || "tr".equalsIgnoreCase(nodeName) || "th".equalsIgnoreCase(nodeName) || "td".equalsIgnoreCase(nodeName);
+
+		//		return child.getName().equals(aVisualComponent.getName()) || child.getName().equalsIgnoreCase("panel");
 	}
 }

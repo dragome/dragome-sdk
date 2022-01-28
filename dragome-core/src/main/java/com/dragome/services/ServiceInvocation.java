@@ -30,6 +30,7 @@ public class ServiceInvocation
 	private List<?> args;
 	private String id;
 	private static Map<Class<?>, Object> services= new HashMap<Class<?>, Object>();
+	private boolean voidService;
 
 	public void setId(String id)
 	{
@@ -48,12 +49,13 @@ public class ServiceInvocation
 		id= DragomeEntityManager.getEntityId(this);
 	}
 
-	public ServiceInvocation(Class<?> type, Method method, List<?> list, String id)
+	public ServiceInvocation(Class<?> type, Method method, List<?> list, String id, boolean voidService)
 	{
 		this.type= type;
 		this.method= method;
 		this.args= list;
 		this.id= id;
+		this.voidService= voidService;
 	}
 
 	public List<?> getArgs()
@@ -112,6 +114,16 @@ public class ServiceInvocation
 	public String getId()
 	{
 		return id;
+	}
+
+	public boolean isVoidService()
+	{
+		return voidService;
+	}
+
+	public void setVoidService(boolean voidService)
+	{
+		this.voidService = voidService;
 	}
 
 }

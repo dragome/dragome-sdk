@@ -143,7 +143,7 @@ public class CombinedDomInstance
 				String script2= localInstanceAssignmentScript;
 				if (modifierMethods.contains(method.getName()))
 				{
-					if ((refresher++ % 10) == 0)
+					if (false && (refresher++ % 1) == 0)
 						ScriptHelper.eval(script2, this);
 					else
 						ScriptHelper.evalNoResult(script2, this);

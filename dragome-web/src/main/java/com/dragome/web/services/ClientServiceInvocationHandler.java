@@ -35,7 +35,8 @@ public class ClientServiceInvocationHandler implements InvocationHandler
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 	{
 		ServiceInvocation serviceInvocation= ServerToClientServiceInvoker.invokeMethodInClient(type, method, args);
-		if (WebServiceLocator.getInstance().isMethodVoid(method))
+		
+		if (serviceInvocation == null || WebServiceLocator.getInstance().isMethodVoid(method))
 		{
 			return null;
 		}

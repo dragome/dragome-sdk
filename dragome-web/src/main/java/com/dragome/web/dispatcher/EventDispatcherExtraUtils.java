@@ -88,11 +88,11 @@ public class EventDispatcherExtraUtils
 	}
 
 	@MethodAlias(alias= "EventDispatcher.nsi")
-	private static ServiceInvocation nsi(String type, String methodName, String id, List<Object> args) throws NoSuchMethodException
+	private static ServiceInvocation nsi(String type, String methodName, String id, List<Object> args, boolean voidService) throws NoSuchMethodException
 	{
 		Class<?> forName= reflectionService.forName(type);
 
-		ServiceInvocation serviceInvocation= new ServiceInvocation(forName, findMethod(methodName, forName), args, id);
+		ServiceInvocation serviceInvocation= new ServiceInvocation(forName, findMethod(methodName, forName), args, id, voidService);
 		ScriptHelper.put("serviceInvocation", serviceInvocation, null);
 		return serviceInvocation;
 	}

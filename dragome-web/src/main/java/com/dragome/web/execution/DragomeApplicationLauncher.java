@@ -88,7 +88,7 @@ public class DragomeApplicationLauncher
 					try
 					{
 						Object result= serviceInvocation.invoke();
-						if (!WebServiceLocator.getInstance().isMethodVoid(serviceInvocation.getMethod()))
+						if (!serviceInvocation.isVoidService())
 						{
 							applicationExecutor.pushResult(new ServiceInvocationResult(serviceInvocation, result));
 //							System.out.println("response message: " + responseMessagesCounter++);
