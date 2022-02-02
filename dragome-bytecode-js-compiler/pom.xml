@@ -117,6 +117,13 @@
       <artifactId>bcel</artifactId>
       <version>6.0</version>
     </dependency>
+    
+    <dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.27.0-GA</version>
+		</dependency>
+    
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
@@ -125,6 +132,11 @@
     <dependency>
       <groupId>com.dragome</groupId>
       <artifactId>dragome-js-commons</artifactId>
+      <version>${dragome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dragome</groupId>
+      <artifactId>dragome-callback-evictor</artifactId>
       <version>${dragome.version}</version>
     </dependency>
   </dependencies>

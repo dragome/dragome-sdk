@@ -400,6 +400,7 @@ public final class DragomeInstrumentationClassLoader extends URLClassLoader
 	 *
 	 * @return the Class instance created from the given data
 	 */
+	@SuppressWarnings("unchecked")
 	public Class defineClassFromData(final byte[] classData, final String classname)
 	{
 		return (Class) AccessController.doPrivileged(new PrivilegedAction()
@@ -419,15 +420,15 @@ public final class DragomeInstrumentationClassLoader extends URLClassLoader
 				}
 
 				byte[] newData;
-				if (bytecodeTransformer == null || !bytecodeTransformer.requiresTransformation(classname) || loadingClass.contains(classname))
+//				if (bytecodeTransformer == null || !bytecodeTransformer.requiresTransformation(classname) || loadingClass.contains(classname))
 					newData= classData;
-				else
-				{
-					loadingClass.add(classname);
-					Thread.currentThread().setContextClassLoader(last);
-					newData= bytecodeTransformer.transform(classname, classData);
-					Thread.currentThread().setContextClassLoader(DragomeInstrumentationClassLoader.this);
-				}
+//				else
+//				{
+//					loadingClass.add(classname);
+//					Thread.currentThread().setContextClassLoader(last);
+//					newData= bytecodeTransformer.transform(classname, classData);
+//					Thread.currentThread().setContextClassLoader(DragomeInstrumentationClassLoader.this);
+//				}
 
 				ProtectionDomain domain= this.getClass().getProtectionDomain();
 				return defineClass(classname, newData, 0, newData.length, domain);

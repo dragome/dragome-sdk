@@ -15,10 +15,25 @@
  */
 package java.lang;
 
-public class InstantiationException extends Exception
-{
-	public InstantiationException(String message)
-	{
-		super(message);
-	}
+public class InstantiationException extends ReflectiveOperationException {
+    @java.io.Serial
+    private static final long serialVersionUID = -8441929162975509110L;
+
+    /**
+     * Constructs an {@code InstantiationException} with no detail message.
+     */
+    public InstantiationException() {
+        super();
+    }
+
+    /**
+     * Constructs an {@code InstantiationException} with the
+     * specified detail message.
+     *
+     * @param   s   the detail message.
+     */
+    public InstantiationException(String s) {
+        super(s);
+    }
 }
+

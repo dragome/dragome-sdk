@@ -38,7 +38,7 @@ public final class ContinuationClassAdapter extends ClassVisitor
 		className= name;
 
 		// Check that it doesn't implement Continuable (already been instrumented)
-		String[] newInterfaces= new String[interfaces.length + 1];
+		String[] newInterfaces= new String[interfaces.length];
 		for (int i= 0; i < interfaces.length; i++)
 		{
 			if (interfaces[i].equals(Type.getInternalName(Continuable.class)))
@@ -50,7 +50,7 @@ public final class ContinuationClassAdapter extends ClassVisitor
 		}
 
 		// Add the Continuable interface so that the class is marked and wont be instrumented again by mistake
-		newInterfaces[newInterfaces.length - 1]= Type.getInternalName(Continuable.class);
+//		newInterfaces[newInterfaces.length - 1]= Type.getInternalName(Continuable.class);
 
 		cv.visit(version, access, name, signature, superName, newInterfaces);
 	}

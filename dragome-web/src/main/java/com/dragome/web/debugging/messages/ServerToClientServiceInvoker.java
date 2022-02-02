@@ -49,6 +49,8 @@ public class ServerToClientServiceInvoker
 		else if (currentTimeMillis - lastTime < 50)
 			canInvoke= true;
 
+		canInvoke= false;
+
 		boolean methodVoid= WebServiceLocator.getInstance().isMethodVoid(method);
 		if (canInvoke || !methodVoid)
 		{

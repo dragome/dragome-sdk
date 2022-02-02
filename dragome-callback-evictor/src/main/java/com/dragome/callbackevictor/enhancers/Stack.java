@@ -17,6 +17,7 @@
 package com.dragome.callbackevictor.enhancers;
 
 import java.io.Serializable;
+import java.lang.reflect.Proxy;
 
 import com.dragome.commons.ProxyRelatedInvocationHandler;
 
@@ -246,8 +247,8 @@ public class Stack implements Serializable
 	{
 		if (o instanceof ProxyRelatedInvocationHandler)
 		{
-			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler= (ProxyRelatedInvocationHandler) o;
-			o= proxyRelatedInvocationHandler.getProxy();
+			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler = (ProxyRelatedInvocationHandler) o;
+			o = proxyRelatedInvocationHandler.getProxy();
 		}
 
 		if (rTop == rstack.length)

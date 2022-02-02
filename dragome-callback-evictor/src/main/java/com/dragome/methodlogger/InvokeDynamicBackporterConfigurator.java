@@ -16,6 +16,7 @@
 package com.dragome.methodlogger;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 import com.dragome.commons.InstrumentationDragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeTransformer;
@@ -23,19 +24,22 @@ import com.dragome.compiler.invokedynamic.serverside.InvokeDynamicBackporter;
 
 public class InvokeDynamicBackporterConfigurator extends InstrumentationDragomeConfigurator
 {
-	public InvokeDynamicBackporterConfigurator()
+	private Predicate<String> requiredChecker;
+
+	public InvokeDynamicBackporterConfigurator(Predicate<String> requiredChecker)
 	{
+		this.requiredChecker = requiredChecker;
 	}
 
 	public InvokeDynamicBackporterConfigurator(String... includedPaths)
 	{
-		this();
+		this(s-> true);
 		this.includedPaths.addAll(Arrays.asList(includedPaths));
 	}
 
 	public BytecodeTransformer getBytecodeTransformer()
 	{
-		return new InvokeDynamicBackporter();
+		return new InvokeDynamicBackporter(requiredChecker);
 	}
 
 	public boolean filterClassPath(String classpathEntry)

@@ -29,6 +29,8 @@ import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
 
 import com.dragome.callbackevictor.serverside.bytecode.transformation.ResourceTransformer;
+import com.dragome.compiler.invokedynamic.serverside.ClassWriterExtension;
+import com.dragome.compiler.invokedynamic.serverside.InvokeDynamicBackporter;
 
 public final class AsmClassTransformer implements ResourceTransformer {
 
@@ -41,7 +43,9 @@ public final class AsmClassTransformer implements ResourceTransformer {
     }
 
     private byte[] transform(final ClassReader cr) {
-        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        final ClassWriter cw = new ClassWriterExtension(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        
+        
         // print bytecode before transformation
         // cr.accept(new TraceClassVisitor(new ContinuationClassAdapter(this, cw), new PrintWriter(System.out)), false);
 
