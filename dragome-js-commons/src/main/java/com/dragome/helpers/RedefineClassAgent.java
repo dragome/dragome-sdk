@@ -55,7 +55,7 @@ public class RedefineClassAgent {
 	 * How long to wait for the agent to load before giving up and assuming the load
 	 * failed.
 	 */
-	private static final int AGENT_LOAD_WAIT_TIME_SEC = 10;
+	private static final int AGENT_LOAD_WAIT_TIME_SEC = 2;
 
 	/**
 	 * Agent entry point. Do not call this directly.
