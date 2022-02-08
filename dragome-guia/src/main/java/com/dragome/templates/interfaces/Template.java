@@ -54,4 +54,5 @@ public interface Template extends EventProducer
 	void setChildren(List<Template> children);
 	void setName(String name);
 	void setContent(Content<?> templateContent);
+	public boolean contains(Template template);
 }

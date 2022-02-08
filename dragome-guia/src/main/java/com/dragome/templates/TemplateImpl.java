@@ -302,4 +302,13 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	{
 		this.templateContent= templateContent;
 	}
+
+	@Override
+	public boolean contains(Template template)
+	{
+	    if (children.contains(template))
+		return true;
+	    else
+		return children.stream().anyMatch(t-> t.contains(template));
+	}
 }
