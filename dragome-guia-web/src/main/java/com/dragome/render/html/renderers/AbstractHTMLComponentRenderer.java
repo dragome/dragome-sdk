@@ -124,13 +124,13 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 	public boolean matches(T aVisualComponent, Template child)
 	{
 		boolean compatible= isTemplateCompatible(child);
-
-		if (!compatible)
-		{
-			for (Template c : child.getChildren())
-				compatible|= isTemplateCompatible(c);
-		}
-
+//
+//		if (!compatible)
+//		{
+//			for (Template c : child.getChildren())
+//				compatible|= isTemplateCompatible(c);
+//		}
+//
 		return compatible;
 	}
 
@@ -151,7 +151,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 					{
 						public void changingTemplate(VisualComponent aComponent, Template currentTemplate, Template newTemplate)
 						{
-							clearRendering(aComponent, currentTemplate);
+							//clearRendering(aComponent, currentTemplate);
 						}
 					});
 

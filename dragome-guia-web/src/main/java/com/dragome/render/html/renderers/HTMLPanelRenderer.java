@@ -15,6 +15,9 @@
  */
 package com.dragome.render.html.renderers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import com.dragome.guia.components.interfaces.VisualPanel;
@@ -58,11 +61,13 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 
 	public boolean matches(VisualPanel aVisualComponent, Template child)
 	{
+	    	List<String> panelTags= Arrays.asList("div", "table", "tr", "th", "td", "tbody");
+	    
 		Element element= ((Content<Element>) child.getContent()).getValue();
 
 		String nodeName= element.getNodeName();
 
-		return "div".equalsIgnoreCase(nodeName) || "table".equalsIgnoreCase(nodeName) || "tr".equalsIgnoreCase(nodeName) || "th".equalsIgnoreCase(nodeName) || "td".equalsIgnoreCase(nodeName);
+		return panelTags.contains(nodeName.toLowerCase());
 
 		//		return child.getName().equals(aVisualComponent.getName()) || child.getName().equalsIgnoreCase("panel");
 	}
