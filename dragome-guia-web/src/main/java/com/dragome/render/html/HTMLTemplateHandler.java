@@ -32,18 +32,19 @@ import com.dragome.web.html.dom.w3c.ElementExtension;
 public class HTMLTemplateHandler implements TemplateHandler
 {
 	private static int i;
+	private static int cloneNumber;
 
 	public void makeVisible(Template clonedChild)
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
 		DomHelper.removeClassName(element, "dragome-hide");
-		//		element.removeAttribute("style");
+		// element.removeAttribute("style");
 	}
 
 	public void makeInvisible(Template clonedChild)
 	{
 		Element element= (Element) clonedChild.getContent().getValue();
-		//		element.setAttribute("style", "display:none;");
+		// element.setAttribute("style", "display:none;");
 		DomHelper.addClassName(element, "dragome-hide");
 	}
 
@@ -62,11 +63,12 @@ public class HTMLTemplateHandler implements TemplateHandler
 			node.setAttribute("data-cloned-element", "" + i++);
 
 		Element cloneNode= (Element) node.cloneNode(true);
-		//		node.getParentNode().appendChild(cloneNode);
+		// node.getParentNode().appendChild(cloneNode);
 
 		Template clonedTemplate= cloneChildren(template, cloneNode);
+		clonedTemplate.updateName(template.getName() + "_" + ++cloneNumber);
 
-		//		node.getParentNode().removeChild(cloneNode);
+		// node.getParentNode().removeChild(cloneNode);
 
 		return clonedTemplate;
 	}
@@ -108,6 +110,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 	{
 		((Element) child.getContent().getValue()).setAttribute("data-result", name);
 	}
+
 	public void releaseTemplate(Template clonedChild)
 	{
 		((Element) clonedChild.getContent().getValue()).removeAttribute("data-template");
