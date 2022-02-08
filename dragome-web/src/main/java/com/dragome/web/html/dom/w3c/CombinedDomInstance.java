@@ -135,7 +135,12 @@ public class CombinedDomInstance
 
 				ScriptHelper.put("delegate", newInstance, this);
 				String finalScript= "delegate.node= " + localInstanceAssignmentScript;
-				ScriptHelper.evalNoResult(finalScript, this);
+				
+				if (modifierMethods.contains(method.getName()))
+						ScriptHelper.eval(finalScript, this);
+					else
+						ScriptHelper.evalNoResult(finalScript, this);
+
 				return newInstance;
 			}
 			else
@@ -146,7 +151,7 @@ public class CombinedDomInstance
 					if (false && (refresher++ % 1) == 0)
 						ScriptHelper.eval(script2, this);
 					else
-						ScriptHelper.evalNoResult(script2, this);
+						ScriptHelper.eval(script2, this);
 				}
 				else
 				{
