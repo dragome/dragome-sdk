@@ -22,8 +22,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ObjectArray;
 import org.w3c.dom.TypeInfo;
 import org.w3c.dom.UserDataHandler;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.html.HTMLCollection;
+import org.w3c.dom.views.ClientRect;
+import org.w3c.dom.views.ClientRectList;
 
 public class AbstractElement implements Element
 {
@@ -85,12 +91,6 @@ public class AbstractElement implements Element
 	}
 
 	public Node getNextSibling()
-	{
-
-		return null;
-	}
-
-	public NamedNodeMap getAttributes()
 	{
 
 		return null;
@@ -360,5 +360,215 @@ public class AbstractElement implements Element
 	public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException
 	{
 
+	}
+
+
+	public Element getParentElement()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void addEventListener(String type, EventListener listener)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void addEventListener(String type, EventListener listener, boolean capture)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void removeEventListener(String type, EventListener listener)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void removeEventListener(String type, EventListener listener, boolean capture)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public boolean dispatchEvent(Event event)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public NodeList getElementsByClassName(String classNames)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public HTMLCollection getChildren()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Element getFirstElementChild()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Element getLastElementChild()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Element getPreviousElementSibling()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Element getNextElementSibling()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public int getChildElementCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public ClientRectList getClientRects()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public ClientRect getBoundingClientRect()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void scrollIntoView()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void scrollIntoView(boolean top)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public int getScrollTop()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public void setScrollTop(int scrollTop)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public int getScrollLeft()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public void setScrollLeft(int scrollLeft)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public int getScrollWidth()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int getScrollHeight()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int getClientTop()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int getClientLeft()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int getClientWidth()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int getClientHeight()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public Element querySelector(String selectors)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public NodeList querySelectorAll(String selectors)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public NamedNodeMap getAttributes()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

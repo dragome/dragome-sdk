@@ -89,6 +89,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 				renderInnerContent(visualList, selectElement);
 
 				ElementExtension eventTarget= JsCast.castTo(selectElement, ElementExtension.class);
+				eventTarget.removeEventListeners("change");
 				eventTarget.addEventListener("change", new EventListener()
 				{
 					public void handleEvent(Event evt)
@@ -113,7 +114,8 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
 					isSelected|= !visualList.isMultipleItems() && element == value;
 
-					Element querySelector= selectExtension.querySelector("option[value='" + rendered + "']");
+					String elementValue= createElementValue(element);
+					Element querySelector= selectExtension.querySelector("option[value='" +  elementValue + "']");
 					if (querySelector != null)
 					{
 						if (isSelected)
@@ -129,7 +131,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 						if (isSelected)
 							optionElement.setAttribute("selected", "selected");
 
-						optionElement.setAttribute("value", rendered);
+						optionElement.setAttribute("value", elementValue);
 						setElementInnerHTML(optionElement, rendered);
 
 						selectExtension.appendChild(optionElement);
@@ -148,7 +150,9 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 						Renderer<Object> renderer= visualList.getRenderer();
 						String rendered= renderer.render(element);
 
-						if (value2.equals(rendered))
+						String elementValue= createElementValue(element);
+
+						if (value2.equals(elementValue))
 							found= true;
 					}
 
@@ -156,10 +160,15 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 						selectElement.removeChild(element2);
 				}
 			}
+
 		});
 
 		return canvas;
 
+	}
+	private String createElementValue(Object element)
+	{
+		return System.identityHashCode(element) + "";
 	}
 	protected int getSelectElementSize()
 	{
@@ -176,7 +185,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		{
 			Node item= options.item(i);
 			Element element= (Element) item;
-			
+
 			HTMLOptionElement htmlOptionElement= JsCast.castTo(element, HTMLOptionElement.class);
 			boolean isSelected= htmlOptionElement.getSelected();
 			String value= element.getAttribute("value");
@@ -203,17 +212,18 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		for (Object object : acceptableValues)
 		{
 			String render= renderer.render(object);
-			if (render.equals(value))
+			String elementValue= createElementValue(object);
+
+			if (elementValue.equals(value))
 				return object;
 		}
 		return null;
 	}
-	
-	
+
 	public boolean matches(VisualListBox<Object> aVisualComponent, Template child)
 	{
-		Element element= ((Content<Element>) child.getContent()).getValue(); 
+		Element element= ((Content<Element>) child.getContent()).getValue();
 		String nodeName= element.getNodeName();
-		return "select".equalsIgnoreCase(nodeName) ;
+		return "select".equalsIgnoreCase(nodeName);
 	}
 }

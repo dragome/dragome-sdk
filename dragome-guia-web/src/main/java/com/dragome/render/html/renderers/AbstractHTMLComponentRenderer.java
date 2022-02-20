@@ -15,13 +15,18 @@
  */
 package com.dragome.render.html.renderers;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EventListener;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.events.EventTarget;
 
+import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
@@ -110,7 +115,10 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		ElementExtension eventTarget= JsCast.castTo(element, ElementExtension.class);
 
 		for (String listener : listeners)
+		{
+			eventTarget.removeEventListeners(listener);
 			eventTarget.addEventListener(listener, new MultipleEventListener<T>(visualComponent), false);
+		}
 	}
 
 	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName, Class<? extends EventListener> expectedType)
@@ -181,5 +189,21 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 	public boolean isTemplateCompatible(Template child)
 	{
 		return false;
+	}
+	
+
+	
+	public static Optional<Template> findMatchingTemplateFor(VisualComponent aVisualComponent, Template template)
+	{
+		 ComponentRenderer<Object, VisualComponent> renderer= GuiaServiceLocator.getInstance().getTemplateManager().getComponentRenderer();
+
+		List<Template> children= new ArrayList<>(template.getChildren());
+		Collections.reverse(children);
+
+		return children.stream().filter(child -> {
+			Element e= (Element) child.getContent().getValue();
+			String attribute= e.getAttribute("data-component-id");
+			return renderer.matches(aVisualComponent, child) && !child.isActive() && attribute == null;
+		}).findFirst();
 	}
 }

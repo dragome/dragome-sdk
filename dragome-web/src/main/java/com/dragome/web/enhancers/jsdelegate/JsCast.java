@@ -20,7 +20,6 @@ import com.dragome.services.WebServiceLocator;
 
 public class JsCast
 {
-	
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
 	{
@@ -34,7 +33,13 @@ public class JsCast
 		ScriptHelper.put("eventTarget", eventTarget, null);
 		ScriptHelper.put("type", type, null);
 
-		ScriptHelper.evalNoResult("eventTarget.node.addEventListener(type, (function(){handleEventMethod.apply(eventListener, arguments)}))", null);
+		String handlerName= "handler_" + type;
+		String handlerListenerName= handlerName + "_listener";
+		ScriptHelper.put("handlerName", handlerName, null);
+		ScriptHelper.put("handlerListenerName", handlerListenerName, null);
+		ScriptHelper.evalNoResult("eventTarget.node[handlerName]= handleEventMethod", null);
+		ScriptHelper.evalNoResult("eventTarget.node[handlerListenerName]= eventListener", null);
+		ScriptHelper.evalNoResult("eventTarget.node.addEventListener(type, (function(event){event.currentTarget[\"" + handlerName + "\"].apply(event.currentTarget[\"" + handlerListenerName + "\"], arguments)}))", null);
 	}
 
 	public static void addOnEventListener(EventTarget eventTarget, EventListener eventListener, String methodName)
@@ -47,7 +52,14 @@ public class JsCast
 		ScriptHelper.evalNoResult("eventListener.javaRefId= javaRefId", null);
 
 		ScriptHelper.put("eventTarget", eventTarget, null);
-		String script= "eventTarget.node." + methodName + "= (function(){handleEventMethod.apply(eventListener, arguments)})";
+		
+		String handlerName= "handler_" + methodName;
+		String handlerListenerName= handlerName + "_listener";
+		ScriptHelper.put("handlerName", handlerName, null);
+		ScriptHelper.put("handlerListenerName", handlerListenerName, null);
+		ScriptHelper.evalNoResult("eventTarget.node[handlerName]= handleEventMethod", null);
+		ScriptHelper.evalNoResult("eventTarget.node[handlerListenerName]= eventListener", null);
+		String script= "eventTarget.node." + methodName + "= (function(event){event.target[\"" + handlerName + "\"].apply(event.target[\"" + handlerListenerName + "\"], arguments)})";
 		ScriptHelper.evalNoResult(script, null);
 	}
 

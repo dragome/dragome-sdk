@@ -121,6 +121,7 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 				//				ScriptHelper.eval("textFieldElement.node.value=value", this);
 
 				ElementExtension eventTarget= JsCast.castTo(textFieldElement, ElementExtension.class);
+				eventTarget.removeEventListeners("change");
 				eventTarget.addEventListener("change", new EventListener()
 				{
 					public void handleEvent(Event evt)

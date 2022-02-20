@@ -21,8 +21,8 @@ import com.dragome.web.debugging.interfaces.CrossExecutionCommandProcessor;
 import com.dragome.web.debugging.interfaces.CrossExecutionResult;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.w3c.BrowserDomHandler;
-import com.dragome.web.html.dom.w3c.CobraDomHandler;
 import com.dragome.web.html.dom.w3c.CombinedDomInstance;
+import com.dragome.web.html.dom.w3c.serverside.CobraDomHandler;
 
 public class RemoteScriptHelper implements ScriptHelperInterface
 {

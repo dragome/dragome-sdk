@@ -95,4 +95,11 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 
 		addListeners(radioButton, radioButtonElement);
 	}
+	
+	public boolean isTemplateCompatible(Template child)
+	{
+		Element element= (Element) child.getContent().getValue();
+		String tagName= element.getTagName();
+		return tagName.equalsIgnoreCase("input") && "radio".equals(element.getAttribute("type"));
+	}
 }

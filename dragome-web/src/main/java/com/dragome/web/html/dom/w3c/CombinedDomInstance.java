@@ -24,6 +24,7 @@ import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.helpers.XPathGenerator;
+import com.dragome.web.html.dom.w3c.serverside.CobraDomHandler;
 
 public class CombinedDomInstance
 {
@@ -34,7 +35,7 @@ public class CombinedDomInstance
 	private Object remoteInstance;
 	private HTMLDocumentImpl document;
 	private static String innerHTML;
-	List<String> modifierMethods= Arrays.asList("setInnerHTML", "insertBefore", "appendChild", "replaceChild", "removeChild", "setTextContent", "setAttribute", "removeAttribute");
+	List<String> modifierMethods= Arrays.asList("removeEventListeners", "setInnerHTML", "insertBefore", "appendChild", "replaceChild", "removeChild", "setTextContent", "setAttribute", "removeAttribute");
 	private static int refresher;
 
 	public static void reset()
@@ -135,11 +136,11 @@ public class CombinedDomInstance
 
 				ScriptHelper.put("delegate", newInstance, this);
 				String finalScript= "delegate.node= " + localInstanceAssignmentScript;
-				
+
 				if (modifierMethods.contains(method.getName()))
-						ScriptHelper.eval(finalScript, this);
-					else
-						ScriptHelper.evalNoResult(finalScript, this);
+					ScriptHelper.evalNoResult(finalScript, this);
+				else
+					ScriptHelper.evalNoResult(finalScript, this);
 
 				return newInstance;
 			}
@@ -148,10 +149,10 @@ public class CombinedDomInstance
 				String script2= localInstanceAssignmentScript;
 				if (modifierMethods.contains(method.getName()))
 				{
-					if (false && (refresher++ % 1) == 0)
-						ScriptHelper.eval(script2, this);
+					if (false && (refresher++ % 40) == 0)
+						ScriptHelper.evalNoResult(script2, this);
 					else
-						ScriptHelper.eval(script2, this);
+						ScriptHelper.evalNoResult(script2, this);
 				}
 				else
 				{
@@ -217,17 +218,16 @@ public class CombinedDomInstance
 						{
 							script1= createElementAccessorScript(object);
 
+							Object changedNode= args[i];
 							if (method.getName().equals("replaceChild") && i == 1)
 							{
 								Object newInstance= invokeAndCreateLocalInstance(script1, method, true);
-
-								if (args[i] != null && Proxy.isProxyClass(args[i].getClass()))
-								{
-									ProxyRelatedInvocationHandler invocationHandler= (ProxyRelatedInvocationHandler) Proxy.getInvocationHandler(args[i]);
-									CombinedDomInstance combinedDomInstance= (CombinedDomInstance) invocationHandler.getProxy();
-									combinedDomInstance.setRemoteInstance(newInstance);
-									updateMaps(combinedDomInstance.getLocalInstance(), combinedDomInstance.getRemoteInstance(), combinedDomInstance);
-								}
+								replaceRemoteInstance(newInstance, changedNode);
+							}
+							else if (method.getName().equals("removeChild") && i == 0)
+							{
+								Object newInstance= invokeAndCreateLocalInstance(script1, method, true);
+								replaceRemoteInstance(newInstance, changedNode);
 							}
 						}
 						else
@@ -255,6 +255,17 @@ public class CombinedDomInstance
 			script= "";
 		}
 		return script;
+	}
+
+	private void replaceRemoteInstance(Object newInstance, Object changedNode)
+	{
+		if (changedNode != null && Proxy.isProxyClass(changedNode.getClass()))
+		{
+			ProxyRelatedInvocationHandler invocationHandler= (ProxyRelatedInvocationHandler) Proxy.getInvocationHandler(changedNode);
+			CombinedDomInstance combinedDomInstance= (CombinedDomInstance) invocationHandler.getProxy();
+			combinedDomInstance.setRemoteInstance(newInstance);
+			updateMaps(combinedDomInstance.getLocalInstance(), combinedDomInstance.getRemoteInstance(), combinedDomInstance);
+		}
 	}
 
 	public void addEventListenerWrapper(EventTarget eventTarget, String type, EventListener eventListener)

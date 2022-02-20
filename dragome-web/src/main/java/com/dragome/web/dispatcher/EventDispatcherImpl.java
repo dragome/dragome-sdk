@@ -68,5 +68,7 @@ public class EventDispatcherImpl implements EventDispatcher
 				processing= false;
 			}
 		}
+		else
+			throw new CannotExecuteJavaMethod();
 	}
 }

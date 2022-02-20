@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 
 import com.dragome.services.ServiceInvocation;
 import com.dragome.services.ServiceLocator;
+import com.dragome.web.dispatcher.CannotExecuteJavaMethod;
 
 public class SorterMessagesQueue implements Runnable
 {
@@ -48,6 +49,7 @@ public class SorterMessagesQueue implements Runnable
 				currentMessage= recievedMessages.get(lastMessageId);
 				if (currentMessage != null)
 				{
+					recievedMessages.remove(lastMessageId);
 					lastMessageId++;
 
 					final String finalMessage= currentMessage;
@@ -57,8 +59,21 @@ public class SorterMessagesQueue implements Runnable
 					{
 						public void run()
 						{
-							ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(finalMessage);
-							serviceInvocation.invoke();
+							boolean ready= false;
+
+							while (!ready)
+							{
+								ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(finalMessage);
+								try
+								{
+									serviceInvocation.invoke();
+									ready= true;
+								}
+								catch (CannotExecuteJavaMethod e)
+								{
+									ready= false;
+								}
+							}
 						}
 					});
 				}

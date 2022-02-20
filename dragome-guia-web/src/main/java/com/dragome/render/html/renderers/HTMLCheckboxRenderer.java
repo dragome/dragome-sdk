@@ -64,7 +64,8 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 			Element value= textElementContent.getValue();
 			Node parentNode= value.getParentNode();
 			Text optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createTextNode(checkbox.getCaption());
-			parentNode.replaceChild(optionElement, value);
+			if (parentNode != null)
+				parentNode.replaceChild(optionElement, value);
 		}
 		else
 		{
@@ -73,12 +74,11 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 			radioButtonElement= document.createElement("input");
 			setupElement(checkbox, radioButtonElement);
 		}
-		
+
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 		canvas.setContent(radioButtonElement);
 		return canvas;
 	}
-	
 
 	public void setupElement(final VisualCheckbox checkbox, final Element button1)
 	{
@@ -86,14 +86,14 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 		button1.setAttribute("value", checkbox.getCaption());
 		updateChecked(checkbox, button1);
 
-//		checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-//		{
-//			public void onValueChange(ValueChangeEvent<Boolean> event)
-//			{
-//				updateChecked(checkbox, button1);
-//			}
-//		});
-		
+		//		checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+		//		{
+		//			public void onValueChange(ValueChangeEvent<Boolean> event)
+		//			{
+		//				updateChecked(checkbox, button1);
+		//			}
+		//		});
+
 		checkbox.addListener(ClickListener.class, new ClickListener()
 		{
 			public void clickPerformed(VisualComponent aVisualComponent)
@@ -103,7 +103,7 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 				checkbox.setValue(value);
 			}
 		});
-		
+
 		addListeners(checkbox, button1);
 	}
 
@@ -111,16 +111,25 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 	{
 		boolean checked= checkbox.getValue() != null && checkbox.getValue();
 		String isChecked= checked ? "true" : "false";
-		
+
 		HTMLInputElement htmlInputElement= JsCast.castTo(button1, HTMLInputElement.class);
 		htmlInputElement.setChecked(checked);
-//		ScriptHelper.put("checked", isChecked, this);
-//		ScriptHelper.put("button1", button1, this);
-//		ScriptHelper.evalNoResult("button1.node.checked= (checked == 'true')", this);
+		//		ScriptHelper.put("checked", isChecked, this);
+		//		ScriptHelper.put("button1", button1, this);
+		//		ScriptHelper.evalNoResult("button1.node.checked= (checked == 'true')", this);
 		//				
 		//				if (checked)
 		//					button1.setAttribute("checked", "checked");
 		//				else
 		//					button1.removeAttribute("checked");
+	}
+
+	public boolean isTemplateCompatible(Template child)
+	{
+		
+		return child.getChildren().size() == 2 && child.hasChild("input") && child.hasChild("text");
+		//		Element element= (Element) child.getContent().getValue();
+		//		String tagName= element.getTagName();
+		//		return tagName.equalsIgnoreCase("input") && "checkbox".equals(element.getAttribute("type"));
 	}
 }
