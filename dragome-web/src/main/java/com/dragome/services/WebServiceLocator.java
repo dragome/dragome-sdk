@@ -31,7 +31,6 @@ import com.dragome.web.debugging.messages.ServerToClientMessageChannel;
 import com.dragome.web.dispatcher.EventDispatcher;
 import com.dragome.web.dispatcher.EventDispatcherImpl;
 import com.dragome.web.html.dom.DomHandler;
-import com.dragome.web.html.dom.w3c.BrowserDomHandler;
 import com.dragome.web.html.dom.w3c.serverside.CobraDomHandler;
 import com.dragome.web.services.BrowserParametersHandler;
 import com.dragome.web.services.ClientSideServiceFactory;

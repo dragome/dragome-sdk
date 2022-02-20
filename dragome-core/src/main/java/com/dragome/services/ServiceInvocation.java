@@ -15,6 +15,7 @@
  */
 package com.dragome.services;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 import com.dragome.commons.ContinueReflection;
 import com.dragome.helpers.DragomeEntityManager;
+import com.dragome.web.dispatcher.CannotExecuteJavaMethod;
 
 public class ServiceInvocation
 {
@@ -98,19 +100,27 @@ public class ServiceInvocation
 				Class<?> implementationForInterface= ServiceLocator.getInstance().getMetadataManager().getImplementationForInterface(type);
 				service= implementationForInterface.newInstance();
 				services.put(type, service);
-//				System.out.println("service " + type.getName() + " created");
+				//				System.out.println("service " + type.getName() + " created");
 			}
 
 			Object[] array= args.toArray();
 			Method localMethod= method;
-			
+
 			return localMethod.invoke(service, array);
+		}
+		catch (InvocationTargetException e)
+		{
+			if (e.getTargetException() instanceof CannotExecuteJavaMethod)
+				throw new CannotExecuteJavaMethod();
+			else
+				throw new RuntimeException(e);
 		}
 		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
+
 	public String getId()
 	{
 		return id;
@@ -123,7 +133,7 @@ public class ServiceInvocation
 
 	public void setVoidService(boolean voidService)
 	{
-		this.voidService = voidService;
+		this.voidService= voidService;
 	}
 
 }
