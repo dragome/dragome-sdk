@@ -17,6 +17,7 @@ package com.dragome.templates.interfaces;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dragome.model.interfaces.EventProducer;
 
@@ -55,4 +56,5 @@ public interface Template extends EventProducer
 	void setName(String name);
 	void setContent(Content<?> templateContent);
 	public boolean contains(Template template);
+	public Template getTopParent();
 }

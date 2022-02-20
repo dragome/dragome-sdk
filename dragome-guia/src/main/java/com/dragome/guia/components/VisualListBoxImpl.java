@@ -99,6 +99,9 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 		}
 		else
 		{
+			if (acceptableValues.size() == 0)
+				return null;
+
 			selectedIndex= selectedIndex % acceptableValues.size();
 			return acceptableValues.get(selectedIndex);
 		}

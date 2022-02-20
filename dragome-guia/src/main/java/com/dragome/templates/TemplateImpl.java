@@ -16,10 +16,11 @@
 package com.dragome.templates;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.DefaultEventProducer;
@@ -69,7 +70,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	private Content<?> templateContent;
 	protected Boolean inner= Boolean.FALSE;
 	private Template parent;
-	private List<Template> children= new ArrayList<Template>();
+	protected List<Template> children= new ArrayList<Template>();
 	protected TemplateListener templateListener= GuiaServiceLocator.getInstance().getTemplateListener();
 
 	public TemplateImpl()
@@ -161,14 +162,17 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public void insertAfter(Template newChild, Template referenceChild)
 	{
-		Template previous= addToChildren(newChild);
+		Template previous= addToChildren(newChild, t -> {
+			int indexOf= children.indexOf(referenceChild);
+			children.add(indexOf + 1, t);
+		});
 
-		templateListener.insertAfter(newChild, referenceChild, childrenMap, getChildren(), this);
+		templateListener.insertAfter(newChild, referenceChild, new HashMap<String, Template>(childrenMap), new ArrayList<Template>(children), this);
 	}
 
 	public void remove(Template child)
 	{
-		getChildren().remove(child);
+		children.remove(child);
 		childrenMap.remove(child.getName());
 		child.setParent(null);
 		templateListener.childRemoved(child);
@@ -176,14 +180,17 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public void insertBefore(Template newChild, Template referenceChild)
 	{
-		Template previous= addToChildren(newChild);
+		Template previous= addToChildren(newChild, t -> {
+			int indexOf= children.indexOf(referenceChild);
+			children.add(indexOf, t);
+		});
 
-		templateListener.insertBefore(newChild, referenceChild, childrenMap, getChildren(), this);
+		templateListener.insertBefore(newChild, referenceChild, new HashMap<String, Template>(childrenMap), new ArrayList<Template>(children), this);
 	}
 
 	public void addChild(Template template)
 	{
-		Template previous= addToChildren(template);
+		Template previous= addToChildren(template, t -> children.add(t));
 
 		if (previous != null)
 			templateListener.childReplaced(this, previous, template);
@@ -191,20 +198,33 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 			templateListener.childAdded(this, template);
 	}
 
-	public Template addToChildren(Template template)
+	public Template addToChildren(Template template, Consumer<Template> templateInserter)
 	{
-		Template previous= childrenMap.put(template.getName(), template);
-		if (previous != null)
+		Template previous= null;
+		if (template.getName() != null)
 		{
-			previous.setParent(null);
-			getChildren().set(getChildren().indexOf(previous), template);
+			if (hasChild(template.getName()))
+			{
+				Template child= getChild(template.getName());
+				children.remove(child);
+			}
+			previous= childrenMap.put(template.getName(), template);
+			if (previous != null)
+				previous.setParent(null);
 		}
-		else
+
+		Consumer<Template> consumer= templateInserter;
+
+		consumer.accept(template);
+
+		if (template.getParent() != null)
 		{
-			getChildren().add(template);
+			Template parent2= template.getParent();
+			parent2.remove(template);
 		}
 
 		template.setParent(this);
+
 		return previous;
 	}
 
@@ -219,22 +239,22 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		return getName() + ": (" + result.toString() + ")";
 	}
 
-	public int hashCode()
-	{
-		return getName().hashCode();
-	}
-
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof Template)
-		{
-			Template other= (Template) obj;
-			boolean childrenEqual= children.size() == other.getChildren().size();
-			return name.equals(other.getName()) && childrenEqual;
-		}
-		else
-			return false;
-	}
+	//	public int hashCode()
+	//	{
+	//		return getName().hashCode() + children.hashCode();
+	//	}
+	//
+	//	public boolean equals(Object obj)
+	//	{
+	//		if (obj instanceof Template)
+	//		{
+	//			Template other= (Template) obj;
+	//			boolean childrenEqual= children.size() == other.getChildren().size();
+	//			return name.equals(other.getName()) && childrenEqual;
+	//		}
+	//		else
+	//			return false;
+	//	}
 
 	public void removeChild(String name)
 	{
@@ -279,7 +299,7 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 
 	public List<Template> getChildren()
 	{
-		return children;
+		return Collections.unmodifiableList(children);
 	}
 
 	public boolean isActive()
@@ -306,9 +326,15 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	@Override
 	public boolean contains(Template template)
 	{
-	    if (children.contains(template))
-		return true;
-	    else
-		return children.stream().anyMatch(t-> t.contains(template));
+		if (children.contains(template))
+			return true;
+		else
+			return children.stream().anyMatch(t -> t.contains(template));
+	}
+
+	@Override
+	public Template getTopParent()
+	{
+		return parent == null ? this : parent.getTopParent();
 	}
 }

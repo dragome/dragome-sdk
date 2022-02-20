@@ -7,10 +7,7 @@ import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.dragome.render.html.renderers.Mergeable;
-import com.dragome.templates.TemplateImpl;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateListener;
@@ -79,7 +76,8 @@ public class SwingTemplateListener implements TemplateListener
 		if (isInvokingEvents())
 		{
 			Component referenceElement= (Component) referenceChild.getContent().getValue();
-			Object componentConstraints= ((MigLayout) referenceElement.getParent().getLayout()).getComponentConstraints(referenceElement);
+//			Object componentConstraints= ((MigLayout) referenceElement.getParent().getLayout()).getComponentConstraints(referenceElement);
+			Object componentConstraints= null;
 
 			int index= childrenList.indexOf(referenceChild) - 1;
 			if (index < 0)
