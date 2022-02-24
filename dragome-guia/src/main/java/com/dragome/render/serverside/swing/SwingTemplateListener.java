@@ -106,12 +106,4 @@ public class SwingTemplateListener implements TemplateListener
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public boolean isActive(Template templateImpl)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

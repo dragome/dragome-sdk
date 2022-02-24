@@ -23,15 +23,15 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.dragome.guia.GuiaServiceLocator;
-import com.dragome.guia.components.DefaultEventProducer;
 import com.dragome.render.html.renderers.Mergeable;
+import com.dragome.render.interfaces.TemplateHandler;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
-import com.dragome.templates.interfaces.TemplateListener;
 import com.dragome.templates.interfaces.TemplateVisitor;
 
-public class TemplateImpl extends DefaultEventProducer implements Template
+public class TemplateImpl extends AbstractTemplate
 {
+	private TemplateHandler templateHandler= GuiaServiceLocator.getInstance().getTemplateHandler();
 
 	public static Template findTemplate(Template templateElement, final String name)
 	{
@@ -65,27 +65,21 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		return currentTemplateElement;
 	}
 
-	private String name;
 	protected Map<String, Template> childrenMap= new HashMap<String, Template>();
 	private Content<?> templateContent;
 	protected Boolean inner= Boolean.FALSE;
-	private Template parent;
+	Template parent;
 	protected List<Template> children= new ArrayList<Template>();
-	protected TemplateListener templateListener= GuiaServiceLocator.getInstance().getTemplateListener();
 
 	public TemplateImpl()
 	{
+		super();
 	}
 
 	public TemplateImpl(String aName)
 	{
 		this();
 		setName(aName);
-	}
-
-	public String getName()
-	{
-		return name;
 	}
 
 	public Content<?> getContent()
@@ -115,13 +109,6 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		//		}
 	}
 
-	public void updateName(String name)
-	{
-		this.setName(name);
-
-		templateListener.nameChanged(this, name);
-	}
-
 	public void updateContent(Content<?> templateContent)
 	{
 		templateListener.contentChanged(this, this.templateContent, templateContent);
@@ -143,11 +130,6 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public Boolean isInner()
 	{
 		return inner;
-	}
-
-	public Content<?> getElementById(String id)
-	{
-		return childrenMap.get(id).getContent();
 	}
 
 	public Template getParent()
@@ -201,14 +183,15 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 	public Template addToChildren(Template template, Consumer<Template> templateInserter)
 	{
 		Template previous= null;
-		if (template.getName() != null)
+		String templateName= template.getName();
+		if (templateName != null)
 		{
-			if (hasChild(template.getName()))
+			if (hasChild(templateName))
 			{
-				Template child= getChild(template.getName());
+				Template child= getChild(templateName);
 				children.remove(child);
 			}
-			previous= childrenMap.put(template.getName(), template);
+			previous= childrenMap.put(templateName, template);
 			if (previous != null)
 				previous.setParent(null);
 		}
@@ -226,17 +209,6 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		template.setParent(this);
 
 		return previous;
-	}
-
-	public String toString()
-	{
-		StringBuilder result= new StringBuilder();
-		for (Template template : children)
-		{
-			String childString= template.toString();
-			result.append(childString + "//");
-		}
-		return getName() + ": (" + result.toString() + ")";
 	}
 
 	//	public int hashCode()
@@ -262,11 +234,6 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 			remove(getChild(name));
 	}
 
-	public void setFiringEvents(boolean firingEvents)
-	{
-		this.templateListener.setEnabled(firingEvents);
-	}
-
 	public void renameChild(Template child, String aName)
 	{
 		String childName= child.getName();
@@ -290,21 +257,9 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 			remove(child);
 	}
 
-	public void accept(TemplateVisitor templateVisitor)
-	{
-		templateVisitor.visitTemplate(this);
-		for (Template template : childrenMap.values())
-			template.accept(templateVisitor);
-	}
-
 	public List<Template> getChildren()
 	{
 		return Collections.unmodifiableList(children);
-	}
-
-	public boolean isActive()
-	{
-		return templateListener.isActive(this);
 	}
 
 	public void setChildren(List<Template> children)
@@ -312,29 +267,23 @@ public class TemplateImpl extends DefaultEventProducer implements Template
 		this.children= children;
 	}
 
-	@Override
-	public void setName(String name)
-	{
-		this.name= name;
-	}
-
 	public void setContent(Content<?> templateContent)
 	{
 		this.templateContent= templateContent;
 	}
 
-	@Override
-	public boolean contains(Template template)
+	public void hide()
 	{
-		if (children.contains(template))
-			return true;
-		else
-			return children.stream().anyMatch(t -> t.contains(template));
+		templateHandler.makeInvisible(this);
 	}
 
-	@Override
-	public Template getTopParent()
+	public void show()
 	{
-		return parent == null ? this : parent.getTopParent();
+		templateHandler.makeVisible(this);
+	}
+
+	public Template createClone()
+	{
+		return templateHandler.clone(this);
 	}
 }

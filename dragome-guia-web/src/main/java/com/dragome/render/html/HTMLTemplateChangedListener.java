@@ -165,9 +165,4 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 			HTMLTemplateFactory.setReplacedName(element, name);
 		}
 	}
-
-	public boolean isActive(Template template)
-	{
-		return ((Element) template.getContent().getValue()).hasAttribute(AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE);
-	}
 }

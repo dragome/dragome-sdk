@@ -203,7 +203,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		return children.stream().filter(child -> {
 			Element e= (Element) child.getContent().getValue();
 			String attribute= e.getAttribute("data-component-id");
-			return renderer.matches(aVisualComponent, child) && !child.isActive() && attribute == null;
+			return renderer.matches(aVisualComponent, child) && attribute == null;
 		}).findFirst();
 	}
 }

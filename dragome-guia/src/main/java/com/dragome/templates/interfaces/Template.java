@@ -16,45 +16,41 @@
 package com.dragome.templates.interfaces;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.dragome.model.interfaces.EventProducer;
 
 public interface Template extends EventProducer
 {
 	public Content<?> getContent();
+	void setContent(Content<?> templateContent);
 	public void updateContent(Content<?> templateContent);
 
-	public Map<String, Template> getChildrenMap();
-	public void setChildrenMap(Map<String, Template> templateElements);
-
-	//public Template<T> setChild(String anAlias, Template<T> templateElement);
-	public Template getChild(String anAlias);
-
-	public Boolean isInner();
-	public void setInner(Boolean inner);
-	public Content<?> getElementById(String id);
-	public Template getParent();
-	public void setParent(Template parent);
-	public void addChild(Template template);
 	public abstract void updateName(String name);
 	public abstract String getName();
-	public void removeChild(String name);
-	public void setFiringEvents(boolean firing);
-	public void renameChild(Template child, String aName);
-	public boolean hasChild(String aName);
-	public void removeAll();
-	public void accept(TemplateVisitor templateVisitor);
-
-	void insertAfter(Template newChild, Template referenceChild);
-	void remove(Template child);
-	void insertBefore(Template newChild, Template referenceChild);
-	public List<Template> getChildren();
-	public boolean isActive();
-	void setChildren(List<Template> children);
 	void setName(String name);
-	void setContent(Content<?> templateContent);
+
+	public boolean hasChild(String aName);
+	public Template getChild(String anAlias);
+	public void addChild(Template template);
+	public void renameChild(Template child, String aName);
+	public void removeChild(String name);
+	public void removeAll();
+	void remove(Template child);
+	void insertAfter(Template newChild, Template referenceChild);
+	void insertBefore(Template newChild, Template referenceChild);
+
+	public List<Template> getChildren();
+	void setChildren(List<Template> children);
+
 	public boolean contains(Template template);
+
+	public Template getParent();
+	public void setParent(Template parent);
 	public Template getTopParent();
+
+	public void setFiringEvents(boolean firing);
+	public void accept(TemplateVisitor templateVisitor);
+	public void hide();
+	void show();
+	public Template createClone();
 }

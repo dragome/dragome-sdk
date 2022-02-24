@@ -116,7 +116,7 @@ public class HTMLTemplateFactory
 	public void putTemplate(List<Element> foundElements, Map<Node, Template> templates, Element element, String name)
 	{
 		foundElements.add(element);
-		Template subTemplate= createTemplate(name);
+		TemplateImpl subTemplate= createTemplate(name);
 		subTemplate.updateContent(new ContentImpl<Element>(element));
 		subTemplate.setInner(name.indexOf("*") != -1);
 		templates.put(element, subTemplate);
@@ -204,9 +204,9 @@ public class HTMLTemplateFactory
 		return template;
 	}
 
-	public static Template createTemplate(String name)
+	public static TemplateImpl createTemplate(String name)
 	{
-		Template template= new TemplateImpl(name);
+		TemplateImpl template= new TemplateImpl(name);
 
 		return template;
 	}

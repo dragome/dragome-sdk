@@ -23,10 +23,11 @@ public interface VisualPanel extends VisualComponent
 {
 	public VisualPanel addChild(VisualComponent aVisualComponent);
 	public List<? extends VisualComponent> getChildren();
-	public void setChildren(List<? extends VisualComponent> children);
+	public void updateChildren(List<? extends VisualComponent> children);
 	public void removeChild(VisualComponent aVisualComponent);
 	public VisualComponent getChildByName(String aName);
 	public void replaceChild(VisualComponent child);
 	void addOrReplaceChild(VisualComponent child);
 	public void replaceChild(VisualComponent newChild, VisualComponent oldChild);
+	void setChildren(List<? extends VisualComponent> children);
 }

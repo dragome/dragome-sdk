@@ -29,5 +29,4 @@ public interface TemplateListener extends EventListener
 	void insertBefore(Template newChild, Template referenceChild, Map<String, Template> children, List<Template> childrenList, Template template);
 	void childReplaced(Template parent, Template previousChild, Template newChild);
 	void nameChanged(Template template, String name);
-	boolean isActive(Template templateImpl);
 }

@@ -76,7 +76,12 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 		return children;
 	}
 
-	public void setChildren(List<? extends VisualComponent> elements)
+	public void setChildren(List<? extends VisualComponent> children)
+	{
+		this.children= (List<VisualComponent>) children;
+	}
+	
+	public void updateChildren(List<? extends VisualComponent> elements)
 	{
 		children.clear();
 		for (VisualComponent child : elements)

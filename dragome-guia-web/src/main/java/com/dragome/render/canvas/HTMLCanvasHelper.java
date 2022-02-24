@@ -16,38 +16,34 @@
 package com.dragome.render.canvas;
 
 import java.util.List;
-import java.util.Map.Entry;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.dragome.render.canvas.interfaces.CanvasHelper;
-import com.dragome.services.WebServiceLocator;
 import com.dragome.templates.HTMLTemplateFactory;
-import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 
 public class HTMLCanvasHelper implements CanvasHelper
 {
 	public void hideTemplateIds(Template template)
 	{
-		String key= null;
-		String result= "";
-
-		Document document= WebServiceLocator.getInstance().getDomHandler().getDocument();
-		for (Entry<String, Template> entry : template.getChildrenMap().entrySet())
-		{
-			if (key != null)
-				result+= ",";
-
-			key= entry.getKey();
-			Template value= entry.getValue();
-
-			Attr id= ((Content<Element>) value.getContent()).getValue().getAttributeNode("id");
-			String value2= id.getValue();
-			document.getElementById(value2).setAttribute("id", System.identityHashCode(template) + "_" + value2);
-		}
+		throw new RuntimeException("not implemented");
+		//		String key= null;
+		//		String result= "";
+		//
+		//		Document document= WebServiceLocator.getInstance().getDomHandler().getDocument();
+		//		for (Entry<String, Template> entry : template.getChildrenMap().entrySet())
+		//		{
+		//			if (key != null)
+		//				result+= ",";
+		//
+		//			key= entry.getKey();
+		//			Template value= entry.getValue();
+		//
+		//			Attr id= ((Content<Element>) value.getContent()).getValue().getAttributeNode("id");
+		//			String value2= id.getValue();
+		//			document.getElementById(value2).setAttribute("id", System.identityHashCode(template) + "_" + value2);
+		//		}
 	}
 
 	public void restoreTemplateIds(Template template)

@@ -23,7 +23,8 @@ public abstract class AbstractClasspathFile implements ClasspathFile
 	{
 		try
 		{
-			inputStream.close();
+			if (inputStream != null)
+				inputStream.close();
 		}
 		catch (IOException e)
 		{

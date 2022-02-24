@@ -109,7 +109,7 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 		Element element= (Element) child.getContent().getValue();
 		String tagName= element.getTagName();
 		boolean result= tagName.equalsIgnoreCase("span") || tagName.equalsIgnoreCase("nobr");
-		return result;
+		return result && child.getChildren().isEmpty();
 	}
 
 }

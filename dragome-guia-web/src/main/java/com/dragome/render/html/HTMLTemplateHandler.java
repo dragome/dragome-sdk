@@ -83,7 +83,7 @@ public class HTMLTemplateHandler implements TemplateHandler
 			clonedTemplate.setFiringEvents(false);
 			clonedTemplate.updateContent(new ContentImpl<Element>(cloneNode));
 
-			for (Template child : template.getChildrenMap().values())
+			for (Template child : template.getChildren())
 			{
 				String childName= child.getName();
 
