@@ -38,7 +38,7 @@ public class ObservableList<T> implements List<T>
 		this.list= new ArrayList<T>(list);
 	}
 
-	public static <S> List<S> makeObservable(List<S> list)
+	public static <S> ObservableList<S> makeObservable(List<S> list)
 	{
 		return new ObservableList<S>(new ArrayList<S>(list));
 	}
