@@ -35,7 +35,7 @@ public class SwingTemplateListener implements TemplateListener
 				Component value= (Component) oldTemplateContent.getValue();
 				Mergeable<Component> value2= (Mergeable<Component>) newTemplateContent.getValue();
 
-				value2.mergeWith(template, value);
+				value2.mergeWith(value);
 			}
 		}
 	}

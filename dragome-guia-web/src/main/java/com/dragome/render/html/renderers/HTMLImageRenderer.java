@@ -20,7 +20,6 @@ import org.w3c.dom.Element;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualImage;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.templates.interfaces.Template;
 
 public class HTMLImageRenderer extends AbstractHTMLComponentRenderer<VisualImage>
 {
@@ -32,9 +31,9 @@ public class HTMLImageRenderer extends AbstractHTMLComponentRenderer<VisualImage
 	{
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-		canvas.setContent(new MergeableElement()
+		canvas.setContent(new MergeableElement(this)
 		{
-			public void mergeWith(Template template, Element element)
+			public void mergeWith(Element element)
 			{
 				if (visualImage.getValue() != null)
 					element.setAttribute("src", visualImage.getValue());

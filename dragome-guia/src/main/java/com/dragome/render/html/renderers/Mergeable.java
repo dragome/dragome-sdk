@@ -15,9 +15,34 @@
  */
 package com.dragome.render.html.renderers;
 
+import java.util.Optional;
+
+import org.w3c.dom.Element;
+
+import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.templates.interfaces.Template;
 
 public interface Mergeable<T>
 {
-	public void mergeWith(Template template, T element);
+	public void mergeWith(T element);
+
+	ComponentRenderer<T, ?> getRenderer();
+	
+	public default Element findCompatibleElement(Template template, Element element)
+	{
+		ComponentRenderer<T, ?> renderer= getRenderer();
+		
+		boolean templateCompatible= renderer.isTemplateCompatible(template);
+
+		Template t2= template;
+		if (!templateCompatible)
+		{
+			Optional<Template> findFirst= template.getChildren().stream().filter(t -> renderer.isTemplateCompatible(t)).findFirst();
+			if (findFirst.isPresent())
+				t2= findFirst.get();
+		}
+
+		final Element labelElement= templateCompatible ? element : (Element) t2.getContent().getValue();
+		return labelElement;
+	}
 }

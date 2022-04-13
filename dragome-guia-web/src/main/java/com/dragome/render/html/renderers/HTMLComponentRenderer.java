@@ -18,6 +18,7 @@ package com.dragome.render.html.renderers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.w3c.dom.Element;
 
@@ -48,6 +49,18 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 	{
 		addRenderFor(VisualImage.class, HTMLImageRenderer.class);
 		addRenderFor(VisualLink.class, HTMLLinkRenderer.class);
+		addRenderFor(VisualComboBox.class, HTMLComboBoxRenderer.class);
+		addRenderFor(VisualListBoxImpl.class, HTMLListRenderer.class);
+		addRenderFor(VisualPanelImpl.class, HTMLPanelRenderer.class);
+
+		addRenderFor(VisualRadioButton.class, HTMLRadioButtonRenderer.class);
+		addRenderFor(VisualCheckboxImpl.class, HTMLCheckboxRenderer.class);
+		addRenderFor(VisualButtonImpl.class, HTMLButtonRenderer.class);
+
+		addRenderFor(VisualLabelImpl.class, HTMLLabelRenderer.class);
+		addRenderFor(VisualTextFieldImpl.class, HTMLTextFieldRenderer.class);
+		addRenderFor(VisualTextArea.class, HTMLTextAreaRenderer.class);
+		addRenderFor(VisualProgressBar.class, HTMLProgressBarRenderer.class);
 	}
 
 	public Canvas render(final VisualComponent visualComponent)
@@ -72,48 +85,57 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 		return render;
 	}
 
-	public ComponentRenderer findComponentRenderer(final VisualComponent visualComponent)
+	public static ComponentRenderer findComponentRenderer(final VisualComponent visualComponent)
 	{
 		ComponentRenderer renderer= null;
-
-		if (visualComponent instanceof VisualComboBox)
-			renderer= new HTMLComboBoxRenderer();
-		else if (visualComponent instanceof VisualListBoxImpl)
-			renderer= new HTMLListRenderer();
-		else if (visualComponent instanceof VisualPanelImpl)
-			renderer= new HTMLPanelRenderer();
-		else if (visualComponent instanceof VisualCheckboxImpl)
-			renderer= new HTMLCheckboxRenderer();
-		else if (visualComponent instanceof VisualButtonImpl)
-			renderer= new HTMLButtonRenderer();
-		else if (visualComponent instanceof VisualLabelImpl)
-			renderer= new HTMLLabelRenderer();
-		else if (visualComponent instanceof VisualTextFieldImpl)
-			renderer= new HTMLTextFieldRenderer();
-		else if (visualComponent instanceof VisualTextArea)
-			renderer= new HTMLTextAreaRenderer();
-		else if (visualComponent instanceof VisualRadioButton)
-			renderer= new HTMLRadioButtonRenderer();
-		else if (visualComponent instanceof VisualProgressBar)
-			renderer= new HTMLProgressBarRenderer();
-
 		for (Entry<Class<? extends VisualComponent>, Class<? extends ComponentRenderer<Element, ? extends VisualComponent>>> entry : renderers.entrySet())
 		{
-			if (entry.getKey().isAssignableFrom(visualComponent.getClass()))
+			if (entry.getKey().equals(visualComponent.getClass()))
 				renderer= ServiceLocator.getInstance().getReflectionService().createClassInstance(entry.getValue());
 		}
+
+		if (renderer == null)
+			for (Entry<Class<? extends VisualComponent>, Class<? extends ComponentRenderer<Element, ? extends VisualComponent>>> entry : renderers.entrySet())
+			{
+				if (entry.getKey().isAssignableFrom(visualComponent.getClass()))
+					renderer= ServiceLocator.getInstance().getReflectionService().createClassInstance(entry.getValue());
+			}
 		return renderer;
 	}
 
-	public static <A extends VisualComponent> void addRenderFor(Class<A> componentClass, Class<? extends ComponentRenderer<Element, ? extends A>> rendererClass)
+	public static <A extends VisualComponent> void addRenderFor(Class<? extends A> componentClass, Class<? extends ComponentRenderer<Element, ? extends A>> rendererClass)
 	{
 		renderers.put(componentClass, rendererClass);
 	}
 
-	@Override
-	public boolean matches(VisualComponent aVisualComponent, Template child)
+	public boolean matches(Template child, VisualComponent aVisualComponent)
 	{
 		ComponentRenderer renderer= findComponentRenderer(aVisualComponent);
-		return renderer != null ? renderer.matches(aVisualComponent, child) : false;
+		return renderer != null ? renderer.matches(child) : false;
+	}
+
+	@Override
+	public boolean matches(Template child)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Optional<Template> findMatchingTemplateFor(Template template)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Optional<Template> findMatchingTemplateFor(VisualComponent aVisualComponent, Template template)
+	{
+		return findComponentRenderer(aVisualComponent).findMatchingTemplateFor(template);
+	}
+
+	@Override
+	public boolean isTemplateCompatible(Template template)
+	{
+		return matches(template);
 	}
 }

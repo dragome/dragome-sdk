@@ -234,6 +234,18 @@ public class TemplateImpl extends AbstractTemplate
 			remove(getChild(name));
 	}
 
+	public void replaceChild(Template oldChild, Template newChild)
+	{
+		String templateName= oldChild.getName();
+		if (templateName != null)
+		{
+			newChild.updateName(templateName);
+			childrenMap.put(templateName, newChild);
+		}
+		children.set(children.indexOf(oldChild), newChild);
+		templateListener.childReplaced(this, oldChild, newChild);
+	}
+
 	public void renameChild(Template child, String aName)
 	{
 		String childName= child.getName();

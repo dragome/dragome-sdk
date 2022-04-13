@@ -45,24 +45,11 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-		canvas.setContent(new MergeableElement()
+		canvas.setContent(new MergeableElement(this)
 		{
-			public void mergeWith(Template template, final Element textFieldElement1)
+			public void mergeWith(final Element textFieldElement)
 			{
-				boolean templateCompatible= isTemplateCompatible(template);
 				String id= DragomeEntityManager.add(visualTextField);
-
-				textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-				Template t2= template;
-				if (!templateCompatible)
-				{
-					textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
-					t2= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst().get();
-				}
-				else
-					textFieldElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-
-				final Element textFieldElement= templateCompatible ? textFieldElement1 : (Element) t2.getContent().getValue();
 				textFieldElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
 				//				final DomHandler domHandler= ServiceLocator.getInstance().getDomHandler();
@@ -77,10 +64,10 @@ public class HTMLTextFieldRenderer extends AbstractHTMLComponentRenderer<VisualT
 
 						HTMLInputElement htmlInputElement= JsCast.castTo(textFieldElement, HTMLInputElement.class);
 						htmlInputElement.setValue(value);
-						
-//						ScriptHelper.put("textFieldElement", textFieldElement, this);
-//						ScriptHelper.put("value", value, this);
-//						ScriptHelper.eval("textFieldElement.node.value=value", this);
+
+						//						ScriptHelper.put("textFieldElement", textFieldElement, this);
+						//						ScriptHelper.put("value", value, this);
+						//						ScriptHelper.eval("textFieldElement.node.value=value", this);
 					}
 				});
 

@@ -59,9 +59,9 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 		}
 		else
 		{
-			canvas.setContent(new MergeableElement()
+			canvas.setContent(new MergeableElement(this)
 			{
-				public void mergeWith(Template template, Element element)
+				public void mergeWith(Element element)
 				{
 					setupElement(visualButton, element);
 				}
@@ -79,7 +79,7 @@ public class HTMLButtonRenderer extends AbstractHTMLComponentRenderer<VisualButt
 		addListeners(visualButton, element);
 	}
 
-	public boolean matches(VisualButton aVisualComponent, Template child)
+	public boolean matches(Template child)
 	{
 		Element element= (Element) child.getContent().getValue();
 

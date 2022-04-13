@@ -17,6 +17,7 @@ package com.dragome.templates.interfaces;
 
 import java.util.List;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.model.interfaces.EventProducer;
 
 public interface Template extends EventProducer
@@ -32,6 +33,7 @@ public interface Template extends EventProducer
 	public boolean hasChild(String aName);
 	public Template getChild(String anAlias);
 	public void addChild(Template template);
+	public void replaceChild(Template oldChild, Template newChild);
 	public void renameChild(Template child, String aName);
 	public void removeChild(String name);
 	public void removeAll();

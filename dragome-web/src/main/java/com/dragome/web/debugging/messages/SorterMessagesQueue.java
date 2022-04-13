@@ -60,7 +60,9 @@ public class SorterMessagesQueue implements Runnable
 						public void run()
 						{
 							boolean ready= false;
+							long currentTimeMillis= System.currentTimeMillis();
 
+//							while (System.currentTimeMillis() - currentTimeMillis < 10000)
 							while (!ready)
 							{
 								ServiceInvocation serviceInvocation= (ServiceInvocation) ServiceLocator.getInstance().getSerializationService().deserialize(finalMessage);

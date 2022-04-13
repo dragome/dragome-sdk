@@ -17,8 +17,6 @@ package com.dragome.guia.components.interfaces;
 
 import java.util.List;
 
-import com.dragome.guia.events.listeners.interfaces.PanelListener;
-
 public interface VisualPanel extends VisualComponent
 {
 	public VisualPanel addChild(VisualComponent aVisualComponent);

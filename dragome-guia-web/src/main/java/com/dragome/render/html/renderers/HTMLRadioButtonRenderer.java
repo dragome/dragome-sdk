@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.w3c.dom.html.HTMLInputElement;
 
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
@@ -32,6 +33,7 @@ import com.dragome.services.WebServiceLocator;
 import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 
 public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<VisualRadioButton>
 {
@@ -81,8 +83,8 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 		{
 			public void clickPerformed(VisualComponent aVisualComponent)
 			{
-				ScriptHelper.put("e", radioButtonElement, this);
-				boolean value= ScriptHelper.evalBoolean("e.node.checked", this);
+				HTMLInputElement htmlInputElement= JsCast.castTo(radioButtonElement, HTMLInputElement.class);
+				boolean value= htmlInputElement.getChecked();
 				radioButton.setValue(value);
 			}
 		});

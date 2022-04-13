@@ -161,7 +161,7 @@ public class TemplateRepeater<T>
 		for (Template clonedRepeatedChild : clonedRepeatChildren)
 		{
 			clonedRepeatedChild.updateName(clonedRepeatedChild.getName() + "_" + Integer.toHexString((int) System.currentTimeMillis()));
-			insertChild.getParent().insertAfter(clonedRepeatedChild, insertChild);
+			insertChild.getParent().insertBefore(clonedRepeatedChild, insertChild);
 		}
 	}
 

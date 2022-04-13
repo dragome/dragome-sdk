@@ -55,9 +55,9 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-		canvas.setContent(new MergeableElement()
+		canvas.setContent(new MergeableElement(this)
 		{
-			public void mergeWith(Template template, final Element selectElement)
+			public void mergeWith(final Element selectElement)
 			{
 
 				setElementInnerHTML(selectElement, "");
@@ -220,7 +220,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		return null;
 	}
 
-	public boolean matches(VisualListBox<Object> aVisualComponent, Template child)
+	public boolean matches(Template child)
 	{
 		Element element= ((Content<Element>) child.getContent()).getValue();
 		String nodeName= element.getNodeName();

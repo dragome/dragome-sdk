@@ -110,11 +110,12 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 	{
 		VisualComponent childByName= getChildByName(child.getName());
 		children.remove(childByName);
-		childByName.setParent(null);
 		children.add(child);
-		child.setParent(this);
 		if (hasListener(PanelListener.class))
 			getListener(PanelListener.class).childReplaced(childByName, child);
+
+		child.setParent(this);
+		childByName.setParent(null);
 	}
 
 	public void addOrReplaceChild(VisualComponent component)
@@ -131,10 +132,11 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 		if (indexOf != -1)
 		{
 			children.set(indexOf, newChild);
-			oldChild.setParent(null);
-			newChild.setParent(this);
 			if (hasListener(PanelListener.class))
 				getListener(PanelListener.class).childReplaced(oldChild, newChild);
+
+			oldChild.setParent(null);
+			newChild.setParent(this);
 		}
 	}
 }

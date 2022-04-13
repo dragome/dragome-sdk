@@ -59,7 +59,7 @@ public class HTMLPanelRenderer extends AbstractHTMLComponentRenderer<VisualPanel
 		return null;
 	}
 
-	public boolean matches(VisualPanel aVisualComponent, Template child)
+	public boolean matches(Template child)
 	{
 	    	List<String> panelTags= Arrays.asList("div", "table", "tr", "th", "td", "tbody");
 	    

@@ -15,9 +15,6 @@
  */
 package com.dragome.render.html.renderers;
 
-import java.util.Iterator;
-import java.util.Optional;
-
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
@@ -41,28 +38,13 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-		canvas.setContent(new MergeableElement()
+		canvas.setContent(new MergeableElement(this)
 		{
 			private String originalAttribute;
 
-			public void mergeWith(Template template, Element labelElement1)
+			public void mergeWith(Element labelElement)
 			{
-				boolean templateCompatible= isTemplateCompatible(template);
 				String id= DragomeEntityManager.add(visualLabel);
-
-				labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-				Template t2= template;
-				if (!templateCompatible)
-				{
-					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, "parent:" + id);
-					Optional<Template> findFirst= template.getChildren().stream().filter(t -> isTemplateCompatible(t)).findFirst();
-					if (findFirst.isPresent())
-						t2= findFirst.get();
-				}
-				else
-					labelElement1.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
-
-				final Element labelElement= templateCompatible ? labelElement1 : (Element) t2.getContent().getValue();
 				labelElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
 
 				//final Element labelElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("span");

@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 
-import com.dragome.guia.components.AbstractVisualComponent;
 import com.dragome.guia.components.VisualPanelImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;

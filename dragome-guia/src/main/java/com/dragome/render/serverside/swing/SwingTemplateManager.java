@@ -1,6 +1,9 @@
 package com.dragome.render.serverside.swing;
 
+import java.util.Optional;
+
 import com.dragome.guia.components.interfaces.VisualButton;
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.components.interfaces.VisualTextField;
@@ -54,7 +57,28 @@ public class SwingTemplateManager implements TemplateManager
 			}
 
 			@Override
-			public boolean matches(Object aVisualComponent, Template child)
+			public boolean matches(Template child)
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public Optional<Template> findMatchingTemplateFor(Template template)
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public boolean matches(Template child, VisualComponent aVisualComponent)
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean isTemplateCompatible(Template template)
 			{
 				// TODO Auto-generated method stub
 				return false;

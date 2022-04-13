@@ -15,6 +15,9 @@
  */
 package com.dragome.render.interfaces;
 
+import java.util.Optional;
+
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.templates.interfaces.Template;
 
@@ -22,5 +25,11 @@ public interface ComponentRenderer<ContentType, ComponentType>
 {
 	public Canvas<ContentType> render(ComponentType aVisualComponent);
 
-	public boolean matches(ComponentType aVisualComponent, Template child);
+	public boolean matches(Template child);
+
+	Optional<Template> findMatchingTemplateFor(Template template);
+
+	boolean matches(Template child, VisualComponent aVisualComponent);
+
+	public boolean isTemplateCompatible(Template template);
 }

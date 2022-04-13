@@ -1,9 +1,12 @@
 package com.dragome.render.serverside.swing;
 
+import java.util.Optional;
+
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
@@ -19,7 +22,7 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 
 		canvasImpl.setContent(new Mergeable<Object>()
 		{
-			public void mergeWith(Template template, Object element)
+			public void mergeWith(Object element)
 			{
 				final JTextField jTextField= (JTextField) element;
 
@@ -33,12 +36,40 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 
 				jTextField.setText(visualTextField.getValue() + "");
 			}
+
+			@Override
+			public ComponentRenderer<Object, ?> getRenderer()
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		return canvasImpl;
 	}
 
 	@Override
-	public boolean matches(VisualTextField<Object> aVisualComponent, Template child)
+	public boolean matches(Template child)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Optional<Template> findMatchingTemplateFor(Template template)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean matches(Template child, VisualComponent aVisualComponent)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isTemplateCompatible(Template template)
 	{
 		// TODO Auto-generated method stub
 		return false;

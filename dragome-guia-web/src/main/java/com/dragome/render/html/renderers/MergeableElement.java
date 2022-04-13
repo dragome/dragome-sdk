@@ -16,8 +16,27 @@
 package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Element;
+
+import com.dragome.render.interfaces.ComponentRenderer;
 	
 public abstract class MergeableElement extends AbstractElement implements Mergeable<Element>
 {
+	private ComponentRenderer<Element, ?> renderer;
+
+	public MergeableElement(ComponentRenderer<Element, ?> aRenderer)
+	{
+		this.setRenderer(aRenderer);
+	}
+
+	@Override
+	public ComponentRenderer<Element, ?> getRenderer()
+	{
+		return renderer;
+	}
+
+	public void setRenderer(ComponentRenderer<Element, ?> renderer)
+	{
+		this.renderer = renderer;
+	}
 
 }

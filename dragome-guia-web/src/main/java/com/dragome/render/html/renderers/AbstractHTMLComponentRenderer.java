@@ -129,7 +129,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");
 	}
 
-	public boolean matches(T aVisualComponent, Template child)
+	public boolean matches(Template child)
 	{
 		boolean compatible= isTemplateCompatible(child);
 //
@@ -191,19 +191,20 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 		return false;
 	}
 	
-
-	
-	public static Optional<Template> findMatchingTemplateFor(VisualComponent aVisualComponent, Template template)
+	public Optional<Template> findMatchingTemplateFor(Template template)
 	{
-		 ComponentRenderer<Object, VisualComponent> renderer= GuiaServiceLocator.getInstance().getTemplateManager().getComponentRenderer();
-
 		List<Template> children= new ArrayList<>(template.getChildren());
 		Collections.reverse(children);
 
 		return children.stream().filter(child -> {
 			Element e= (Element) child.getContent().getValue();
 			String attribute= e.getAttribute("data-component-id");
-			return renderer.matches(aVisualComponent, child) && attribute == null;
+			return matches(child) && attribute == null;
 		}).findFirst();
+	}
+	
+	public boolean matches(Template child, VisualComponent aVisualComponent)
+	{
+		return false;
 	}
 }

@@ -21,10 +21,8 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.dragome.render.html.renderers.AbstractHTMLComponentRenderer;
 import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.templates.HTMLTemplateFactory;
-import com.dragome.templates.TemplateImpl;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateListener;
@@ -44,16 +42,16 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		{
 			Element referenceElement= (Element) referenceChild.getContent().getValue();
 
-//			int index= childrenList.indexOf(referenceChild) - 1;
-//			if (index < 0)
-//				index= 0;
-//			childrenList.add(index, newChild);
-//
-//			children.put(newChild.getName(), newChild);
+			//			int index= childrenList.indexOf(referenceChild) - 1;
+			//			if (index < 0)
+			//				index= 0;
+			//			childrenList.add(index, newChild);
+			//
+			//			children.put(newChild.getName(), newChild);
 
 			Element newElement= (Element) newChild.getContent().getValue();
 			referenceElement.getParentNode().insertBefore(newElement, referenceElement);
-//			newChild.setParent(template);
+			//			newChild.setParent(template);
 		}
 	}
 
@@ -62,8 +60,8 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		if (isInvokingEvents())
 		{
 			Element referenceElement= (Element) referenceChild.getContent().getValue();
-//			childrenList.add(childrenList.indexOf(referenceChild) + 1, newChild);
-//			children.put(newChild.getName(), newChild);
+			//			childrenList.add(childrenList.indexOf(referenceChild) + 1, newChild);
+			//			children.put(newChild.getName(), newChild);
 			Node nextSibling= findNextSiblingElement(referenceElement);
 			Element newElement= (Element) newChild.getContent().getValue();
 			Node parentNode= referenceElement.getParentNode();
@@ -76,7 +74,7 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 			else
 				parentNode.appendChild(newElement);
 
-//			newChild.setParent(template);
+			//			newChild.setParent(template);
 		}
 	}
 
@@ -100,7 +98,8 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 				if (newTemplateContent.getValue() instanceof Mergeable)
 				{
 					Mergeable<Element> mergeable= (Mergeable<Element>) newTemplateContent.getValue();
-					mergeable.mergeWith(template, element);
+					Element labelElement= mergeable.findCompatibleElement(template, element);
+					mergeable.mergeWith(labelElement);
 				}
 				else
 				{

@@ -1,7 +1,10 @@
 package com.dragome.render.serverside.swing;
 
+import java.util.Optional;
+
 import javax.swing.JLabel;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
@@ -19,7 +22,7 @@ public class SwingVisualLabelRenderer implements ComponentRenderer<Object, Visua
 
 		canvasImpl.setContent(new Mergeable<Object>()
 		{
-			public void mergeWith(Template template, Object element)
+			public void mergeWith(Object element)
 			{
 				final JLabel jLabel= (JLabel) element;
 
@@ -33,12 +36,40 @@ public class SwingVisualLabelRenderer implements ComponentRenderer<Object, Visua
 				
 				jLabel.setText(visualLabel.getValue() + "");
 			}
+
+			@Override
+			public ComponentRenderer<Object, ?> getRenderer()
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		return canvasImpl;
 	}
 
 	@Override
-	public boolean matches(VisualLabel<Object> aVisualComponent, Template child)
+	public boolean matches(Template child)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Optional<Template> findMatchingTemplateFor(Template template)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean matches(Template child, VisualComponent aVisualComponent)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isTemplateCompatible(Template template)
 	{
 		// TODO Auto-generated method stub
 		return false;

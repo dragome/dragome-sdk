@@ -23,7 +23,6 @@ import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.templates.interfaces.Template;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.w3c.ElementExtension;
 
@@ -37,9 +36,9 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 	{
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
 
-		canvas.setContent(new MergeableElement()
+		canvas.setContent(new MergeableElement(this)
 		{
-			public void mergeWith(Template template, final Element linkElement)
+			public void mergeWith(final Element linkElement)
 			{
 				String id= DragomeEntityManager.add(visualLink);
 				if (visualLink.getUrl() != null)

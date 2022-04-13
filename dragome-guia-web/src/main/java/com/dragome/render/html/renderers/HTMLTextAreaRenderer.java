@@ -23,7 +23,6 @@ import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.templates.interfaces.Template;
 
 public class HTMLTextAreaRenderer extends AbstractHTMLComponentRenderer<VisualTextArea<Object>>
 {
@@ -34,9 +33,9 @@ public class HTMLTextAreaRenderer extends AbstractHTMLComponentRenderer<VisualTe
 	public Canvas<Element> render(final VisualTextArea<Object> visualTextArea)
 	{
 		Canvas<Element> canvas= GuiaServiceLocator.getInstance().getTemplateManager().getCanvasFactory().createCanvas();
-		canvas.setContent(new MergeableElement()
+		canvas.setContent(new MergeableElement(this)
 		{
-			public void mergeWith(Template template, final Element textAreaElement)
+			public void mergeWith(final Element textAreaElement)
 			{
 				final String id= DragomeEntityManager.add(visualTextArea);
 

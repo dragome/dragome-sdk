@@ -15,12 +15,13 @@
  */
 package com.dragome.forms.bindings.builders.helpers;
 
+import java.util.function.Supplier;
+
 import com.dragome.forms.bindings.builders.ComponentBuilder;
 import com.dragome.forms.bindings.builders.Getter;
 import com.dragome.forms.bindings.builders.ItemRepeater;
 import com.dragome.forms.bindings.builders.Order;
 import com.dragome.forms.bindings.builders.RepeaterBuilder;
-import com.dragome.forms.bindings.builders.Supplier;
 import com.dragome.forms.bindings.builders.Tester;
 import com.dragome.guia.components.interfaces.VisualComponent;
 

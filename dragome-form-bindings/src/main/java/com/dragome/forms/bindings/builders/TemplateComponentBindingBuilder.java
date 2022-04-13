@@ -16,6 +16,7 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.dragome.forms.bindings.client.form.binding.FormBinder;
 import com.dragome.forms.bindings.client.value.ValueSource;
