@@ -15,7 +15,6 @@
  */
 package com.dragome.forms.bindings.builders;
 
-import com.dragome.guia.components.VisualPanelImpl;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.methodlogger.enhancers.MethodInvocationListener;

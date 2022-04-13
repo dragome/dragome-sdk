@@ -206,9 +206,10 @@ public class DefaultStyle implements Style
 
 	public void setName(String name)
 	{
+		String lastName= this.name;
 		this.name= name == null ? "" : name;
 
-		if (!this.name.trim().equals(this.name))
+		if (!this.name.trim().equals(lastName))
 		{
 			this.name= this.name.trim();
 			fireStyleChanged();

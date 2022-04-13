@@ -16,8 +16,8 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.dragome.forms.bindings.client.form.binding.FormBinder;
 import com.dragome.forms.bindings.client.form.metadata.binding.ConditionBinderBuilder;
@@ -25,7 +25,6 @@ import com.dragome.forms.bindings.client.style.StyleBinder;
 import com.dragome.forms.bindings.client.style.StyleBindingBuilder;
 import com.dragome.forms.bindings.client.style.StyleBuilder;
 import com.dragome.guia.components.interfaces.VisualComponent;
-import com.dragome.guia.components.interfaces.VisualPanel;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
 import com.dragome.guia.events.listeners.interfaces.DoubleClickListener;

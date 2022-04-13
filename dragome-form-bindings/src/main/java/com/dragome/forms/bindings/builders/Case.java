@@ -15,6 +15,8 @@
  */
 package com.dragome.forms.bindings.builders;
 
+import java.util.function.Supplier;
+
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 

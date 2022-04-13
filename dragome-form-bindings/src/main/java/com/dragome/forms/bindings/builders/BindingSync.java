@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;

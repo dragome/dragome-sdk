@@ -1,13 +1,13 @@
 package com.dragome.forms.bindings.builders.helpers;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.dragome.forms.bindings.builders.ActionExecutor;
 import com.dragome.forms.bindings.builders.ChildrenBuilder;
 import com.dragome.forms.bindings.builders.ComponentBuilder;
 import com.dragome.forms.bindings.builders.Consumer;
 import com.dragome.forms.bindings.builders.RepeaterBuilder;
-import com.dragome.forms.bindings.builders.Supplier;
 import com.dragome.forms.bindings.builders.TemplateBindingBuilder;
 import com.dragome.forms.bindings.builders.TemplateComponentBindingBuilder;
 import com.dragome.forms.bindings.client.value.ValueSource;
