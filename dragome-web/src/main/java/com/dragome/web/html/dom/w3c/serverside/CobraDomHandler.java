@@ -33,9 +33,11 @@ import org.xml.sax.SAXException;
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.DomHandler;
 import com.dragome.web.html.dom.w3c.BrowserDomHandler;
 import com.dragome.web.html.dom.w3c.CombinedDomInstance;
+import com.dragome.web.html.dom.w3c.ElementExtension;
 
 @SuppressWarnings("unchecked")
 public class CobraDomHandler implements DomHandler
@@ -114,8 +116,10 @@ public class CobraDomHandler implements DomHandler
 
 	public Element getElementBySelector(String selector)
 	{
+		
+		ElementExtension elementExtension= JsCast.castTo(documentInstance, ElementExtension.class);
 
-		Element result= ((NodeImpl) htmlDocumentImpl).querySelector(selector);
+		Element result= elementExtension.querySelector(selector);
 		//		ScriptHelper.put("selector", selector, this);
 		//		Object object= ScriptHelper.eval("document.querySelectorAll(selector)[0]", this);
 		//		Element result= null;

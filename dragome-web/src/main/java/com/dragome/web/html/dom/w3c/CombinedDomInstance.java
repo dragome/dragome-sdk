@@ -6,10 +6,12 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.cobraparser.html.domimpl.HTMLDocumentImpl;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.events.Event;
@@ -442,12 +444,12 @@ public class CombinedDomInstance
 		Class<?>[] interfaces2= localInstance.getClass().getInterfaces();
 		List<Class<?>> interfacesList= new ArrayList<>();
 		interfacesList.addAll(Arrays.asList(interfaces2));
-		if (localInstance instanceof Element)
+		if (localInstance instanceof Element || localInstance instanceof Document)
 		{
 			interfaces= new Class[] { Element.class, ElementExtension.class, EventTarget.class };
 			interfacesList.addAll(Arrays.asList(interfaces));
 		}
-		return interfacesList;
+		return new ArrayList<Class<?>>( new HashSet(interfacesList));
 	}
 
 	protected Object[] convertArgs(Object[] args, boolean toLocal)
