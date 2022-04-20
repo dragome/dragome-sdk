@@ -79,7 +79,8 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				});
 
-				selectElement.setAttribute("size", getSelectElementSize() + "");
+				if (!selectElement.hasAttribute("size"))
+					selectElement.setAttribute("size", getSelectElementSize() + "");
 
 				if (visualList.isMultipleItems())
 					selectElement.setAttribute("multiple", "multiple");
@@ -115,7 +116,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					isSelected|= !visualList.isMultipleItems() && element == value;
 
 					String elementValue= createElementValue(element);
-					Element querySelector= selectExtension.querySelector("option[value='" +  elementValue + "']");
+					Element querySelector= selectExtension.querySelector("option[value='" + elementValue + "']");
 					if (querySelector != null)
 					{
 						if (isSelected)

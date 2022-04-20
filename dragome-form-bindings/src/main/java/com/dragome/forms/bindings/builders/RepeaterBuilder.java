@@ -16,6 +16,7 @@
 package com.dragome.forms.bindings.builders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +43,7 @@ public class RepeaterBuilder<T, C extends VisualComponent>
 	private Supplier<Order> order;
 	private ValueModelDelegator<Boolean> valueModelDelegatorForFilter;
 	private ValueModelDelegator<?> valueModelDelegatorForOrder;
-	private VisualComponentSupplierForItem<T> visualComponentSupplierForItem= (i, t) -> new VisualPanelImpl(t);
+	private VisualComponentSupplierForItem<T> visualComponentSupplierForItem= (i, t) -> Arrays.asList(new VisualPanelImpl(t));
 
 	public RepeaterBuilder(ValueModelDelegator<List<T>> valueModelDelegator, Template template, VisualPanel panel, TemplateComponentBindingBuilder<VisualPanel> templateComponentBindingBuilder)
 	{
@@ -67,11 +68,14 @@ public class RepeaterBuilder<T, C extends VisualComponent>
 		{
 			public void fillTemplate(T item, Template aTemplate)
 			{
-				VisualComponent itemPanel= visualComponentSupplierForItem.process(item, aTemplate);
-				panel.addChild(itemPanel);
-				ComponentBuilder componentBuilder= new ComponentBuilder(itemPanel, templateComponentBindingBuilder);
-				itemRepeater.process(item, componentBuilder);
-				componentBuilder.build();
+				List<VisualComponent> itemPanel= visualComponentSupplierForItem.process(item, aTemplate);
+
+				itemPanel.forEach(v -> {
+					panel.addChild(v);
+					ComponentBuilder componentBuilder= new ComponentBuilder(v, templateComponentBindingBuilder);
+					itemRepeater.process(item, componentBuilder);
+					componentBuilder.build();
+				});
 			}
 		}, true);
 		templateRepeater.repeatItems();

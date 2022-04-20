@@ -243,6 +243,7 @@ public class TemplateImpl extends AbstractTemplate
 			childrenMap.put(templateName, newChild);
 		}
 		children.set(children.indexOf(oldChild), newChild);
+		newChild.setParent(this);
 		templateListener.childReplaced(this, oldChild, newChild);
 	}
 

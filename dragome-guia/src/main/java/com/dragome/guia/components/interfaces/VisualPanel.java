@@ -20,7 +20,7 @@ import java.util.List;
 public interface VisualPanel extends VisualComponent
 {
 	public VisualPanel addChild(VisualComponent aVisualComponent);
-	public List<? extends VisualComponent> getChildren();
+	public List<VisualComponent> getChildren();
 	public void updateChildren(List<? extends VisualComponent> children);
 	public void removeChild(VisualComponent aVisualComponent);
 	public VisualComponent getChildByName(String aName);
@@ -28,4 +28,16 @@ public interface VisualPanel extends VisualComponent
 	void addOrReplaceChild(VisualComponent child);
 	public void replaceChild(VisualComponent newChild, VisualComponent oldChild);
 	void setChildren(List<? extends VisualComponent> children);
+
+	public default boolean containsInDepth(VisualPanel child)
+	{
+		boolean anyMatch= getChildren().stream().anyMatch(c -> {
+			if (c instanceof VisualPanel)
+				return ((VisualPanel) c).containsInDepth(child);
+			else
+				return false;
+		});
+
+		return getChildren().contains(child) || anyMatch;
+	}
 }

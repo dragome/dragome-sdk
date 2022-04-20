@@ -62,7 +62,7 @@ public class CombinedDomInstance
 		innerHTML= document.getInnerHTML();
 	}
 
-	public Object invoke(Method method, Object[] args)
+	public Object invoke(Method method, Object[] args) throws InstantiationException, ClassNotFoundException
 	{
 		Object result;
 		try
@@ -180,17 +180,47 @@ public class CombinedDomInstance
 		fromRemote.put(System.identityHashCode(remote), combinedDomInstance);
 	}
 
-	public String createElementAccessorScript(Object aLocalInstance)
+	public String createElementAccessorScript(Object aLocalInstance) throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		if (aLocalInstance instanceof HTMLDocument)
 			return "document";
 		else
 		{
-			Element element= (Element) aLocalInstance;
-			Node remoteParent= findTopParent(element);
-			String parentVariableName= createParentVariableName(remoteParent);
-			return createScript(element, parentVariableName);
+
+			CombinedDomInstance combinedDomInstance= getFromLocal(aLocalInstance);
+
+			Object newInstance;
+			if (combinedDomInstance == null)
+				newInstance= createRemoteInstance(aLocalInstance);
+			else
+			{
+				newInstance= combinedDomInstance.getRemoteInstance();
+				if (Proxy.isProxyClass(newInstance.getClass()))
+				{
+					Object lastInstance= newInstance;
+					newInstance= createRemoteInstance(aLocalInstance);
+					replaceRemoteInstance(newInstance, lastInstance);
+				}
+			}
+			return "byXpath(\"" + System.identityHashCode(newInstance) + "\", \".\")";
 		}
+	}
+
+	private Object createRemoteInstance(Object aLocalInstance) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+		Object newInstance;
+		Element element= (Element) aLocalInstance;
+		Node remoteParent= findTopParent(element);
+		String parentVariableName= createParentVariableName(remoteParent);
+		String createScript= createScript(element, parentVariableName);
+
+		newInstance= Class.forName(JsCast.createDelegateClassName(ElementExtension.class.getName())).newInstance();
+
+		ScriptHelper.put("delegate", newInstance, this);
+		String finalScript= "delegate.node= " + createScript;
+
+		ScriptHelper.evalNoResult(finalScript, this);
+		return newInstance;
 	}
 
 	public String createRemoteInstanceGetterScript(Object localInstance2, Method method, Object[] args)
@@ -204,7 +234,7 @@ public class CombinedDomInstance
 
 				script+= "." + adaptNameToJs(method);
 
-				Object[] convertArgs= convertArgs(args, false);
+				Object[] convertArgs= convertArgs(args, true);
 				if (args != null)
 				{
 					boolean isSetterAsProperty= method.getName().startsWith("set") && args.length == 1;
@@ -227,6 +257,11 @@ public class CombinedDomInstance
 								replaceRemoteInstance(newInstance, changedNode);
 							}
 							else if (method.getName().equals("removeChild") && i == 0)
+							{
+								Object newInstance= invokeAndCreateLocalInstance(script1, method, true);
+								replaceRemoteInstance(newInstance, changedNode);
+							}
+							else if (method.getName().equals("appendChild") && i == 0)
 							{
 								Object newInstance= invokeAndCreateLocalInstance(script1, method, true);
 								replaceRemoteInstance(newInstance, changedNode);
@@ -449,7 +484,7 @@ public class CombinedDomInstance
 			interfaces= new Class[] { Element.class, ElementExtension.class, EventTarget.class };
 			interfacesList.addAll(Arrays.asList(interfaces));
 		}
-		return new ArrayList<Class<?>>( new HashSet(interfacesList));
+		return new ArrayList<Class<?>>(new HashSet(interfacesList));
 	}
 
 	protected Object[] convertArgs(Object[] args, boolean toLocal)

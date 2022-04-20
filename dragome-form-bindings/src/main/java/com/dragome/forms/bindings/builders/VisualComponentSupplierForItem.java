@@ -15,10 +15,12 @@
  */
 package com.dragome.forms.bindings.builders;
 
+import java.util.List;
+
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.templates.interfaces.Template;
 
 public interface VisualComponentSupplierForItem<T>
 {
-	public VisualComponent process(T item, Template aTemplate);
+	public List<VisualComponent> process(T item, Template aTemplate);
 }

@@ -71,7 +71,7 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 		return this;
 	}
 
-	public List<? extends VisualComponent> getChildren()
+	public List<VisualComponent> getChildren()
 	{
 		return children;
 	}
@@ -138,5 +138,10 @@ public class VisualPanelImpl extends AbstractVisualComponent implements VisualPa
 			oldChild.setParent(null);
 			newChild.setParent(this);
 		}
+	}
+	
+	public String toString()
+	{
+		return children.toString();
 	}
 }

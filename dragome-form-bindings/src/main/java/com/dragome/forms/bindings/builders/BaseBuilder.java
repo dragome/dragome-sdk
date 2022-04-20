@@ -24,6 +24,7 @@ import com.dragome.forms.bindings.client.form.metadata.binding.ConditionBinderBu
 import com.dragome.forms.bindings.client.style.StyleBinder;
 import com.dragome.forms.bindings.client.style.StyleBindingBuilder;
 import com.dragome.forms.bindings.client.style.StyleBuilder;
+import com.dragome.forms.bindings.client.style.UIStyler;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
@@ -89,6 +90,11 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 	{
 		return style(component).with(className);
 	}
+	
+	public B stylTemplateWith(UIStyler styler, String className)
+	{
+		return style(styler).with(className);
+	}
 
 	public B showWhen(Supplier<Boolean> supplier)
 	{
@@ -117,6 +123,13 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 	{
 		styleBuilder= styleBinder.style(component);
 		styleBuilder2= styleBinder2.style(component);
+		return (B) this;
+	}
+	
+	public B style(UIStyler template)
+	{
+		styleBuilder= styleBinder.style(template);
+		styleBuilder2= styleBinder2.style(template);
 		return (B) this;
 	}
 
@@ -265,7 +278,7 @@ public abstract class BaseBuilder<C extends VisualComponent, B extends BaseBuild
 		return (B) this;
 	}
 
-	public C component()
+	public VisualComponent component()
 	{
 		return component;
 	}

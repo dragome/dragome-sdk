@@ -48,7 +48,8 @@ public class TemplateLayout extends DefaultEventProducer implements Layout
 			}
 			else
 			{
-				aVisualComponent.initLayout(new TemplateLayout());
+				if (aVisualComponent.getLayout() == null)
+					aVisualComponent.initLayout(new TemplateLayout());
 			}
 
 			if (aVisualComponent.getLayout() != null && aVisualComponent.getLayout() instanceof TemplateLayout)
@@ -68,7 +69,7 @@ public class TemplateLayout extends DefaultEventProducer implements Layout
 		public void componentRemoved(VisualComponent aVisualComponent)
 		{
 			Template template= getTemplate(aVisualComponent);
-			if (template != null)
+			if (template != null && template.getParent() != null)
 				template.getParent().remove(template);
 		}
 
@@ -115,10 +116,13 @@ public class TemplateLayout extends DefaultEventProducer implements Layout
 
 	public void setTemplate(Template template)
 	{
-		TemplateChangeListener listener= getListener(TemplateChangeListener.class);
-		if (listener != null)
-			listener.changingTemplate(associatedComponent, this.template, template);
-		this.template= template;
+		if (template != this.template)
+		{
+			TemplateChangeListener listener= getListener(TemplateChangeListener.class);
+			if (listener != null)
+				listener.changingTemplate(associatedComponent, this.template, template);
+			this.template= template;
+		}
 	}
 
 	public void setAssociatedComponent(VisualComponent visualComponent)

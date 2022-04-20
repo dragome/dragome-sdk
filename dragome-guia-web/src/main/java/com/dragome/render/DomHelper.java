@@ -20,7 +20,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 import com.dragome.web.html.dom.w3c.ElementExtension;

@@ -22,6 +22,7 @@ import com.dragome.forms.bindings.client.binding.AbstractBindingContainer;
 import com.dragome.forms.bindings.client.util.Utils;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.model.interfaces.UIObject;
+import com.dragome.templates.interfaces.Template;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,5 +46,10 @@ public class StyleBinder extends AbstractBindingContainer
 	public StyleBuilder style(VisualComponent widget)
 	{
 		return style(new VisualComponentUIObjectWrapper(widget));
+	}
+
+	public StyleBuilder style(UIStyler uiStyler)
+	{
+		return style(new GenericUIObjectWrapper(uiStyler));
 	}
 }
