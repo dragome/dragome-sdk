@@ -26,16 +26,39 @@ public class ObservableList<T> implements List<T>
 {
 	protected List<T> list;
 
-	protected ListChangedListener listChangeListener= new ListChangedListener<T>()
+	protected ListChangedListener listChangeListener= createDummyListener();
+
+	private ListChangedListener lastListChangeListener;
+
+	private ListChangedListener<T> createDummyListener()
 	{
-		public void listChanged(T t)
+		return new ListChangedListener<T>()
 		{
-		}
-	};
+			public void listChanged(T t)
+			{
+			}
+		};
+	}
+
+	public ListChangedListener getListChangeListener()
+	{
+		return listChangeListener;
+	}
 
 	public ObservableList(List<T> list)
 	{
 		this.list= new ArrayList<T>(list);
+	}
+	
+	public void suspendListening()
+	{
+		lastListChangeListener= listChangeListener;
+		listChangeListener= createDummyListener();
+	}
+	
+	public void continueListening()
+	{
+		listChangeListener= lastListChangeListener;
 	}
 
 	public static <S> ObservableList<S> makeObservable(List<S> list)
