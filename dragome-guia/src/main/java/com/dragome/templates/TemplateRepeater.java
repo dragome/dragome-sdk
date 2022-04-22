@@ -31,10 +31,36 @@ import com.dragome.templates.interfaces.Template;
 
 public class TemplateRepeater<T>
 {
+	public class ItemWrapper<T>
+	{
+		private T item;
+
+		public int hashCode()
+		{
+			return item.hashCode();
+		}
+
+		public boolean equals(Object obj)
+		{
+			return ((ItemWrapper) obj).getItem() == item;
+		}
+
+		public ItemWrapper(T item)
+		{
+			this.item= item;
+		}
+
+		public T getItem()
+		{
+			return item;
+		}
+
+	}
+
 	private List<T> items;
 	private ItemProcessor<T> itemProcessor;
-	private Map<T, List<Template>> templatesByItem= new LinkedHashMap<T, List<Template>>();
-	private LinkedHashMap<T, List<Template>> shownTemplates= new LinkedHashMap<T, List<Template>>();
+	private Map<ItemWrapper<T>, List<Template>> templatesByItem= new LinkedHashMap<>();
+	private LinkedHashMap<ItemWrapper<T>, List<Template>> shownTemplates= new LinkedHashMap<>();
 	private boolean updating= false;
 
 	public TemplateRepeater()
@@ -88,11 +114,11 @@ public class TemplateRepeater<T>
 
 	public void repeatItems(Iterable<T> items, ItemProcessor<T> itemProcessor)
 	{
-		Map<T, List<Template>> templatesByItemReplacement= new LinkedHashMap<T, List<Template>>();
+		Map<ItemWrapper<T>, List<Template>> templatesByItemReplacement= new LinkedHashMap<>();
 		TemplateHandler templateHandler= GuiaServiceLocator.getInstance().getTemplateHandler();
 
-		Entry<T, List<Template>> entry= null;
-		Iterator<Entry<T, List<Template>>> entriesIterator= shownTemplates.entrySet().iterator();
+		Entry<ItemWrapper<T>, List<Template>> entry= null;
+		Iterator<Entry<ItemWrapper<T>, List<Template>>> entriesIterator= shownTemplates.entrySet().iterator();
 
 		if (updating)
 		{
@@ -102,7 +128,8 @@ public class TemplateRepeater<T>
 
 		for (T item : items)
 		{
-			List<Template> templatesOfItem= templatesByItem.get(item);
+			TemplateRepeater<T>.ItemWrapper<T> itemWrapper= new ItemWrapper<T>(item);
+			List<Template> templatesOfItem= templatesByItem.get(itemWrapper);
 
 			if (templatesOfItem == null || templatesOfItem.isEmpty())
 			{
@@ -111,7 +138,7 @@ public class TemplateRepeater<T>
 					templateHandler.makeInvisible(template);
 
 				templatesOfItem= templateHandler.cloneTemplates(repeatChildren);
-				insertTemplates(itemProcessor, item, templatesOfItem, entry);
+				insertTemplates(itemProcessor, itemWrapper, templatesOfItem, entry);
 
 				for (Template repeatChild : templatesOfItem)
 					templateHandler.makeVisible(repeatChild);
@@ -119,27 +146,29 @@ public class TemplateRepeater<T>
 				itemProcessor.fillTemplates(item, templatesOfItem);
 				if (templatesOfItem.size() == 1)
 					itemProcessor.fillTemplate(item, templatesOfItem.get(0));
+				else
+					System.out.println("more than one template");
 			}
-			else if (entry == null || !entry.getKey().equals(item))
-				insertTemplates(itemProcessor, item, templatesOfItem, entry);
+			else if (entry == null || !entry.getKey().equals(itemWrapper))
+				insertTemplates(itemProcessor, itemWrapper, templatesOfItem, entry);
 
-			templatesByItemReplacement.put(item, templatesOfItem);
+			templatesByItemReplacement.put(new ItemWrapper(item), templatesOfItem);
 
 			if (updating)
 				if (entriesIterator.hasNext())
 				{
-					if (entry == null || entry.getKey().equals(item))
+					if (entry == null || entry.getKey().equals(itemWrapper))
 						entry= entriesIterator.next();
 				}
 				else
 					entry= null;
 		}
 
-		shownTemplates= new LinkedHashMap<T, List<Template>>(templatesByItemReplacement);
+		shownTemplates= new LinkedHashMap<ItemWrapper<T>, List<Template>>(templatesByItemReplacement);
 
 		if (updating)
 		{
-			for (Entry<T, List<Template>> entry2 : templatesByItem.entrySet())
+			for (Entry<TemplateRepeater<T>.ItemWrapper<T>, List<Template>> entry2 : templatesByItem.entrySet())
 			{
 				if (!templatesByItemReplacement.containsKey(entry2.getKey()))
 				{
@@ -155,9 +184,9 @@ public class TemplateRepeater<T>
 		}
 
 	}
-	private void insertTemplates(ItemProcessor<T> itemProcessor, T item, List<Template> clonedRepeatChildren, Entry<T, List<Template>> entry)
+	private void insertTemplates(ItemProcessor<T> itemProcessor, ItemWrapper<T> item, List<Template> clonedRepeatChildren, Entry<ItemWrapper<T>, List<Template>> entry)
 	{
-		Template insertChild= entry != null ? entry.getValue().get(0) : itemProcessor.getInsertTemplate(item);
+		Template insertChild= entry != null ? entry.getValue().get(0) : itemProcessor.getInsertTemplate(item.getItem());
 		for (Template clonedRepeatedChild : clonedRepeatChildren)
 		{
 			clonedRepeatedChild.updateName(clonedRepeatedChild.getName() + "_" + Integer.toHexString((int) System.currentTimeMillis()));
