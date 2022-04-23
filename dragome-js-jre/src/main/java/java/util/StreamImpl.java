@@ -32,6 +32,7 @@ import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -135,9 +136,20 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	}
 	public <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<R> result= new ArrayList<>();
+
+		for (Iterator<T> iterator= topStream.iterator(); iterator.hasNext();)
+		{
+			T type= (T) iterator.next();
+
+			Stream<? extends R> apply= mapper.apply(type);
+			List<R> collect= apply.collect(Collectors.toList());
+			result.addAll(collect);
+		}
+
+		return new StreamImpl<R, T>(result);
 	}
+	
 	public IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper)
 	{
 		// TODO Auto-generated method stub
@@ -206,8 +218,7 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	}
 	public Object[] toArray()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return collect(Collectors.toList()).toArray();
 	}
 	public <A> A[] toArray(IntFunction<A[]> generator)
 	{
