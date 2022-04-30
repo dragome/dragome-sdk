@@ -74,6 +74,7 @@ public class CombinedDomInstance
 			{
 				Object invoke2= null;
 				boolean modifier= modifierMethods.contains(method.getName());
+
 				if (modifier || method.getReturnType() == void.class || method.getReturnType() == Void.class || !discardReturnValue)
 				{
 					boolean isProxyRemote= Proxy.isProxyClass(remote.getClass());
@@ -95,6 +96,9 @@ public class CombinedDomInstance
 								invoke2= invokeAndCreateLocalInstance(createRemoteInstanceGetterScript(localInstance, method, args), method, true);
 							else
 								invoke2= getActualMethod(method, remote).invoke(remote, convertArgs(args, false));
+							
+							if (false && modifier)
+								ScriptHelper.eval("document", this);
 						}
 					}
 
@@ -208,6 +212,8 @@ public class CombinedDomInstance
 
 	private Object createRemoteInstance(Object aLocalInstance) throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
+		CombinedDomInstance fromLocal2= getFromLocal(aLocalInstance);
+
 		Object newInstance;
 		Element element= (Element) aLocalInstance;
 		Node remoteParent= findTopParent(element);

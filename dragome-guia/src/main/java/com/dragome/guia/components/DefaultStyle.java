@@ -206,14 +206,7 @@ public class DefaultStyle implements Style
 
 	public void setName(String name)
 	{
-		String lastName= this.name;
-		this.name= name == null ? "" : name;
-
-		if (!this.name.trim().equals(lastName))
-		{
-			this.name= this.name.trim();
-			fireStyleChanged();
-		}
+		setName(name, true);
 	}
 
 	public VisualComponent getVisualComponent()
@@ -268,5 +261,18 @@ public class DefaultStyle implements Style
 	{
 		String componentStyleName= getComponentStyleName();
 		return isClassPresent(styleName, componentStyleName);
+	}
+
+	public void setName(String name, boolean fireEvent)
+	{
+		String lastName= this.name;
+		this.name= name == null ? "" : name;
+
+		if (!this.name.trim().equals(lastName))
+		{
+			this.name= this.name.trim();
+			if (fireEvent)
+				fireStyleChanged();
+		}
 	}
 }

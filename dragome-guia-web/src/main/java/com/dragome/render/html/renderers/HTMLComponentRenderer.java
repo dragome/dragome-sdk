@@ -87,12 +87,12 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 
 	public static ComponentRenderer findComponentRenderer(final VisualComponent visualComponent)
 	{
+		Class<? extends ComponentRenderer<Element, ? extends VisualComponent>> class1= renderers.get(visualComponent.getClass());
+
 		ComponentRenderer renderer= null;
-		for (Entry<Class<? extends VisualComponent>, Class<? extends ComponentRenderer<Element, ? extends VisualComponent>>> entry : renderers.entrySet())
-		{
-			if (entry.getKey().equals(visualComponent.getClass()))
-				renderer= ServiceLocator.getInstance().getReflectionService().createClassInstance(entry.getValue());
-		}
+
+		if (class1 != null)
+			renderer= ServiceLocator.getInstance().getReflectionService().createClassInstance(class1);
 
 		if (renderer == null)
 			for (Entry<Class<? extends VisualComponent>, Class<? extends ComponentRenderer<Element, ? extends VisualComponent>>> entry : renderers.entrySet())

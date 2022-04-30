@@ -96,8 +96,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 		addListeners(visualComponent, element, null);
 
-		visualComponent.getStyle().setName(element.getAttribute("class"));
-		visualComponent.getStyle().fireStyleChanged();
+		visualComponent.getStyle().setName(element.getAttribute("class"), false);
 	}
 
 	private void addListeners(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> expectedType)
@@ -123,7 +122,7 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 
 	protected void addListener(final VisualComponent visualComponent, final Element element, Class<? extends EventListener> listenerType, String jsAttributeName, Class<? extends EventListener> expectedType)
 	{
-		if (visualComponent.hasListener(listenerType) && (expectedType == null || expectedType.equals(listenerType)))
+		if ((expectedType == null || expectedType.equals(listenerType)) && visualComponent.hasListener(listenerType))
 			listeners.add(jsAttributeName);
 
 		//			element.setAttribute(jsAttributeName, "_ed.onEvent()");

@@ -25,7 +25,7 @@ public final class Collectors
 		{
 			this.result= result;
 		}
-		
+
 		public Supplier<Object> supplier()
 		{
 			return null;
@@ -100,11 +100,9 @@ public final class Collectors
 	{
 		return new CollectorImplementation<T, List<T>>(new ArrayList<>());
 	}
-	
+
 	public static <T> Collector<T, ?, Set<T>> toSet()
 	{
 		return new CollectorImplementation<T, Set<T>>(new HashSet<>());
 	}
-	
-	
 }

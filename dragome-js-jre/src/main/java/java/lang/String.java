@@ -20,6 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -78,7 +80,7 @@ public final class String implements CharSequence, Comparable<String>, Serializa
 		consume(init(bytes, offset, count, enc));
 	}
 
-	public String(byte[] bytes, String enc)  
+	public String(byte[] bytes, String enc)
 	{
 		consume(init(bytes, 0, bytes.length, enc));
 	}
@@ -155,25 +157,28 @@ public final class String implements CharSequence, Comparable<String>, Serializa
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-            return true;
-		if (obj instanceof String) {
+			return true;
+		if (obj instanceof String)
+		{
 			ScriptHelper.put("obj", obj, this);
 			ScriptHelper.evalNoResult("var string1 = String(this)", this);
 			ScriptHelper.evalNoResult("var string2 = String(obj)", this);
-            int n1 = ScriptHelper.evalInt("string1.length", this);
-            int n2 = ScriptHelper.evalInt("string2.length", this);
-            if (n1 == n2) {
-                int i = 0;
-                while (n1-- != 0) {
-                	ScriptHelper.put("i", i, this);
-                	boolean flag = ScriptHelper.evalBoolean("string1.charAt(i) == string2.charAt(i)", this);
-                    if (!flag)
-                    	return false;
-                    i++;
-                }
-                return true;
-            }
-        }
+			int n1= ScriptHelper.evalInt("string1.length", this);
+			int n2= ScriptHelper.evalInt("string2.length", this);
+			if (n1 == n2)
+			{
+				int i= 0;
+				while (n1-- != 0)
+				{
+					ScriptHelper.put("i", i, this);
+					boolean flag= ScriptHelper.evalBoolean("string1.charAt(i) == string2.charAt(i)", this);
+					if (!flag)
+						return false;
+					i++;
+				}
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -573,7 +578,7 @@ public final class String implements CharSequence, Comparable<String>, Serializa
 
 	public String[] split(String regex, int maxMatch)
 	{ // from GWT
-		  // The compiled regular expression created from the string
+	  // The compiled regular expression created from the string
 		ScriptHelper.put("regex", regex, this);
 		Object compiled= ScriptHelper.eval("new RegExp(regex, 'g');", this);
 		ScriptHelper.put("compiled", compiled, this);
@@ -732,5 +737,15 @@ public final class String implements CharSequence, Comparable<String>, Serializa
 	public String toUpperCase(Locale root)
 	{
 		return toUpperCase();
+	}
+
+	public static String join(CharSequence delimiter, Iterable<? extends CharSequence> elements)
+	{
+		StringJoiner joiner= new StringJoiner(delimiter);
+		for (CharSequence cs : elements)
+		{
+			joiner.add(cs);
+		}
+		return joiner.toString();
 	}
 }

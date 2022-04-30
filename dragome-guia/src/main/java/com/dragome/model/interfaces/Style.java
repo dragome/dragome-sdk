@@ -39,6 +39,7 @@ public interface Style
 	public boolean isEnabled();
 	public void setEnabled(boolean isEnabled);
 	public String getName();
+	public void setName(String name, boolean fireEvent);
 	public void setName(String name);
 	public abstract void setVisualComponent(VisualComponent visualComponent);
 	public abstract VisualComponent getVisualComponent();
