@@ -30,19 +30,20 @@ public class ObjectTransformer extends AbstractTransformer
 		JSONContext context= getContext();
 		Path path= context.getPath();
 		ChainedSet visits= context.getVisits();
+		int identityHashCode= System.identityHashCode(object);
 		try
 		{
-			if (!visits.contains(object))
+			if (!visits.contains(identityHashCode))
 			{
-				context.setVisits(new ChainedSet(visits));
-				context.getVisits().add(object);
+//				context.setVisits(new ChainedSet(visits));
+				context.getVisits().add(identityHashCode);
 				// traverse object
 				BeanAnalyzer analyzer= BeanAnalyzer.analyze(resolveClass(object));
 				TypeContext typeContext= context.writeOpenObject();
 
 				context.writeName("@id");
 				Integer objectId= getObjectId(object, context);
-				context.getReferences().put(System.identityHashCode(object), objectId);
+				context.getReferences().put(identityHashCode, objectId);
 				context.write("" + objectId);
 
 				context.writeComma();
@@ -80,7 +81,7 @@ public class ObjectTransformer extends AbstractTransformer
 					path.pop();
 				}
 				context.writeCloseObject();
-				context.setVisits((ChainedSet) context.getVisits().getParent());
+//				context.setVisits((ChainedSet) context.getVisits().getParent());
 
 			}
 			else
