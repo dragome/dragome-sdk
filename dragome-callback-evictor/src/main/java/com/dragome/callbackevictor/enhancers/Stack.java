@@ -222,11 +222,7 @@ public class Stack implements Serializable
 
 	public void pushObject(Object o)
 	{
-		//		if (o instanceof ProxyRelatedInvocationHandler)
-		//		{
-		//			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler= (ProxyRelatedInvocationHandler) o;
-		//			o= proxyRelatedInvocationHandler.getProxy();
-		//		}
+//		o= replaceInvocationHandler(o, false);
 
 		if (oTop == ostack.length)
 		{
@@ -245,11 +241,7 @@ public class Stack implements Serializable
 
 	public void pushReference(Object o)
 	{
-		if (o instanceof ProxyRelatedInvocationHandler)
-		{
-			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler = (ProxyRelatedInvocationHandler) o;
-			o = proxyRelatedInvocationHandler.getProxy();
-		}
+		o= replaceInvocationHandler(o, true);
 
 		if (rTop == rstack.length)
 		{
@@ -258,6 +250,19 @@ public class Stack implements Serializable
 			rstack= hlp;
 		}
 		rstack[rTop++]= o;
+	}
+
+	private Object replaceInvocationHandler(Object o, boolean bypass)
+	{
+		if (o instanceof ProxyRelatedInvocationHandler)
+		{
+			ProxyRelatedInvocationHandler proxyRelatedInvocationHandler= (ProxyRelatedInvocationHandler) o;
+			if (bypass || !proxyRelatedInvocationHandler.getClass().getSimpleName().contains("InvocationHandlerForLambdas"))
+				o= proxyRelatedInvocationHandler.getProxy();
+			else
+				System.out.println("dzgdsag");
+		}
+		return o;
 	}
 
 	public boolean isSerializable()
