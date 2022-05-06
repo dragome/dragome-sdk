@@ -17,7 +17,6 @@
 package com.dragome.callbackevictor.enhancers;
 
 import java.io.Serializable;
-import java.lang.reflect.Proxy;
 
 import com.dragome.commons.ProxyRelatedInvocationHandler;
 
@@ -38,37 +37,53 @@ public class Stack implements Serializable
 	private int iTop, fTop, dTop, lTop, oTop, rTop;
 	private Runnable runnable;
 
+	public Stack()
+	{
+	}
 	public Stack(Runnable pRunnable)
 	{
-		istack= new int[10];
-		lstack= new long[5];
-		dstack= new double[5];
-		fstack= new float[5];
-		ostack= new Object[10];
-		rstack= new Object[5];
 		setRunnable(pRunnable);
 	}
 
 	public Stack(final Stack pParent)
 	{
-		istack= new int[pParent.istack.length];
-		lstack= new long[pParent.lstack.length];
-		dstack= new double[pParent.dstack.length];
-		fstack= new float[pParent.fstack.length];
-		ostack= new Object[pParent.ostack.length];
-		rstack= new Object[pParent.rstack.length];
-		iTop= pParent.iTop;
-		fTop= pParent.fTop;
-		dTop= pParent.dTop;
-		lTop= pParent.lTop;
-		oTop= pParent.oTop;
-		rTop= pParent.rTop;
-		System.arraycopy(pParent.istack, 0, istack, 0, iTop);
-		System.arraycopy(pParent.fstack, 0, fstack, 0, fTop);
-		System.arraycopy(pParent.dstack, 0, dstack, 0, dTop);
-		System.arraycopy(pParent.lstack, 0, lstack, 0, lTop);
-		System.arraycopy(pParent.ostack, 0, ostack, 0, oTop);
-		System.arraycopy(pParent.rstack, 0, rstack, 0, rTop);
+		if (pParent.istack != null)
+		{
+			iTop= pParent.iTop;
+			istack= new int[pParent.istack.length];
+			System.arraycopy(pParent.istack, 0, istack, 0, iTop);
+		}
+		if (pParent.lstack != null)
+		{
+			lTop= pParent.lTop;
+			lstack= new long[pParent.lstack.length];
+			System.arraycopy(pParent.lstack, 0, lstack, 0, lTop);
+		}
+		if (pParent.dstack != null)
+		{
+			dTop= pParent.dTop;
+			dstack= new double[pParent.dstack.length];
+			System.arraycopy(pParent.dstack, 0, dstack, 0, dTop);
+		}
+		if (pParent.fstack != null)
+		{
+			fTop= pParent.fTop;
+			fstack= new float[pParent.fstack.length];
+			System.arraycopy(pParent.fstack, 0, fstack, 0, fTop);
+		}
+		if (pParent.ostack != null)
+		{
+			oTop= pParent.oTop;
+			ostack= new Object[pParent.ostack.length];
+			System.arraycopy(pParent.ostack, 0, ostack, 0, oTop);
+		}
+		if (pParent.rstack != null)
+		{
+			rTop= pParent.rTop;
+			rstack= new Object[pParent.rstack.length];
+			System.arraycopy(pParent.rstack, 0, rstack, 0, rTop);
+		}
+
 		setRunnable(pParent.getRunnable());
 	}
 
@@ -174,6 +189,8 @@ public class Stack implements Serializable
 
 	public void pushDouble(double d)
 	{
+		if (dstack == null)
+			dstack= new double[5];
 
 		if (dTop == dstack.length)
 		{
@@ -186,6 +203,8 @@ public class Stack implements Serializable
 
 	public void pushFloat(float f)
 	{
+		if (fstack == null)
+			fstack= new float[5];
 
 		if (fTop == fstack.length)
 		{
@@ -198,6 +217,8 @@ public class Stack implements Serializable
 
 	public void pushInt(int i)
 	{
+		if (istack == null)
+			istack= new int[10];
 
 		if (iTop == istack.length)
 		{
@@ -210,6 +231,8 @@ public class Stack implements Serializable
 
 	public void pushLong(long l)
 	{
+		if (lstack == null)
+			lstack= new long[5];
 
 		if (lTop == lstack.length)
 		{
@@ -222,7 +245,10 @@ public class Stack implements Serializable
 
 	public void pushObject(Object o)
 	{
-//		o= replaceInvocationHandler(o, false);
+		if (ostack == null)
+			ostack= new Object[10];
+
+		//		o= replaceInvocationHandler(o, false);
 
 		if (oTop == ostack.length)
 		{
@@ -241,6 +267,9 @@ public class Stack implements Serializable
 
 	public void pushReference(Object o)
 	{
+		if (rstack == null)
+			rstack= new Object[5];
+
 		o= replaceInvocationHandler(o, true);
 
 		if (rTop == rstack.length)

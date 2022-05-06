@@ -15,6 +15,9 @@
  */
 package com.dragome.commons;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRelatedInvocationHandler
 {
@@ -35,25 +38,24 @@ public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRela
 	{
 		return proxy;
 	}
-	
+
 	public void setInvoked(boolean invoked)
 	{
 		this.invoked= invoked;
 	}
-	
+
 	public boolean isInvoked()
 	{
-	    return invoked;
+		return invoked;
 	}
 
-	@Override
-	public Class<?>[] getInterfaces()
+	public List<Class<?>> getInterfaces()
 	{
-		return interfaces;
+		return interfaces == null ? new ArrayList<Class<?>>() : Arrays.asList(interfaces);
 	}
 
-	public void setInterfaces(Class<?>[] interfaces)
+	public void setInterfaces(List<Class<?>> interfaces)
 	{
-		this.interfaces = interfaces;
+		this.interfaces= interfaces.toArray(new Class[0]);
 	}
 }

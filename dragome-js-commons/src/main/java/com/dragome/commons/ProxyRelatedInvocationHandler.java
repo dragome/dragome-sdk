@@ -16,6 +16,7 @@
 package com.dragome.commons;
 
 import java.lang.reflect.InvocationHandler;
+import java.util.List;
 
 public interface ProxyRelatedInvocationHandler extends InvocationHandler
 {
@@ -23,6 +24,6 @@ public interface ProxyRelatedInvocationHandler extends InvocationHandler
 	Object getProxy();
 	void setInvoked(boolean invoked);
 	boolean isInvoked();
-	Class<?>[] getInterfaces();
-	void setInterfaces(Class<?>[] interfaces);
+	List<Class<?>> getInterfaces();
+	void setInterfaces(List<Class<?>> interfaces);
 }

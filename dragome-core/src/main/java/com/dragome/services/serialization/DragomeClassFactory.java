@@ -20,6 +20,7 @@ import java.util.Map;
 
 import flexjson.ObjectBinder;
 import flexjson.ObjectFactory;
+import flexjson.factories.ClassObjectFactory;
 
 public class DragomeClassFactory implements ObjectFactory
 {
@@ -27,14 +28,8 @@ public class DragomeClassFactory implements ObjectFactory
 	public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass)
 	{
 		String name= ((Map<String, String>) value).get("name");
-		try
-		{
-			return Class.forName(name);
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new RuntimeException(e);
-		}
+
+		return ClassObjectFactory.parseType(name);
 	}
 
 }

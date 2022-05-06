@@ -15,19 +15,32 @@ public class BeanObjectFactory implements ObjectFactory
 	{
 		try
 		{
-			Map map= (Map) value;
-			Integer reference= (Integer) map.get("@ref");
-			if (reference != null)
-				return context.getReferences().get(reference);
-			else
-			{
-				Object target= instantiate(targetClass);
-				Integer id= (Integer) map.get("@id");
-				if (id != null)
-					context.getReferences().put(id, target);
+			if (value instanceof String)
+				return value;
 
-				return context.bindIntoObject(map, target, targetType);
+			if (value instanceof Map)
+			{
+				Map map= (Map) value;
+				Integer reference= (Integer) map.get("@ref");
+				if (reference != null)
+				{
+					Object object= context.getReferences().get(reference);
+					if (map.size() > 1)
+						context.bindIntoObject(map, object, targetType);
+					return object;
+				}
+				else
+				{
+					Object target= instantiate(targetClass);
+					Integer id= (Integer) map.get("@id");
+					if (id != null)
+						context.getReferences().put(id, target);
+
+					return context.bindIntoObject(map, target, targetType);
+				}
 			}
+			else
+				return context.bind(value, value.getClass());
 		}
 		catch (InstantiationException e)
 		{

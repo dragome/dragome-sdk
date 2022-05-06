@@ -32,12 +32,17 @@ public class DragomeCallsiteFactory
 {
 	protected static class InvocationHandlerForLambdas extends AbstractProxyRelatedInvocationHandler
 	{
-		private final Class<?> class1;
-		private final String methodName;
-		private final Object[] parameters;
+		private Class<?> class1;
+		private String methodName;
+		private Object[] parameters;
 		private Class<?> returnType;
 		private String invokeName;
-		private String callType;
+		private Method foundMethod;
+		private boolean isInstanceMethod;
+
+		public InvocationHandlerForLambdas()
+		{
+		}
 
 		protected InvocationHandlerForLambdas(Class<?> class1, String methodName, Object[] parameters, Class<?> returnTypeClass, String invokeName, String callType)
 		{
@@ -46,7 +51,7 @@ public class DragomeCallsiteFactory
 			this.parameters= parameters;
 			this.returnType= returnTypeClass;
 			this.invokeName= invokeName;
-			this.callType= callType;
+			init(callType);
 		}
 
 		@ContinueReflection
@@ -59,45 +64,57 @@ public class DragomeCallsiteFactory
 				//				if (returnType.getMethod(method.getName(), method.getParameterTypes()) != null)
 				if (!method.getName().equals(invokeName))
 					return invokeDefaultMethod(proxy, method, args);
-
 				if ("<init>".equals(methodName))
 					return class1.newInstance();
 
-				List<Object> asList= new ArrayList<Object>(Arrays.asList(parameters));
-				if (args != null)
-					asList.addAll(Arrays.asList(args));
-
-				Method[] methods= class1.getDeclaredMethods();
-				Object result= null;
-				for (int i= 0; i < methods.length && result == null; i++)
-				{
-					Method foundMethod= methods[i];
-					if (foundMethod.getName().equals(methodName))
-					{
-						foundMethod.setAccessible(true);
-
-						boolean isInstanceMethod= parameters.length > 0 && isSameClass();
-
-						if ("static".equals(callType))
-							isInstanceMethod= !Modifier.isStatic(foundMethod.getModifiers());
-
-						Object obj= null;
-						Object[] invocationArgs= asList.toArray();
-						if (isInstanceMethod)
-						{
-							obj= asList.remove(0);
-							invocationArgs= asList.toArray();
-						}
-						result= foundMethod.invoke(obj, invocationArgs);
-					}
-				}
-
-				return result;
+				Object[] createInvocationArgs= createInvocationArgs(args);
+				Object calcObj= isInstanceMethod ? parameters.length > 0 ? parameters[0] : args[0] : null;
+				Method foundMethod2= foundMethod;
+				args= new Object[0];
+				method= null;
+				proxy= null;
+				Object invoke= foundMethod2.invoke(calcObj, createInvocationArgs);
+				return invoke;
 			}
 			catch (Exception e1)
 			{
 				throw new RuntimeException(e1);
 			}
+		}
+
+		private void init(String callType)
+		{
+			Method[] methods= class1.getDeclaredMethods();
+
+			for (int i= 0; i < methods.length; i++)
+			{
+				setFoundMethod(methods[i]);
+				if (getFoundMethod().getName().equals(methodName))
+				{
+					isInstanceMethod= parameters.length > 0 && isSameClass();
+
+					if ("static".equals(callType))
+						isInstanceMethod= !Modifier.isStatic(getFoundMethod().getModifiers());
+
+					getFoundMethod().setAccessible(true);
+					return;
+				}
+			}
+		}
+
+		private Object[] createInvocationArgs(Object[] args)
+		{
+			List<Object> asList= new ArrayList<Object>(Arrays.asList(parameters));
+			if (args != null)
+				asList.addAll(Arrays.asList(args));
+			Object[] invocationArgs= asList.toArray();
+
+			if (isInstanceMethod)
+			{
+				asList.remove(0);
+				invocationArgs= asList.toArray();
+			}
+			return invocationArgs;
 		}
 		private boolean isSameClass()
 		{
@@ -135,6 +152,76 @@ public class DragomeCallsiteFactory
 
 			return handler.invoke(proxy, method, args);
 		}
+
+		public Class<?> getReturnType()
+		{
+			return returnType;
+		}
+
+		public void setReturnType(Class<?> returnType)
+		{
+			this.returnType= returnType;
+		}
+
+		public String getInvokeName()
+		{
+			return invokeName;
+		}
+
+		public void setInvokeName(String invokeName)
+		{
+			this.invokeName= invokeName;
+		}
+
+		public Class<?> getClass1()
+		{
+			return class1;
+		}
+
+		public String getMethodName()
+		{
+			return methodName;
+		}
+
+		public List<Object> getParameters()
+		{
+			return Arrays.asList(parameters);
+		}
+
+		public void setClass1(Class<?> class1)
+		{
+			this.class1= class1;
+		}
+
+		public void setMethodName(String methodName)
+		{
+			this.methodName= methodName;
+		}
+
+		public void setParameters(List<Object> parameters)
+		{
+			this.parameters= parameters.toArray();
+		}
+
+		public Method getFoundMethod()
+		{
+			return foundMethod;
+		}
+
+		public void setFoundMethod(Method foundMethod)
+		{
+			this.foundMethod = foundMethod;
+		}
+
+		public boolean isInstanceMethod()
+		{
+			return isInstanceMethod;
+		}
+
+		public void setInstanceMethod(boolean isInstanceMethod)
+		{
+			this.isInstanceMethod = isInstanceMethod;
+		}
 	}
 
 	public static Object create(String className, String invokeName, String returnType, String invokeType, String handle2, Object objects, String callType)
@@ -151,7 +238,10 @@ public class DragomeCallsiteFactory
 			}
 			final Object[] parameters= (Object[]) objects;
 			Class<?> returnTypeClass= Class.forName(returnType);
-			return Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), new Class<?>[] { returnTypeClass }, new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType));
+			Class<?>[] interfaces= new Class<?>[] { returnTypeClass };
+			InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType);
+			invocationHandlerForLambdas.setInterfaces(Arrays.asList(interfaces));
+			return Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), interfaces, invocationHandlerForLambdas);
 		}
 		catch (Exception e)
 		{

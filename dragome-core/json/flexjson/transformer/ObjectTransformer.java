@@ -45,7 +45,6 @@ public class ObjectTransformer extends AbstractTransformer
 				Integer objectId= getObjectId(object, context);
 				context.getReferences().put(identityHashCode, objectId);
 				context.write("" + objectId);
-
 				context.writeComma();
 				for (BeanProperty prop : analyzer.getProperties())
 				{
@@ -104,11 +103,12 @@ public class ObjectTransformer extends AbstractTransformer
 		return context.isSerializingWithUniqueIds() ? System.identityHashCode(object) : context.ids++;
 	}
 
-	private void writeReference(Object object, JSONContext context)
+	protected void writeReference(Object object, JSONContext context)
 	{
 		TypeContext typeContext= context.writeOpenObject();
 		context.writeName("@ref");
-		context.write(context.getReferences().get(System.identityHashCode(object)) + "");
+		Integer integer= context.getReferences().get(System.identityHashCode(object));
+		context.write(integer + "");
 		context.writeCloseObject();
 	}
 

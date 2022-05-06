@@ -16,6 +16,7 @@
 package flexjson.transformer;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Proxy;
 
 import flexjson.TypeContext;
 
@@ -24,6 +25,19 @@ public class ArrayTransformer extends AbstractTransformer
 
 	public void transform(Object object)
 	{
+		
+		getContext().writeOpenObject();
+		getContext().writeName("class");
+		getContext().writeQuoted(Array.class.getName());
+		getContext().writeComma();
+		getContext().writeName("type");
+		
+		ClassTransformer classTransformer= new ClassTransformer();
+		classTransformer.transform(object.getClass().getComponentType());
+		getContext().writeComma();
+
+		getContext().writeName("items");
+
 		TypeContext typeContext= getContext().writeOpenArray();
 		int length= Array.getLength(object);
 		for (int i= 0; i < length; ++i)
@@ -34,6 +48,9 @@ public class ArrayTransformer extends AbstractTransformer
 			getContext().transform(Array.get(object, i));
 		}
 		getContext().writeCloseArray();
+		
+		getContext().writeCloseObject();
+
 	}
 
 }

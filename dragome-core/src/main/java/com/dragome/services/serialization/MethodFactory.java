@@ -17,6 +17,10 @@ package com.dragome.services.serialization;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import com.dragome.helpers.TimeCollector;
 import com.dragome.services.ServiceLocator;
@@ -31,17 +35,29 @@ public final class MethodFactory implements ObjectFactory
 		TimeCollector timeCollector= ServiceLocator.getInstance().getTimeCollector();
 		timeCollector.registerStart("instantiate method");
 
-		String methodSignature= (String) value;
+		Map map= (Map) value;
+		String methodSignature= (String) map.get("name");
+
 		String className= methodSignature.substring(0, methodSignature.lastIndexOf("."));
 		String methodName= methodSignature.substring(methodSignature.lastIndexOf(".") + 1, methodSignature.lastIndexOf(":"));
 		int parametersCount= Integer.parseInt(methodSignature.substring(methodSignature.lastIndexOf(":") + 1));
 		try
 		{
+			List<Method> methodsList= new ArrayList<Method>();
+
+			Method[] declaMethods= Class.forName(className).getDeclaredMethods();
 			Method[] methods= Class.forName(className).getMethods();
-			for (Method method : methods)
+
+			methodsList.addAll(Arrays.asList(declaMethods));
+			methodsList.addAll(Arrays.asList(methods));
+
+			for (Method method : methodsList)
 			{
 				if (method.getName().equals(methodName) && method.getParameterTypes().length == parametersCount)
+				{
+					method.setAccessible(true);
 					return method;
+				}
 			}
 		}
 		catch (Exception e)

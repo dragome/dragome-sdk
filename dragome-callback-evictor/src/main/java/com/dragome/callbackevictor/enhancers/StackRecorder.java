@@ -16,134 +16,161 @@
  */
 package com.dragome.callbackevictor.enhancers;
 
-
 /**
  * Adds additional behaviors necessary for stack capture/restore
  * on top of {@link Stack}.
  */
-public final class StackRecorder extends Stack {
+public final class StackRecorder extends Stack
+{
 
-    private static final long serialVersionUID = 2L;
+	public StackRecorder()
+	{
+	}
 
-    private static final ThreadLocal<StackRecorder> threadMap = new ThreadLocal<StackRecorder>();
+	private static final long serialVersionUID= 2L;
 
-    /**
-     * True, if the continuation restores the previous stack trace to the last
-     * invocation of suspend().
-     *
-     * <p>
-     * This field is accessed from the byte code injected into application code,
-     * and therefore defining a wrapper get method makes it awkward to
-     * step through the user code. That's why this field is public.
-     */
-    public transient boolean isRestoring = false;
+	private static final ThreadLocal<StackRecorder> threadMap= new ThreadLocal<StackRecorder>();
 
-    /**
-     * True, is the continuation freeze the strack trace, and stops the
-     * continuation.
-     *
-     * @see #isRestoring
-     */
-    public transient boolean isCapturing = false;
+	/**
+	 * True, if the continuation restores the previous stack trace to the last
+	 * invocation of suspend().
+	 *
+	 * <p>
+	 * This field is accessed from the byte code injected into application code,
+	 * and therefore defining a wrapper get method makes it awkward to
+	 * step through the user code. That's why this field is public.
+	 */
+	public transient boolean isRestoring= false;
 
-    /** Context object passed by the client code to continuation during resume */
-    private transient Object context;
-    /** Result object passed by the continuation to the client code during suspend */
-    public transient Object value;
+	/**
+	 * True, is the continuation freeze the strack trace, and stops the
+	 * continuation.
+	 *
+	 * @see #isRestoring
+	 */
+	public transient boolean isCapturing= false;
 
-    /**
-     * Creates a new empty {@link StackRecorder} that runs the given target.
-     */
-    public StackRecorder( final Runnable pTarget ) {
-        super(pTarget);
-    }
+	/** Context object passed by the client code to continuation during resume */
+	private transient Object context;
+	/** Result object passed by the continuation to the client code during suspend */
+	public transient Object value;
 
-    /**
-     * Creates a clone of the given {@link StackRecorder}.
-     */
-    public StackRecorder(final Stack pParent) {
-        super(pParent);
-    }
+	/**
+	 * Creates a new empty {@link StackRecorder} that runs the given target.
+	 */
+	public StackRecorder(final Runnable pTarget)
+	{
+		super(pTarget);
+	}
 
-    public static Object suspend(final Object value) {
-        final StackRecorder stackRecorder = get();
-        if(stackRecorder == null) {
-            throw new IllegalStateException("No continuation is running");
-        }
+	/**
+	 * Creates a clone of the given {@link StackRecorder}.
+	 */
+	public StackRecorder(final Stack pParent)
+	{
+		super(pParent);
+	}
 
-        stackRecorder.isCapturing = !stackRecorder.isRestoring;
-        stackRecorder.isRestoring = false;
-        stackRecorder.value = value;
+	public static Object suspend(final Object value)
+	{
+		final StackRecorder stackRecorder= get();
+		if (stackRecorder == null)
+		{
+			throw new IllegalStateException("No continuation is running");
+		}
 
-        // flow breaks here, actual return will be executed in resumed continuation
-        // return in continuation to be suspended is executed as well but ignored
+		stackRecorder.isCapturing= !stackRecorder.isRestoring;
+		stackRecorder.isRestoring= false;
+		stackRecorder.value= value;
 
-        return stackRecorder.context;
-    }
+		// flow breaks here, actual return will be executed in resumed continuation
+		// return in continuation to be suspended is executed as well but ignored
 
-    public StackRecorder execute(final Object context) {
-        final StackRecorder old = registerThread();
-        try {
-            isRestoring = !isEmpty(); // start restoring if we have a filled stack
-            this.context = context;
-            
-            if (isRestoring) {
-            }
-            
-            getRunnable().run();
+		return stackRecorder.context;
+	}
 
-            if (isCapturing) {
-                if(isEmpty()) {
-                    // if we were really capturing the stack, at least we should have
-                    // one object in the reference stack. Otherwise, it usually means
-                    // that the application wasn't instrumented correctly.
-                    throw new IllegalStateException("stack corruption. Is "+getRunnable().getClass()+" instrumented for javaflow?");
-                }
-                // top of the reference stack is the object that we'll call into
-                // when resuming this continuation. we have a separate Runnable
-                // for this, so throw it away
-                popReference();
-                return this;
-            } else {
-                return null;    // nothing more to continue
-            }
-        } catch(final ContinuationDeath cd) {
-            // this isn't an error, so no need to log
-            throw cd;
-        } catch(final Error e) {
-            throw e;
-        } catch(final RuntimeException e) {
-            throw e;
-        } finally {
-            this.context = null;
-            deregisterThread(old);
-        }
-    }
+	public StackRecorder execute(final Object context)
+	{
+		final StackRecorder old= registerThread();
+		try
+		{
+			isRestoring= !isEmpty(); // start restoring if we have a filled stack
+			this.context= context;
 
-    public Object getContext() {
-        return context;
-    }
+			if (isRestoring)
+			{
+			}
 
-    /**
-     * Bind this stack recorder to running thread.
-     */
-    private StackRecorder registerThread() {
-        final StackRecorder old = get();
-        threadMap.set(this);
-        return old;
-    }
+			getRunnable().run();
 
-    /**
-     * Unbind the current stack recorder to running thread.
-     */
-    private void deregisterThread(final StackRecorder old) {
-        threadMap.set(old);
-    }
+			if (isCapturing)
+			{
+				if (isEmpty())
+				{
+					// if we were really capturing the stack, at least we should have
+					// one object in the reference stack. Otherwise, it usually means
+					// that the application wasn't instrumented correctly.
+					throw new IllegalStateException("stack corruption. Is " + getRunnable().getClass() + " instrumented for javaflow?");
+				}
+				// top of the reference stack is the object that we'll call into
+				// when resuming this continuation. we have a separate Runnable
+				// for this, so throw it away
+				popReference();
+				return this;
+			}
+			else
+			{
+				return null; // nothing more to continue
+			}
+		}
+		catch (final ContinuationDeath cd)
+		{
+			// this isn't an error, so no need to log
+			throw cd;
+		}
+		catch (final Error e)
+		{
+			throw e;
+		}
+		catch (final RuntimeException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			this.context= null;
+			deregisterThread(old);
+		}
+	}
 
-    /**
-     * Return the continuation, which is associated to the current thread.
-     */
-    public static StackRecorder get() {
-        return threadMap.get();
-    }
+	public Object getContext()
+	{
+		return context;
+	}
+
+	/**
+	 * Bind this stack recorder to running thread.
+	 */
+	private StackRecorder registerThread()
+	{
+		final StackRecorder old= get();
+		threadMap.set(this);
+		return old;
+	}
+
+	/**
+	 * Unbind the current stack recorder to running thread.
+	 */
+	private void deregisterThread(final StackRecorder old)
+	{
+		threadMap.set(old);
+	}
+
+	/**
+	 * Return the continuation, which is associated to the current thread.
+	 */
+	public static StackRecorder get()
+	{
+		return threadMap.get();
+	}
 }

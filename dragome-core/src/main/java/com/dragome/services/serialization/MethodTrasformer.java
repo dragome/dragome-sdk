@@ -17,7 +17,10 @@ package com.dragome.services.serialization;
 
 import java.lang.reflect.Method;
 
+import flexjson.JSONContext;
+import flexjson.TypeContext;
 import flexjson.transformer.AbstractTransformer;
+import flexjson.transformer.ClassTransformer;
 
 public class MethodTrasformer extends AbstractTransformer
 {
@@ -25,6 +28,18 @@ public class MethodTrasformer extends AbstractTransformer
 	{
 		Method method= (Method) object;
 		String result= method.getDeclaringClass().getName().replaceAll("_", ".") + "." + method.getName() + ":" + method.getParameterTypes().length;
-		getContext().writeQuoted(result);
+
+		JSONContext context= getContext();
+		TypeContext typeContext= context.writeOpenObject();
+
+		context.writeName("class");
+		ClassTransformer classTransformer= new ClassTransformer();
+		classTransformer.transform(object.getClass());
+		context.writeComma();
+		
+		context.writeName("name");
+		context.writeQuoted(result);
+
+		context.writeCloseObject();
 	}
 }
