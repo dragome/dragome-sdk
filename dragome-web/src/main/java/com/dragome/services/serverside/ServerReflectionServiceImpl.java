@@ -32,6 +32,12 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 		return implementations;
 	}
 
+	public static void reset()
+	{
+		reflections= new Reflections("^");
+		reflections2= new Reflections(".*");
+	}
+
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
 	{
 		return reflections.getTypesAnnotatedWith((Class<? extends Annotation>) class1);
