@@ -26,7 +26,7 @@ import com.dragome.templates.interfaces.Template;
 
 public class TemplateLayout extends DefaultEventProducer implements Layout
 {
-	public static class PanelListenerImpl implements PanelListener
+	public class PanelListenerImpl implements PanelListener
 	{
 		protected ComponentRenderer<Object, VisualComponent> renderer= GuiaServiceLocator.getInstance().getTemplateManager().getComponentRenderer();
 		protected VisualComponent visualPanel;
@@ -87,13 +87,14 @@ public class TemplateLayout extends DefaultEventProducer implements Layout
 			}
 		}
 
-		private Template getTemplate(VisualComponent oldChild)
-		{
-			if (oldChild instanceof HasLayout && ((HasLayout) oldChild).getLayout() instanceof TemplateLayout)
-				return ((TemplateLayout) ((HasLayout) oldChild).getLayout()).getTemplate();
-			else
-				return null;
-		}
+	}
+
+	protected Template getTemplate(VisualComponent component)
+	{
+		if (component instanceof HasLayout && ((HasLayout) component).getLayout() instanceof TemplateLayout)
+			return ((TemplateLayout) ((HasLayout) component).getLayout()).getTemplate();
+		else
+			return null;
 	}
 
 	protected Template template;

@@ -34,7 +34,7 @@ public class AbstractVisualComponent extends DefaultEventProducer implements Vis
 	protected Layout layout;
 
 	protected static StyleChangedListener styleChangedListener= GuiaServiceLocator.getInstance().getStyleChangeListener();
-	
+
 	public AbstractVisualComponent()
 	{
 		initListeners();
@@ -88,36 +88,36 @@ public class AbstractVisualComponent extends DefaultEventProducer implements Vis
 	{
 		addListener(ClickListener.class, clickListener);
 	}
-	
+
 	public void addDoubleClickListener(DoubleClickListener doubleClickListener)
 	{
 		addListener(DoubleClickListener.class, doubleClickListener);
 	}
-	
+
 	public void addKeyListener(KeyUpListener keyUpListener)
 	{
 		addListener(KeyUpListener.class, keyUpListener);
 	}
-	
+
 	public void setVisible(boolean visible)
-    {
+	{
 		getStyle().setVisible(visible);
-    }
-	
+	}
+
 	public boolean isVisible()
 	{
-	    return getStyle().isVisible();
+		return getStyle().isVisible();
 	}
-	
+
 	public void focus()
-    {
+	{
 		if (hasListener(FocusListener.class))
 			getListener(FocusListener.class).focusGained(this);
-    }
+	}
 
 	public void initLayout(Layout layout)
 	{
-	    setLayout(layout);
+		setLayout(layout);
 		layout.setAssociatedComponent(this);
 	}
 

@@ -3,8 +3,12 @@ package flexjson;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BeanAnalyzer
@@ -145,7 +149,17 @@ public class BeanAnalyzer
 			merge(properties, current.properties);
 			current= current.superBean;
 		}
-		return properties.values();
+		Collection<BeanProperty> values= properties.values();
+		
+		List<BeanProperty> properties2= new ArrayList<>(values);
+		Collections.sort(properties2, new Comparator<BeanProperty>()
+		{
+			public int compare(BeanProperty o1, BeanProperty o2)
+			{
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return properties2;
 	}
 
 	private void merge(Map<String, BeanProperty> destination, Map<String, BeanProperty> source)

@@ -27,6 +27,15 @@ import com.dragome.commons.compiler.annotations.DragomeCompilerSettings;
 
 public class BindingSync
 {
+
+	public static void reset()
+	{
+		events= new LinkedList<MethodVisitedEvent>();
+		conditions= new ArrayList<ValueModelDelegator<?>>();
+		firing= false;
+		recordingFor= new Stack<NullMutableValueModel<?>>();
+	}
+
 	static Queue<MethodVisitedEvent> events= new LinkedList<MethodVisitedEvent>();
 	private static List<ValueModelDelegator<?>> conditions= new ArrayList<ValueModelDelegator<?>>();
 	static boolean firing;
