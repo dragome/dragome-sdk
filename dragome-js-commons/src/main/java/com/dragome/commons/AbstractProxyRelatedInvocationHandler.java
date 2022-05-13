@@ -22,7 +22,6 @@ import java.util.List;
 public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRelatedInvocationHandler
 {
 	private Object proxy;
-	private boolean invoked;
 	private Class<?>[] interfaces;
 
 	public AbstractProxyRelatedInvocationHandler()
@@ -37,16 +36,6 @@ public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRela
 	public Object getProxy()
 	{
 		return proxy;
-	}
-
-	public void setInvoked(boolean invoked)
-	{
-		this.invoked= invoked;
-	}
-
-	public boolean isInvoked()
-	{
-		return invoked;
 	}
 
 	public List<Class<?>> getInterfaces()

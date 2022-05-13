@@ -136,7 +136,7 @@ public class TemplateComponentBindingBuilder<C extends VisualComponent> extends 
 			ObservableList<S> observableList= (ObservableList<S>) list;
 			observableList.setListChangeListener(new ListChangedListener<S>()
 			{
-				public void listChanged(S s)
+				public void listChanged(S s, boolean addition)
 				{
 					valueModelDelegator.fireValueChangeEvent();
 				}

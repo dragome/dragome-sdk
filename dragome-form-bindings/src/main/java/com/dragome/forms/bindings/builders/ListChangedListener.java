@@ -19,5 +19,5 @@ import java.util.EventListener;
 
 public interface ListChangedListener<T> extends EventListener
 {
-	void listChanged(T element);
+	void listChanged(T element, boolean addition);
 }

@@ -34,7 +34,7 @@ public class ObservableList<T> implements List<T>
 	{
 		return new ListChangedListener<T>()
 		{
-			public void listChanged(T t)
+			public void listChanged(T t, boolean addition)
 			{
 			}
 		};
@@ -99,14 +99,14 @@ public class ObservableList<T> implements List<T>
 	public boolean add(T e)
 	{
 		boolean result= list.add(e);
-		listChangeListener.listChanged(e);
+		listChangeListener.listChanged(e, false);
 		return result;
 	}
 
 	public boolean remove(Object o)
 	{
 		boolean result= list.remove(o);
-		listChangeListener.listChanged(o);
+		listChangeListener.listChanged(o, false);
 		return result;
 	}
 
@@ -118,35 +118,35 @@ public class ObservableList<T> implements List<T>
 	public boolean addAll(Collection<? extends T> c)
 	{
 		boolean result= list.addAll(c);
-		listChangeListener.listChanged(null);
+		listChangeListener.listChanged(null, false);
 		return result;
 	}
 
 	public boolean addAll(int index, Collection<? extends T> c)
 	{
 		boolean result= list.addAll(index, c);
-		listChangeListener.listChanged(null);
+		listChangeListener.listChanged(null, false);
 		return result;
 	}
 
 	public boolean removeAll(Collection<?> c)
 	{
 		boolean result= list.removeAll(c);
-		listChangeListener.listChanged(null);
+		listChangeListener.listChanged(null, false);
 		return result;
 	}
 
 	public boolean retainAll(Collection<?> c)
 	{
 		boolean retainAll= list.retainAll(c);
-		listChangeListener.listChanged(null);
+		listChangeListener.listChanged(null, false);
 		return retainAll;
 	}
 
 	public void clear()
 	{
 		list.clear();
-		listChangeListener.listChanged(null);
+		listChangeListener.listChanged(null, false);
 	}
 
 	public boolean equals(Object o)
@@ -167,20 +167,20 @@ public class ObservableList<T> implements List<T>
 	public T set(int index, T element)
 	{
 		T set= list.set(index, element);
-		listChangeListener.listChanged(element);
+		listChangeListener.listChanged(element, false);
 		return set;
 	}
 
 	public void add(int index, T element)
 	{
 		list.add(index, element);
-		listChangeListener.listChanged(element);
+		listChangeListener.listChanged(element, true);
 	}
 
 	public T remove(int index)
 	{
 		T remove= list.remove(index);
-		listChangeListener.listChanged(remove);
+		listChangeListener.listChanged(remove, false);
 		return remove;
 	}
 
@@ -222,7 +222,7 @@ public class ObservableList<T> implements List<T>
 	public boolean removeIf(Predicate<? super T> filter)
 	{
 		boolean removeIf= list.removeIf(filter);
-		listChangeListener.listChanged(null);
+		listChangeListener.listChanged(null, false);
 		return removeIf;
 	}
 }

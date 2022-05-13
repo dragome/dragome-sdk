@@ -62,6 +62,8 @@ public class DragomeCallsiteFactory
 			try
 			{
 				//				if (returnType.getMethod(method.getName(), method.getParameterTypes()) != null)
+				if (method.getName().equals("hashCode"))
+					return foundMethod.hashCode();
 				if (!method.getName().equals(invokeName))
 					return invokeDefaultMethod(proxy, method, args);
 				if ("<init>".equals(methodName))
