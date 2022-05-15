@@ -109,16 +109,24 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public static Class<?> forName(String className) throws ClassNotFoundException
 	{
+		boolean evalBoolean= ScriptHelper.evalBoolean("className === undefined", null);
+		if (evalBoolean)
+		{
+			System.out.println("undefined");
+			className= "java.lang.Object";
+		}
+
 		className= className.replace("_", ".");
 
 		Class<?> clazz= classesByName.get(className);
 		if (clazz == null)
 		{
-			if (className.startsWith("["))
+			boolean startsWithBracket= className.startsWith("[");
+			boolean endsWithBracket= className.endsWith("]");
+			if (startsWithBracket || endsWithBracket)
 			{ // temp fix  for [].getClass();
 
 				String jsClassName= "java_lang_reflect_Array";
-
 				ScriptHelper.put("jsClassName", jsClassName, null);
 				Object nativeClass= null;
 				ScriptHelper.eval("try{var result= eval(jsClassName)}catch(e){}", null);
@@ -127,27 +135,33 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 				if (nativeClass == null)
 					throw new ClassNotFoundException(jsClassName);
 
-				String type= className.replaceAll("\\[", "");
-				type= type.replaceAll(";", "");
-				if (type.startsWith("L"))
-					type= type.replaceFirst("L", "");
+				String type;
+				if (startsWithBracket)
+				{
+					type= className.replaceAll("\\[", "");
+					type= type.replaceAll(";", "");
+					if (type.startsWith("L"))
+						type= type.replaceFirst("L", "");
 
-				if (type.startsWith("Z"))
-					type= "boolean";
-				else if (type.startsWith("B"))
-					type= "byte";
-				else if (type.startsWith("C"))
-					type= "char";
-				else if (type.startsWith("D"))
-					type= "double";
-				else if (type.startsWith("F"))
-					type= "float";
-				else if (type.startsWith("I"))
-					type= "int";
-				else if (type.startsWith("J"))
-					type= "long";
-				else if (type.startsWith("S"))
-					type= "short";
+					if (type.startsWith("Z"))
+						type= "boolean";
+					else if (type.startsWith("B"))
+						type= "byte";
+					else if (type.startsWith("C"))
+						type= "char";
+					else if (type.startsWith("D"))
+						type= "double";
+					else if (type.startsWith("F"))
+						type= "float";
+					else if (type.startsWith("I"))
+						type= "int";
+					else if (type.startsWith("J"))
+						type= "long";
+					else if (type.startsWith("S"))
+						type= "short";
+				}
+				else
+					type= className.replaceAll("\\[", "").replace("\\]", "");
 
 				clazz= new Class(nativeClass);
 				clazz.isArray= true;
@@ -274,6 +288,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.$$type == \"Interface\"", this);
 	}
 
+	public boolean isAbstract()
+	{
+		return ScriptHelper.evalBoolean("this.$$$nativeClass___java_lang_Object.$$classtype == \"abstract\"", this);
+	}
+
 	public boolean isArray()
 	{
 		return isArray;
@@ -364,7 +383,12 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		ScriptHelper.put("signatures", signatures, this);
 		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
 		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-		signatures= (String[]) ScriptHelper.eval("signatures", this);
+
+		if (!filterConstructors)
+			signatures= (java.lang.String[]) ScriptHelper.eval("signatures.filter(sig => this.$$$nativeClass___java_lang_Object.prototype[sig].self.classname.replaceAll(\"_\", \".\")  == this.realName)", this);
+		else
+			signatures= (String[]) ScriptHelper.eval("signatures", this);
+
 		addMethods(declaredMethods2, signatures, Modifier.PUBLIC, filterConstructors);
 		signatures= new String[0];
 		ScriptHelper.put("signatures", signatures, this);
@@ -414,8 +438,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 		ScriptHelper.put("result", "\n{\n}", this);
 		ScriptHelper.put("signature", signature, this);
-		ScriptHelper.eval("try{result= this.$$$nativeClass___java_lang_Object.$$members[signature].toString()}catch(e){}", this);
-		ScriptHelper.eval("try{result= this.$$$nativeClass___java_lang_Object.prototype[signature].toString()}catch(e){}", this);
+		ScriptHelper.eval("if (this.$$$nativeClass___java_lang_Object.$$members && this.$$$nativeClass___java_lang_Object.$$members[signature]) {try{result= this.$$$nativeClass___java_lang_Object.$$members[signature].toString()}catch(e){}}", this);
+		ScriptHelper.eval("if (this.$$$nativeClass___java_lang_Object.prototype && this.$$$nativeClass___java_lang_Object.prototype[signature]) {try{result= this.$$$nativeClass___java_lang_Object.prototype[signature].toString()}catch(e){}}", this);
 		Object result2= ScriptHelper.eval("result", this);
 		boolean isDefault= !result2.toString().endsWith("\n{\n}");
 		return isDefault;
@@ -760,8 +784,24 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		if (obj == null)
 			return false;
+
 		ScriptHelper.put("obj", obj, this);
-		boolean result= ScriptHelper.evalBoolean("obj.$$$nativeClass___java_lang_Object == this.$$$nativeClass___java_lang_Object", this);
+
+		java.lang.Object first= this;
+		java.lang.Object second= obj;
+
+		boolean isFirstProxy= ScriptHelper.evalBoolean("(this.$$$nativeClass___java_lang_Object.superclass && this.$$$nativeClass___java_lang_Object.superclass.classname == 'java_lang_reflect_Proxy') == true", this);
+		if (isFirstProxy)
+			first= ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.$$implements[0].javaClass", this);
+
+		boolean isSecondProxy= ScriptHelper.evalBoolean("(obj.$$$nativeClass___java_lang_Object.superclass && obj.$$$nativeClass___java_lang_Object.superclass.classname == 'java_lang_reflect_Proxy') == true", this);
+		if (isSecondProxy)
+			second= ScriptHelper.eval("obj.$$$nativeClass___java_lang_Object.$$implements[0].javaClass", this);
+
+		ScriptHelper.put("first", first, this);
+		ScriptHelper.put("second", second, this);
+
+		boolean result= ScriptHelper.evalBoolean("first.$$$nativeClass___java_lang_Object == second.$$$nativeClass___java_lang_Object", this);
 		return result;
 	}
 
@@ -782,7 +822,15 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public int getModifiers()
 	{
-		return 0x1;
+		int result= 0x1;
+
+		if (isInterface())
+			result|= Modifier.INTERFACE;
+
+		if (isAbstract())
+			result|= Modifier.ABSTRACT;
+
+		return result;
 	}
 
 	public String getCanonicalName()
@@ -878,5 +926,20 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		}
 
 		return genericSignature;
+	}
+
+	public Method getEnclosingMethod() throws SecurityException
+	{
+		return null;
+	}
+
+	public Constructor<?> getEnclosingConstructor() throws SecurityException
+	{
+		return null;
+	}
+
+	public Class<?> getDeclaringClass() throws SecurityException
+	{
+		return this;
 	}
 }

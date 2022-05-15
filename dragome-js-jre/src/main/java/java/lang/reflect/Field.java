@@ -21,7 +21,9 @@ import java.util.List;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
+import sun.reflect.generics.parser.SignatureParser;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.tree.MethodTypeSignature;
 
 public final class Field extends AccessibleObject implements Member
 {
@@ -126,9 +128,9 @@ public final class Field extends AccessibleObject implements Member
 	{
 		Class<?> declaringClass= getDeclaringClass();
 		ScriptHelper.put("declaringClass", declaringClass, this);
-		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
+		String genericSignature= (String) ScriptHelper.eval("declaringClass.$getSignatureFor___java_lang_String$java_lang_String(this.$$$signature___java_lang_String)", this);
+		if (genericSignature != null)
 		{
-			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
 			return new ParameterizedTypeImpl(genericSignature);
 		}
 		else

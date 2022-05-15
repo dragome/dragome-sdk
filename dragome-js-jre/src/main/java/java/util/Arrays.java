@@ -27,6 +27,8 @@ package java.util;
 
 import java.lang.reflect.*;
 
+import com.dragome.commons.javascript.ScriptHelper;
+
 /**
  * This class contains various methods for manipulating arrays (such as
  * sorting and searching). This class also contains a static factory
@@ -2822,69 +2824,7 @@ public class Arrays {
      */
     @SafeVarargs
     public static <T> List<T> asList(T... a) {
-        return new ArrayList<>(a);
-    }
-
-    /**
-     * @serial include
-     */
-    private static class ArrayList<E> extends AbstractList<E>
-        implements RandomAccess, java.io.Serializable
-    {
-        private static final long serialVersionUID = -2764017481108945198L;
-        private final E[] a;
-
-        ArrayList(E[] array) {
-            if (array==null)
-                throw new NullPointerException();
-            a = array;
-        }
-
-        public int size() {
-            return a.length;
-        }
-
-        public Object[] toArray() {
-            return a.clone();
-        }
-
-        public <T> T[] toArray(T[] a) {
-            int size = size();
-            if (a.length < size)
-                return Arrays.copyOf(this.a, size,
-                                     (Class<? extends T[]>) a.getClass());
-            System.arraycopy(this.a, 0, a, 0, size);
-            if (a.length > size)
-                a[size] = null;
-            return a;
-        }
-
-        public E get(int index) {
-            return a[index];
-        }
-
-        public E set(int index, E element) {
-            E oldValue = a[index];
-            a[index] = element;
-            return oldValue;
-        }
-
-        public int indexOf(Object o) {
-            if (o==null) {
-                for (int i=0; i<a.length; i++)
-                    if (a[i]==null)
-                        return i;
-            } else {
-                for (int i=0; i<a.length; i++)
-                    if (o.equals(a[i]))
-                        return i;
-            }
-            return -1;
-        }
-
-        public boolean contains(Object o) {
-            return indexOf(o) != -1;
-        }
+        return new ArrayList<T>(a);
     }
 
     /**

@@ -165,6 +165,9 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (!classUnit.getName().equals("java.lang.Object"))
 			println("construct: function(){},");
 
+		if (Modifier.isAbstract(typeDecl.getAccess()))
+			println("type : \"abstract\",");
+		
 		classUnit.setData(reset());
 
 		List fields= theTypeDecl.getFields();
@@ -675,7 +678,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		//			print(" " + op + "= ");
 		//		else
 
-		if (left.getTypeBinding().equals(Type.OBJECT))
+		if (left.getTypeBinding().equals(Type.OBJECT) && right.getTypeBinding().equals(Type.OBJECT))
 		{
 			String op2= op.toString();
 

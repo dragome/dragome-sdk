@@ -31,7 +31,12 @@ import com.dragome.web.debugging.JavascriptReference;
 import com.dragome.web.dispatcher.JavaRefId;
 import com.dragome.web.enhancers.jsdelegate.JsCast;
 
+import sun.reflect.generics.factory.CoreReflectionFactory;
+import sun.reflect.generics.parser.SignatureParser;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.repository.ConstructorRepository;
+import sun.reflect.generics.scope.ClassScope;
+import sun.reflect.generics.tree.MethodTypeSignature;
 
 @DragomeCompilerSettings(CompilerType.Standard)
 public final class Method extends Executable
@@ -318,7 +323,25 @@ public final class Method extends Executable
 
 	public Type[] getGenericParameterTypes()
 	{
-		return getParameterTypes();
+		String foundSignature= findMethodSignature();
+		if (foundSignature != null)
+		{
+			CoreReflectionFactory reflectionFactory= CoreReflectionFactory.make(List.class, ClassScope.make(List.class));
+
+			//			String s= "(Ljava/lang/Class<+Lcom/dragome/view/VisualActivity;>;Ljava/util/List<Lcom/dragome/templates/interfaces/Template;>;)V";
+			//			MethodTypeSignature parseMethodSig= SignatureParser.make().parseMethodSig(s);
+
+			ConstructorRepository constructorRepository= ConstructorRepository.make(foundSignature, reflectionFactory);
+			Type[] parameterTypes= constructorRepository.getParameterTypes();
+
+			return parameterTypes;
+			//			MethodTypeSignature parseMethodSig= SignatureParser.make().parseMethodSig(foundSignature);
+
+			//			String replaceAll= foundSignature.substring(foundSignature.indexOf("(") + 1, foundSignature.indexOf(")")).replaceAll("\\*", "Ljava/lang/Object;");
+			//			return new Type[] { new ParameterizedTypeImpl(replaceAll) };
+		}
+		else
+			return getParameterTypes();
 	}
 
 	public Class<?> getDeclaringClass()
@@ -328,16 +351,22 @@ public final class Method extends Executable
 
 	public Type getGenericReturnType()
 	{
+		String foundSignature= findMethodSignature();
+		if (foundSignature != null)
+			return new ParameterizedTypeImpl(foundSignature.substring(foundSignature.indexOf(")") + 1));
+		else
+			return getReturnType();
+	}
+
+	private String findMethodSignature()
+	{
 		Class<?> declaringClass= getDeclaringClass();
 		ScriptHelper.put("declaringClass", declaringClass, this);
 
 		String signature= (String) ScriptHelper.eval("this.$$$signature___java_lang_String", this);
 
 		String foundSignature= declaringClass.getSignatureFor(signature);
-		if (foundSignature != null)
-			return new ParameterizedTypeImpl(foundSignature.substring(foundSignature.indexOf(")") + 1));
-		else
-			return getReturnType();
+		return foundSignature;
 	}
 
 	public Object[] boxParameters(Object[] args)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996, 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,39 +23,33 @@
  * questions.
  */
 
-/*
- * (C) Copyright Taligent, Inc. 1996 - All Rights Reserved
- * (C) Copyright IBM Corp. 1996-1998 - All Rights Reserved
- *
- *   The original version of this source code and documentation is copyrighted
- * and owned by Taligent, Inc., a wholly-owned subsidiary of IBM. These
- * materials are provided under terms of a License Agreement between Taligent
- * and Sun. This technology is protected by multiple US and International
- * patents. This notice and attribution to Taligent may not be removed.
- *   Taligent is a registered trademark of Taligent, Inc.
- *
- */
+package sun.reflect.generics.tree;
 
-package java.text;
+import sun.reflect.generics.visitor.TypeTreeVisitor;
 
-@Deprecated
-public class SimpleDateFormat extends DateFormat
-{
-	public SimpleDateFormat()
-	{
-		super("");
-		// TODO Auto-generated constructor stub
-	}
+/** AST that represents a formal type parameter. */
+public class FormalTypeParameter implements TypeTree {
+    private final String name;
+    private final FieldTypeSignature[] bounds;
 
-	public SimpleDateFormat(String string)
-	{
-		super(string);
-		// TODO Auto-generated constructor stub
-	}
+    private FormalTypeParameter(String n, FieldTypeSignature[] bs) {
+        name = n;
+        bounds = bs;
+    }
 
-	public String toPattern()
-	{
-		return null;
-	}
+    /**
+     * Factory method.
+     * Returns a formal type parameter with the requested name and bounds.
+     * @param n  the name of the type variable to be created by this method.
+     * @param bs - the bounds of the type variable to be created by this method.
+     * @return a formal type parameter with the requested name and bounds
+     */
+    public static FormalTypeParameter make(String n, FieldTypeSignature[] bs){
+        return new FormalTypeParameter(n,bs);
+    }
 
+    public FieldTypeSignature[] getBounds(){return bounds;}
+    public String getName(){return name;}
+
+    public void accept(TypeTreeVisitor<?> v){v.visitFormalTypeParameter(this);}
 }

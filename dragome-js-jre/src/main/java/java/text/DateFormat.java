@@ -39,6 +39,7 @@
 package java.text;
 
 import java.util.Date;
+import java.util.Locale;
 
 import com.dragome.commons.javascript.ScriptHelper;
 
@@ -143,12 +144,10 @@ public abstract class DateFormat extends Format
 		this.pattern= pattern;
 	}
 
-
 	@Override
 	public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new StringBuffer(format((Date)obj));
 	}
 	public static DateFormat getDateTimeInstance(String l, String m)
 	{
@@ -160,11 +159,16 @@ public abstract class DateFormat extends Format
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public static final DateFormat getDateTimeInstance(int dateStyle, int timeStyle)
+	{
+		return null;
+	}
+
 	public Date parse(String source) throws ParseException
 	{
 		ScriptHelper.put("customPattern", pattern, this);
 		ScriptHelper.put("aDate", source, this);
-		
 
 		long eval= ScriptHelper.evalLong("JSJoda.convert(JSJoda.DateTimeFormatter.ofPattern(customPattern).parse(aDate).date).toDate().getTime()", this);
 		return new Date(eval);

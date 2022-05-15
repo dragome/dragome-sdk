@@ -109,9 +109,7 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 	 */
 	public ArrayList()
 	{
-		array= (E[]) (new Object[0]);
-		start= 0;
-		end= array.length;
+		this((E[]) (new Object[0]));
 	}
 
 	/**
@@ -143,6 +141,13 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 	{
 		this();
 		initialCapacity++;
+	}
+
+	public ArrayList(E[] array)
+	{
+		this.array= array;
+		start= 0;
+		end= array.length;
 	}
 
 	/**
@@ -412,5 +417,22 @@ public class ArrayList<E> extends AbstractCollection<E> implements List<E>
 			add(e);
 
 		return c.size() > 0;
+	}
+
+	public Object[] toArray()
+	{
+		ScriptHelper.put("a1", array, this);
+		return (Object[]) ScriptHelper.eval("dragomeJs.cloneArray(a1)", this);
+	}
+
+	public <T> T[] toArray(T[] a)
+	{
+		int size= size();
+		if (a.length < size)
+			return Arrays.copyOf(this.array, size, (Class<? extends T[]>) a.getClass());
+		System.arraycopy(this.array, 0, a, 0, size);
+		if (a.length > size)
+			a[size]= null;
+		return a;
 	}
 }

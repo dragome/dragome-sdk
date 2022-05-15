@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996, 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2004, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,39 +23,37 @@
  * questions.
  */
 
-/*
- * (C) Copyright Taligent, Inc. 1996 - All Rights Reserved
- * (C) Copyright IBM Corp. 1996-1998 - All Rights Reserved
- *
- *   The original version of this source code and documentation is copyrighted
- * and owned by Taligent, Inc., a wholly-owned subsidiary of IBM. These
- * materials are provided under terms of a License Agreement between Taligent
- * and Sun. This technology is protected by multiple US and International
- * patents. This notice and attribution to Taligent may not be removed.
- *   Taligent is a registered trademark of Taligent, Inc.
- *
- */
+package sun.reflect.generics.tree;
 
-package java.text;
+import sun.reflect.generics.visitor.TypeTreeVisitor;
 
-@Deprecated
-public class SimpleDateFormat extends DateFormat
-{
-	public SimpleDateFormat()
-	{
-		super("");
-		// TODO Auto-generated constructor stub
-	}
+public class Wildcard implements TypeArgument {
+    private FieldTypeSignature[] upperBounds;
+    private FieldTypeSignature[] lowerBounds;
 
-	public SimpleDateFormat(String string)
-	{
-		super(string);
-		// TODO Auto-generated constructor stub
-	}
+    private Wildcard(FieldTypeSignature[] ubs, FieldTypeSignature[] lbs) {
+        upperBounds = ubs;
+        lowerBounds = lbs;
+    }
 
-	public String toPattern()
-	{
-		return null;
-	}
+    private static final FieldTypeSignature[] emptyBounds = new FieldTypeSignature[0];
 
+    public static Wildcard make(FieldTypeSignature[] ubs,
+                                FieldTypeSignature[] lbs) {
+        return new Wildcard(ubs, lbs);
+    }
+
+    public FieldTypeSignature[] getUpperBounds(){
+        return upperBounds;
+    }
+
+    public FieldTypeSignature[] getLowerBounds(){
+        if (lowerBounds.length == 1 &&
+            lowerBounds[0] == BottomSignature.make())
+            return emptyBounds;
+        else
+            return lowerBounds;
+    }
+
+    public void accept(TypeTreeVisitor<?> v){v.visitWildcard(this);}
 }

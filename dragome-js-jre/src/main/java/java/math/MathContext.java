@@ -303,24 +303,4 @@ public final class MathContext implements Serializable {
 
     // Private methods
 
-    /**
-     * Reconstitute the {@code MathContext} instance from a stream (that is,
-     * deserialize it).
-     *
-     * @param s the stream being read.
-     */
-    private void readObject(java.io.ObjectInputStream s)
-        throws java.io.IOException, ClassNotFoundException {
-        s.defaultReadObject();     // read in all fields
-        // validate possibly bad fields
-        if (precision < MIN_DIGITS) {
-            String message = "MathContext: invalid digits in stream";
-            throw new java.io.StreamCorruptedException(message);
-        }
-        if (roundingMode == null) {
-            String message = "MathContext: null roundingMode in stream";
-            throw new java.io.StreamCorruptedException(message);
-        }
-    }
-
 }

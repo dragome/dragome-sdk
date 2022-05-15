@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996, 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,39 +23,35 @@
  * questions.
  */
 
-/*
- * (C) Copyright Taligent, Inc. 1996 - All Rights Reserved
- * (C) Copyright IBM Corp. 1996-1998 - All Rights Reserved
+package sun.reflect.generics.reflectiveObjects;
+
+import sun.reflect.generics.factory.GenericsFactory;
+import sun.reflect.generics.visitor.Reifier;
+
+
+/**
+ * Common infrastructure for things that lazily generate reflective generics
+ * objects.
+ * <p> In all these cases, one needs produce a visitor that will, on demand,
+ * traverse the stored AST(s) and reify them into reflective objects.
+ * The visitor needs to be initialized with a factory, which will be
+ * provided when the instance is initialized.
+ * The factory should be cached.
  *
- *   The original version of this source code and documentation is copyrighted
- * and owned by Taligent, Inc., a wholly-owned subsidiary of IBM. These
- * materials are provided under terms of a License Agreement between Taligent
- * and Sun. This technology is protected by multiple US and International
- * patents. This notice and attribution to Taligent may not be removed.
- *   Taligent is a registered trademark of Taligent, Inc.
- *
- */
+*/
+public abstract class LazyReflectiveObjectGenerator {
+    private final GenericsFactory factory; // cached factory
 
-package java.text;
+    protected LazyReflectiveObjectGenerator(GenericsFactory f) {
+        factory = f;
+    }
 
-@Deprecated
-public class SimpleDateFormat extends DateFormat
-{
-	public SimpleDateFormat()
-	{
-		super("");
-		// TODO Auto-generated constructor stub
-	}
+    // accessor for factory
+    private GenericsFactory getFactory() {
+        return factory;
+    }
 
-	public SimpleDateFormat(String string)
-	{
-		super(string);
-		// TODO Auto-generated constructor stub
-	}
-
-	public String toPattern()
-	{
-		return null;
-	}
+    // produce a reifying visitor (could this be typed as a TypeTreeVisitor?
+    protected Reifier getReifier(){return Reifier.make(getFactory());}
 
 }

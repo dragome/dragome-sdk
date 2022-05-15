@@ -15,6 +15,9 @@
  */
 package java.io;
 
+import java.lang.reflect.Type;
+import java.util.Locale;
+
 /*
  * Copyright (c) 2005 j2js.com,
  *
@@ -205,5 +208,17 @@ public class PrintStream extends OutputStream
 	public void println(java.lang.Object x)
 	{
 		print(x);
+	}
+	public PrintStream printf(String format, Object... args)
+	{
+		print(format + args);
+		return this;
+	}
+
+	public PrintStream printf(Locale l, String format, Object... args)
+	{
+		print(format + args);
+
+		return this;
 	}
 }

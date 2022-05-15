@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996, 2012, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,39 +23,18 @@
  * questions.
  */
 
-/*
- * (C) Copyright Taligent, Inc. 1996 - All Rights Reserved
- * (C) Copyright IBM Corp. 1996-1998 - All Rights Reserved
- *
- *   The original version of this source code and documentation is copyrighted
- * and owned by Taligent, Inc., a wholly-owned subsidiary of IBM. These
- * materials are provided under terms of a License Agreement between Taligent
- * and Sun. This technology is protected by multiple US and International
- * patents. This notice and attribution to Taligent may not be removed.
- *   Taligent is a registered trademark of Taligent, Inc.
- *
+package sun.reflect.generics.tree;
+
+import sun.reflect.generics.visitor.TypeTreeVisitor;
+
+/** Common supertype for all nodes that represent type expressions in
+ * the generic signature AST.
  */
-
-package java.text;
-
-@Deprecated
-public class SimpleDateFormat extends DateFormat
-{
-	public SimpleDateFormat()
-	{
-		super("");
-		// TODO Auto-generated constructor stub
-	}
-
-	public SimpleDateFormat(String string)
-	{
-		super(string);
-		// TODO Auto-generated constructor stub
-	}
-
-	public String toPattern()
-	{
-		return null;
-	}
-
+public interface TypeTree extends Tree {
+    /**
+     * Accept method for the visitor pattern.
+     * @param v - a <tt>TypeTreeVisitor</tt> that will process this
+     * tree
+     */
+    void accept(TypeTreeVisitor<?> v);
 }
