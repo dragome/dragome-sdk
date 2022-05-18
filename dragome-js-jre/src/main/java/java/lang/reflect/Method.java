@@ -44,11 +44,13 @@ public final class Method extends Executable
 	protected String signature;
 	protected Class<?> cls;
 	protected boolean accessible;
-	protected Class<?>[] parametersTypes;
 	protected Class<?> returnType;
 	private int modifiers;
 	private boolean isDefault;
 	private String name;
+	private Class[] parameterTypes;
+	private Type[] genericParametersTypes;
+	private boolean requiresBoxing;
 
 	public Method(Class<?> newCls, String theSignature, int modifiers)
 	{
@@ -74,35 +76,46 @@ public final class Method extends Executable
 
 	public Class<?>[] getParameterTypes()
 	{
-		String signatureWithNoReturnType= signature.substring(0, signature.lastIndexOf("$"));
-		String[] parameters= signatureWithNoReturnType.replaceAll("____", "__").replaceAll("___", "__").split("__");
-		List<Class<?>> result= new ArrayList<Class<?>>();
-
-		if (parameters.length > 1)
+		if (parameterTypes == null)
 		{
-			for (int i= 1; i < parameters.length; i++)
+			String signatureWithNoReturnType= signature.substring(0, signature.lastIndexOf("$"));
+			String[] parameters= signatureWithNoReturnType.replaceAll("____", "__").replaceAll("___", "__").split("__");
+			List<Class<?>> result= new ArrayList<Class<?>>();
+
+			if (parameters.length > 1)
 			{
-				String typeName= parameters[i];
-				if (typeName.trim().length() > 0 && !typeName.contains("$"))
+				for (int i= 1; i < parameters.length; i++)
 				{
-					//			typeName= boxTypes(typeName);
-
-					Class<?> parameterType= Object.class;
-					try
+					String typeName= parameters[i];
+					if (typeName.trim().length() > 0 && !typeName.contains("$"))
 					{
-						parameterType= Class.forName(fixArrayClassName(typeName));
-					}
-					catch (Exception e)
-					{
-					}
+						//			typeName= boxTypes(typeName);
 
-					result.add(parameterType);
+						Class<?> parameterType= Object.class;
+						try
+						{
+							parameterType= Class.forName(fixArrayClassName(typeName));
+						}
+						catch (Exception e)
+						{
+						}
+
+						result.add(parameterType);
+					}
 				}
+				parameterTypes= result.toArray(new Class[0]);
 			}
-			return result.toArray(new Class[0]);
+			else
+				parameterTypes= new Class[0];
+
+			for (int i= 0; i < parameterTypes.length; i++)
+			{
+				ScriptHelper.put("parameterType", parameterTypes[i], null);
+				requiresBoxing|= ScriptHelper.evalBoolean("parameterType.realName == 'boolean'|| parameterType.realName == 'int' || parameterType.realName == 'long' || parameterType.realName == 'short' || parameterType.realName == 'float' || parameterType.realName == 'double' || parameterType.realName == 'byte' || parameterType.realName == 'char'", null);
+			}
 		}
-		else
-			return new Class[0];
+
+		return parameterTypes;
 	}
 
 	public static String boxTypes(String typeName)
@@ -129,7 +142,8 @@ public final class Method extends Executable
 
 	public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
-		boxArguments(getParameterTypes(), args);
+		if (requiresBoxing)
+			boxArguments(getParameterTypes(), args);
 
 		Object result= null;
 		if (obj == null)
@@ -142,9 +156,29 @@ public final class Method extends Executable
 		ScriptHelper.put("args", args, this);
 		ScriptHelper.put("sig", this.signature, this);
 
-		Object instanceMethod= ScriptHelper.eval("obj[sig]", this);
+		boolean instanceMethod= ScriptHelper.eval("obj[sig]", this) == null;
+//
+//		if (instanceMethod)
+//		{
+//			Method foundMethod= null;
+//			Method[] methods= obj.getClass().getMethods();
+//			for (Method method : methods)
+//			{
+//				if (method.getName().equals(getName()))
+//					if (foundMethod == null)
+//						foundMethod= method;
+//					else
+//						System.out.println("como?");
+//			}
+//
+//			if (foundMethod != null)
+//			{
+//				ScriptHelper.put("sig", foundMethod.signature, this);
+//				instanceMethod= false;
+//			}
+//		}
 
-		if (instanceMethod == null)
+		if (instanceMethod)
 			result= ScriptHelper.eval("obj.clazz.constructor[sig](args)", this);
 		else
 			result= ScriptHelper.eval("obj[sig].apply(obj, args)", this);
@@ -244,22 +278,37 @@ public final class Method extends Executable
 			Class<?> currentReturnType= returnType;
 
 			if (currentReturnType != null)
+			{
 				if (currentReturnType.equals(Boolean.class))
-					result= result instanceof Boolean ? result : (ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE);
-				else if (currentReturnType.equals(Integer.class))
-					result= Integer.parseInt(ScriptHelper.evalInt("result", null) + "");
-				else if (currentReturnType.equals(Long.class))
-					result= Long.parseLong(ScriptHelper.evalInt("result", null) + "");
-				else if (currentReturnType.equals(Short.class))
-					result= Short.parseShort(ScriptHelper.evalInt("result", null) + "");
-				else if (currentReturnType.equals(Float.class))
-					result= Float.parseFloat(ScriptHelper.evalFloat("result", null) + "");
-				else if (currentReturnType.equals(Double.class))
-					result= Double.parseDouble(ScriptHelper.evalDouble("result", null) + "");
-				else if (currentReturnType.equals(Byte.class))
-					result= Byte.valueOf((byte) ScriptHelper.evalChar("result", null));
-				else if (currentReturnType.equals(Character.class))
-					result= Character.valueOf((ScriptHelper.eval("result", null) + "").charAt(0));
+					if (result instanceof Boolean)
+						return result;
+					else
+						return ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE;
+				else if (Number.class.isAssignableFrom(returnType) || currentReturnType.equals(Character.class))
+				{
+					Object newInstance= returnType.newInstance();
+					ScriptHelper.put("instance", newInstance, null);
+					ScriptHelper.eval("instance[Object.keys(instance)[0]]= result", null);
+					return newInstance;
+				}
+
+				//				if (currentReturnType.equals(Boolean.class))
+				//					result= result instanceof Boolean ? result : (ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE);
+				//				else if (currentReturnType.equals(Integer.class))
+				//					result= Integer.parseInt(ScriptHelper.evalInt("result", null) + "");
+				//				else if (currentReturnType.equals(Long.class))
+				//					result= Long.parseLong(ScriptHelper.evalInt("result", null) + "");
+				//				else if (currentReturnType.equals(Short.class))
+				//					result= Short.parseShort(ScriptHelper.evalInt("result", null) + "");
+				//				else if (currentReturnType.equals(Float.class))
+				//					result= Float.parseFloat(ScriptHelper.evalFloat("result", null) + "");
+				//				else if (currentReturnType.equals(Double.class))
+				//					result= Double.parseDouble(ScriptHelper.evalDouble("result", null) + "");
+				//				else if (currentReturnType.equals(Byte.class))
+				//					result= Byte.valueOf((byte) ScriptHelper.evalChar("result", null));
+				//				else if (currentReturnType.equals(Character.class))
+				//					result= Character.valueOf((ScriptHelper.eval("result", null) + "").charAt(0));
+			}
 		}
 		catch (Exception e)
 		{
@@ -299,6 +348,12 @@ public final class Method extends Executable
 			try
 			{
 				String returnTypeString= signature.substring(signature.lastIndexOf("$") + 1);
+				if (returnTypeString.toLowerCase().charAt(0) != returnTypeString.charAt(0))
+				{
+					String[] split= signature.split("\\$");
+					returnTypeString= split[split.length - 2] + "$" + split[split.length - 1];
+				}
+
 				returnTypeString= fixArrayClassName(returnTypeString);
 				//				returnTypeString= boxTypes(returnTypeString);
 				returnType= Class.forName(returnTypeString);
@@ -323,25 +378,20 @@ public final class Method extends Executable
 
 	public Type[] getGenericParameterTypes()
 	{
-		String foundSignature= findMethodSignature();
-		if (foundSignature != null)
+		if (genericParametersTypes == null)
 		{
-			CoreReflectionFactory reflectionFactory= CoreReflectionFactory.make(List.class, ClassScope.make(List.class));
-
-			//			String s= "(Ljava/lang/Class<+Lcom/dragome/view/VisualActivity;>;Ljava/util/List<Lcom/dragome/templates/interfaces/Template;>;)V";
-			//			MethodTypeSignature parseMethodSig= SignatureParser.make().parseMethodSig(s);
-
-			ConstructorRepository constructorRepository= ConstructorRepository.make(foundSignature, reflectionFactory);
-			Type[] parameterTypes= constructorRepository.getParameterTypes();
-
-			return parameterTypes;
-			//			MethodTypeSignature parseMethodSig= SignatureParser.make().parseMethodSig(foundSignature);
-
-			//			String replaceAll= foundSignature.substring(foundSignature.indexOf("(") + 1, foundSignature.indexOf(")")).replaceAll("\\*", "Ljava/lang/Object;");
-			//			return new Type[] { new ParameterizedTypeImpl(replaceAll) };
+			String foundSignature= findMethodSignature();
+			if (foundSignature != null)
+			{
+				CoreReflectionFactory reflectionFactory= CoreReflectionFactory.make(List.class, ClassScope.make(List.class));
+				ConstructorRepository constructorRepository= ConstructorRepository.make(foundSignature, reflectionFactory);
+				genericParametersTypes= constructorRepository.getParameterTypes();
+			}
+			else
+				genericParametersTypes= getParameterTypes();
 		}
-		else
-			return getParameterTypes();
+
+		return genericParametersTypes;
 	}
 
 	public Class<?> getDeclaringClass()
@@ -455,5 +505,10 @@ public final class Method extends Executable
 		}
 		else
 			return false;
+	}
+
+	public String getSignature()
+	{
+		return signature;
 	}
 }

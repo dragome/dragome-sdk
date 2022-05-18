@@ -31,8 +31,13 @@ public final class Character
 
 	public static final Class<Character> TYPE= Class.getType("char");
 
-	private char value;
+	private char value= 0;
 
+	
+	public Character()
+	{
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * Constructs a newly allocated Character object that represents the specified char value.
 	 */

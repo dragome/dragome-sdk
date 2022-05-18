@@ -11,10 +11,10 @@ function _isNull(aObject) {
 
 function addSignatureTo(aClass, aMethodSignature, aGenericSignature) {
 	try {
-		aClass= eval(aClass);
+		aClass = eval(aClass);
 		if (!aClass.$$$$signatures)
 			aClass.$$$$signatures = [];
-	
+
 		aClass.$$$$signatures[aMethodSignature] = aGenericSignature;
 	} catch {
 	}
@@ -28,9 +28,9 @@ var now = (function() {
 
 	performance.now = (function() {
 		return performance.now || performance.webkitNow || performance.msNow
-				|| performance.oNow || performance.mozNow || function() {
-					return new Date().getTime();
-				};
+			|| performance.oNow || performance.mozNow || function() {
+				return new Date().getTime();
+			};
 	})();
 
 	return performance.now();
@@ -61,13 +61,13 @@ dragomeJs.createException = function(className, message, original) {
 	} catch (e) {
 		stack = e.stack;
 		stack = stack.replace(
-				"TypeError: Cannot set property 'b' of undefined", message);
+			"TypeError: Cannot set property 'b' of undefined", message);
 	}
 
 	var exception;
 	try {
 		var clazz = java_lang_Class
-				.$forName___java_lang_String$java_lang_Class(className);
+			.$forName___java_lang_String$java_lang_Class(className);
 		exception = eval("new clazz.$$$nativeClass___java_lang_Object");
 		exception.$$init____java_lang_String$void(message);
 		exception.original = original;
@@ -87,10 +87,10 @@ dragomeJs.createException = function(className, message, original) {
 dragomeJs.nullSaveException = function(objectref) {
 	if (objectref instanceof Error && getQuerystring("debug") == "true")
 		objectref = dragomeJs.createException("java.lang.NullPointerException",
-				objectref.message, objectref);
+			objectref.message, objectref);
 	else if (objectref == null)
 		objectref = dragomeJs.createException("java.lang.NullPointerException",
-				null);
+			null);
 	if (!objectref.message) {
 		var message = objectref.$$$message___java_lang_String;
 		objectref.message = message;
@@ -99,8 +99,8 @@ dragomeJs.nullSaveException = function(objectref) {
 			undefined.b = 1;
 		} catch (e) {
 			var stackSplit = e.stack.split("\n");
-			for(i = 2; i < stackSplit.length;i++)
-				cleanStack = cleanStack+stackSplit[i]+"\n";
+			for (i = 2; i < stackSplit.length; i++)
+				cleanStack = cleanStack + stackSplit[i] + "\n";
 		}
 		objectref.$$$stackTrace___java_lang_String = cleanStack;
 	}
@@ -130,7 +130,7 @@ dragomeJs.isInstanceof = function(obj, type) {
 		return false;
 
 	if ((typeof obj == "string" || obj instanceof String)
-			&& type == java_lang_String)
+		&& type == java_lang_String)
 		return true;
 
 	var clazz = !obj.$$type ? obj.constructor : obj;
@@ -216,7 +216,7 @@ dragomeJs.newArray = function(classSignature, dim, index) {
 	array.classSignature = classSignature;
 	array.__proto__.$getClass$java_lang_Class = function() {
 		var clazz = java_lang_Class
-				.$forName___java_lang_String$java_lang_Class(this.classSignature);
+			.$forName___java_lang_String$java_lang_Class(this.classSignature);
 		return clazz;
 	};
 
@@ -265,14 +265,14 @@ dragomeJs.inspect = function(object) {
 		return object;
 
 	var attributes = new Array();
-	for ( var e in object) {
+	for (var e in object) {
 		attributes[attributes.length] = e;
 	}
 
 	if (attributes.length > 0) {
 		attributes.sort();
 		s += "\n\tAttributes:\n";
-		for ( var e in attributes) {
+		for (var e in attributes) {
 			var attribute = attributes[e];
 			var value = "";
 			try {
@@ -314,7 +314,7 @@ dragomeJs.checkCast = function(obj, className) {
 
 	if (typeof obj == "string")
 		if (className == java_lang_CharSequence
-				|| className == java_lang_Comparable)
+			|| className == java_lang_Comparable)
 			return obj;
 
 	// if (className == java_lang_Boolean && (obj == 1 || obj == 0))
@@ -332,50 +332,45 @@ dragomeJs.checkCast = function(obj, className) {
 			cn = "java_lang_String";
 
 		throw dragomeJs.createException("java.lang.RuntimeException",
-				"Cannot cast " + cn + " to " + className.basename);
+			"Cannot cast " + cn + " to " + className.basename);
 	}
 
 	return obj;
 };
 
-function createProxyOf(types, methods, handler1, handler) {
+function createProxyOf(types, methods) {
 	var membersMap = {};
-	membersMap.$$$handler___java_lang_reflect_InvocationHandler = handler1;
-	
-	var createInvoker = function(method) {
-		return function() {
-			return handler
-					.$invoke___java_lang_Object__java_lang_reflect_Method__java_lang_Object_ARRAYTYPE$java_lang_Object(
-							this, method, arguments);
-		};
-	}
+	membersMap.$$$handler___java_lang_reflect_InvocationHandler = null;
 
-	for ( var i in methods.$$$array___java_lang_Object_ARRAYTYPE) {
-		var methodName = methods.$$$array___java_lang_Object_ARRAYTYPE[i].$$$signature___java_lang_String;
-		membersMap[methodName] = createInvoker(methods.$$$array___java_lang_Object_ARRAYTYPE[i]);
+	for (const method of methods) {
+		var methodName = method.$$$method___java_lang_reflect_Method.$$$signature___java_lang_String;
+		membersMap[methodName] = (function() {
+			method.$$$method___java_lang_reflect_Method.$boxParameters___java_lang_Object_ARRAYTYPE$java_lang_Object_ARRAYTYPE(arguments);
+
+			var result = this.$$$handler___java_lang_reflect_InvocationHandler.$invoke___java_lang_Object__java_lang_reflect_Method__java_lang_Object_ARRAYTYPE$java_lang_Object(this.$$$handler___java_lang_reflect_InvocationHandler.proxy, method.$$$method___java_lang_reflect_Method, arguments);
+			if (method.$$$unboxReturnValue___boolean)
+				result = Object.values(result)[0];
+
+			return result;
+		});
 	}
 
 	var nativeTypes = new Array(types.length);
-	for ( var i in types)
+	for (var i in types)
 		nativeTypes[i] = types[i].$$$nativeClass___java_lang_Object;
 
 	var nextNumber = objectId({});
 
-	var proxyName= "ProxyOf_" + nextNumber;
-	
+	var proxyName = "ProxyOf_" + nextNumber;
+
 	qx.Class.define(proxyName, {
-		extend : java_lang_reflect_Proxy,
-		implement : nativeTypes,
-		construct : function() {
-		},
-		members : membersMap
+		extend: java_lang_reflect_Proxy,
+		implement: nativeTypes,
+		construct: function() {},
+		members: membersMap
 	});
-	
-	var result=  eval("new " + proxyName + "()");
 
-	handler1.proxy= result;
-
-	return result;
+	return proxyName;
 };
 
 dragomeJs.addNativeMethod = function(signature, method) {
@@ -384,29 +379,29 @@ dragomeJs.addNativeMethod = function(signature, method) {
 
 dragomeJs.resolveNativeMethod = function(owner, signature) {
 	var instance = java_lang_Class.$forName___java_lang_String$java_lang_Class(
-			(owner.classname.substring(0, owner.classname.lastIndexOf("_") + 1)
-					+ "Delegate" + owner.classname.substring(owner.classname
-					.lastIndexOf("_") + 1)).replaceAll("_", "."))
-			.$newInstance$java_lang_Object()[signature];
+		(owner.classname.substring(0, owner.classname.lastIndexOf("_") + 1)
+			+ "Delegate" + owner.classname.substring(owner.classname
+				.lastIndexOf("_") + 1)).replaceAll("_", "."))
+		.$newInstance$java_lang_Object()[signature];
 	return instance;
 	// return dragomeJs.nativeMethods[signature];
 };
 
 dragomeJs.resolveMethod = function(owner, signature) {
 	var clazz = java_lang_Class
-			.$forName___java_lang_String$java_lang_Class(owner);
+		.$forName___java_lang_String$java_lang_Class(owner);
 	var method = clazz.getMethodBySignature(signature);
 	return method;
 };
 
 dragomeJs.castTo = function(instance, className) {
 	var clazz = java_lang_Class
-			.$forName___java_lang_String$java_lang_Class(className);
+		.$forName___java_lang_String$java_lang_Class(className);
 	return dragomeJs.castTo2(instance, clazz);
 };
 
 dragomeJs.castTo2 = function(instance, clazz) {
 	return com_dragome_web_enhancers_jsdelegate_JsCast
-			.$castTo___java_lang_Object__java_lang_Class$java_lang_Object(
-					instance, clazz);
+		.$castTo___java_lang_Object__java_lang_Class$java_lang_Object(
+			instance, clazz);
 };

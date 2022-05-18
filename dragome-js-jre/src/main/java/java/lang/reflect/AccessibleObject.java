@@ -174,7 +174,10 @@ public class AccessibleObject implements AnnotatedElement
 
 	native Class[] getExceptionTypesImpl();
 
-	native String getSignature();
+	public String getSignature()
+	{
+		return null;
+	}
 
 	native boolean checkAccessibility(Class senderClass, Object receiver);
 

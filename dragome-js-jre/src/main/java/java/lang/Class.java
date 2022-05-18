@@ -28,7 +28,9 @@ import java.net.URL;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -86,13 +88,14 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	protected Object nativeClass;
 	protected Method[] methods;
-	protected List<Method> declaredMethods;
 	protected List<Field> declaredFields;
 	protected Method[] declaredMethodsInDepth;
 	protected Class<?>[] interfacesCache;
 	protected boolean isArray;
 	protected String type;
 	private String name;
+	private Method[] declaredMethodsAsArrays;
+//	protected static Map<String, Class<?>> classesByName= new HashMap<String, Class<?>>();
 
 	private Class(Object theNativeClass)
 	{
@@ -109,6 +112,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public static Class<?> forName(String className) throws ClassNotFoundException
 	{
+		String parameterclassName= className;
+
 		boolean evalBoolean= ScriptHelper.evalBoolean("className === undefined", null);
 		if (evalBoolean)
 		{
@@ -116,11 +121,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			className= "java.lang.Object";
 		}
 
-		className= className.replace("_", ".");
 
-		Class<?> clazz= classesByName.get(className);
+		Class<?> clazz= classesByName.get(parameterclassName);
 		if (clazz == null)
 		{
+			className= className.replace("_", ".");
 			boolean startsWithBracket= className.startsWith("[");
 			boolean endsWithBracket= className.endsWith("]");
 			if (startsWithBracket || endsWithBracket)
@@ -169,7 +174,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 				ScriptHelper.put("clazz", clazz, null);
 				ScriptHelper.put("className", className, null);
 				ScriptHelper.eval("clazz.realName=className", null);
-				classesByName.put(className, clazz);
+				classesByName.put(parameterclassName, clazz);
 				return clazz;
 			}
 
@@ -210,7 +215,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			ScriptHelper.put("clazz", clazz, null);
 			ScriptHelper.put("className", className, null);
 			ScriptHelper.eval("clazz.realName=className", null);
-			classesByName.put(className, clazz);
+			classesByName.put(parameterclassName, clazz);
 			//			classesByName.put(jsClassName, clazz);
 		}
 
@@ -369,12 +374,13 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	private Method[] getDeclaredMessages(boolean filterConstructors)
 	{
-		if (declaredMethods == null)
+		if (declaredMethodsAsArrays == null)
 		{
-			declaredMethods= new ArrayList<Method>();
+			ArrayList<Method> declaredMethods= new ArrayList<Method>();
 			findMethods(declaredMethods, filterConstructors);
+			declaredMethodsAsArrays= declaredMethods.toArray(new Method[0]);
 		}
-		return declaredMethods.toArray(new Method[0]);
+		return declaredMethodsAsArrays;
 	}
 
 	private void findMethods(List<Method> declaredMethods2, boolean filterConstructors)

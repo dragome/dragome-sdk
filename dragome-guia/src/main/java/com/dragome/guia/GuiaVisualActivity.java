@@ -32,12 +32,12 @@ public abstract class GuiaVisualActivity extends DefaultVisualActivity implement
 	
 	public GuiaVisualActivity()
 	{
-		initialize();
-		updateMainPanel();
 	}
 
 	public void onCreate()
 	{
+		initialize();
+		updateMainPanel();
 		build();
 		showTemplate();
 	}

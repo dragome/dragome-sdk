@@ -88,8 +88,11 @@ public final class Double extends Number implements Comparable<Double>
 
 	public static final Class<Double> TYPE= Class.getType("double");
 
-	private double value;
+	private double value= 0;
 
+	public Double()
+	{
+	}
 	/**
 	 * Constructs a newly allocated Double object that represents the primitive double argument.
 	 */

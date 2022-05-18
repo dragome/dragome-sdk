@@ -34,8 +34,11 @@ public final class Float extends Number
 	public static final int MIN_EXPONENT= -126;
 	public static final int SIZE= 32;
 
-	private float value;
+	private float value= 0;
 
+	public Float()
+	{
+	}
 	/**
 	 * Allocates a Float object representing the value argument.
 	 */

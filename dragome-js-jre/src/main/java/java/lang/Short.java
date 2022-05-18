@@ -27,8 +27,11 @@ public final class Short extends Number
 
 	public static final Class<Short> TYPE= Class.getType("short");
 
-	private short value;
+	private short value= 0;
 
+	public Short()
+	{
+	}
 	/**
 	 * Constructs a newly allocated Byte object that represents the specified byte value.
 	 */

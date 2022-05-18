@@ -47,4 +47,15 @@ public abstract class AbstractProxyRelatedInvocationHandler implements ProxyRela
 	{
 		this.interfaces= interfaces.toArray(new Class[0]);
 	}
+	
+	public void setupInterfaces(Class<?>[] interfaces)
+	{
+		this.interfaces= interfaces;
+	}
+	
+	public Class<?>[] obtainInterfaces()
+	{
+		return interfaces;
+	}
+
 }

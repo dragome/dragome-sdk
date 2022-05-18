@@ -68,8 +68,11 @@ function byXpath(parentId, xpathExpression) {
 function objectId(obj) {
     if (obj == null)
         return null;
-    if (obj.__obj_id == null)
+    else if (typeof obj === 'string')
+    	return obj.split('').reduce((prevHash, currVal) => (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+    else if (obj.__obj_id == null)
         obj.__obj_id = __next_objid++;
+
     return obj.__obj_id;
 }
 

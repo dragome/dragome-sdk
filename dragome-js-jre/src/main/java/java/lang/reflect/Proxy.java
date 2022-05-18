@@ -17,43 +17,79 @@ package java.lang.reflect;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelper;
 
 public class Proxy
 {
+	private static Map<String, Method> cachedMethods= new HashMap<>();
+	private static Map<String, String> proxyClassesByName= new HashMap<>();
+	
 	private InvocationHandler handler;
-	private final Class[] interfaces;
 
-	/** 
-	 * Constructs a new Proxy instance.
-	 */
-	protected Proxy(InvocationHandler theHandler, Class[] interfaces)
+	public static class MethodInvoker
 	{
-		handler= theHandler;
-		this.interfaces= interfaces;
-	}
+		public Method method;
+		private boolean unboxReturnValue;
 
-	// TODO: Annotation
-	//@Taint
-	public static Object invoke(Proxy object, String methodSignature, Object[] args) throws Throwable
-	{
-		if (methodSignature.startsWith("getClass()"))
-			return Proxy.class;
-		else
+		public MethodInvoker(List<Method> interfacesMethods, Method method)
 		{
-			Method method= new Method(null, methodSignature, Modifier.PUBLIC);
-			return object.handler.invoke(object, method, args);
+			this.method= method;
+			method= findMethod(interfacesMethods);
+			Class<?> returnType= method.getReturnType();
+			boolean isPrimitive= returnType != null && returnType.isPrimitive();
+			unboxReturnValue= isPrimitive && !returnType.equals(Void.class) && !returnType.equals(void.class);
+		}
+
+		private Method findMethod(List<Method> interfacesMethods)
+		{
+			Method method2= cachedMethods.get(method.getSignature());
+			if (method2 == null)
+			{
+				for (Method interfaceMethod : interfacesMethods)
+				{
+					if (method.getName().equals(interfaceMethod.getName()))
+					{
+						List<Class<?>> asList= Arrays.asList(method.getParameterTypes());
+						List<Class<?>> asList2= Arrays.asList(interfaceMethod.getParameterTypes());
+						if (asList.equals(asList2))
+							method= interfaceMethod;
+					}
+				}
+
+				cachedMethods.put(method.getSignature(), method);
+				method2= method;
+			}
+			return method2;
 		}
 	}
 
-	/**
-	 * Returns an instance of a proxy class for the specified interfaces
-	 * that dispatches method invocations to the specified invocation handler.
-	 */
-	public static Object newProxyInstance(ClassLoader loader, Class[] interfaces, final InvocationHandler handler) throws IllegalArgumentException
+	
+	public static Object newProxyInstance(ClassLoader loader, Class[] interfaces, final InvocationHandler aHandler) throws IllegalArgumentException
+	{
+		StringBuilder keyBuilder= new StringBuilder();
+		for (Class interfaze : interfaces)
+			keyBuilder.append(interfaze.getName());
+		String key= keyBuilder.toString();
+
+		String proxyClassName= proxyClassesByName.get(key);
+		if (proxyClassName == null)
+		{
+			proxyClassName= createProxyClass(interfaces, aHandler, key);
+			proxyClassesByName.put(key, proxyClassName);
+		}
+
+		Object result= ScriptHelper.eval("new " + proxyClassName + "()", null);
+		ScriptHelper.eval("aHandler.proxy= result", null);
+		ScriptHelper.eval("result.$$$handler___java_lang_reflect_InvocationHandler= aHandler", null);
+
+		return result;
+	}
+
+	private static String createProxyClass(Class[] interfaces, final InvocationHandler aHandler, String key)
 	{
 		List<Method> methods= new ArrayList<Method>();
 
@@ -61,7 +97,7 @@ public class Proxy
 		{
 			if (!interfaze.isInterface())
 				throw new IllegalArgumentException(interfaze.getName() + " is not an interface");
-			
+
 			List<Method> foundMethods= interfaze.internalGetMethods(false);
 			methods.addAll(foundMethods);
 		}
@@ -75,45 +111,16 @@ public class Proxy
 
 		addObjectClassMethods(methods);
 
-		InvocationHandler handler2= new AbstractProxyRelatedInvocationHandler()
-		{
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
-			{
-				setProxy(proxy);
+		List<MethodInvoker> methodInvokers= new ArrayList<>();
 
-				for (Method interfaceMethod : interfacesMethods)
-				{
-					if (method.getName().equals(interfaceMethod.getName()))
-					{
-						List<Class<?>> asList= Arrays.asList(method.getParameterTypes());
-						List<Class<?>> asList2= Arrays.asList(interfaceMethod.getParameterTypes());
-						if (asList.equals(asList2))
-							method= interfaceMethod;
-					}
-				}
-
-				method.boxParameters(args);
-
-				Class returnType= method.getReturnType();
-
-				Object result= handler.invoke(proxy, method, args);
-
-				boolean isPrimitive= returnType != null && returnType.isPrimitive();
-				if (isPrimitive && !returnType.equals(Void.class) && !returnType.equals(void.class))
-					result= BoxingHelper.convertObjectToPrimitive(result);
-
-				return result;
-			}
-		};
+		for (Method method : methods)
+			methodInvokers.add(new MethodInvoker(interfacesMethods, method));
 
 		ScriptHelper.put("interfaces", interfaces, null);
-		ScriptHelper.put("handler1", handler, null);
-		ScriptHelper.put("handler2", handler2, null);
-		ScriptHelper.put("methods", methods, null);
+		ScriptHelper.put("handler1", aHandler, null);
+		ScriptHelper.put("methods", methodInvokers.toArray(), null);
 
-		Object result= ScriptHelper.eval("createProxyOf(interfaces, methods, handler1, handler2)", null);
-
-		return result;
+		return (String) ScriptHelper.eval("createProxyOf(interfaces, methods)", null);
 	}
 
 	private static void addObjectClassMethods(List<Method> methods)
@@ -129,7 +136,6 @@ public class Proxy
 	public static boolean isProxyClass(Class class1)
 	{
 		ScriptHelper.put("class1", class1, null);
-
 		return ScriptHelper.evalBoolean("class1 && class1.$$$nativeClass___java_lang_Object && class1.$$$nativeClass___java_lang_Object.classname.startsWith(\"ProxyOf_\")", null);
 	}
 

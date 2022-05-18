@@ -21,8 +21,7 @@ public class DateObjectFactory implements ObjectFactory
 	public DateObjectFactory()
 	{
 		dateFormats= new ArrayList<DateFormat>();
-		dateFormats.add(new SimpleDateFormat("MM/dd/yy hh:mm:ss"));
-		dateFormats.add(new SimpleDateFormat("MM/dd/yy"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));
 	}
  
 	public DateObjectFactory(List<DateFormat> dateFormats)

@@ -192,7 +192,10 @@ public final class Field extends AccessibleObject implements Member
 		return modifier;
 	}
 
-	native String getSignature();
+	public String getSignature()
+	{
+		return signature;
+	}
 
 	public Class<?> getType()
 	{

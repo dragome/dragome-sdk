@@ -170,7 +170,7 @@ public abstract class DateFormat extends Format
 		ScriptHelper.put("customPattern", pattern, this);
 		ScriptHelper.put("aDate", source, this);
 
-		long eval= ScriptHelper.evalLong("JSJoda.convert(JSJoda.DateTimeFormatter.ofPattern(customPattern).parse(aDate).date).toDate().getTime()", this);
+		long eval= ScriptHelper.evalLong("JSJoda.convert(JSJoda.LocalDateTime.parse(aDate)).toDate().getTime()", this);
 		return new Date(eval);
 	}
 

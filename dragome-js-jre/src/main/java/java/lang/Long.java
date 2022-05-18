@@ -22,7 +22,7 @@ import com.dragome.commons.javascript.ScriptHelper;
  *
  * 
  */
-public final class Long
+public final class Long extends Number implements Comparable<Long>
 {
 	public static final long MIN_VALUE= 0x8000000000000000L;
 
@@ -34,8 +34,11 @@ public final class Long
 
 	public static final Class<Long> TYPE= Class.getType("long");
 
-	private long value;
+	private long value= 0;
 
+	public Long()
+	{
+	}
 	/**
 	 * Constructs a newly allocated Long object that represents the specified long argument.
 	 */
@@ -122,4 +125,26 @@ public final class Long
 			return Integer.numberOfTrailingZeros((int) (i >> 32)) + 32;
 		}
 	}
+
+	public int compareTo(Long object)
+	{
+		return value > object.value ? 1 : (value < object.value ? -1 : 0);
+	}
+
+
+	public int intValue()
+	{
+		return (int) value;
+	}
+
+	public float floatValue()
+	{
+		return value;
+	}
+
+	public double doubleValue()
+	{
+		return value;
+	}
+
 }

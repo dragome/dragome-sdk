@@ -23,7 +23,7 @@ public final class Array
 	{
 		ScriptHelper.put("componentType", componentType, null);
 		ScriptHelper.put("length", length, null);
-		String realName = ScriptHelper.evalCasting("componentType.realName", String.class, null);
+		String realName = (String) ScriptHelper.eval("componentType.realName", null);
 		realName = "[L" + realName + ";";
 		ScriptHelper.put("classSignature", realName, null);
 		Object eval = ScriptHelper.eval("dragomeJs.newArray(classSignature, [length]);", null);

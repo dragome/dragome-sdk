@@ -41,11 +41,15 @@ public class Integer extends Number implements Comparable<Integer>
 
 	public static final Class<Integer> TYPE= Class.getType("int");
 
-	private int value;
+	private int value= 0;
 
 	/**
 	 * Constructs a newly allocated Integer object that represents the specified int value.
 	 */
+	
+	public Integer()
+	{
+	}
 	public Integer(int newValue)
 	{
 		value= newValue;

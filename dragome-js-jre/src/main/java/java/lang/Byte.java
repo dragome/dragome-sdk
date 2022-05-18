@@ -23,8 +23,12 @@ public final class Byte extends Number
 
 	public static final Class<Byte> TYPE= Class.getType("byte");
 
-	private byte value;
+	private byte value= 0;
 
+	
+	public Byte()
+	{
+	}
 	/**
 	 * Constructs a newly allocated Byte object that represents the specified byte value.
 	 */

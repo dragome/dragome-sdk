@@ -53,9 +53,10 @@ public final class Boolean
 		return FALSE;
 	}
 
-    public static Boolean valueOf(String aBoolean) {
-        return "true".equalsIgnoreCase(aBoolean);
-    }
+	public static Boolean valueOf(String aBoolean)
+	{
+		return "true".equalsIgnoreCase(aBoolean);
+	}
 
 	/**
 	 * Allocates a Boolean object representing the value argument.
@@ -97,4 +98,12 @@ public final class Boolean
 		return Boolean.toString(value);
 	}
 
+//	public boolean equals(Object obj)
+//	{
+//		if (obj instanceof Boolean)
+//		{
+//			return value == ((Boolean) obj).booleanValue();
+//		}
+//		return false;
+//	}
 }

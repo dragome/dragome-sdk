@@ -99,7 +99,7 @@ public class ObservableList<T> implements List<T>
 	public boolean add(T e)
 	{
 		boolean result= list.add(e);
-		listChangeListener.listChanged(e, false);
+		listChangeListener.listChanged(e, true);
 		return result;
 	}
 

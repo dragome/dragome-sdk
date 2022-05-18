@@ -23,7 +23,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.ContinueReflection;
@@ -52,6 +54,17 @@ public class DragomeCallsiteFactory
 			this.returnType= returnTypeClass;
 			this.invokeName= invokeName;
 			init(callType);
+		}
+
+		public InvocationHandlerForLambdas(Class<?> class1, String methodName, Object[] parameters, Class<?> returnTypeClass, String invokeName, String callType, Method foundMethod, boolean isInstanceMethod)
+		{
+			this.class1= class1;
+			this.methodName= methodName;
+			this.parameters= parameters;
+			this.returnType= returnTypeClass;
+			this.invokeName= invokeName;
+			this.foundMethod= foundMethod;
+			this.isInstanceMethod= isInstanceMethod;
 		}
 
 		@ContinueReflection
@@ -212,7 +225,7 @@ public class DragomeCallsiteFactory
 
 		public void setFoundMethod(Method foundMethod)
 		{
-			this.foundMethod = foundMethod;
+			this.foundMethod= foundMethod;
 		}
 
 		public boolean isInstanceMethod()
@@ -222,28 +235,45 @@ public class DragomeCallsiteFactory
 
 		public void setInstanceMethod(boolean isInstanceMethod)
 		{
-			this.isInstanceMethod = isInstanceMethod;
+			this.isInstanceMethod= isInstanceMethod;
 		}
 	}
+
+	private static Map<String, Object> callsites= new HashMap<>();
 
 	public static Object create(String className, String invokeName, String returnType, String invokeType, String handle2, Object objects, String callType)
 	{
 		try
 		{
-			Class<?> class1= Class.forName(className.replace("/", "."));
-			String methodName= handle2.substring(handle2.indexOf(".") + 1, handle2.indexOf("("));
+			Object proxy= callsites.get(handle2);
 
-			if (!handle2.startsWith(className + "."))
+			if (proxy == null)
 			{
-				class1= Class.forName(handle2.substring(0, handle2.indexOf(".")).replace("/", "."));
-				methodName= handle2.substring(handle2.indexOf(".") + 1, handle2.indexOf("("));
+				int indexOfDot= handle2.indexOf(".");
+				int indexOfBrackets= handle2.indexOf("(");
+				String methodName= handle2.substring(indexOfDot + 1, indexOfBrackets);
+
+				Class<?> class1;
+				if (!handle2.startsWith(className + "."))
+					class1= Class.forName(handle2.substring(0, indexOfDot).replace("/", "."));
+				else
+					class1= Class.forName(className.replace("/", "."));
+
+				final Object[] parameters= (Object[]) objects;
+				Class<?> returnTypeClass= Class.forName(returnType);
+				Class<?>[] interfaces= new Class<?>[] { returnTypeClass };
+				InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType);
+				invocationHandlerForLambdas.setupInterfaces(interfaces);
+				proxy= Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), interfaces, invocationHandlerForLambdas);
+				callsites.put(handle2, proxy);
 			}
-			final Object[] parameters= (Object[]) objects;
-			Class<?> returnTypeClass= Class.forName(returnType);
-			Class<?>[] interfaces= new Class<?>[] { returnTypeClass };
-			InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType);
-			invocationHandlerForLambdas.setInterfaces(Arrays.asList(interfaces));
-			return Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), interfaces, invocationHandlerForLambdas);
+			else
+			{
+				InvocationHandlerForLambdas invocationHandlerForLambdas= (InvocationHandlerForLambdas) Proxy.getInvocationHandler(proxy);
+				InvocationHandlerForLambdas invocationHandlerForLambdas2= new InvocationHandlerForLambdas(invocationHandlerForLambdas.class1, invocationHandlerForLambdas.methodName, (Object[]) objects, invocationHandlerForLambdas.returnType, invokeName, callType, invocationHandlerForLambdas.foundMethod, invocationHandlerForLambdas.isInstanceMethod);
+				proxy= Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), invocationHandlerForLambdas.obtainInterfaces(), invocationHandlerForLambdas2);
+			}
+			return proxy;
 		}
 		catch (Exception e)
 		{

@@ -39,6 +39,7 @@ public abstract class AbstractServicesInvocationHandler extends AbstractProxyRel
 	public AbstractServicesInvocationHandler(Class<?> type)
 	{
 		this.type= type;
+		setInterfaces(Arrays.asList(type));
 	}
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
