@@ -223,7 +223,8 @@ public final class StringJoiner {
                 elts[i] = null;
             } while (++i < size);
             size = 1;
-            String string= new String(chars);
+            
+            String string= String.valueOf(chars);
             elts[0] = string;
         }
     }

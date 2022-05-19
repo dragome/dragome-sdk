@@ -108,11 +108,14 @@ public final class Method extends Executable
 			else
 				parameterTypes= new Class[0];
 
+			boolean requiresBoxingTemp= false;
 			for (int i= 0; i < parameterTypes.length; i++)
 			{
 				ScriptHelper.put("parameterType", parameterTypes[i], null);
-				requiresBoxing|= ScriptHelper.evalBoolean("parameterType.realName == 'boolean'|| parameterType.realName == 'int' || parameterType.realName == 'long' || parameterType.realName == 'short' || parameterType.realName == 'float' || parameterType.realName == 'double' || parameterType.realName == 'byte' || parameterType.realName == 'char'", null);
+				boolean evalBoolean= ScriptHelper.evalBoolean("parameterType.realName == 'boolean'|| parameterType.realName == 'int' || parameterType.realName == 'long' || parameterType.realName == 'short' || parameterType.realName == 'float' || parameterType.realName == 'double' || parameterType.realName == 'byte' || parameterType.realName == 'char'", null);
+				requiresBoxingTemp|= evalBoolean;
 			}
+			requiresBoxing= requiresBoxingTemp;
 		}
 
 		return parameterTypes;
@@ -142,8 +145,9 @@ public final class Method extends Executable
 
 	public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
+		getParameterTypes();
 		if (requiresBoxing)
-			boxArguments(getParameterTypes(), args);
+			boxArguments(parameterTypes, args);
 
 		Object result= null;
 		if (obj == null)
@@ -157,26 +161,26 @@ public final class Method extends Executable
 		ScriptHelper.put("sig", this.signature, this);
 
 		boolean instanceMethod= ScriptHelper.eval("obj[sig]", this) == null;
-//
-//		if (instanceMethod)
-//		{
-//			Method foundMethod= null;
-//			Method[] methods= obj.getClass().getMethods();
-//			for (Method method : methods)
-//			{
-//				if (method.getName().equals(getName()))
-//					if (foundMethod == null)
-//						foundMethod= method;
-//					else
-//						System.out.println("como?");
-//			}
-//
-//			if (foundMethod != null)
-//			{
-//				ScriptHelper.put("sig", foundMethod.signature, this);
-//				instanceMethod= false;
-//			}
-//		}
+		//
+		//		if (instanceMethod)
+		//		{
+		//			Method foundMethod= null;
+		//			Method[] methods= obj.getClass().getMethods();
+		//			for (Method method : methods)
+		//			{
+		//				if (method.getName().equals(getName()))
+		//					if (foundMethod == null)
+		//						foundMethod= method;
+		//					else
+		//						System.out.println("como?");
+		//			}
+		//
+		//			if (foundMethod != null)
+		//			{
+		//				ScriptHelper.put("sig", foundMethod.signature, this);
+		//				instanceMethod= false;
+		//			}
+		//		}
 
 		if (instanceMethod)
 			result= ScriptHelper.eval("obj.clazz.constructor[sig](args)", this);
