@@ -244,6 +244,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	{
 		if (this.equals(String.class))
 			return (T) "";
+		else if (isInterface() || isAbstract())
+			throw new InstantiationException(getName() + " is not a concrete class");
 		else
 		{
 			ScriptHelper.eval("var o= null", this);

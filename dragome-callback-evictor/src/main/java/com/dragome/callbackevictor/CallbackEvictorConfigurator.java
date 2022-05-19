@@ -29,7 +29,16 @@ public class CallbackEvictorConfigurator extends InstrumentationDragomeConfigura
 {
 	public CallbackEvictorConfigurator()
 	{
-		includedPaths.addAll(Arrays.asList(/*"java.lang.reflect.Proxy", "java.lang.reflect.Method",*/"com.dragome.utils.DragomeCallsiteFactory$InvocationHandlerForLambdas", "com.dragome.serverside.servlets.ServiceInvoker", "com.dragome.model.EventDispatcherImpl", "com.dragome.model.EventExecutor", "com.dragome.services", "com.dragome.helpers.DiscovererPage", "com.dragome.services.RemoteServicesHelper", "com.dragome.services.RequestExecutor", "com.dragome.render.html", "com.dragome.debugging.execution", "com.dragome.callbackevictor.CallbackEvictorConfigurator", "com.dragome.examples"));
+		includedPaths.addAll(Arrays.asList(/*"java.lang.reflect.Proxy", "java.lang.reflect.Method",*/
+				"com.dragome.utils.DragomeCallsiteFactory$InvocationHandlerForLambdas", //
+				"com.dragome.serverside.servlets.ServiceInvoker", //
+				"com.dragome.model.EventDispatcherImpl", //
+				"com.dragome.model.EventExecutor", //
+				"com.dragome.helpers.DiscovererPage", //
+				"com.dragome.services.RemoteServicesHelper", //
+				"com.dragome.services.RequestExecutor", //
+				"com.dragome.callbackevictor.CallbackEvictorConfigurator", //
+				"com.dragome.examples"));
 		loadedFromParent.addAll(new HashSet<String>(Arrays.asList("org.atmosphere", "com.dragome.commons.ProxyRelatedInvocationHandler", "java.", "javax.", "net.sf.saxon")));
 	}
 
