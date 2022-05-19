@@ -17,9 +17,11 @@ import org.w3c.dom.events.EventTarget;
 import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.web.html.dom.DomHandler;
 
 public class JsCast
 {
+	private static DomHandler domHandler= WebServiceLocator.getInstance().getDomHandler();
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
 	{
@@ -52,7 +54,7 @@ public class JsCast
 		ScriptHelper.evalNoResult("eventListener.javaRefId= javaRefId", null);
 
 		ScriptHelper.put("eventTarget", eventTarget, null);
-		
+
 		String handlerName= "handler_" + methodName;
 		String handlerListenerName= handlerName + "_listener";
 		ScriptHelper.put("handlerName", handlerName, null);
@@ -70,7 +72,7 @@ public class JsCast
 
 	public static <T> T castTo(Object instance, Class<T> type)
 	{
-		return WebServiceLocator.getInstance().getDomHandler().castTo(instance, type, null);
+		return domHandler.castTo(instance, type, null);
 	}
 
 	public static <T> T createInstanceOf(Class<T> type)

@@ -82,38 +82,26 @@ public class BrowserDomHandler implements DomHandler
 
 	public <T> T createCastedInstance(Object instance, Class<T> type, Object callerInstance)
 	{
+		if (instance == null)
+			return null;
+		else
+			return createDelegateInstance(instance, type, callerInstance);
+
+	}
+
+	private <T> T createDelegateInstance(Object instance, Class<T> type, Object callerInstance)
+	{
 		try
 		{
-			if (instance == null)
-				return null;
+			String delegateClassName= JsCast.createDelegateClassName(type.getName());
+			Class<?> class2= Class.forName(delegateClassName);
+			Object newInstance= class2.newInstance();
 
+			ScriptHelper.put("delegate", newInstance, callerInstance);
 			ScriptHelper.put("instance", instance, callerInstance);
+			ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
 
-			if (type.equals(Float.class))
-				return (T) new Float(ScriptHelper.evalFloat("instance", callerInstance));
-			else if (type.equals(Integer.class))
-				return (T) new Integer(ScriptHelper.evalInt("instance", callerInstance));
-			else if (type.equals(Double.class))
-				return (T) new Double(ScriptHelper.evalDouble("instance", callerInstance));
-			else if (type.equals(Long.class))
-				return (T) new Long(ScriptHelper.evalLong("instance", callerInstance));
-			else if (type.equals(Boolean.class))
-				return (T) new Boolean(ScriptHelper.evalBoolean("instance", callerInstance));
-			else if (type.equals(Short.class))
-				return (T) new Short((short) ScriptHelper.evalInt("instance", callerInstance));
-			else if (type.equals(String.class))
-				return (T) ScriptHelper.eval("instance", callerInstance);
-			else
-			{
-				String delegateClassName= JsCast.createDelegateClassName(type.getName());
-				Class<?> class2= Class.forName(delegateClassName);
-				Object newInstance= class2.newInstance();
-
-				ScriptHelper.put("delegate", newInstance, callerInstance);
-				ScriptHelper.evalNoResult("delegate.node= instance.node != null ? instance.node : instance", callerInstance);
-
-				return (T) newInstance;
-			}
+			return (T) newInstance;
 		}
 		catch (Exception e)
 		{

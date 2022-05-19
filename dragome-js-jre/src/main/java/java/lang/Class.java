@@ -28,9 +28,7 @@ import java.net.URL;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -95,7 +93,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	protected String type;
 	private String name;
 	private Method[] declaredMethodsAsArrays;
-//	protected static Map<String, Class<?>> classesByName= new HashMap<String, Class<?>>();
+	private JSObject<Boolean> assignableFrom= new JSObject<Boolean>();;
+	//	protected static Map<String, Class<?>> classesByName= new HashMap<String, Class<?>>();
 
 	private Class(Object theNativeClass)
 	{
@@ -120,7 +119,6 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 			System.out.println("undefined");
 			className= "java.lang.Object";
 		}
-
 
 		Class<?> clazz= classesByName.get(parameterclassName);
 		if (clazz == null)
@@ -276,16 +274,23 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	 */
 	public boolean isAssignableFrom(Class<?> otherClass)
 	{
-		Class<?>[] interfaces= getInterfaces();
+		java.lang.Boolean result= assignableFrom.get(otherClass.getName());
+		if (result == null)
+		{
+			Class<?>[] interfaces= getInterfaces();
 
-		if (otherClass == null)
-			throw new NullPointerException();
+			if (otherClass == null)
+				throw new NullPointerException();
 
-		if (otherClass.isInterface() && Object.class.equals(this))
-			return true;
+			if (otherClass.isInterface() && Object.class.equals(this))
+				return true;
 
-		ScriptHelper.put("otherClass", otherClass, this);
-		return ScriptHelper.evalBoolean("dragomeJs.isInstanceof(otherClass.$$$nativeClass___java_lang_Object, this.$$$nativeClass___java_lang_Object)", this);
+			ScriptHelper.put("otherClass", otherClass, this);
+			result= ScriptHelper.evalBoolean("dragomeJs.isInstanceof(otherClass.$$$nativeClass___java_lang_Object, this.$$$nativeClass___java_lang_Object)", this);
+
+			assignableFrom.put(otherClass.getName(), result);
+		}
+		return result;
 	}
 
 	public boolean isInterface()
@@ -731,7 +736,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		for (int i= 0; i < signatures.length; i++)
 		{
 			ScriptHelper.put("sig", signatures[i], this);
-			String signature= ScriptHelper.evalCasting("sig.e", String.class, this);
+			String signature= (java.lang.String) ScriptHelper.eval("sig.e", this);
 
 			declaredFields.add(new Field(this, signature, modifier));
 		}

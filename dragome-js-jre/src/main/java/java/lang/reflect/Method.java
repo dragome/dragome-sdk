@@ -205,8 +205,6 @@ public final class Method extends Executable
 			Object object= args[j];
 			Object typedArgument= JsCast.castTo(object, parameterTypes[j]);
 			typedArguments[j]= typedArgument;
-			//			ScriptHelper.put("a", object, this);
-			//			ScriptHelper.eval("console.log(a)", this);
 		}
 
 		if (executeAtServer)
@@ -279,16 +277,14 @@ public final class Method extends Executable
 
 		try
 		{
-			Class<?> currentReturnType= returnType;
-
-			if (currentReturnType != null)
+			if (returnType != null)
 			{
-				if (currentReturnType.equals(Boolean.class))
+				if (returnType.equals(Boolean.class))
 					if (result instanceof Boolean)
 						return result;
 					else
 						return ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE;
-				else if (Number.class.isAssignableFrom(returnType) || currentReturnType.equals(Character.class))
+				else if (Number.class.isAssignableFrom(returnType) || returnType.equals(Character.class))
 				{
 					Object newInstance= returnType.newInstance();
 					ScriptHelper.put("instance", newInstance, null);

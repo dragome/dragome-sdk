@@ -271,6 +271,7 @@ public class DragomeCallsiteFactory
 			{
 				InvocationHandlerForLambdas invocationHandlerForLambdas= (InvocationHandlerForLambdas) Proxy.getInvocationHandler(proxy);
 				InvocationHandlerForLambdas invocationHandlerForLambdas2= new InvocationHandlerForLambdas(invocationHandlerForLambdas.class1, invocationHandlerForLambdas.methodName, (Object[]) objects, invocationHandlerForLambdas.returnType, invokeName, callType, invocationHandlerForLambdas.foundMethod, invocationHandlerForLambdas.isInstanceMethod);
+				invocationHandlerForLambdas2.setupInterfaces(new Class<?>[] { invocationHandlerForLambdas.returnType });
 				proxy= Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), invocationHandlerForLambdas.obtainInterfaces(), invocationHandlerForLambdas2);
 			}
 			return proxy;
