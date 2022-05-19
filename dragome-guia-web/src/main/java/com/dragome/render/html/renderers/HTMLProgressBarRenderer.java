@@ -60,7 +60,7 @@ public class HTMLProgressBarRenderer extends AbstractHTMLComponentRenderer<Visua
 
 	private void updatePercentage(final Element perDiv, final Element statDiv, VisualProgressBar progressBar)
 	{
-		setElementInnerHTML(perDiv, progressBar.getPercentage() + "%");
+		perDiv.setTextContent(progressBar.getPercentage() + "%");
 		statDiv.setAttribute("style", "width:" + progressBar.getPercentage() + "%;");
 	}
 }

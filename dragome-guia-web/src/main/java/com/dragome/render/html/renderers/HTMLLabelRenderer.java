@@ -77,7 +77,9 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 					label1.setAttribute(attribute, replaceAll);
 				}
 				else if (aText != null && !aText.trim().isEmpty())
-					setElementInnerHTML(label1, aText == null ? "null" : aText);
+				{
+					label1.setTextContent(aText == null ? "null" : aText);
+				}
 			}
 
 		});

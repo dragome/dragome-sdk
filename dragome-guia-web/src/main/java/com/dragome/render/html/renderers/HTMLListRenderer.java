@@ -59,9 +59,6 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		{
 			public void mergeWith(final Element selectElement)
 			{
-
-				setElementInnerHTML(selectElement, "");
-
 				visualList.addValueChangeHandler(new ValueChangeHandler<Object>()
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
@@ -133,7 +130,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 							optionElement.setAttribute("selected", "selected");
 
 						optionElement.setAttribute("value", elementValue);
-						setElementInnerHTML(optionElement, rendered);
+						optionElement.setTextContent(rendered);
 
 						selectExtension.appendChild(optionElement);
 					}
