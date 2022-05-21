@@ -38,6 +38,7 @@ public class CallbackEvictorConfigurator extends InstrumentationDragomeConfigura
 				"com.dragome.services.RemoteServicesHelper", //
 				"com.dragome.services.RequestExecutor", //
 				"com.dragome.callbackevictor.CallbackEvictorConfigurator", //
+				"com.dragome.utils.StaticMethodInvokerForLambdas", //
 				"com.dragome.examples"));
 		loadedFromParent.addAll(new HashSet<String>(Arrays.asList("org.atmosphere", "com.dragome.commons.ProxyRelatedInvocationHandler", "java.", "javax.", "net.sf.saxon")));
 	}

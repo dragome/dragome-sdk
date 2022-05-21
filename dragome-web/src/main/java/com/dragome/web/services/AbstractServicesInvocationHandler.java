@@ -44,16 +44,23 @@ public abstract class AbstractServicesInvocationHandler extends AbstractProxyRel
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
 	{
-		setProxy(proxy);
+		if (method.getName().equals("hashCode"))
+			return type.hashCode();
+		else if (method.getName().equals("equals"))
+			return super.equals(args[0]);
+		else
+		{
+			setProxy(proxy);
 
-		final WebServiceLocator webServiceLocator= WebServiceLocator.getInstance();
-		final ServiceLocator instance= ServiceLocator.getInstance();
+			final WebServiceLocator webServiceLocator= WebServiceLocator.getInstance();
+			final ServiceLocator instance= ServiceLocator.getInstance();
 
-		Map<String, String> parameters= createParameters(type, method, args);
-		RequestExecutor requestExecutor= webServiceLocator.getRequestExecutor();
-		final SerializationService serializationService= instance.getSerializationService();
+			Map<String, String> parameters= createParameters(type, method, args);
+			RequestExecutor requestExecutor= webServiceLocator.getRequestExecutor();
+			final SerializationService serializationService= instance.getSerializationService();
 
-		return execute(parameters, requestExecutor, serializationService, !method.getReturnType().equals(void.class));
+			return execute(parameters, requestExecutor, serializationService, !method.getReturnType().equals(void.class));
+		}
 	}
 
 	public static Map<String, String> createParameters(Class<?> type, Method method, Object[] args)

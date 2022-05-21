@@ -83,12 +83,25 @@ public class DragomeCallsiteFactory
 					return class1.newInstance();
 
 				Object[] createInvocationArgs= createInvocationArgs(args);
-				Object calcObj= isInstanceMethod ? parameters.length > 0 ? parameters[0] : args[0] : null;
+				Object calcObj;
+				if (isInstanceMethod)
+					calcObj= parameters.length > 0 ? parameters[0] : args[0];
+				else
+					calcObj= null;
 				Method foundMethod2= foundMethod;
 				args= new Object[0];
 				method= null;
 				proxy= null;
-				Object invoke= foundMethod2.invoke(calcObj, createInvocationArgs);
+				Object invoke;
+
+				if (isInstanceMethod)
+					invoke= foundMethod2.invoke(calcObj, createInvocationArgs);
+				else
+				{
+					StaticMethodInvokerForLambdas staticMethodInvokerForLambdas= new StaticMethodInvokerForLambdas(foundMethod2, createInvocationArgs);
+					invoke= staticMethodInvokerForLambdas.invoke();
+				}
+
 				return invoke;
 			}
 			catch (Exception e1)
@@ -106,7 +119,7 @@ public class DragomeCallsiteFactory
 				setFoundMethod(methods[i]);
 				if (getFoundMethod().getName().equals(methodName))
 				{
-					isInstanceMethod= parameters.length > 0 && isSameClass();
+					isInstanceMethod= parameters.length > 0 && calcIsSameClass();
 
 					if ("static".equals(callType))
 						isInstanceMethod= !Modifier.isStatic(getFoundMethod().getModifiers());
@@ -131,7 +144,7 @@ public class DragomeCallsiteFactory
 			}
 			return invocationArgs;
 		}
-		private boolean isSameClass()
+		private boolean calcIsSameClass()
 		{
 			if (!(parameters[0] instanceof Object))
 				return false;
@@ -273,7 +286,7 @@ public class DragomeCallsiteFactory
 				InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType);
 				invocationHandlerForLambdas.setupInterfaces(interfaces);
 				proxy= Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), interfaces, invocationHandlerForLambdas);
-				callsites.put(data, proxy);
+				//				callsites.put(data, proxy);
 			}
 			else
 			{

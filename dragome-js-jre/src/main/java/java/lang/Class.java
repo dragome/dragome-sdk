@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
@@ -93,7 +92,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	protected String type;
 	private String name;
 	private Method[] declaredMethodsAsArrays;
-	private JSObject<Boolean> assignableFrom= new JSObject<Boolean>();;
+	private JSObject<Boolean> assignableFrom= new JSObject<Boolean>();
+	private Constructor[] declaredConstructors;;
 	//	protected static Map<String, Class<?>> classesByName= new HashMap<String, Class<?>>();
 
 	private Class(Object theNativeClass)
@@ -412,10 +412,19 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Constructor<?>[] getDeclaredConstructors() throws SecurityException
 	{
-		ArrayList<Method> constructors= new ArrayList<>();
-		findMethods(constructors, false);
-		List<Constructor> collect= constructors.stream().map(m -> new Constructor(m)).collect(Collectors.toList());
-		return collect.toArray(new Constructor[0]);
+		if (declaredConstructors == null)
+		{
+			ArrayList<Method> constructors= new ArrayList<>();
+			findMethods(constructors, false);
+
+			declaredConstructors= new Constructor[constructors.size()];
+			for (int i= 0; i < constructors.size(); i++)
+			{
+				Method constructor= constructors.get(i);
+				declaredConstructors[i]= new Constructor(constructor);
+			}
+		}
+		return declaredConstructors;
 	}
 
 	@MethodAlias(local_alias= "getMethodBySignature")
