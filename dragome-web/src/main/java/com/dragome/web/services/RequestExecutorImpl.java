@@ -113,7 +113,7 @@ public class RequestExecutorImpl implements RequestExecutor
 
 		if (parameters != null)
 			for (Entry<String, String> entry : parameters.entrySet())
-				parameter+= URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8") + "&";
+				parameter+= URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + entry.getValue() + "&";
 
 		if (isAsync)
 		{
