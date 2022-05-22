@@ -1,13 +1,19 @@
 package com.dragome.utils;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 import com.dragome.commons.ContinueReflection;
 
 public class StaticMethodInvokerForLambdas implements MethodHolder
 {
-	private final Method method;
-	Object[] args;
+	private Method method;
+	private Object[] args;
+
+	public StaticMethodInvokerForLambdas()
+	{
+	}
 
 	public StaticMethodInvokerForLambdas(Method method, Object[] args)
 	{
@@ -34,5 +40,22 @@ public class StaticMethodInvokerForLambdas implements MethodHolder
 	public Method getMethod()
 	{
 		return method;
+	}
+
+	public void setMethod(Method method)
+	{
+		this.method= method;
+	}
+	
+
+	public List<Object> getArgs()
+	{
+		return Arrays.asList(args);
+	}
+
+
+	public void setArgs(List<Object> parameters)
+	{
+		this.args= parameters.toArray();
 	}
 }
