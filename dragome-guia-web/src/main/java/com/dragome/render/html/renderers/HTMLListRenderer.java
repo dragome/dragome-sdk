@@ -83,6 +83,10 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					selectElement.setAttribute("multiple", "multiple");
 				else
 					selectElement.removeAttribute("multiple");
+				
+				
+				if (!visualList.getStyle().isEnabled())
+					selectElement.setAttribute("disabled", "disabled");
 
 				renderInnerContent(visualList, selectElement);
 
@@ -110,7 +114,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					Object value= visualList.getValue();
 
 					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
-					isSelected|= !visualList.isMultipleItems() && element == value;
+					isSelected|= !visualList.isMultipleItems() && element.equals(value);
 
 					String elementValue= createElementValue(element);
 					Element querySelector= selectExtension.querySelector("option[value='" + elementValue + "']");

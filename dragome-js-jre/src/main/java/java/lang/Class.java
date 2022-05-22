@@ -115,10 +115,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 		boolean evalBoolean= ScriptHelper.evalBoolean("className === undefined", null);
 		if (evalBoolean)
-		{
-			System.out.println("is array?");
 			className= "[Ljava.lang.Object;";
-		}
 
 		Class<?> clazz= classesByName.get(parameterclassName);
 		if (clazz == null)

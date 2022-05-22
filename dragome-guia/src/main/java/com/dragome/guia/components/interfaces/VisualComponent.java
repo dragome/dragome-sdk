@@ -38,4 +38,5 @@ public interface VisualComponent extends EventProducer, HasVisible, HasLayout
 	public void addDoubleClickListener(DoubleClickListener doubleClickListener);
 	public void addKeyListener(KeyUpListener keyUpListener);
 	void focus();
+	public void setDisabled();
 }
