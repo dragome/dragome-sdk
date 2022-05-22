@@ -17,6 +17,9 @@
 package com.dragome.callbackevictor.enhancers;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.utils.MethodHolder;
@@ -26,7 +29,6 @@ import com.dragome.utils.MethodHolder;
  */
 public class Stack implements Serializable
 {
-	private String id;
 	private static final long serialVersionUID= 2L;
 
 	private int[] istack;
@@ -250,7 +252,7 @@ public class Stack implements Serializable
 		if (ostack == null)
 			ostack= new Object[10];
 
-		if (oTop > 0 && ostack[oTop-1] instanceof MethodHolder)
+		if (oTop > 0 && ostack[oTop - 1] instanceof MethodHolder)
 		{
 			o= null;
 		}
@@ -329,21 +331,9 @@ public class Stack implements Serializable
 		return true;
 	}
 
-	public boolean isEmpty()
+	protected boolean isEmpty()
 	{
 		return iTop == 0 && lTop == 0 && dTop == 0 && fTop == 0 && oTop == 0 && rTop == 0;
-	}
-
-	private String getStats()
-	{
-		final StringBuffer sb= new StringBuffer();
-		sb.append("i[").append(iTop).append("],");
-		sb.append("l[").append(lTop).append("],");
-		sb.append("d[").append(dTop).append("],");
-		sb.append("f[").append(fTop).append("],");
-		sb.append("o[").append(oTop).append("],");
-		sb.append("r[").append(rTop).append("]");
-		return sb.toString();
 	}
 
 	public Runnable getRunnable()
@@ -356,233 +346,109 @@ public class Stack implements Serializable
 		this.runnable= runnable;
 	}
 
-	public String getId()
+	public List<Object> getStacks()
 	{
-		return id;
+		ArrayList<Object> result= new ArrayList<>();
+		List<Integer> asList= Arrays.asList(iTop, fTop, dTop, lTop, oTop, rTop);
+		result.addAll(asList);
+
+		if (iTop != 0)
+			result.addAll(convertIntArray());
+		if (fTop != 0)
+			result.addAll(convertFloatArray());
+		if (dTop != 0)
+			result.addAll(convertDoubleArray());
+		if (lTop != 0)
+			result.addAll(convertLongArray());
+		if (oTop != 0)
+			result.addAll(convertObjectArray(ostack, oTop));
+		if (rTop != 0)
+			result.addAll(convertObjectArray(rstack, rTop));
+		return result;
 	}
 
-	public void setId(String id)
+	private List<Object> convertIntArray()
 	{
-		this.id= id;
-	}
-	public int[] getIstack()
-	{
-		return istack;
-	}
+		List<Object> output= new ArrayList<>();
+		for (int value : istack)
+			output.add(value);
 
-	public void setIstack(int[] istack)
-	{
-		this.istack= istack;
+		return output.subList(0, iTop);
 	}
 
-	public float[] getFstack()
+	private List<Object> convertFloatArray()
 	{
-		return fstack;
+		List<Object> output= new ArrayList<>();
+		for (int value : istack)
+			output.add(value);
+
+		return output.subList(0, iTop);
+	}
+	private List<Object> convertDoubleArray()
+	{
+		List<Object> output= new ArrayList<>();
+		for (int value : istack)
+			output.add(value);
+
+		return output.subList(0, iTop);
+	}
+	private List<Object> convertLongArray()
+	{
+		List<Object> output= new ArrayList<>();
+		for (int value : istack)
+			output.add(value);
+
+		return output.subList(0, iTop);
+	}
+	private List<Object> convertObjectArray(Object[] array, int top)
+	{
+		List<Object> output= new ArrayList<>();
+		for (Object value : array)
+			output.add(value);
+
+		return output.subList(0, top);
 	}
 
-	public void setFstack(float[] fstack)
+	public void setStacks(List<Object> tops)
 	{
-		this.fstack= fstack;
+		iTop= (int) tops.get(0);
+		fTop= (int) tops.get(1);
+		dTop= (int) tops.get(2);
+		lTop= (int) tops.get(3);
+		oTop= (int) tops.get(4);
+		rTop= (int) tops.get(5);
+
+		if (iTop > 0)
+			istack= new int[iTop];
+		if (fTop > 0)
+			fstack= new float[fTop];
+		if (dTop > 0)
+			dstack= new double[dTop];
+		if (lTop > 0)
+			lstack= new long[lTop];
+		if (oTop > 0)
+			ostack= new Object[oTop];
+		if (rTop > 0)
+			rstack= new Object[rTop];
+
+		int i= 0;
+		for (int j= 6; j < tops.size(); j++)
+		{
+			if (i < iTop)
+				istack[i]= (int) tops.get(j);
+			else if (i < iTop + fTop)
+				fstack[i - iTop]= (float) tops.get(j);
+			else if (i < iTop + fTop + dTop)
+				dstack[i - iTop - fTop]= (double) tops.get(j);
+			else if (i < iTop + fTop + dTop + lTop)
+				lstack[i - iTop - fTop - dTop]= (long) tops.get(j);
+			else if (i < iTop + fTop + dTop + lTop + oTop)
+				ostack[i - iTop - fTop - dTop - lTop]= tops.get(j);
+			else if (i < iTop + fTop + dTop + lTop + oTop + rTop)
+				rstack[i - iTop - fTop - dTop - lTop - oTop]= tops.get(j);
+			i++;
+		}
+		
+		System.out.println("fsdgh");
 	}
-
-	public double[] getDstack()
-	{
-		return dstack;
-	}
-
-	public void setDstack(double[] dstack)
-	{
-		this.dstack= dstack;
-	}
-
-	public long[] getLstack()
-	{
-		return lstack;
-	}
-
-	public void setLstack(long[] lstack)
-	{
-		this.lstack= lstack;
-	}
-
-	public Object[] getOstack()
-	{
-		return ostack;
-	}
-
-	public void setOstack(Object[] ostack)
-	{
-		this.ostack= ostack;
-	}
-
-	public Object[] getRstack()
-	{
-		return rstack;
-	}
-
-	public void setRstack(Object[] rstack)
-	{
-		this.rstack= rstack;
-	}
-
-	public int getITop()
-	{
-		return iTop;
-	}
-
-	public void setITop(int top)
-	{
-		iTop= top;
-	}
-
-	public int getFTop()
-	{
-		return fTop;
-	}
-
-	public void setFTop(int top)
-	{
-		fTop= top;
-	}
-
-	public int getDTop()
-	{
-		return dTop;
-	}
-
-	public void setDTop(int top)
-	{
-		dTop= top;
-	}
-
-	public int getLTop()
-	{
-		return lTop;
-	}
-
-	public void setLTop(int top)
-	{
-		lTop= top;
-	}
-
-	public int getOTop()
-	{
-		return oTop;
-	}
-
-	public void setOTop(int top)
-	{
-		oTop= top;
-	}
-
-	public int getRTop()
-	{
-		return rTop;
-	}
-
-	public void setRTop(int top)
-	{
-		rTop= top;
-	}
-
-	//    private String getContent() {
-	//        final StringBuffer sb = new StringBuffer();
-	//        sb.append("i[").append(iTop).append("]\n");
-	//        sb.append("l[").append(lTop).append("]\n");
-	//        sb.append("d[").append(dTop).append("]\n");
-	//        sb.append("f[").append(fTop).append("]\n");
-	//        sb.append("o[").append(oTop).append("]\n");
-	//        for(int i=0; i<oTop;i++) {
-	//            sb.append(' ').append(i).append(": ");
-	//            sb.append(ReflectionUtils.getClassName(ostack[i])).append('/').append(ReflectionUtils.getClassLoaderName(ostack[i]));
-	//            sb.append('\n');
-	//        }
-	//        sb.append("r[").append(rTop).append("]\n");
-	//        for(int i=0; i<rTop;i++) {
-	//            sb.append(' ').append(i).append(": ");
-	//            sb.append(ReflectionUtils.getClassName(rstack[i])).append('/').append(ReflectionUtils.getClassLoaderName(rstack[i]));
-	//            sb.append('\n');
-	//        }
-	//        
-	//        return sb.toString();
-	//    }
-
-	//    public String toString() {
-	//        return getContent();
-	//    }
-
-	//    private void writeObject(ObjectOutputStream s) throws IOException {
-	//        s.writeInt(iTop);
-	//        for( int i=0; i<iTop; i++ ) {
-	//            s.writeInt(istack[i]);
-	//        }
-	//
-	//        s.writeInt(lTop);
-	//        for( int i=0; i<lTop; i++ ) {
-	//            s.writeLong(lstack[i]);
-	//        }
-	//
-	//        s.writeInt(dTop);
-	//        for( int i=0; i<dTop; i++ ) {
-	//            s.writeDouble(dstack[i]);
-	//        }
-	//
-	//        s.writeInt(fTop);
-	//        for( int i=0; i<fTop; i++ ) {
-	//            s.writeDouble(fstack[i]);
-	//        }
-	//
-	//        s.writeInt(oTop);
-	//        for( int i=0; i<oTop; i++ ) {
-	//            s.writeObject(ostack[i]);
-	//        }
-	//
-	//        s.writeInt(rTop);
-	//        for( int i=0; i<rTop; i++ ) {
-	//            s.writeObject(rstack[i]);
-	//        }
-	//
-	//        s.writeObject(runnable);
-	//    }
-	//
-	//    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
-	//        iTop = s.readInt();
-	//        istack = new int[iTop];
-	//        for( int i=0; i<iTop; i++ ) {
-	//            istack[i] = s.readInt();
-	//        }
-	//
-	//        lTop = s.readInt();
-	//        lstack = new long[lTop];
-	//        for( int i=0; i<lTop; i++ ) {
-	//            lstack[i] = s.readLong();
-	//        }
-	//
-	//        dTop = s.readInt();
-	//        dstack = new double[dTop];
-	//        for( int i=0; i<dTop; i++ ) {
-	//            dstack[i] = s.readDouble();
-	//        }
-	//
-	//        fTop = s.readInt();
-	//        fstack = new float[fTop];
-	//        for( int i=0; i<fTop; i++ ) {
-	//            fstack[i] = s.readFloat();
-	//        }
-	//
-	//        oTop = s.readInt();
-	//        ostack = new Object[oTop];
-	//        for( int i=0; i<oTop; i++ ) {
-	//            ostack[i] = s.readObject();
-	//        }
-	//
-	//        rTop = s.readInt();
-	//        rstack = new Object[rTop];
-	//        for( int i=0; i<rTop; i++ ) {
-	//            rstack[i] = s.readObject();
-	//        }
-	//
-	//        runnable = (Runnable)s.readObject();
-	//    }
-
 }
