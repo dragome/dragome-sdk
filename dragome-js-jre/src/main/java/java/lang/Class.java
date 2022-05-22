@@ -116,8 +116,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		boolean evalBoolean= ScriptHelper.evalBoolean("className === undefined", null);
 		if (evalBoolean)
 		{
-			System.out.println("undefined");
-			className= "java.lang.Object";
+			System.out.println("is array?");
+			className= "[Ljava.lang.Object;";
 		}
 
 		Class<?> clazz= classesByName.get(parameterclassName);
@@ -142,6 +142,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 				if (startsWithBracket)
 				{
 					type= className.replaceAll("\\[", "");
+					type= className.replaceAll("\\]", "");
 					type= type.replaceAll(";", "");
 					if (type.startsWith("L"))
 						type= type.replaceFirst("L", "");
@@ -168,10 +169,14 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 				clazz= new Class(nativeClass);
 				clazz.isArray= true;
+				type= type.replace("[L", "").replace("]", "");
 				clazz.type= type;
+
+				java.lang.String realName2= "[L" + type + ";";
 				ScriptHelper.put("clazz", clazz, null);
+				ScriptHelper.put("realName2", realName2, null);
 				ScriptHelper.put("className", className, null);
-				ScriptHelper.eval("clazz.realName=className", null);
+				ScriptHelper.eval("clazz.realName=realName2", null);
 				classesByName.put(parameterclassName, clazz);
 				return clazz;
 			}
@@ -795,10 +800,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	@Override
 	public int hashCode()
 	{
-		final int prime= 31;
-		int result= 1;
-		result= prime * result + ((getName() == null) ? 0 : getName().hashCode());
-		return result;
+		return ScriptHelper.evalInt("objectId(this.realName)", this);
 	}
 
 	@Override

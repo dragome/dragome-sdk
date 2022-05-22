@@ -214,6 +214,7 @@ dragomeJs.newArray = function(classSignature, dim, index) {
 	var array = new Array(dimensionAtIndex);
 	array.$clone$java_lang_Object = java_lang_Object.prototype.$clone$java_lang_Object;
 	array.classSignature = classSignature;
+	array.dim= dim;
 	array.__proto__.$getClass$java_lang_Class = function() {
 		var clazz = java_lang_Class
 			.$forName___java_lang_String$java_lang_Class(this.classSignature);
@@ -245,10 +246,24 @@ dragomeJs.newArray = function(classSignature, dim, index) {
  * java.lang.Object#clone()java.lang.Object
  */
 dragomeJs.cloneArray = function(other) {
-	var dim = other.length;
-	var array = new Array(dim);
-	array.clazz = other.clazz;
-	for (var i = 0; i < dim; i++) {
+	var dim = other.dim;
+	
+	var array= dragomeJs.newArray(other.classSignature, dim);
+	for (var i = 0; i < other.length; i++) {
+		array[i] = other[i];
+	}
+	return array;
+};
+
+
+dragomeJs.wrapArray = function(other) {
+
+	if (other.length == 0)
+		return null;	
+	
+	var classSignature= '[Ljava.lang.Object;';
+	var array= dragomeJs.newArray(classSignature, [1]);
+	for (var i = 0; i < other.length; i++) {
 		array[i] = other[i];
 	}
 	return array;
@@ -347,7 +362,9 @@ function createProxyOf(types, methods) {
 		membersMap[methodName] = (function() {
 			method.$$$method___java_lang_reflect_Method.$boxParameters___java_lang_Object_ARRAYTYPE$java_lang_Object_ARRAYTYPE(arguments);
 
-			var result = this.$$$handler___java_lang_reflect_InvocationHandler.$invoke___java_lang_Object__java_lang_reflect_Method__java_lang_Object_ARRAYTYPE$java_lang_Object(this.$$$handler___java_lang_reflect_InvocationHandler.proxy, method.$$$method___java_lang_reflect_Method, arguments);
+			var args= dragomeJs.wrapArray(arguments);
+
+			var result = this.$$$handler___java_lang_reflect_InvocationHandler.$invoke___java_lang_Object__java_lang_reflect_Method__java_lang_Object_ARRAYTYPE$java_lang_Object(this.$$$handler___java_lang_reflect_InvocationHandler.proxy, method.$$$method___java_lang_reflect_Method, args);
 			if (method.$$$unboxReturnValue___boolean)
 				result = Object.values(result)[0];
 

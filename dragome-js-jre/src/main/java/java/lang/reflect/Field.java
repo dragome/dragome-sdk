@@ -41,6 +41,9 @@ public final class Field extends AccessibleObject implements Member
 		try
 		{
 			String type= signature.substring(signature.indexOf("___") + 3);
+			if (type.endsWith("ARRAYTYPE"))
+				type= "[L" + type.replace("_ARRAYTYPE", ";");
+			
 			this.fieldType= Class.forName(type);
 		}
 		catch (ClassNotFoundException e)
@@ -75,7 +78,7 @@ public final class Field extends AccessibleObject implements Member
 			result= ScriptHelper.eval("obj.constructor[sig]", this);
 		else
 			result= ScriptHelper.eval("obj[sig]", this);
-		
+
 		return Method.adaptResult(result, getType());
 	}
 

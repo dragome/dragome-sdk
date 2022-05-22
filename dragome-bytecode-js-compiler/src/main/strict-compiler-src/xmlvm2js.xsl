@@ -766,7 +766,7 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
 <xsl:template match="jvm:anewarray|jvm:newarray">
   <xsl:text>
     __count = __stack[--__sp];
-    __stack[__sp++] = new Array(__count);
+    __stack[__sp++] = dragomeJs.newArray('[Ljava.lang.Object;', [__count]);
   </xsl:text>
 </xsl:template>
 
@@ -2285,9 +2285,9 @@ qx.Class.define("</xsl:text><xsl:call-template name="getPackgePlusClassName"><xs
   <xsl:text>
             __r</xsl:text>
   <xsl:value-of select="@vx" />
-  <xsl:text> = new Array(__r</xsl:text>
+  <xsl:text> = dragomeJs.newArray('[Ljava.lang.Object;', [__r</xsl:text>
   <xsl:value-of select="@vy" />
-  <xsl:text>);</xsl:text>
+  <xsl:text>]);</xsl:text>
 </xsl:template>
 
 <!--  dex:fill-array-data
