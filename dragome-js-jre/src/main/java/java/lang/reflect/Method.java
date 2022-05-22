@@ -160,7 +160,7 @@ public final class Method extends Executable
 		ScriptHelper.put("args", args, this);
 		ScriptHelper.put("sig", this.signature, this);
 
-		boolean instanceMethod= ScriptHelper.eval("obj[sig]", this) == null;
+		boolean instanceMethod= ScriptHelper.evalBoolean("obj[sig] == null", this);
 		//
 		//		if (instanceMethod)
 		//		{

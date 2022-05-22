@@ -429,4 +429,16 @@ public class ReflectionHelper
 
 		return (Class<?>) result;
 	}
+
+	public static boolean isMethodEquals(Method method1, Method method2)
+	{
+		if (method2.getName().equals(method1.getName()))
+		{
+			List<Class<?>> asList= Arrays.asList(method2.getParameterTypes());
+			List<Class<?>> asList2= Arrays.asList(method1.getParameterTypes());
+			if (asList.equals(asList2))
+				return true;
+		}
+		return false;
+	}
 }

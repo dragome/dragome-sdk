@@ -21,14 +21,20 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dragome.callbackevictor.enhancers.StackRecorder;
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.ContinueReflection;
+
+import sun.reflect.generics.factory.CoreReflectionFactory;
+import sun.reflect.generics.repository.ConstructorRepository;
+import sun.reflect.generics.scope.ClassScope;
 
 public class DragomeCallsiteFactory
 {
@@ -41,18 +47,20 @@ public class DragomeCallsiteFactory
 		private String invokeName;
 		private Method foundMethod;
 		private boolean isInstanceMethod;
+		private Class<?>[] parametersTypes;
 
 		public InvocationHandlerForLambdas()
 		{
 		}
 
-		protected InvocationHandlerForLambdas(Class<?> class1, String methodName, Object[] parameters, Class<?> returnTypeClass, String invokeName, String callType)
+		protected InvocationHandlerForLambdas(Class<?> class1, String methodName, Object[] parameters, Class<?> returnTypeClass, String invokeName, String callType, Class[] parametersTypes)
 		{
 			this.class1= class1;
 			this.methodName= methodName;
 			this.parameters= parameters;
 			this.returnType= returnTypeClass;
 			this.invokeName= invokeName;
+			this.parametersTypes= parametersTypes;
 			init(callType);
 		}
 
@@ -102,6 +110,8 @@ public class DragomeCallsiteFactory
 					invoke= staticMethodInvokerForLambdas.invoke();
 				}
 
+				//				StackRecorder.get().pushReference(this);
+
 				return invoke;
 			}
 			catch (Exception e1)
@@ -116,16 +126,21 @@ public class DragomeCallsiteFactory
 
 			for (int i= 0; i < methods.length; i++)
 			{
-				setFoundMethod(methods[i]);
-				if (getFoundMethod().getName().equals(methodName))
+				foundMethod= methods[i];
+
+				if (foundMethod.getName().equals(methodName))
 				{
-					isInstanceMethod= parameters.length > 0 && calcIsSameClass();
+					Class<?>[] foundParameterTypes= foundMethod.getParameterTypes();
+					if (Arrays.equals(foundParameterTypes, parametersTypes))
+					{
+						isInstanceMethod= parameters.length > 0 && calcIsSameClass();
 
-					if ("static".equals(callType))
-						isInstanceMethod= !Modifier.isStatic(getFoundMethod().getModifiers());
+						if ("static".equals(callType))
+							isInstanceMethod= !Modifier.isStatic(foundMethod.getModifiers());
 
-					getFoundMethod().setAccessible(true);
-					return;
+						foundMethod.setAccessible(true);
+						return;
+					}
 				}
 			}
 		}
@@ -250,6 +265,16 @@ public class DragomeCallsiteFactory
 		{
 			this.isInstanceMethod= isInstanceMethod;
 		}
+
+		public Class[] getParametersTypes()
+		{
+			return parametersTypes;
+		}
+
+		public void setParametersTypes(Class[] parametersTypes)
+		{
+			this.parametersTypes= parametersTypes;
+		}
 	}
 
 	private static Map<String, Object> callsites= new HashMap<>();
@@ -270,6 +295,18 @@ public class DragomeCallsiteFactory
 				String callType= split[4];
 				String handle2= split[5];
 
+				CoreReflectionFactory reflectionFactory= CoreReflectionFactory.make(DragomeCallsiteFactory.class, ClassScope.make(DragomeCallsiteFactory.class));
+				String signature= handle2.substring(handle2.indexOf("("));
+				ConstructorRepository constructorRepository= ConstructorRepository.make(signature, reflectionFactory);
+				Type[] parametersTypesArray= constructorRepository.getParameterTypes();
+
+				Class<?>[] parametersTypes= new Class<?>[parametersTypesArray.length];
+				for (int i= 0; i < parametersTypesArray.length; i++)
+				{
+					Type type= parametersTypesArray[i];
+					parametersTypes[i]= (Class<?>) type;
+				}
+
 				int indexOfDot= handle2.indexOf(".");
 				int indexOfBrackets= handle2.indexOf("(");
 				String methodName= handle2.substring(indexOfDot + 1, indexOfBrackets);
@@ -283,7 +320,7 @@ public class DragomeCallsiteFactory
 				final Object[] parameters= (Object[]) objects;
 				Class<?> returnTypeClass= Class.forName(returnType);
 				Class<?>[] interfaces= new Class<?>[] { returnTypeClass };
-				InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType);
+				InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType, parametersTypes);
 				invocationHandlerForLambdas.setupInterfaces(interfaces);
 				proxy= Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), interfaces, invocationHandlerForLambdas);
 				//				callsites.put(data, proxy);

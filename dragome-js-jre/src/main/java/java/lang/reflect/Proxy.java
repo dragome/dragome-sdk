@@ -16,18 +16,18 @@
 package java.lang.reflect;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.dragome.commons.javascript.ScriptHelper;
+import com.dragome.helpers.ReflectionHelper;
 
 public class Proxy
 {
 	private static Map<String, Method> cachedMethods= new HashMap<>();
 	private static Map<String, String> proxyClassesByName= new HashMap<>();
-	
+
 	private InvocationHandler handler;
 
 	public static class MethodInvoker
@@ -51,13 +51,8 @@ public class Proxy
 			{
 				for (Method interfaceMethod : interfacesMethods)
 				{
-					if (method.getName().equals(interfaceMethod.getName()))
-					{
-						List<Class<?>> asList= Arrays.asList(method.getParameterTypes());
-						List<Class<?>> asList2= Arrays.asList(interfaceMethod.getParameterTypes());
-						if (asList.equals(asList2))
-							method= interfaceMethod;
-					}
+					if (ReflectionHelper.isMethodEquals(interfaceMethod, method))
+						method= interfaceMethod;
 				}
 
 				cachedMethods.put(method.getSignature(), method);
@@ -66,7 +61,6 @@ public class Proxy
 			return method2;
 		}
 	}
-
 	
 	public static Object newProxyInstance(ClassLoader loader, Class[] interfaces, final InvocationHandler aHandler) throws IllegalArgumentException
 	{
