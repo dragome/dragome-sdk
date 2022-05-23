@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dragome.callbackevictor.enhancers.StackRecorder;
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
 import com.dragome.commons.ContinueReflection;
 
@@ -47,7 +46,6 @@ public class DragomeCallsiteFactory
 		private String invokeName;
 		private Method foundMethod;
 		private boolean isInstanceMethod;
-		private Class<?>[] parametersTypes;
 
 		public InvocationHandlerForLambdas()
 		{
@@ -60,8 +58,7 @@ public class DragomeCallsiteFactory
 			this.parameters= parameters;
 			this.returnType= returnTypeClass;
 			this.invokeName= invokeName;
-			this.parametersTypes= parametersTypes;
-			init(callType);
+			init(callType, parametersTypes);
 		}
 
 		public InvocationHandlerForLambdas(Class<?> class1, String methodName, Object[] parameters, Class<?> returnTypeClass, String invokeName, Method foundMethod, boolean isInstanceMethod)
@@ -120,7 +117,7 @@ public class DragomeCallsiteFactory
 			}
 		}
 
-		private void init(String callType)
+		private void init(String callType, Class[] parametersTypes)
 		{
 			Method[] methods= class1.getDeclaredMethods();
 
@@ -264,16 +261,6 @@ public class DragomeCallsiteFactory
 		public void setInstanceMethod(boolean isInstanceMethod)
 		{
 			this.isInstanceMethod= isInstanceMethod;
-		}
-
-		public Class[] getParametersTypes()
-		{
-			return parametersTypes;
-		}
-
-		public void setParametersTypes(Class[] parametersTypes)
-		{
-			this.parametersTypes= parametersTypes;
 		}
 	}
 
