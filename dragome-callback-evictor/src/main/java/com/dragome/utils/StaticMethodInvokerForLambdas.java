@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import com.dragome.callbackevictor.enhancers.StackRecorder;
 import com.dragome.commons.ContinueReflection;
 
 public class StaticMethodInvokerForLambdas implements MethodHolder
@@ -29,7 +30,13 @@ public class StaticMethodInvokerForLambdas implements MethodHolder
 			Method method2= method;
 			Object[] args= this.args;
 
-			return method2.invoke(null, args);
+			Object result= method2.invoke(null, args);
+
+			StackRecorder stackRecorder= StackRecorder.get();
+			if (stackRecorder != null && stackRecorder.isCapturing)
+				stackRecorder.pushReference(this);
+
+			return result;
 		}
 		catch (Exception e)
 		{
@@ -46,13 +53,11 @@ public class StaticMethodInvokerForLambdas implements MethodHolder
 	{
 		this.method= method;
 	}
-	
 
 	public List<Object> getArgs()
 	{
 		return Arrays.asList(args);
 	}
-
 
 	public void setArgs(List<Object> parameters)
 	{
