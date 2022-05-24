@@ -52,22 +52,20 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 				style.setName(deDup(result));
 				style.setSynchronized(true);
 			}
+			
+			if (name != null && name.trim().length() > 0)
+				element.setAttribute("class", name);
 			else
-			{
-				if (name != null && name.trim().length() > 0)
-					element.setAttribute("class", name);
-				else
-					element.removeAttribute("class");
+				element.removeAttribute("class");
 
-				if (style.isEnabled())
-					element.removeAttribute("disabled");
-				else
-					element.setAttribute("disabled", "disabled");
-				//			if (style.isVisible())
-				//				element.removeAttribute("style");
-				//			else
-				//				element.setAttribute("style", "display:none;");
-			}
+			if (style.isEnabled())
+				element.removeAttribute("disabled");
+			else
+				element.setAttribute("disabled", "disabled");
+			//			if (style.isVisible())
+			//				element.removeAttribute("style");
+			//			else
+			//				element.setAttribute("style", "display:none;");
 		}
 	}
 

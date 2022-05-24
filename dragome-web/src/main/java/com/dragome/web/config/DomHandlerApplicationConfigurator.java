@@ -34,6 +34,7 @@ import org.w3c.dom.events.KeyboardEvent;
 import org.w3c.dom.events.ProgressEvent;
 import org.w3c.dom.html.CanvasRenderingContext2D;
 import org.w3c.dom.html.HTMLCanvasElement;
+import org.w3c.dom.html.HTMLCollection;
 import org.w3c.dom.html.HTMLDocument;
 import org.w3c.dom.html.HTMLInputElement;
 import org.w3c.dom.html.HTMLOptionElement;
@@ -93,7 +94,7 @@ public class DomHandlerApplicationConfigurator extends ChainedInstrumentationDra
 			Int32Array.class, Int8Array.class, Uint16Array.class, Uint32Array.class, Uint8Array.class, //
 			ArrayBufferFactory.class, TypedArraysFactory.class, XMLHttpRequest.class, Object.class, ProgressEvent.class, //
 			EventTarget.class, Event.class, XMLHttpRequest.class, WebSocket.class, MessageEventExtension.class, XMLHttpRequestExtension.class, 
-			ElementExtension.class, DocumentExtension.class, HTMLInputElement.class, HTMLDocument.class, HTMLOptionElement.class, HTMLSelectElement.class));
+			ElementExtension.class, DocumentExtension.class, HTMLInputElement.class, HTMLDocument.class, HTMLOptionElement.class, HTMLSelectElement.class, HTMLCollection.class, HTMLOptionElement.class));
 
 	public DomHandlerApplicationConfigurator()
 	{
