@@ -17,8 +17,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLCollection;
 import org.w3c.dom.html.HTMLDocument;
 import org.w3c.dom.html.HTMLInputElement;
+import org.w3c.dom.html.HTMLOptionElement;
 import org.w3c.dom.html.HTMLSelectElement;
 
 import com.dragome.commons.AbstractProxyRelatedInvocationHandler;
@@ -96,7 +98,7 @@ public class CombinedDomInstance
 								invoke2= invokeAndCreateLocalInstance(createRemoteInstanceGetterScript(localInstance, method, args), method, true);
 							else
 								invoke2= getActualMethod(method, remote).invoke(remote, convertArgs(args, false));
-							
+
 							if (false && modifier)
 								ScriptHelper.eval("document", this);
 						}
@@ -327,8 +329,23 @@ public class CombinedDomInstance
 						HTMLSelectElement remoteHtmlSelectElement= JsCast.castTo(target, HTMLSelectElement.class);
 						HTMLSelectElement htmlSelectElement= (HTMLSelectElement) localInstance;
 
-						int selectedIndex= remoteHtmlSelectElement.getSelectedIndex();
-						htmlSelectElement.setSelectedIndex(selectedIndex);
+						if (remoteHtmlSelectElement.getMultiple())
+						{
+							HTMLCollection options= remoteHtmlSelectElement.getOptions();
+							HTMLCollection localOptions= htmlSelectElement.getOptions();
+							for (int i= 0; i < localOptions.getLength(); i++)
+							{
+								HTMLOptionElement option= JsCast.castTo(options.item(i), HTMLOptionElement.class);
+								HTMLOptionElement localOption= JsCast.castTo(localOptions.item(i), HTMLOptionElement.class);
+
+								localOption.setSelected(option.getSelected());
+							}
+						}
+						else
+						{
+							int selectedIndex= remoteHtmlSelectElement.getSelectedIndex();
+							htmlSelectElement.setSelectedIndex(selectedIndex);
+						}
 					}
 					else if (localInstance instanceof HTMLInputElement)
 					{
