@@ -149,7 +149,7 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 
 		return new StreamImpl<R, T>(result);
 	}
-	
+
 	public IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper)
 	{
 		// TODO Auto-generated method stub
@@ -182,8 +182,14 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	}
 	public Stream<T> peek(Consumer<? super T> action)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new StreamImpl<T, T>((StreamImpl<T, T>) this)
+		{
+			public void accept(T t)
+			{
+				action.accept(t);
+				downstream.accept(t);
+			}
+		};
 	}
 	public Stream<T> limit(long maxSize)
 	{
