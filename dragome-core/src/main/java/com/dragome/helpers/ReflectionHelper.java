@@ -22,6 +22,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -132,7 +133,11 @@ public class ReflectionHelper
 		}
 		while ((aClass= aClass.getSuperclass()) != null);
 
-		return new ArrayList<>(getters);
+		List<Method> result= new ArrayList<>(getters);
+		
+		Collections.sort(result, (m1, m2) -> m1.getName().compareTo(m2.getName()));
+		
+		return result;
 	}
 
 	public static List<Method> getGettersImpl(Class<?> aClass, boolean excludereadonly)

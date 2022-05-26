@@ -106,7 +106,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public String toString()
 	{
-		return "class " + getName();
+		return (isInterface() ? "interface " : "class ") + getName();
 	}
 
 	public static Class<?> forName(String className) throws ClassNotFoundException
