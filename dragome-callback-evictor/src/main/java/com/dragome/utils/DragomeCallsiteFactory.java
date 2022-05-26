@@ -310,7 +310,7 @@ public class DragomeCallsiteFactory
 				InvocationHandlerForLambdas invocationHandlerForLambdas= new InvocationHandlerForLambdas(class1, methodName, parameters, returnTypeClass, invokeName, callType, parametersTypes);
 				invocationHandlerForLambdas.setupInterfaces(interfaces);
 				proxy= Proxy.newProxyInstance(DragomeCallsiteFactory.class.getClassLoader(), interfaces, invocationHandlerForLambdas);
-				//				callsites.put(data, proxy);
+				callsites.put(data, proxy);
 			}
 			else
 			{
