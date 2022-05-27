@@ -32,6 +32,17 @@ import java.util.Vector;
 
 public class ReflectionHelper
 {
+	public static Object invokeMethod(Method method, Object object, Object[] args)
+	{
+		try
+		{
+			return method.invoke(object, args);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
 	public static String uncapitalise(String str)
 	{
@@ -134,9 +145,9 @@ public class ReflectionHelper
 		while ((aClass= aClass.getSuperclass()) != null);
 
 		List<Method> result= new ArrayList<>(getters);
-		
+
 		Collections.sort(result, (m1, m2) -> m1.getName().compareTo(m2.getName()));
-		
+
 		return result;
 	}
 
