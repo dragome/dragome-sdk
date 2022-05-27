@@ -193,6 +193,11 @@ public class DragomeCallsiteFactory
 			return handler.invoke(proxy, method, args);
 		}
 
+		public String toString()
+		{
+			return foundMethod.toString();
+		}
+
 		public Class<?> getReturnType()
 		{
 			return returnType;

@@ -323,7 +323,7 @@ public final class Method extends Executable
 
 	public String toString()
 	{
-		return signature;
+		return cls.getName() + "." + signature;
 	}
 
 	public void setAccessible(boolean accessible)
