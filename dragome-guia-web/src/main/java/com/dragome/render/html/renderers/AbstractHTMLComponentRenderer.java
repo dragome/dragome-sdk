@@ -18,15 +18,15 @@ package com.dragome.render.html.renderers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.events.EventTarget;
 
-import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.BlurListener;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
@@ -53,6 +53,8 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 	public static final String COMPONENT_ID_ATTRIBUTE= "data-component-id";
 
 	private Set<String> listeners= new HashSet<String>();
+
+	private static Map<CompatibleTemplateKey, Optional<Template>> compatibleTemplates= new HashMap<CompatibleTemplateKey, Optional<Template>>();
 
 	public AbstractHTMLComponentRenderer()
 	{
@@ -131,13 +133,13 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 	public boolean matches(Template child)
 	{
 		boolean compatible= isTemplateCompatible(child);
-//
-//		if (!compatible)
-//		{
-//			for (Template c : child.getChildren())
-//				compatible|= isTemplateCompatible(c);
-//		}
-//
+		//
+		//		if (!compatible)
+		//		{
+		//			for (Template c : child.getChildren())
+		//				compatible|= isTemplateCompatible(c);
+		//		}
+		//
 		return compatible;
 	}
 
@@ -189,19 +191,28 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 	{
 		return false;
 	}
-	
-	public Optional<Template> findMatchingTemplateFor(Template template)
-	{
-		List<Template> children= new ArrayList<>(template.getChildren());
-		Collections.reverse(children);
 
-		return children.stream().filter(child -> {
-			Element e= (Element) child.getContent().getValue();
-			String attribute= e.getAttribute("data-component-id");
-			return matches(child) && attribute == null;
-		}).findFirst();
+	public Optional<Template> findMatchingTemplateFor(Class<? extends VisualComponent> componentType, Template template)
+	{
+		Optional<Template> result= compatibleTemplates.get(new CompatibleTemplateKey(componentType, template));
+
+		if (result == null)
+		{
+			List<Template> children= new ArrayList<>(template.getChildren());
+			Collections.reverse(children);
+
+			Optional<Template> resultOptional= children.stream().filter(child -> {
+				Element e= (Element) child.getContent().getValue();
+				String attribute= e.getAttribute("data-component-id");
+				return matches(child) && attribute == null;
+			}).findFirst();
+
+			compatibleTemplates.put(new CompatibleTemplateKey(componentType, template), result= resultOptional);
+		}
+
+		return result;
 	}
-	
+
 	public boolean matches(Template child, VisualComponent aVisualComponent)
 	{
 		return false;

@@ -65,7 +65,7 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 
 	public Canvas render(final VisualComponent visualComponent)
 	{
-		ComponentRenderer renderer= findComponentRenderer(visualComponent);
+		ComponentRenderer renderer= findComponentRenderer(visualComponent.getClass());
 		Canvas render;
 
 		if (renderer != null)
@@ -85,9 +85,9 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 		return render;
 	}
 
-	public static ComponentRenderer findComponentRenderer(final VisualComponent visualComponent)
+	public static ComponentRenderer findComponentRenderer(Class<? extends VisualComponent> componentType)
 	{
-		Class<? extends ComponentRenderer<Element, ? extends VisualComponent>> class1= renderers.get(visualComponent.getClass());
+		Class<? extends ComponentRenderer<Element, ? extends VisualComponent>> class1= renderers.get(componentType);
 
 		ComponentRenderer renderer= null;
 
@@ -97,7 +97,7 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 		if (renderer == null)
 			for (Entry<Class<? extends VisualComponent>, Class<? extends ComponentRenderer<Element, ? extends VisualComponent>>> entry : renderers.entrySet())
 			{
-				if (entry.getKey().isAssignableFrom(visualComponent.getClass()))
+				if (entry.getKey().isAssignableFrom(componentType))
 					renderer= ServiceLocator.getInstance().getReflectionService().createClassInstance(entry.getValue());
 			}
 		return renderer;
@@ -110,7 +110,7 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 
 	public boolean matches(Template child, VisualComponent aVisualComponent)
 	{
-		ComponentRenderer renderer= findComponentRenderer(aVisualComponent);
+		ComponentRenderer renderer= findComponentRenderer(aVisualComponent.getClass());
 		return renderer != null ? renderer.matches(child) : false;
 	}
 
@@ -121,16 +121,14 @@ public class HTMLComponentRenderer implements ComponentRenderer<Element, VisualC
 		return false;
 	}
 
-	@Override
-	public Optional<Template> findMatchingTemplateFor(Template template)
+	public Optional<Template> findMatchingTemplateFor(Class<? extends VisualComponent> componentType, Template template)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public static Optional<Template> findMatchingTemplateFor(VisualComponent aVisualComponent, Template template)
 	{
-		return findComponentRenderer(aVisualComponent).findMatchingTemplateFor(template);
+		return findComponentRenderer(aVisualComponent.getClass()).findMatchingTemplateFor(aVisualComponent.getClass(), template);
 	}
 
 	@Override

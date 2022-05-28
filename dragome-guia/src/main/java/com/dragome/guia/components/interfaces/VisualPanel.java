@@ -31,13 +31,13 @@ public interface VisualPanel extends VisualComponent
 
 	public default boolean containsInDepth(VisualPanel child)
 	{
-		boolean anyMatch= getChildren().stream().anyMatch(c -> {
-			if (c instanceof VisualPanel)
-				return ((VisualPanel) c).containsInDepth(child);
+		VisualComponent parent= child.getParent();
+		while (parent != null)
+			if (parent == this)
+				return true;
 			else
-				return false;
-		});
+				parent= parent.getParent();
 
-		return getChildren().contains(child) || anyMatch;
+		return false;
 	}
 }

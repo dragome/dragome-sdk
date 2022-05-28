@@ -282,27 +282,38 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	}
 	public boolean anyMatch(Predicate<? super T> predicate)
 	{
-		boolean[] found= new boolean[1];
-
-		for (Iterator<T> iterator= topStream.iterator(); iterator.hasNext();)
+		boolean anyMatch= false;
+		for (Iterator<T> iterator= topStream.iterator(); !anyMatch && iterator.hasNext();)
 		{
-			T type= (T) iterator.next();
-
-			if (!found[0] && predicate.test(type))
-				found[0]= true;
+			T item= (T) iterator.next();
+			anyMatch|= predicate.test(item);
 		}
 
-		return found[0];
+		return anyMatch;
 	}
+	
 	public boolean allMatch(Predicate<? super T> predicate)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		boolean allMatch= true;
+		for (Iterator<T> iterator= topStream.iterator(); allMatch && iterator.hasNext();)
+		{
+			T item= (T) iterator.next();
+			allMatch&= predicate.test(item);
+		}
+
+		return allMatch;
 	}
+	
 	public boolean noneMatch(Predicate<? super T> predicate)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		boolean noneMatch= false;
+		for (Iterator<T> iterator= topStream.iterator(); !noneMatch && iterator.hasNext();)
+		{
+			T item= (T) iterator.next();
+			noneMatch&= predicate.test(item);
+		}
+
+		return !noneMatch;
 	}
 	public Optional<T> findFirst()
 	{

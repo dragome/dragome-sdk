@@ -27,7 +27,7 @@ public interface ComponentRenderer<ContentType, ComponentType>
 
 	public boolean matches(Template child);
 
-	Optional<Template> findMatchingTemplateFor(Template template);
+	Optional<Template> findMatchingTemplateFor(Class<? extends VisualComponent> componentType, Template template);
 
 	boolean matches(Template child, VisualComponent aVisualComponent);
 

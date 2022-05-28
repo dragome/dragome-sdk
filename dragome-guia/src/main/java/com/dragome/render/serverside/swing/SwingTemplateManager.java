@@ -64,9 +64,8 @@ public class SwingTemplateManager implements TemplateManager
 			}
 
 			@Override
-			public Optional<Template> findMatchingTemplateFor(Template template)
+			public Optional<Template> findMatchingTemplateFor(Class<? extends VisualComponent> componentType, Template template)
 			{
-				// TODO Auto-generated method stub
 				return null;
 			}
 

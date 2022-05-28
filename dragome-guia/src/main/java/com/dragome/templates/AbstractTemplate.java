@@ -2,6 +2,7 @@ package com.dragome.templates;
 
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.DefaultEventProducer;
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.templates.interfaces.Content;
 import com.dragome.templates.interfaces.Template;
 import com.dragome.templates.interfaces.TemplateListener;
@@ -60,10 +61,14 @@ public abstract class AbstractTemplate extends DefaultEventProducer implements T
 
 	public boolean contains(Template template)
 	{
-		if (getChildren().contains(template))
-			return true;
-		else
-			return getChildren().stream().anyMatch(t -> t.contains(template));
+		Template parent= template.getParent();
+		while (parent != null)
+			if (parent == this)
+				return true;
+			else
+				parent= parent.getParent();
+
+		return false;
 	}
 
 	public Template getTopParent()

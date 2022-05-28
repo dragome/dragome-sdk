@@ -195,7 +195,7 @@ public class DragomeCallsiteFactory
 
 		public String toString()
 		{
-			return foundMethod.toString();
+			return foundMethod.toString().replace("private ", "").replace("public ", "");
 		}
 
 		public Class<?> getReturnType()

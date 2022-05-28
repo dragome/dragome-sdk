@@ -51,6 +51,7 @@ public final class Method extends Executable
 	private Class[] parameterTypes;
 	private Type[] genericParametersTypes;
 	private boolean requiresBoxing;
+	private String javaSignature;
 
 	public Method(Class<?> newCls, String theSignature, int modifiers)
 	{
@@ -273,48 +274,50 @@ public final class Method extends Executable
 
 	public static Object adaptResult(Object result, Class<?> returnType)
 	{
-		ScriptHelper.put("result", result, null);
+		if (returnType.equals(Boolean.class))
+			return returnBoolean(result);
+		else if (Number.class.isAssignableFrom(returnType) || returnType.equals(Character.class))
+			return returnNumber(result, returnType);
 
+		//				if (currentReturnType.equals(Boolean.class))
+		//					result= result instanceof Boolean ? result : (ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE);
+		//				else if (currentReturnType.equals(Integer.class))
+		//					result= Integer.parseInt(ScriptHelper.evalInt("result", null) + "");
+		//				else if (currentReturnType.equals(Long.class))
+		//					result= Long.parseLong(ScriptHelper.evalInt("result", null) + "");
+		//				else if (currentReturnType.equals(Short.class))
+		//					result= Short.parseShort(ScriptHelper.evalInt("result", null) + "");
+		//				else if (currentReturnType.equals(Float.class))
+		//					result= Float.parseFloat(ScriptHelper.evalFloat("result", null) + "");
+		//				else if (currentReturnType.equals(Double.class))
+		//					result= Double.parseDouble(ScriptHelper.evalDouble("result", null) + "");
+		//				else if (currentReturnType.equals(Byte.class))
+		//					result= Byte.valueOf((byte) ScriptHelper.evalChar("result", null));
+		//				else if (currentReturnType.equals(Character.class))
+		//					result= Character.valueOf((ScriptHelper.eval("result", null) + "").charAt(0));
+		return result;
+	}
+
+	private static Object returnNumber(Object result, Class<?> returnType)
+	{
 		try
 		{
-			if (returnType != null)
-			{
-				if (returnType.equals(Boolean.class))
-					if (result instanceof Boolean)
-						return result;
-					else
-						return ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE;
-				else if (Number.class.isAssignableFrom(returnType) || returnType.equals(Character.class))
-				{
-					Object newInstance= returnType.newInstance();
-					ScriptHelper.put("instance", newInstance, null);
-					ScriptHelper.eval("instance[Object.keys(instance)[0]]= result", null);
-					return newInstance;
-				}
-
-				//				if (currentReturnType.equals(Boolean.class))
-				//					result= result instanceof Boolean ? result : (ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE);
-				//				else if (currentReturnType.equals(Integer.class))
-				//					result= Integer.parseInt(ScriptHelper.evalInt("result", null) + "");
-				//				else if (currentReturnType.equals(Long.class))
-				//					result= Long.parseLong(ScriptHelper.evalInt("result", null) + "");
-				//				else if (currentReturnType.equals(Short.class))
-				//					result= Short.parseShort(ScriptHelper.evalInt("result", null) + "");
-				//				else if (currentReturnType.equals(Float.class))
-				//					result= Float.parseFloat(ScriptHelper.evalFloat("result", null) + "");
-				//				else if (currentReturnType.equals(Double.class))
-				//					result= Double.parseDouble(ScriptHelper.evalDouble("result", null) + "");
-				//				else if (currentReturnType.equals(Byte.class))
-				//					result= Byte.valueOf((byte) ScriptHelper.evalChar("result", null));
-				//				else if (currentReturnType.equals(Character.class))
-				//					result= Character.valueOf((ScriptHelper.eval("result", null) + "").charAt(0));
-			}
+			Object newInstance= returnType.newInstance();
+			ScriptHelper.eval("newInstance[Object.keys(newInstance)[0]]= result", null);
+			return newInstance;
 		}
 		catch (Exception e)
 		{
-			System.out.println("adaptResult failed");
+			throw new RuntimeException(e);
 		}
-		return result;
+	}
+
+	private static Object returnBoolean(Object result)
+	{
+		if (result instanceof Boolean)
+			return result;
+		else
+			return ScriptHelper.evalBoolean("result", null) ? Boolean.TRUE : Boolean.FALSE;
 	}
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotation)
 	{
@@ -323,7 +326,22 @@ public final class Method extends Executable
 
 	public String toString()
 	{
-		return cls.getName() + "." + signature;
+		if (javaSignature == null)
+		{
+			Class<?>[] parameterTypes2= getParameterTypes();
+			String types= "";
+			for (int i= 0; i < parameterTypes2.length; i++)
+			{
+				Class<?> class1= parameterTypes2[i];
+				types+= class1.getName();
+				if (i < parameterTypes2.length - 1)
+					types+= ",";
+			}
+
+			javaSignature= "private" + " " + getReturnType().getName() + " " + cls.getName() + "." + getName() + "(" + types + ")";
+		}
+
+		return javaSignature;
 	}
 
 	public void setAccessible(boolean accessible)

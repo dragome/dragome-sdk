@@ -1,20 +1,16 @@
 package com.dragome.render.serverside.swing;
 
-import java.util.Optional;
-
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualTextField;
 import com.dragome.render.canvas.CanvasImpl;
 import com.dragome.render.canvas.interfaces.Canvas;
 import com.dragome.render.html.renderers.Mergeable;
 import com.dragome.render.interfaces.ComponentRenderer;
-import com.dragome.templates.interfaces.Template;
 
-public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, VisualTextField<Object>>
+public class SwingVisualTextFieldRenderer extends AbstractSwingRenderer<VisualTextField<Object>>
 {
 	public Canvas<Object> render(final VisualTextField<Object> visualTextField)
 	{
@@ -45,33 +41,5 @@ public class SwingVisualTextFieldRenderer implements ComponentRenderer<Object, V
 			}
 		});
 		return canvasImpl;
-	}
-
-	@Override
-	public boolean matches(Template child)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Optional<Template> findMatchingTemplateFor(Template template)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean matches(Template child, VisualComponent aVisualComponent)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isTemplateCompatible(Template template)
-	{
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

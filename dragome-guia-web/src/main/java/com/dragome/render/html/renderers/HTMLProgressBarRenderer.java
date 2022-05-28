@@ -23,10 +23,9 @@ import com.dragome.guia.components.interfaces.VisualProgressBar;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
-import com.dragome.render.interfaces.ComponentRenderer;
 import com.dragome.services.WebServiceLocator;
 
-public class HTMLProgressBarRenderer extends AbstractHTMLComponentRenderer<VisualProgressBar> implements ComponentRenderer<Element, VisualProgressBar>
+public class HTMLProgressBarRenderer extends AbstractHTMLComponentRenderer<VisualProgressBar>
 {
 	public Canvas<Element> render(final VisualProgressBar progressBar)
 	{

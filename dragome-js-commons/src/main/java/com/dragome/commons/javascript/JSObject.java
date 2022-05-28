@@ -51,12 +51,7 @@ public class JSObject<T>
 
 	public T get(String key)
 	{
-		ScriptHelper.put("key", key, null);
-		if (containsKey(ScriptHelper.eval("this.obj", null), key))
-		{
-			return (T) ScriptHelper.eval("this.obj[key]", null);
-		}
-		return null;
+		return (T) ScriptHelper.eval("this.obj[key]", null);
 	}
 
 	public void put(String key, T value)

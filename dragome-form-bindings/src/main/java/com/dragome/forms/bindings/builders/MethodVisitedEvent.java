@@ -19,11 +19,13 @@ public class MethodVisitedEvent
 {
 	private Object instance;
 	private String name;
+	private String propertyName;
 
 	public MethodVisitedEvent(Object instance, String name)
 	{
 		this.instance= instance;
 		this.name= name;
+		this.propertyName= getPropertyName(name);
 	}
 
 	public Object getInstance()
@@ -49,7 +51,7 @@ public class MethodVisitedEvent
 
 	private static String getPropertyName(String methodName)
 	{
-		if (methodName.length() > 3 &&(methodName.startsWith("get") || methodName.startsWith("set")))
+		if (methodName.length() > 3 && (methodName.startsWith("get") || methodName.startsWith("set")))
 			return methodName.toLowerCase().charAt(3) + methodName.substring(4);
 		else if (methodName.length() > 2 && methodName.startsWith("is"))
 			return methodName.toLowerCase().charAt(2) + methodName.substring(3);
@@ -59,7 +61,7 @@ public class MethodVisitedEvent
 
 	public boolean isSameProperty(MethodVisitedEvent event)
 	{
-		return getPropertyName(name).equals(getPropertyName(event.name)) && instance == event.instance;
+		return propertyName.equals(event.propertyName) && instance == event.instance;
 	}
 
 }
