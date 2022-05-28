@@ -36,9 +36,6 @@ import com.dragome.commons.javascript.ScriptHelper;
  */
 public final class String implements CharSequence, Comparable<String>, Serializable
 {
-
-	private int hashCode;
-
 	private static void consume(String me)
 	{
 		// Tagging method.
@@ -345,10 +342,7 @@ public final class String implements CharSequence, Comparable<String>, Serializa
 	 */
 	public int hashCode()
 	{
-		if (hashCode == 0)
-			hashCode= ScriptHelper.evalInt("this.split(\"\").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)", this);
-		
-		return hashCode;
+		return  ScriptHelper.evalInt("this.split(\"\").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)", this);
 	}
 
 	/**
