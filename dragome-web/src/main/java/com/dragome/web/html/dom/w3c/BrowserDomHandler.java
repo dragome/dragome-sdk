@@ -93,7 +93,7 @@ public class BrowserDomHandler implements DomHandler
 	{
 		try
 		{
-			String delegateClassName= JsCast.createDelegateClassName(type.getName());
+			String delegateClassName= JsCast.createDelegateClassName(type);
 			Class<?> class2= Class.forName(delegateClassName);
 			Object newInstance= class2.newInstance();
 

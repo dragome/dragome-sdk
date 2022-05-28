@@ -93,7 +93,8 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	private String name;
 	private Method[] declaredMethodsAsArrays;
 	private JSObject<Boolean> assignableFrom= new JSObject<Boolean>();
-	private Constructor[] declaredConstructors;;
+	private Constructor[] declaredConstructors;
+	private Package package1;;
 	//	protected static Map<String, Class<?>> classesByName= new HashMap<String, Class<?>>();
 
 	private Class(Object theNativeClass)
@@ -828,9 +829,13 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public Package getPackage()
 	{
-		String name= getName();
-		String packageName= name.substring(0, name.indexOf(getSimpleName()) - 1);
-		return new Package(packageName);
+		if (package1 == null)
+		{
+			String name= getName();
+			String packageName= name.substring(0, name.indexOf(getSimpleName()) - 1);
+			package1= new Package(packageName);
+		}
+		return package1;
 	}
 
 	public <U> Class<? extends U> asSubclass(Class<U> clazz)

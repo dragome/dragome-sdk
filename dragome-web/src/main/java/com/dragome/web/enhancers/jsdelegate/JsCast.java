@@ -11,6 +11,9 @@
 
 package com.dragome.web.enhancers.jsdelegate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
@@ -22,6 +25,7 @@ import com.dragome.web.html.dom.DomHandler;
 public class JsCast
 {
 	private static DomHandler domHandler= WebServiceLocator.getInstance().getDomHandler();
+	private static Map<Class, String> delegateClassNames= new HashMap<Class, String>();
 
 	public static void addEventListener(EventTarget eventTarget, String type, EventListener eventListener, boolean b)
 	{
@@ -81,10 +85,18 @@ public class JsCast
 		return ScriptHelper.evalCasting(script, type, null);
 	}
 
-	public static String createDelegateClassName(String type)
+	public static String createDelegateClassName(Class type)
 	{
-		int lastIndexOf= type.lastIndexOf(".");
-		String classname= type.substring(0, lastIndexOf + 1) + "Delegate" + type.substring(lastIndexOf + 1);
-		return classname;
+		String result= delegateClassNames.get(type);
+		if (result == null)
+		{
+			String name= type.getName();
+			int lastIndexOf= name.lastIndexOf(".");
+			result= name.substring(0, lastIndexOf + 1) + "Delegate" + name.substring(lastIndexOf + 1);
+
+			delegateClassNames.put(type, result);
+		}
+
+		return result;
 	}
 }

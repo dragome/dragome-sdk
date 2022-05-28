@@ -140,7 +140,7 @@ public class CombinedDomInstance
 		{
 			if (realResult)
 			{
-				Object newInstance= Class.forName(JsCast.createDelegateClassName(ElementExtension.class.getName())).newInstance();
+				Object newInstance= Class.forName(JsCast.createDelegateClassName(ElementExtension.class)).newInstance();
 
 				ScriptHelper.put("delegate", newInstance, this);
 				String finalScript= "delegate.node= " + localInstanceAssignmentScript;
@@ -222,7 +222,7 @@ public class CombinedDomInstance
 		String parentVariableName= createParentVariableName(remoteParent);
 		String createScript= createScript(element, parentVariableName);
 
-		newInstance= Class.forName(JsCast.createDelegateClassName(ElementExtension.class.getName())).newInstance();
+		newInstance= Class.forName(JsCast.createDelegateClassName(ElementExtension.class)).newInstance();
 
 		ScriptHelper.put("delegate", newInstance, this);
 		String finalScript= "delegate.node= " + createScript;

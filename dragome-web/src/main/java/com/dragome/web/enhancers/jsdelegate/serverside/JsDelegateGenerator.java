@@ -359,7 +359,7 @@ public class JsDelegateGenerator
 		try
 		{
 			String type= interface1.getName();
-			String classname= JsCast.createDelegateClassName(type);
+			String classname= JsCast.createDelegateClassName(interface1);
 			CtClass ctClass= ClassPool.getDefault().getOrNull(classname);
 
 			if (ctClass == null)
@@ -377,6 +377,6 @@ public class JsDelegateGenerator
 
 	public InMemoryClasspathFile generateAsClasspathFile(Class<?> class1)
 	{
-		return new InMemoryClasspathFile(JsCast.createDelegateClassName(class1.getName()), generate(class1));
+		return new InMemoryClasspathFile(JsCast.createDelegateClassName(class1), generate(class1));
 	}
 }

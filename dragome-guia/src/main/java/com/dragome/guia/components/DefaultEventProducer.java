@@ -42,12 +42,24 @@ public class DefaultEventProducer implements EventProducer
 	public <T extends EventListener> void addListener(Class<T> aType, T aListener)
 	{
 		EventListener listener= listeners.get(aType);
-		if (listener == null || (!(listener instanceof ListenerMultiplexer) && !Proxy.isProxyClass(listener.getClass())))
+		if (listener == null)
 		{
-			listeners.put(aType, listener= ProxyBasedListenerMultiplexer.createListenerMultiplexer(aType));
+			listeners.put(aType, listener= aListener);
 		}
-		ListenerMultiplexer<T> listenerMultiplexer= (ListenerMultiplexer<T>) listener;
-		listenerMultiplexer.add(aListener); //TODO compilador
+		else if (!(listener instanceof ListenerMultiplexer) && !Proxy.isProxyClass(listener.getClass()))
+		{
+			T listener2= ProxyBasedListenerMultiplexer.createListenerMultiplexer(aType);
+			listeners.put(aType, listener2);
+			ListenerMultiplexer<T> listenerMultiplexer= (ListenerMultiplexer<T>) listener2;
+			listenerMultiplexer.add((T) listener);
+			listener= (EventListener) listenerMultiplexer;
+		}
+
+		if (listener instanceof ListenerMultiplexer)
+		{
+			ListenerMultiplexer<T> listenerMultiplexer= (ListenerMultiplexer<T>) listener;
+			listenerMultiplexer.add(aListener); //TODO compilador
+		}
 
 		if (!aType.equals(ListenerChanged.class))
 			if (hasListener(ListenerChanged.class))

@@ -15,11 +15,6 @@
  */
 package java.util;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
@@ -253,7 +248,13 @@ public class StreamImpl<T, C> implements Stream<T>, Consumer<C>
 	}
 	public <R, A> R collect(Collector<? super T, A, R> collector)
 	{
-		forEach(v -> collector.accumulator().accept(null, v));
+		forEach(new Consumer<T>()
+		{
+			public void accept(T v)
+			{
+				collector.accumulator().accept(null, v);
+			}
+		});
 		return collector.finisher().apply(null);
 	}
 	public Optional<T> min(Comparator<? super T> comparator)

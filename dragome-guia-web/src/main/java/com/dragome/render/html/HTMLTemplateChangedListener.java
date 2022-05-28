@@ -124,8 +124,9 @@ public final class HTMLTemplateChangedListener implements TemplateListener
 		if (isInvokingEvents())
 		{
 			Element referenceElement= (Element) referenceChild.getContent().getValue();
-			if (referenceElement.getParentNode() != null)
-				referenceElement.getParentNode().removeChild(referenceElement);
+			Node parentNode= referenceElement.getParentNode();
+			if (parentNode != null)
+				parentNode.removeChild(referenceElement);
 		}
 	}
 
