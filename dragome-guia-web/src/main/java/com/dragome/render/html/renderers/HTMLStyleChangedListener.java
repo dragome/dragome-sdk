@@ -21,23 +21,23 @@ import java.util.Set;
 
 import org.w3c.dom.Element;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Style;
 import com.dragome.services.WebServiceLocator;
+import com.dragome.templates.TemplateLayout;
 
 public class HTMLStyleChangedListener implements StyleChangedListener
 {
-	private Element element;
-
 	public HTMLStyleChangedListener()
 	{
 	}
 
 	public void styleChanged(Style style)
 	{
-		String entityId= DragomeEntityManager.getEntityId(style.getVisualComponent());
-		Element element= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
+		VisualComponent visualComponent= style.getVisualComponent();
+		Element element= findElement(visualComponent);
 		if (element != null)
 		{
 			String name= style.getName();
@@ -52,7 +52,7 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 				style.setName(deDup(result));
 				style.setSynchronized(true);
 			}
-			
+
 			if (name != null && name.trim().length() > 0)
 				element.setAttribute("class", name);
 			else
@@ -67,6 +67,17 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 			//			else
 			//				element.setAttribute("style", "display:none;");
 		}
+	}
+
+	public Element findElement(VisualComponent visualComponent)
+	{
+		String entityId= DragomeEntityManager.getEntityId(visualComponent);
+		Element element;
+		if (visualComponent.getLayout() instanceof TemplateLayout)
+			element= (Element) ((TemplateLayout) visualComponent.getLayout()).getTemplate().getContent().getValue();
+		else
+			element= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
+		return element;
 	}
 
 	public String deDup(String s)
@@ -89,14 +100,15 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 
 	public void boundsChanged(Style style)
 	{
-		String entityId= DragomeEntityManager.getEntityId(style.getVisualComponent());
-		if (element == null)
-			element= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
-
-		String styleString= "position: relative; left: ${left}px;top: ${top}px;";
-		styleString= styleString.replace("${left}", style.getBounds().getX() + "");
-		styleString= styleString.replace("${top}", style.getBounds().getY() + "");
+		VisualComponent visualComponent= style.getVisualComponent();
+		Element element= findElement(visualComponent);
 		if (element != null)
-			element.setAttribute("style", styleString);
+		{
+			String styleString= "position: relative; left: ${left}px;top: ${top}px;";
+			styleString= styleString.replace("${left}", style.getBounds().getX() + "");
+			styleString= styleString.replace("${top}", style.getBounds().getY() + "");
+			if (element != null)
+				element.setAttribute("style", styleString);
+		}
 	}
 }

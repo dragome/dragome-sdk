@@ -33,6 +33,7 @@ import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualListBox;
 import com.dragome.guia.events.listeners.interfaces.ClickListener;
+import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
@@ -59,6 +60,9 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 		{
 			public void mergeWith(final Element selectElement)
 			{
+				String id= DragomeEntityManager.add(visualList);
+				selectElement.setAttribute(COMPONENT_ID_ATTRIBUTE, id);
+
 				visualList.addValueChangeHandler(new ValueChangeHandler<Object>()
 				{
 					public void onValueChange(ValueChangeEvent<Object> event)
