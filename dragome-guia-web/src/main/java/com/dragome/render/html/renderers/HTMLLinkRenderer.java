@@ -17,7 +17,6 @@ package com.dragome.render.html.renderers;
 
 import org.w3c.dom.Element;
 
-import com.dragome.commons.javascript.ScriptHelper;
 import com.dragome.guia.GuiaServiceLocator;
 import com.dragome.guia.components.interfaces.VisualLink;
 import com.dragome.helpers.DragomeEntityManager;
@@ -60,7 +59,7 @@ public class HTMLLinkRenderer extends AbstractHTMLComponentRenderer<VisualLink>
 					
 					Element querySelector= castTo.querySelector("[data-template='replaced: label']");
 					if (querySelector != null) 
-						castTo.setInnerHTML(aText);
+						querySelector.setTextContent(aText);
 					
 //					ScriptHelper.put("element", label1, null);
 //					ScriptHelper.put("value", aText, null);
