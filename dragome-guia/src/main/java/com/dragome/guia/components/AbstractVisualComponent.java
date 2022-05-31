@@ -136,4 +136,9 @@ public class AbstractVisualComponent extends DefaultEventProducer implements Vis
 		getStyle().setEnabled(false);
 	}
 
+	public boolean isDisabled()
+	{
+		return !getStyle().isEnabled();
+	}
+
 }

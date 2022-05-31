@@ -60,12 +60,16 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 
 			Content<Element> inputElementContent= (Content<Element>) inputTemplate.getContent();
 			Content<Element> textElementContent= (Content<Element>) textTemplate.getContent();
-			setupElement(checkbox, inputElementContent.getValue());
+			Element checkInputElement= inputElementContent.getValue();
+			checkInputElement.setAttribute("id", id);
+			setupElement(checkbox, checkInputElement);
 			Element value= textElementContent.getValue();
+			value.setAttribute("for", id);
 			Node parentNode= value.getParentNode();
 			Text optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createTextNode(checkbox.getCaption());
-			if (parentNode != null)
-				parentNode.replaceChild(optionElement, value);
+			value.setTextContent(checkbox.getCaption());
+			//			if (parentNode != null)
+			//				parentNode.replaceChild(optionElement, value);
 		}
 		else
 		{
@@ -118,15 +122,15 @@ public class HTMLCheckboxRenderer extends AbstractHTMLComponentRenderer<VisualCh
 		//		ScriptHelper.put("button1", button1, this);
 		//		ScriptHelper.evalNoResult("button1.node.checked= (checked == 'true')", this);
 		//				
-		//				if (checked)
-		//					button1.setAttribute("checked", "checked");
-		//				else
-		//					button1.removeAttribute("checked");
+		if (checked)
+			button1.setAttribute("checked", "checked");
+		else
+			button1.removeAttribute("checked");
 	}
 
 	public boolean isTemplateCompatible(Template child)
 	{
-		
+
 		return child.getChildren().size() == 2 && child.hasChild("input") && child.hasChild("text");
 		//		Element element= (Element) child.getContent().getValue();
 		//		String tagName= element.getTagName();

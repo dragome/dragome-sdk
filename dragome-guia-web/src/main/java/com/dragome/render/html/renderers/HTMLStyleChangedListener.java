@@ -72,11 +72,10 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 	public Element findElement(VisualComponent visualComponent)
 	{
 		String entityId= DragomeEntityManager.getEntityId(visualComponent);
-		Element element;
-		if (visualComponent.getLayout() instanceof TemplateLayout)
-			element= (Element) ((TemplateLayout) visualComponent.getLayout()).getTemplate().getContent().getValue();
-		else
-			element= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
+		Element element= WebServiceLocator.getInstance().getDomHandler().getElementBySelector("[" + AbstractHTMLComponentRenderer.COMPONENT_ID_ATTRIBUTE + "=\"" + entityId + "\"]");
+		if (element == null)
+			if (visualComponent.getLayout() instanceof TemplateLayout)
+				element= (Element) ((TemplateLayout) visualComponent.getLayout()).getTemplate().getContent().getValue();
 		return element;
 	}
 

@@ -39,4 +39,5 @@ public interface VisualComponent extends EventProducer, HasVisible, HasLayout
 	public void addKeyListener(KeyUpListener keyUpListener);
 	void focus();
 	public void setDisabled();
+	public boolean isDisabled();
 }

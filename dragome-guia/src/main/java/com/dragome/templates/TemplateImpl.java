@@ -245,6 +245,7 @@ public class TemplateImpl extends AbstractTemplate
 		children.set(children.indexOf(oldChild), newChild);
 		newChild.setParent(this);
 		templateListener.childReplaced(this, oldChild, newChild);
+		oldChild.setParent(null);
 	}
 
 	public void renameChild(Template child, String aName)

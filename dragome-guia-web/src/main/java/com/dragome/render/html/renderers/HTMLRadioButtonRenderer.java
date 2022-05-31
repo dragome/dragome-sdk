@@ -47,6 +47,7 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 		if (layout instanceof TemplateLayout)
 		{
 			TemplateLayout templateLayout= (TemplateLayout) layout;
+			String radioName= id;
 
 			Template template= templateLayout.getTemplate();
 			Content<Element> content= (Content<Element>) template.getContent();
@@ -57,11 +58,17 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 
 			Content<Element> inputElementContent= (Content<Element>) inputTemplate.getContent();
 			Content<Element> textElementContent= (Content<Element>) textTemplate.getContent();
-			setupElement(radioButton, inputElementContent.getValue());
+			Element radioInputElement= inputElementContent.getValue();
+			radioInputElement.setAttribute("id", radioName);
+			setupElement(radioButton, radioInputElement);
 			Element value= textElementContent.getValue();
 			Node parentNode= value.getParentNode();
-			Text optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createTextNode(radioButton.getCaption());
-			parentNode.replaceChild(optionElement, value);
+			
+			value.setAttribute("for", radioName);
+			value.setTextContent(radioButton.getCaption());
+
+//			Text optionElement= WebServiceLocator.getInstance().getDomHandler().getDocument().createTextNode(radioButton.getCaption());
+//			parentNode.replaceChild(optionElement, value);
 		}
 		else
 		{
@@ -94,10 +101,12 @@ public class HTMLRadioButtonRenderer extends AbstractHTMLComponentRenderer<Visua
 		radioButtonElement.setAttribute("name", radioButton.getButtonGroup());
 		if (radioButton.getValue())
 			radioButtonElement.setAttribute("checked", "checked");
+		else
+			radioButtonElement.removeAttribute("checked");
 
 		addListeners(radioButton, radioButtonElement);
 	}
-	
+
 	public boolean isTemplateCompatible(Template child)
 	{
 		Element element= (Element) child.getContent().getValue();
