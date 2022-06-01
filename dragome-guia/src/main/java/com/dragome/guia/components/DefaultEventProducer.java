@@ -46,7 +46,7 @@ public class DefaultEventProducer implements EventProducer
 		{
 			listeners.put(aType, listener= aListener);
 		}
-		else if (!(listener instanceof ListenerMultiplexer) && !Proxy.isProxyClass(listener.getClass()))
+		else if (!(listener instanceof ListenerMultiplexer))
 		{
 			T listener2= ProxyBasedListenerMultiplexer.createListenerMultiplexer(aType);
 			listeners.put(aType, listener2);
