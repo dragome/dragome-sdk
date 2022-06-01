@@ -25,23 +25,16 @@ public class StaticMethodInvokerForLambdas implements MethodHolder
 	@ContinueReflection
 	public Object invoke() throws Exception
 	{
-		try
-		{
-			Method method2= method;
-			Object[] args= this.args;
+		Method method2= method;
+		Object[] args= this.args;
 
-			Object result= method2.invoke(null, args);
+		Object result= method2.invoke(null, args);
 
-			StackRecorder stackRecorder= StackRecorder.get();
-			if (stackRecorder != null && stackRecorder.isCapturing)
-				stackRecorder.pushReference(this);
+		StackRecorder stackRecorder= StackRecorder.get();
+		if (stackRecorder != null && stackRecorder.isCapturing)
+			stackRecorder.pushReference(this);
 
-			return result;
-		}
-		catch (Exception e)
-		{
-		}
-		return null;
+		return result;
 	}
 
 	public Method getMethod()
