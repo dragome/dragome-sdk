@@ -69,9 +69,14 @@ public class ArrayListModel<T> extends AbstractHasHandlers implements MutableLis
 
 	public void setElements(Collection<? extends T> elements)
 	{
-		internalList.clear();
-		internalList.addAll(elements);
-		fireListChanged();
+		boolean equals= internalList.containsAll(elements) && elements.containsAll(internalList);
+
+		if (!equals)
+		{
+			internalList.clear();
+			internalList.addAll(elements);
+			fireListChanged();
+		}
 	}
 
 	public void setElements(T[] elements)
