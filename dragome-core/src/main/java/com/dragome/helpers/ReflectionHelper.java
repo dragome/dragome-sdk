@@ -29,6 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class ReflectionHelper
 {
@@ -126,6 +127,16 @@ public class ReflectionHelper
 	{
 		Class<?> aClass= anObject.getClass();
 		return getGettersImpl(aClass, excludereadonly);
+	}
+
+	public static List<BeanProperty> createEntityProperties(Object entity)
+	{
+		return getAllGetters(entity).stream().map(m -> new BeanProperty(m, entity)).collect(Collectors.toList());
+	}
+	
+	public static List<BeanProperty> createEntityProperties(Class entityType)
+	{
+		return getAllGetters(entityType).stream().map(m -> new BeanProperty(m, null)).collect(Collectors.toList());
 	}
 
 	public static List<Method> getAllGetters(Class<?> aClass)
@@ -266,7 +277,7 @@ public class ReflectionHelper
 	public static String getPropertyName(Method aMethod)
 	{
 		if (isGetter(aMethod) || isSetter(aMethod))
-			return aMethod.getName().substring(aMethod.getReturnType().equals(boolean.class) ? 2 : 3);
+			return aMethod.getName().substring((aMethod.getReturnType().equals(boolean.class) && isGetter(aMethod)) ? 2 : 3);
 		else
 			return null;
 	}
