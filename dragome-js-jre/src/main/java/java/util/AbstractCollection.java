@@ -93,7 +93,11 @@ public abstract class AbstractCollection<T> implements Collection<T>, Iterable<T
 
 	public boolean containsAll(Collection<?> c)
 	{
-		throw new RuntimeException("not implemented");
+		boolean allPresent= true;
+		for (Object object : c)
+			allPresent&= contains(c);
+		
+		return allPresent;
 	}
 
 	public boolean remove(Object elem)

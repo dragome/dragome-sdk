@@ -11,10 +11,20 @@
 package com.dragome.services.serverside;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.MethodParameterScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.DragomeConfiguratorImplementor;
@@ -23,8 +33,30 @@ import com.dragome.web.config.DomHandlerApplicationConfigurator;
 
 public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 {
-	static Reflections reflections= new Reflections("^");
-	static Reflections reflections2= new Reflections(".*");
+	static Reflections reflections= initReflections();
+
+	private static Reflections initReflections()
+	{
+		return new Reflections( //
+				new ConfigurationBuilder().setUrls( //
+						ClasspathHelper.forPackage("com")).setScanners( //
+								new FieldAnnotationsScanner(), //
+								new MethodParameterScanner(), //
+								new SubTypesScanner(), // 
+								new TypeAnnotationsScanner())//
+						.filterInputsBy(//
+								new FilterBuilder()//
+										.include("com/dragome/.+Configurator.*")//
+										.include("com/dragome/.+Compiler.*")//
+										.include("com/dragome/.+ApplicationExecutor.*")//
+										.include("com/dragome/.+GuiaServiceFactory.*")//
+										.include("com/dragome/.+EventDispatcher.*")//
+										.include("com/dragome/.+VisualActivity.*")//
+										.includePackage("com.fpetrola")));
+	}
+
+	//	static Reflections reflections= new Reflections("^");
+	//	static Reflections reflections2= new Reflections(".*");
 
 	public <T> Set<Class<? extends T>> getSubTypesOf(final Class<T> type)
 	{
@@ -32,10 +64,15 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 		return implementations;
 	}
 
+	public <T> Set<Method> findMethodsThatReturns(final Class<T> type)
+	{
+		Set<Method> implementations= reflections.getMethodsReturn(type);
+		return implementations;
+	}
+
 	public static void reset()
 	{
-		reflections= new Reflections("^");
-		reflections2= new Reflections(".*");
+		reflections= initReflections();
 	}
 
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
@@ -50,7 +87,7 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 			DragomeConfigurator foundConfigurator= null;
 
 			Set<Class<?>> typesAnnotatedWith= null;
-			typesAnnotatedWith= reflections2.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
+			typesAnnotatedWith= reflections.getTypesAnnotatedWith(DragomeConfiguratorImplementor.class);
 			int priorityMax= -1;
 			Class<?> nextClass= null;
 			Iterator<Class<?>> iterator= typesAnnotatedWith.iterator();
@@ -73,7 +110,7 @@ public class ServerReflectionServiceImpl extends ReflectionServiceImpl
 
 			if (foundConfigurator == null)
 			{
-				Set<Class<? extends DragomeConfigurator>> configurators= reflections2.getSubTypesOf(DragomeConfigurator.class);
+				Set<Class<? extends DragomeConfigurator>> configurators= reflections.getSubTypesOf(DragomeConfigurator.class);
 				for (Class<? extends DragomeConfigurator> class1 : configurators)
 				{
 					if (!class1.equals(DomHandlerApplicationConfigurator.class))

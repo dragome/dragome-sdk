@@ -16,6 +16,7 @@
 package com.dragome.services;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -103,6 +104,12 @@ public class ReflectionServiceImpl implements ReflectionService
 	}
 	@Override
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public <T> Set<Method> findMethodsThatReturns(Class<T> type)
 	{
 		// TODO Auto-generated method stub
 		return null;

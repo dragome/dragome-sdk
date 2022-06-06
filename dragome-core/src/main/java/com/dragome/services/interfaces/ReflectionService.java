@@ -16,6 +16,7 @@
 package com.dragome.services.interfaces;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
@@ -35,4 +36,5 @@ public interface ReflectionService
 	public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type);
 	public DragomeConfigurator getConfigurator();
 	public Set<Class<?>> getTypesAnnotatedWith(Class<?> class1);
+	<T> Set<Method> findMethodsThatReturns(Class<T> type);
 }

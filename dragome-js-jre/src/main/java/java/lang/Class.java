@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationContainer.AnnotationEntry;
 import com.dragome.commons.compiler.annotations.AnnotationsHelper.AnnotationEntryWithEntityType;
@@ -387,7 +389,18 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (declaredMethodsAsArrays == null)
 		{
 			ArrayList<Method> declaredMethods= new ArrayList<Method>();
-			findMethods(declaredMethods, filterConstructors);
+			Class<?> class1= this;
+			if (Proxy.class.equals(getSuperclass()))
+			{
+				class1= (Class<?>) ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.$$implements[0].javaClass", this);
+
+				List<Method> result= new ArrayList<>();
+
+				internalSuperGetMethod(true, result);
+				return result.toArray(new Method[0]);
+			}
+
+			class1.findMethods(declaredMethods, filterConstructors);
 			declaredMethodsAsArrays= declaredMethods.toArray(new Method[0]);
 		}
 		return declaredMethodsAsArrays;
@@ -398,7 +411,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		String[] signatures= new String[0];
 		ScriptHelper.put("signatures", signatures, this);
 		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.$$members) { if (typeof this.$$$nativeClass___java_lang_Object.$$members[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
-		ScriptHelper.eval("for (var e in this.$$$nativeClass___java_lang_Object.prototype) { if (typeof this.$$$nativeClass___java_lang_Object.prototype[e]  === 'function' && e.startsWith('$')) signatures.push(e); }", this);
+		ScriptHelper.eval("if (this.$$$nativeClass___java_lang_Object.prototype) Object.values(this.$$$nativeClass___java_lang_Object.prototype).forEach(member => {if (member != null && typeof member  === 'function' && member.name && member.name.startsWith('$')) signatures.push(member.name)})", this);
 
 		if (!filterConstructors)
 			signatures= (java.lang.String[]) ScriptHelper.eval("signatures.filter(sig => this.$$$nativeClass___java_lang_Object.prototype[sig].self.classname.replaceAll(\"_\", \".\")  == this.realName)", this);
@@ -510,6 +523,13 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		for (Method method : getDeclaredMethods())
 			addMethod(result, method, filterDuplicated);
 
+		internalSuperGetMethod(filterDuplicated, result);
+
+		return result;
+	}
+
+	private void internalSuperGetMethod(boolean filterDuplicated, List<Method> result)
+	{
 		for (Class<?> interfaze : getInterfaces())
 			for (Method method : interfaze.getMethods())
 				addMethod(result, method, filterDuplicated);
@@ -518,8 +538,6 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		if (superclass != null)
 			for (Method method : superclass.getMethods())
 				addMethod(result, method, filterDuplicated);
-
-		return result;
 	}
 
 	private void addMethod(List<Method> result, Method method, boolean filterDuplicated)
@@ -812,11 +830,11 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		java.lang.Object first= this;
 		java.lang.Object second= obj;
 
-		boolean isFirstProxy= ScriptHelper.evalBoolean("(this.$$$nativeClass___java_lang_Object.superclass && this.$$$nativeClass___java_lang_Object.superclass.classname == 'java_lang_reflect_Proxy') == true", this);
+		boolean isFirstProxy= ScriptHelper.evalBoolean("(this.$$$nativeClass___java_lang_Object && this.$$$nativeClass___java_lang_Object.superclass && this.$$$nativeClass___java_lang_Object.superclass.classname == 'java_lang_reflect_Proxy') == true", this);
 		if (isFirstProxy)
 			first= ScriptHelper.eval("this.$$$nativeClass___java_lang_Object.$$implements[0].javaClass", this);
 
-		boolean isSecondProxy= ScriptHelper.evalBoolean("(obj.$$$nativeClass___java_lang_Object.superclass && obj.$$$nativeClass___java_lang_Object.superclass.classname == 'java_lang_reflect_Proxy') == true", this);
+		boolean isSecondProxy= ScriptHelper.evalBoolean("(obj.$$$nativeClass___java_lang_Object && obj.$$$nativeClass___java_lang_Object.superclass && obj.$$$nativeClass___java_lang_Object.superclass.classname == 'java_lang_reflect_Proxy') == true", this);
 		if (isSecondProxy)
 			second= ScriptHelper.eval("obj.$$$nativeClass___java_lang_Object.$$implements[0].javaClass", this);
 
@@ -927,7 +945,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 
 	public boolean isEnum()
 	{
-		return (this.getModifiers() & ENUM) != 0 && this.getSuperclass() == java.lang.Enum.class;
+		return this.getSuperclass() == java.lang.Enum.class;
 	}
 	public Class<?> getEnclosingClass() throws SecurityException
 	{
@@ -967,5 +985,34 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 	public Class<?> getDeclaringClass() throws SecurityException
 	{
 		return this;
+	}
+
+	public T[] getEnumConstants()
+	{
+		T[] values= getEnumConstantsShared();
+		return (values != null) ? values.clone() : null;
+	}
+
+	private T[] enumConstants;
+
+	T[] getEnumConstantsShared()
+	{
+		T[] constants= enumConstants;
+		if (constants == null)
+		{
+			if (!isEnum())
+				return null;
+			try
+			{
+				final Method values= getMethod("values");
+				T[] temporaryConstants= (T[]) values.invoke(null);
+				enumConstants= constants= temporaryConstants;
+			}
+			catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException ex)
+			{
+				return null;
+			}
+		}
+		return constants;
 	}
 }

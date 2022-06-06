@@ -17,6 +17,7 @@ package java.lang.reflect;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.dragome.commons.compiler.annotations.CompilerType;
@@ -421,7 +422,14 @@ public final class Method extends Executable
 	{
 		String foundSignature= findMethodSignature();
 		if (foundSignature != null)
-			return new ParameterizedTypeImpl(foundSignature.substring(foundSignature.indexOf(")") + 1));
+			try
+			{
+				return new ParameterizedTypeImpl(foundSignature.substring(foundSignature.indexOf(")") + 1));
+			}
+			catch (Exception e)
+			{
+				return getReturnType();
+			}
 		else
 			return getReturnType();
 	}
@@ -519,7 +527,9 @@ public final class Method extends Executable
 		if (obj instanceof Method)
 		{
 			Method method= (Method) obj;
-			return getName().equals(method.getName()) && getDeclaringClass().equals(method.getDeclaringClass()) && getParameterTypes().equals(method.getParameterTypes());
+		
+			boolean parametersEqual= Arrays.equals(getParameterTypes(), method.getParameterTypes());
+			return getName().equals(method.getName()) && getDeclaringClass().equals(method.getDeclaringClass()) && parametersEqual;
 		}
 		else
 			return false;

@@ -185,6 +185,9 @@ public class ReflectionHelper
 		}
 		while ((aClass= aClass.getSuperclass()) != null);
 
+		
+		Collections.sort(getters, (g1, g2)-> g1.getName().compareTo(g2.getName()));
+		
 		return getters;
 	}
 

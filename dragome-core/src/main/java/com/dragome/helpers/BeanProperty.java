@@ -26,7 +26,14 @@ public class BeanProperty
 
 	public Object setValue(Object value)
 	{
-		ReflectionHelper.setPropertyValue(entity, getPropertyName(method), value);
+		try
+		{
+			ReflectionHelper.setPropertyValue(entity, getPropertyName(method), value);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		return value;
 	}
 
