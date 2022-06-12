@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.EventListener;
+import java.util.List;
 
 import com.dragome.guia.events.listeners.interfaces.ListenerMultiplexer;
 import com.dragome.guia.helper.collections.CollectionHandler;
@@ -45,6 +46,10 @@ public class ProxyBasedListenerMultiplexer<T extends EventListener> implements I
 		else if (method.getName().equals("remove"))
 		{
 			remove((T) args[0]);
+		}
+		else if (method.getName().equals("createUnmutableCopy"))
+		{
+			return createUnmutableCopy();
 		}
 		else
 		{
@@ -92,6 +97,18 @@ public class ProxyBasedListenerMultiplexer<T extends EventListener> implements I
 	public void setProxiedClazz(Class<? extends EventListener> clazz)
 	{
 		this.proxiedClass= clazz;
+	}
+
+	public ListenerMultiplexer<EventListener> createUnmutableCopy()
+	{
+		EventListener eventListener= createListenerMultiplexer(proxiedClass);
+
+		ProxyBasedListenerMultiplexer invocationHandler= (ProxyBasedListenerMultiplexer) Proxy.getInvocationHandler(eventListener);
+
+		List<T> list= collectionHandler.getList();
+		list.forEach(t -> invocationHandler.add(t));
+		
+		return (ListenerMultiplexer<EventListener>) eventListener;
 	}
 
 }

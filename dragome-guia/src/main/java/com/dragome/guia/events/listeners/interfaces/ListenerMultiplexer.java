@@ -41,4 +41,5 @@ public interface ListenerMultiplexer<ListenerType extends EventListener>
 {
 	void add(ListenerType aListener);
 	void remove(ListenerType aListener);
+	ListenerMultiplexer<EventListener> createUnmutableCopy();
 }

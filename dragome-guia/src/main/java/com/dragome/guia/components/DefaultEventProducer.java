@@ -100,7 +100,15 @@ public class DefaultEventProducer implements EventProducer
 				}
 			});
 		else
-			return (T) listeners.get(aType);
+		{
+			T t= (T) listeners.get(aType);
+			
+			if (t instanceof ListenerMultiplexer) {
+				ListenerMultiplexer listenerMultiplexer= (ListenerMultiplexer) t;
+				return (T) listenerMultiplexer.createUnmutableCopy();
+			}
+			return t;
+		}
 	}
 
 	public <T extends EventListener> void addListenerForOwner(Class<T> aType, T aListener, Object owner)
