@@ -129,9 +129,9 @@ public class ReflectionHelper
 		return getGettersImpl(aClass, excludereadonly);
 	}
 
-	public static List<BeanProperty> createEntityProperties(Object entity)
+	public static List<BeanProperty> createEntityProperties(Class entityType, Object entity)
 	{
-		return getAllGetters(entity).stream().map(m -> new BeanProperty(m, entity)).collect(Collectors.toList());
+		return getAllGetters(entityType).stream().map(m -> new BeanProperty(m, entity)).collect(Collectors.toList());
 	}
 	
 	public static List<BeanProperty> createEntityProperties(Class entityType)
