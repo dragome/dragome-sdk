@@ -1,6 +1,5 @@
 package com.dragome.render.serverside.swing;
 
-import com.dragome.guia.GuiaServiceFactory;
 import com.dragome.guia.events.listeners.interfaces.StyleChangedListener;
 import com.dragome.model.interfaces.Style;
 import com.dragome.render.interfaces.TemplateHandler;
@@ -39,6 +38,10 @@ public class SwingGuiaServiceFactory
 			}
 			
 			public void boundsChanged(Style style)
+			{
+			}
+
+			public void enabledChanged(Style style)
 			{
 			}
 		};

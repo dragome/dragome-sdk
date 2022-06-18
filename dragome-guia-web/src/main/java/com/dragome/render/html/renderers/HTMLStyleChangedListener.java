@@ -58,10 +58,6 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 			else
 				element.removeAttribute("class");
 
-			if (style.isEnabled())
-				element.removeAttribute("disabled");
-			else
-				element.setAttribute("disabled", "disabled");
 			//			if (style.isVisible())
 			//				element.removeAttribute("style");
 			//			else
@@ -108,6 +104,19 @@ public class HTMLStyleChangedListener implements StyleChangedListener
 			styleString= styleString.replace("${top}", style.getBounds().getY() + "");
 			if (element != null)
 				element.setAttribute("style", styleString);
+		}
+	}
+
+	public void enabledChanged(Style style)
+	{
+		VisualComponent visualComponent= style.getVisualComponent();
+		Element element= findElement(visualComponent);
+		if (element != null)
+		{
+			if (style.isEnabled())
+				element.removeAttribute("disabled");
+			else
+				element.setAttribute("disabled", "disabled");
 		}
 	}
 }

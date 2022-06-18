@@ -23,4 +23,5 @@ public interface StyleChangedListener extends EventListener
 {
 	void styleChanged(Style style);
 	void boundsChanged(Style style);
+	void enabledChanged(Style style);
 }

@@ -17,7 +17,10 @@
 package com.dragome.forms.bindings.client.style;
 
 import java.util.List;
+import java.util.function.Supplier;
 
+import com.dragome.forms.bindings.builders.BindingSync;
+import com.dragome.forms.bindings.builders.ValueModelDelegator;
 import com.dragome.forms.bindings.client.binding.BindingContainer;
 import com.dragome.forms.bindings.client.value.ValueModel;
 import com.dragome.forms.bindings.client.value.ValueSource;
@@ -49,9 +52,19 @@ public class StyleBindingBuilder
 	}
 
 	public void when(ValueSource<Boolean> condition)
-    {
-//		ValueModelDelegator<Boolean> condition= new ValueModelDelegator<Boolean>(condition);
-//		styleBinder.style(allFilterLink).with("selected").when(condition);
-	    
-    }
+	{
+		ValueModelDelegator<Boolean> condition2= BindingSync.createCondition(new Supplier<Boolean>()
+		{
+			public Boolean get()
+			{
+				return condition.getValue();
+			}
+		});
+
+		when(condition2);
+
+		//		ValueModelDelegator<Boolean> condition= new ValueModelDelegator<Boolean>(condition);
+		//		styleBinder.style(allFilterLink).with("selected").when(condition);
+
+	}
 }

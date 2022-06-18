@@ -195,8 +195,14 @@ public class DefaultStyle implements Style
 
 	public void setEnabled(boolean isEnabled)
 	{
+		boolean changed= this.enabled != isEnabled;
+
 		this.enabled= isEnabled;
-		fireStyleChanged();
+
+		if (changed)
+			if (visualComponent.hasListener(StyleChangedListener.class))
+				visualComponent.getListener(StyleChangedListener.class).enabledChanged(this);
+		//		fireStyleChanged();
 	}
 
 	public String getName()

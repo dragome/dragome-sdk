@@ -9,3 +9,8 @@
 .dragome-hide {
 	display: none !important;
 }
+
+div[disabled=disabled] {
+  pointer-events: none;
+  opacity: 0.4;
+}
