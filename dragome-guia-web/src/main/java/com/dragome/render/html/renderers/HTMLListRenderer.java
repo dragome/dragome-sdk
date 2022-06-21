@@ -16,7 +16,9 @@
 package com.dragome.render.html.renderers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -80,15 +82,25 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 
 				});
 
-				if (!selectElement.hasAttribute("size"))
-					selectElement.setAttribute("size", getSelectElementSize() + "");
+				if (!selectElement.hasAttribute("size")) 
+					if (visualList.isMultipleItems())
+						selectElement.setAttribute("size", getSelectElementSize() + "");
+					else
+					{
+						selectElement.setAttribute("size", "1");
+						List<Object> acceptableValues= visualList.getAcceptableValues();
+						if (!acceptableValues.isEmpty())
+						{
+							acceptableValues.add(0, null);
+							visualList.setAcceptableValues(acceptableValues);
+						}
+					}
 
 				if (visualList.isMultipleItems())
 					selectElement.setAttribute("multiple", "multiple");
 				else
 					selectElement.removeAttribute("multiple");
-				
-				
+
 				if (!visualList.getStyle().isEnabled())
 					selectElement.setAttribute("disabled", "disabled");
 
@@ -118,7 +130,7 @@ public class HTMLListRenderer extends AbstractHTMLComponentRenderer<VisualListBo
 					Object value= visualList.getValue();
 
 					boolean isSelected= visualList.isMultipleItems() && visualList.getSelectedValues().contains(element);
-					isSelected|= !visualList.isMultipleItems() && element.equals(value);
+					isSelected|= !visualList.isMultipleItems() && element != null && element.equals(value);
 
 					String elementValue= createElementValue(element);
 					Element querySelector= selectExtension.querySelector("option[value='" + elementValue + "']");

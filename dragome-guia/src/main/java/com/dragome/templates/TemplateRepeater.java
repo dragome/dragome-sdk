@@ -37,7 +37,7 @@ public class TemplateRepeater<T>
 
 		public int hashCode()
 		{
-			return item.hashCode();
+			return item != null ? item.hashCode() : 0;
 		}
 
 		public boolean equals(Object obj)

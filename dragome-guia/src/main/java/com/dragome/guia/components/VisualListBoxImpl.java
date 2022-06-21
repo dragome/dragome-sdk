@@ -88,7 +88,7 @@ public class VisualListBoxImpl<T> extends ComponentWithValueAndRendererImpl<T> i
 
 	public List<T> getAcceptableValues()
 	{
-		return acceptableValues;
+		return new ArrayList<>(acceptableValues);
 	}
 
 	public T getValue()

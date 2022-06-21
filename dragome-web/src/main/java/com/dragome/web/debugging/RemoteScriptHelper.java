@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import com.dragome.commons.ProxyRelatedInvocationHandler;
 import com.dragome.commons.javascript.ScriptHelperInterface;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.services.interfaces.ServiceFactory;
@@ -67,6 +68,16 @@ public class RemoteScriptHelper implements ScriptHelperInterface
 		CombinedDomInstance fromLocal= CombinedDomInstance.getFromLocal(value);
 		if (fromLocal != null)
 			value= fromLocal.getRemoteInstance();
+		else if(Proxy.isProxyClass(value.getClass()) )
+		{
+			ProxyRelatedInvocationHandler invocationHandler= (ProxyRelatedInvocationHandler) Proxy.getInvocationHandler(value);
+			Object proxy= invocationHandler.getProxy();
+			if (proxy instanceof CombinedDomInstance)
+			{
+				CombinedDomInstance combinedDomInstance= (CombinedDomInstance) proxy;
+				value= combinedDomInstance.getRemoteInstance();
+			}
+		}
 
 		crossExecutionCommandProcessor.processNoResult(new JsVariableCreationInMethod(new ReferenceHolder(caller), name, new ReferenceHolder(value), methodName));
 	}
