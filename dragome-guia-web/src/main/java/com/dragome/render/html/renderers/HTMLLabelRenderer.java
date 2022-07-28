@@ -18,12 +18,14 @@ package com.dragome.render.html.renderers;
 import org.w3c.dom.Element;
 
 import com.dragome.guia.GuiaServiceLocator;
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.helpers.DragomeEntityManager;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.interfaces.ValueChangeEvent;
 import com.dragome.model.interfaces.ValueChangeHandler;
 import com.dragome.render.canvas.interfaces.Canvas;
+import com.dragome.templates.TemplateLayout;
 import com.dragome.templates.interfaces.Template;
 
 public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel<Object>>
@@ -49,6 +51,20 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 
 				//final Element labelElement= ServiceLocator.getInstance().getDomHandler().getDocument().createElement("span");
 				setInnerText(visualLabel, labelElement);
+
+				VisualComponent forComponent= visualLabel.getFor();
+				if (forComponent != null)
+				{
+					String forId= DragomeEntityManager.add(forComponent);
+					labelElement.setAttribute("for", forId);
+
+					TemplateLayout templateLayout= (TemplateLayout) forComponent.getLayout();
+					if (templateLayout != null)
+					{
+						Element forElement= (Element) templateLayout.getTemplate().getContent().getValue();
+						forElement.setAttribute("id", forId);
+					}
+				}
 
 				visualLabel.addValueChangeHandler(new ValueChangeHandler<Object>()
 				{
@@ -92,7 +108,7 @@ public class HTMLLabelRenderer extends AbstractHTMLComponentRenderer<VisualLabel
 	{
 		Element element= (Element) child.getContent().getValue();
 		String tagName= element.getTagName();
-		boolean result= tagName.equalsIgnoreCase("span") || tagName.equalsIgnoreCase("nobr");
+		boolean result= tagName.equalsIgnoreCase("span") || tagName.equalsIgnoreCase("label") || tagName.equalsIgnoreCase("nobr");
 		return result && child.getChildren().isEmpty();
 	}
 

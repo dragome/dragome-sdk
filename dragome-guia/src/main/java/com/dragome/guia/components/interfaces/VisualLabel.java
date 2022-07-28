@@ -20,4 +20,6 @@ import com.dragome.model.interfaces.HasValue;
 
 public interface VisualLabel<T> extends VisualComponent, HasValue<T>, HasRenderer<T>
 {
+	void setFor(VisualComponent forComponent);
+	VisualComponent getFor();
 }

@@ -152,6 +152,10 @@ public abstract class AbstractHTMLComponentRenderer<T extends VisualComponent> i
 			if (templateLayout.getTemplate() != null)
 			{
 				Element element= (Element) templateLayout.getTemplate().getContent().getValue();
+
+				String forId= DragomeEntityManager.add(aVisualComponent);
+				element.setAttribute("id", forId);
+
 				boolean isRendered= element.getAttribute("rendered") != null;
 
 				if (!isRendered)

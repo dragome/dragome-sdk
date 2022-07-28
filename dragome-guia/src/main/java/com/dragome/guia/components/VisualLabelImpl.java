@@ -15,12 +15,15 @@
  */
 package com.dragome.guia.components;
 
+import com.dragome.guia.components.interfaces.VisualComponent;
 import com.dragome.guia.components.interfaces.VisualLabel;
 import com.dragome.model.interfaces.Renderer;
 import com.dragome.model.pectin.ComponentWithValueAndRendererImpl;
 
 public class VisualLabelImpl<T> extends ComponentWithValueAndRendererImpl<T> implements VisualLabel<T>
 {
+	private VisualComponent forComponent;
+
 	public VisualLabelImpl()
     {
 		this(null);
@@ -40,5 +43,15 @@ public class VisualLabelImpl<T> extends ComponentWithValueAndRendererImpl<T> imp
 	public VisualLabelImpl(String aName, Renderer<T> renderer)
 	{
 		super(aName, renderer);
+	}
+
+	public void setFor(VisualComponent forComponent)
+	{
+		this.forComponent= forComponent;
+	}
+
+	public VisualComponent getFor()
+	{
+		return forComponent;
 	}
 }

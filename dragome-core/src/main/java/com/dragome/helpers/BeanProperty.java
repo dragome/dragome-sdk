@@ -3,6 +3,7 @@ package com.dragome.helpers;
 import static com.dragome.helpers.ReflectionHelper.getPropertyName;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 public class BeanProperty
 {
@@ -40,5 +41,12 @@ public class BeanProperty
 	public String getName()
 	{
 		return getPropertyName(method);
+	}
+
+	public boolean isReference()
+	{
+		Class<?> returnType= method.getReturnType();
+		boolean notReference= returnType.equals(String.class) || returnType.equals(Boolean.class) || Number.class.isAssignableFrom(returnType) || returnType.isPrimitive() || returnType.equals(Date.class);
+		return !notReference;
 	}
 }
