@@ -34,6 +34,16 @@ public abstract class Enum<E>
 		ScriptHelper.put("name", name, null);
 		return (T) ScriptHelper.eval("enumType.$$$nativeClass___java_lang_Object.$$clinit_()[\"$$$\"+name+\"___\"+enumDragomeName]", null);
 	}
+	
+	public static Object valueOfInternal(Class<?> enumType, String name)
+	{
+		String enumDragomeName = NamingUtils.javaToDragomeNotation(enumType);
+
+		ScriptHelper.put("enumType", enumType, null);
+		ScriptHelper.put("enumDragomeName", enumDragomeName, null);
+		ScriptHelper.put("name", name, null);
+		return ScriptHelper.eval("enumType.$$$nativeClass___java_lang_Object.$$clinit_()[\"$$$\"+name+\"___\"+enumDragomeName]", null);
+	}
 
 	/**
 	 * Returns the ordinal of this enumeration constant.

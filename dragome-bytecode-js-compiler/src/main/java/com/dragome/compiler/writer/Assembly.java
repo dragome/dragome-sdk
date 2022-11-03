@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
@@ -270,7 +271,12 @@ public class Assembly
 		{
 			String[] key= typeDeclaration.split("#");
 			if (!"::::bytes".equals(key[2])) //TODO fixme: scala annotations
-				writer.write(String.format("dragomeJs.addTypeAnnotation(\"%s\", \"%s\", \"%s\", \"%s\");\n", key[0], key[1], key[2], key[3].trim()));
+				writer.write(String.format("dragomeJs.addTypeAnnotation(\"%s\", \"%s\", \"%s\", \"%s\");\n", 
+					StringEscapeUtils.escapeEcmaScript(key[0]),
+					StringEscapeUtils.escapeEcmaScript(key[1]),
+					StringEscapeUtils.escapeEcmaScript(key[2]),
+					StringEscapeUtils.escapeEcmaScript(key[3].trim())
+				));
 		}
 	}
 
