@@ -17,5 +17,5 @@ package java.lang;
 
 public final class Void
 {
-	public static final Class<Void> TYPE= Class.getType("void");
+	public static final Class<Void> TYPE= Class.getPrimitiveClass("void");
 }

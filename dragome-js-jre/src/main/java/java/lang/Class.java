@@ -887,7 +887,7 @@ public final class Class<T> implements java.io.Serializable, java.lang.reflect.G
 		return getMethod(name, parameterTypes);
 	}
 
-	public static <T> java.lang.Class<T> getType(java.lang.String typeName)
+	public static <T> java.lang.Class<T> getPrimitiveClass(java.lang.String typeName)
 	{
 		try
 		{

@@ -381,10 +381,7 @@ implements java.io.Serializable
 				throw new IllegalArgumentException("invalid permission: " + permission);
 		}
 
-		synchronized (this)
-		{
 			perms.put(bp.getCanonicalName(), permission);
-		}
 
 		// No sync on all_allowed; staleness OK
 		if (!all_allowed)
@@ -428,10 +425,7 @@ implements java.io.Serializable
 
 		Permission x;
 
-		synchronized (this)
-		{
 			x= perms.get(path);
-		}
 
 		if (x != null)
 		{
@@ -459,10 +453,7 @@ implements java.io.Serializable
 	public Enumeration<Permission> elements()
 	{
 		// Convert Iterator of Map values into an Enumeration
-		synchronized (this)
-		{
 			return Collections.enumeration(perms.values());
-		}
 	}
 
 	// Need to maintain serialization interoperability with earlier releases,

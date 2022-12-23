@@ -25,7 +25,7 @@ public final class Short extends Number
 	 */
 	public static final short MAX_VALUE= 32767;
 
-	public static final Class<Short> TYPE= Class.getType("short");
+	public static final Class<Short> TYPE= Class.getPrimitiveClass("short");
 
 	private short value= 0;
 

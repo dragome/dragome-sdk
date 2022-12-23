@@ -39,7 +39,7 @@ public class Integer extends Number implements Comparable<Integer>
 	 */
 	public static int MIN_VALUE= -2147483648;
 
-	public static final Class<Integer> TYPE= Class.getType("int");
+	public static final Class<Integer> TYPE= Class.getPrimitiveClass("int");
 
 	private int value= 0;
 

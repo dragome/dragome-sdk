@@ -6,9 +6,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import com.dragome.commons.compiler.classpath.AbstractClasspathFile;
-import com.dragome.commons.compiler.classpath.ClasspathFile;
 
-public class InsideJarClasspathFile extends AbstractClasspathFile implements ClasspathFile
+public class InsideJarClasspathFile extends AbstractClasspathFile 
 {
 	private JarEntry entry;
 	private JarFile jarFile;
@@ -30,13 +29,14 @@ public class InsideJarClasspathFile extends AbstractClasspathFile implements Cla
 
 	public InputStream openInputStream()
 	{
-		try
-		{
-			return inputStream= jarFile.getInputStream(entry);
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
+		InputStream openInputStream = super.openInputStream();
+		if (openInputStream != null)
+			return openInputStream;
+		else
+			try {
+				return inputStream = jarFile.getInputStream(entry);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 		}
 	}
 

@@ -10,4 +10,5 @@ public interface ClasspathFile
 	void close();
 	String getPath();
 	long getCRC();
+	void setBytes(byte[] bytes);
 }

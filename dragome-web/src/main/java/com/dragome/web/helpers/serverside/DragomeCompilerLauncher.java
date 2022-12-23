@@ -13,6 +13,7 @@ package com.dragome.web.helpers.serverside;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -25,6 +26,7 @@ import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.dragome.commons.DragomeConfigurator;
 import com.dragome.commons.compiler.BytecodeToJavascriptCompiler;
@@ -67,14 +69,21 @@ public class DragomeCompilerLauncher
 		List<ClasspathEntry> extraClasspath= configurator.getExtraClasspath(classPath);
 		classPath.addEntries(extraClasspath);
 		configurator.sortClassPath(classPath);
-		classPath= process(classPath, configurator);
+		classPath= process(classPath, configurator, bytecodeTransformer);
 
-		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, new DefaultClasspathFileFilter(), configurator.isCheckingCast(), configurator.isCaching(), configurator.isFailOnError());
+		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, new BytecodeTransformer() {
+			public byte[] transform(String className, byte[] bytecode) {
+				return bytecode;
+			}
+			public boolean requiresTransformation(String className) {
+				return false;
+			}
+		}, new DefaultClasspathFileFilter(), configurator.isCheckingCast(), configurator.isCaching(), configurator.isFailOnError());
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
 		bytecodeToJavascriptCompiler.compile();
 	}
 
-	private static Classpath process(Classpath classPath, DragomeConfigurator configurator)
+	private static Classpath process(Classpath classPath, DragomeConfigurator configurator, BytecodeTransformer bytecodeTransformer)
 	{
 		try
 		{
@@ -116,6 +125,23 @@ public class DragomeCompilerLauncher
 							}
 							else
 								result= false;
+							
+							
+							if (result)
+							{
+								try {
+									InputStream openInputStream = classpathFile.openInputStream();
+
+									byte[] originalByteArray = IOUtils.toByteArray(openInputStream);
+									
+									String replace = entryName.replace("/", ".");
+									byte[] transformedArray = bytecodeTransformer.transform(replace, originalByteArray);
+									
+									classpathFile.setBytes(transformedArray);
+								} catch (Exception e) {
+//									e.printStackTrace();
+								}
+							}
 							return result;
 						}
 					});

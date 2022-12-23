@@ -1,9 +1,13 @@
 package com.dragome.compiler.type;
 
-import java.io.File;
+import java.io.InputStream;
+import java.util.Iterator;
 
+import org.python.core.PyObject;
+import org.python.util.PythonInterpreter;
 import org.xmlvm.ClassToJs;
 
+import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.compiler.DragomeJsCompiler;
 import com.dragome.compiler.Project;
 import com.dragome.compiler.ast.TypeDeclaration;
@@ -12,63 +16,48 @@ import com.dragome.compiler.parser.Parser;
 import com.dragome.compiler.units.ClassUnit;
 import com.dragome.compiler.utils.Log;
 
-public class TypeResolver implements TypeVisitor
-{
-
+public class TypeResolver implements TypeVisitor {
 	private AbstractVisitor generator;
 
 	private Project project;
 
-	public TypeResolver(Project theProject, AbstractVisitor theGenerator)
-	{
-		project= theProject;
-		generator= theGenerator;
+	public TypeResolver(Project theProject, AbstractVisitor theGenerator) {
+		project = theProject;
+		generator = theGenerator;
 	}
 
-	public void visit(ClassUnit clazz)
-	{
+	public void visit(ClassUnit clazz) {
 		if (clazz.isResolved())
 			return;
 
-		Log logger= Log.getLogger();
+		Log logger = Log.getLogger();
 
-		if (clazz.getSignature().toString().startsWith("["))
-		{
+		if (clazz.getSignature().toString().startsWith("[")) {
 
-		}
-		else if (!clazz.isUpToDate())
-		{
+		} else if (!clazz.isUpToDate()) {
 			clazz.clear();
-			try
-			{
+			try {
 				compile(clazz);
 				DragomeJsCompiler.compiler.compileCount++;
-			}
-			catch (RuntimeException ex)
-			{
+			} catch (RuntimeException ex) {
 				DragomeJsCompiler.errorCount++;
 				logger.error(ex.toString());
 
-				if (DragomeJsCompiler.compiler.failOnError)
-				{
+				if (DragomeJsCompiler.compiler.failOnError) {
 					throw ex;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			logger.debug("Up to date: " + clazz);
 		}
 
 		clazz.setResolved(true);
 	}
 
-	private void compile(ClassUnit classUnit)
-	{
+	private void compile(ClassUnit classUnit) {
 		classUnit.getNotReversibleMethods().clear();
 
-		if (classUnit.getClassFile() == null)
-		{
+		if (classUnit.getClassFile() == null) {
 			Log.getLogger().warn("Cannot read " + classUnit.getClassFile());
 			return;
 		}
@@ -77,23 +66,26 @@ public class TypeResolver implements TypeVisitor
 
 		Log.getLogger().infoSameLine(".");
 
-		TypeDeclaration typeDecl= null;
-		try
-		{
-			typeDecl= parse(classUnit);
-		}
-		catch (Exception e)
-		{
+		TypeDeclaration typeDecl = null;
+		try {
+			typeDecl = parse(classUnit);
+		} catch (Exception e) {
 			Log.getLogger().debug("parse error:" + e.getMessage(), e);
 		}
 
 		{
 			typeDecl.visit(generator);
 
-			if (!classUnit.getNotReversibleMethods().isEmpty())
-			{
-				String filename= classUnit.getClassFile().getFilename();
-				classUnit.setAlternativeCompilation(ClassToJs.transformClassFileToJs(filename, classUnit.getBytecode()));
+			if (!classUnit.getNotReversibleMethods().isEmpty()) {
+
+				String filename = classUnit.getClassFile().getFilename();
+				classUnit
+						.setAlternativeCompilation(ClassToJs.transformClassFileToJs(filename, classUnit.getBytecode()));
+
+				for (String methodName : classUnit.getNotReversibleMethods()) {
+					project.addClassToRecompile(filename.replace(".class", "") + "|" + methodName.replace("#", ""));
+				}
+
 				project.incrementBadMethods(classUnit.getNotReversibleMethods().size());
 			}
 
@@ -102,10 +94,9 @@ public class TypeResolver implements TypeVisitor
 		}
 	}
 
-	private TypeDeclaration parse(ClassUnit classUnit)
-	{
-		Parser parser= new Parser(classUnit);
-		TypeDeclaration typeDecl= parser.parse();
+	private TypeDeclaration parse(ClassUnit classUnit) {
+		Parser parser = new Parser(classUnit);
+		TypeDeclaration typeDecl = parser.parse();
 
 		return typeDecl;
 	}

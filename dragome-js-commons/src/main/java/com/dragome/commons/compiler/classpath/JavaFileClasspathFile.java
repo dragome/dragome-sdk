@@ -29,13 +29,14 @@ public class JavaFileClasspathFile extends AbstractClasspathFile
 
 	public InputStream openInputStream()
 	{
-		try
-		{
-			return inputStream= new FileInputStream(file);
-		}
-		catch (FileNotFoundException e)
-		{
-			throw new RuntimeException(e);
-		}
+		InputStream openInputStream = super.openInputStream();
+		if (openInputStream != null)
+			return openInputStream;
+		else
+			try {
+				return inputStream = new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException(e);
+			}
 	}
 }

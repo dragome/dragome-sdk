@@ -48,12 +48,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 
+import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathFile;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.compiler.ast.ArrayCreation;
@@ -113,6 +115,10 @@ public class Project implements Serializable
 	transient private ClasspathFileFilter classpathFilter;
 
 	private boolean stopOnMissingClass;
+
+	private Classpath classpath;
+
+	private Set<String> classesToRecompile= new HashSet<>();
 
 	public ClasspathFileFilter getClasspathFilter()
 	{
@@ -553,5 +559,22 @@ public class Project implements Serializable
 	public void setStopOnMissingClass(boolean stopOnMissingClass)
 	{
 		this.stopOnMissingClass= stopOnMissingClass;
+	}
+
+	public void setClassPath(Classpath classpath) {
+		this.classpath = classpath;
+	}
+
+	public Classpath getClasspath() {
+		return classpath;
+	}
+
+	public void addClassToRecompile(String className) {
+		getClassesToRecompile().add(className);
+		
+	}
+
+	public Set<String> getClassesToRecompile() {
+		return classesToRecompile;
 	}
 }

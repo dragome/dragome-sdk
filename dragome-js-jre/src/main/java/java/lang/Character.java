@@ -29,7 +29,7 @@ public final class Character
 
 	public static final char MIN_HIGH_SURROGATE= '\uD800';
 
-	public static final Class<Character> TYPE= Class.getType("char");
+	public static final Class<Character> TYPE= Class.getPrimitiveClass("char");
 
 	private char value= 0;
 

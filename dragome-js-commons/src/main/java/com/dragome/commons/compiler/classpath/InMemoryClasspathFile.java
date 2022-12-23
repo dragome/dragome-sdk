@@ -38,7 +38,11 @@ public class InMemoryClasspathFile extends AbstractClasspathFile
 
 	public InputStream openInputStream()
 	{
-		return inputStream= new ByteArrayInputStream(bytecode);
+		InputStream openInputStream = super.openInputStream();
+		if (openInputStream != null)
+			return openInputStream;
+		else
+			return inputStream= new ByteArrayInputStream(bytecode);
 	}
 
 	public long getCRC()

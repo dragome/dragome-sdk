@@ -22,7 +22,7 @@ import com.dragome.commons.javascript.ScriptHelper;
 
 public final class Float extends Number
 {
-	public static final Class<Float> TYPE= Class.getType("float");
+	public static final Class<Float> TYPE= Class.getPrimitiveClass("float");
 
 	public static final float POSITIVE_INFINITY= 1.0f / 0.0f;
 	public static final float NEGATIVE_INFINITY= -1.0f / 0.0f;

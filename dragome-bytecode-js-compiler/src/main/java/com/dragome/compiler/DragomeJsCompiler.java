@@ -240,6 +240,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		Project project= Project.createSingleton(getCacheFile());
 		project.setClasspathFilter(classpathFilter);
 		project.setStopOnMissingClass(compilerConfiguration.isFailOnError());
+		project.setClassPath(classpath);
 		setFailOnError(compilerConfiguration.isFailOnError());
 		assembly.setProject(project);
 		assembly.setClasspathFilter(classpathFilter);

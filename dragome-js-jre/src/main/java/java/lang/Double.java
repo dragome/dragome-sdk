@@ -86,7 +86,7 @@ public final class Double extends Number implements Comparable<Double>
 
 	public static final double NaN= 0d / 0d;
 
-	public static final Class<Double> TYPE= Class.getType("double");
+	public static final Class<Double> TYPE= Class.getPrimitiveClass("double");
 
 	private double value= 0;
 

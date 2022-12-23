@@ -2175,22 +2175,10 @@ public class Pass1
 
 			case Const.MONITORENTER:
 			{
-				// Format: monitorenter
-				// Operand stack: ..., objectref() -> ...
-				SynchronizedBlock sb= new SynchronizedBlock();
-				sb.monitor= stack.pop();
-				sb.widen(sb.monitor);
-				sb.setEndIndex(currentIndex);
-				instruction= sb;
-				break;
+				return new NoOperation();
 			}
 			case Const.MONITOREXIT:
-				// Format: monitorexit
-				// Operand stack: ..., objectref() -> ...
-				instruction= new NoOperation();
-				instruction.widen(stack.pop());
-				instruction.setEndIndex(currentIndex);
-				break;
+				return new NoOperation();
 
 			default:
 				throw new UnsupportedOperationException("InstructionType " + instructionType.getName() + " not supported");

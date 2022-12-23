@@ -28,7 +28,7 @@ public final class Boolean
 	 */
 	public static final Boolean FALSE= new Boolean(false);
 
-	public static final Class<Boolean> TYPE= Class.getType("boolean");
+	public static final Class<Boolean> TYPE= Class.getPrimitiveClass("boolean");
 
 	private boolean value;
 
